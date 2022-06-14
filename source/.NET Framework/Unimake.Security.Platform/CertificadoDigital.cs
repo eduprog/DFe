@@ -30,17 +30,29 @@ namespace Unimake.Security.Platform
         /// <summary>
         /// Abre a tela de dialogo do windows para seleção do certificado digital
         /// </summary>
-        /// <returns>Retorna a coleção de certificados digitais</returns>
-        public X509Certificate2Collection AbrirTelaSelecao()
+        /// <returns>Retorna o certificado digital selecionado</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.AbrirTelaSelecao();
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
+        public X509Certificate2 AbrirTelaSelecao()
         {
             var store = new X509Store("MY", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
             var collection = store.Certificates;
-            _ = collection.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
-            var collection2 = collection.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
+            var collection1 = collection.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
+            var collection2 = collection1.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
             var scollection = X509Certificate2UI.SelectFromCollection(collection2, "Certificado(s) digital(is) disponível(is)", "Selecione o certificado digital para uso no aplicativo", X509SelectionFlag.SingleSelection);
 
-            return scollection;
+            if (scollection.Count == 0)
+            {
+                return null;
+            }
+
+            return scollection[0]; //Apesar de ser uma coleção, a tela de seleção sempre retorna somente 1 certificado, que foi o selecionado pelo usuário, por isso pegamos sempre o index 0
         }
 
         /// <summary>
@@ -48,9 +60,24 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="serialNumberOrThumbPrint">Serial number ou Thumb print do certificado digital a ser utilizado na localização</param>
         /// <returns>Certificado digital</returns>
+        /// <example>
+        /// Buscar o certificado digital pelo serialNumber:
+        /// <code>
+        /// var serialNumber = "1234567890"
+        /// var certificado = new CertificadoDigital();        
+        /// var certificadoSelecionado = certificado.BuscarCertificadoDigital(serialNumber);
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// Buscar o certificado digital pelo ThumbPrint:
+        /// <code>
+        /// var thumbPrint = "1234567890154878787978987987987"
+        /// var certificado = new CertificadoDigital();        
+        /// var certificadoSelecionado = certificado.BuscarCertificadoDigital(thumbPrint);
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         public X509Certificate2 BuscarCertificadoDigital(string serialNumberOrThumbPrint)
         {
-            var x509Cert = new X509Certificate2();
             var store = new X509Store("MY", StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
             var collection = store.Certificates;
@@ -70,9 +97,7 @@ namespace Unimake.Security.Platform
                 }
             }
 
-            x509Cert = collection3[0];
-
-            return x509Cert;
+            return collection3[0];
         }
 
         /// <summary>
@@ -81,6 +106,20 @@ namespace Unimake.Security.Platform
         /// <param name="bytes">Bytes do certificado para carga do mesmo</param>
         /// <param name="senha">Senha utilizada para instalar o certificado, será usada para carga do mesmo</param>
         /// <returns>Certificado Digital</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();        
+        /// </code>
+        /// Criando uma array bytes do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificadoByte = certificado.ToByteArray(@"d:\projetos\UnimakePV.pfx");
+        /// </code>
+        /// Recuperar o certificado para uso a partir de uma array byte
+        /// <code>
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(certificadoByte, "12345678");
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [ComVisible(false)] // *** ATENÇÃO ***
         public X509Certificate2 CarregarCertificadoDigitalA1(byte[] bytes, string senha) => new X509Certificate2(bytes, senha);
 
@@ -91,6 +130,20 @@ namespace Unimake.Security.Platform
         /// <param name="senha">Senha utilizada para instalar o certificado, será usada para carga do mesmo</param>
         /// <param name="keyStorageFlags">Define onde e como importar a chave privada de um certificado X.509. (Uma combinação bit a bit dos valores de enumeração que controlam onde e como importar o certificado.)</param>
         /// <returns>Certificado Digital</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();        
+        /// </code>
+        /// Criando uma array bytes do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificadoByte = certificado.ToByteArray(@"d:\projetos\UnimakePV.pfx");
+        /// </code>
+        /// Recuperar o certificado para uso a partir de uma array byte com definição de onde e como importar a chave privada, muitas vezes necessário definir em aplicações web.
+        /// <code>
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(certificadoByte, "12345678", X509KeyStorageFlags.MachineKeySet);
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [ComVisible(false)] // *** ATENÇÃO ***
         public X509Certificate2 CarregarCertificadoDigitalA1(byte[] bytes, string senha, X509KeyStorageFlags keyStorageFlags) => new X509Certificate2(bytes, senha, keyStorageFlags);
 
@@ -100,6 +153,13 @@ namespace Unimake.Security.Platform
         /// <param name="caminho">Caminho do certificado digital. Ex. c:\certificados\certificado.pfx</param>
         /// <param name="senha">Senha utilizada para instalar o arquivo .pfx</param>
         /// <returns>Certificado Digital</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [return: MarshalAs(UnmanagedType.IDispatch)]
         public X509Certificate2 CarregarCertificadoDigitalA1(string caminho, string senha)
         {
@@ -139,6 +199,12 @@ namespace Unimake.Security.Platform
         /// <param name="senha">Senha utilizada para instalar o arquivo .pfx</param>
         /// <param name="keyStorageFlags">Define onde e como importar a chave privada de um certificado X.509. (Uma combinação bit a bit dos valores de enumeração que controlam onde e como importar o certificado.)</param>
         /// <returns>Certificado Digital</returns>
+        /// Recupera o certificado digital direto do .PFX com definição de onde e como importar a chave privada, muitas vezes necessário definir em aplicações web.
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678", X509KeyStorageFlags.MachineKeySet);
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
         [return: MarshalAs(UnmanagedType.IDispatch)]
         public X509Certificate2 CarregarCertificadoDigitalA1(string caminho, string senha, X509KeyStorageFlags keyStorageFlags)
         {
@@ -177,6 +243,20 @@ namespace Unimake.Security.Platform
         /// <param name="base64">String base64 convertida pelo método <see cref="ToBase64(string)"/></param>
         /// <param name="password">Senha do certificado</param>
         /// <returns>Certificado digital</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// </code>
+        /// Criando um Base64 do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificadoBase64 = certificado.ToBase64(@"d:\projetos\UnimakePV.pfx");
+        /// </code>   
+        /// Recuperar o certificado para uso a partir de um Base64
+        /// <code>
+        /// var certificadoSelecionado = certificado.FromBase64(certificadoBase64, "12345678");
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [return: MarshalAs(UnmanagedType.IDispatch)]
         public X509Certificate2 FromBase64(string base64, string password)
         {
@@ -191,6 +271,20 @@ namespace Unimake.Security.Platform
         /// <param name="password">Senha do certificado</param>
         /// <param name="keyStorageFlags">Define onde e como importar a chave privada de um certificado X.509. (Uma combinação bit a bit dos valores de enumeração que controlam onde e como importar o certificado.)</param>
         /// <returns>Certificado digital</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// </code>
+        /// Criando um Base64 do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificadoBase64 = certificado.ToBase64(@"d:\projetos\UnimakePV.pfx");
+        /// </code>   
+        /// Recupera o certificado digital de uma string Base64 com definição de onde e como importar a chave privada, muitas vezes necessário definir em aplicações web.
+        /// <code>
+        /// var certificadoSelecionado = certificado.FromBase64(certificadoBase64, "12345678", X509KeyStorageFlags.MachineKeySet);
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [return: MarshalAs(UnmanagedType.IDispatch)]
         public X509Certificate2 FromBase64(string base64, string password, X509KeyStorageFlags keyStorageFlags)
         {
@@ -199,27 +293,37 @@ namespace Unimake.Security.Platform
         }
 
         /// <summary>
-        /// Executa tela com os certificados digitais instalados para seleção do usuário
+        /// Abre a tela de dialogo do windows para seleção do certificado digital
         /// </summary>
-        /// <returns>Retorna o certificado digital (null se nenhum certificado foi selecionado ou se o certificado selecionado está com alguma falha)</returns>
+        /// <returns>Retorna o certificado digital selecionado</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.AbrirTelaSelecao();
+        /// MessageBox.Show(certificadoSelecionado.Subject);
+        /// </code>
+        /// </example>
         [return: MarshalAs(UnmanagedType.IDispatch)]
         public X509Certificate2 Selecionar()
         {
             var scollection = AbrirTelaSelecao();
 
-            if (scollection.Count > 0)
-            {
-                return scollection[0];
-            }
-
-            return null;
+            return scollection;
         }
 
         /// <summary>
-        /// Converte o arquivo do certificado em base664 e retorna
+        /// Converte o arquivo .PFX do certificado em base64
         /// </summary>
         /// <param name="arquivo">Nome do arquivo</param>
-        /// <returns>Base64</returns>
+        /// <returns>Base64 do certificado digital informado</returns>
+        /// <example>
+        /// Criando um Base64 do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var base64DoCertificado = certificado.ToBase64(@"d:\projetos\UnimakePV.pfx");
+        /// </code>
+        /// Grave o conteúdo do variável "base64DoCertificado" para gravar em sua base de dados
+        /// </example>
         public string ToBase64(string arquivo)
         {
             byte[] result = null;
@@ -241,6 +345,14 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="arquivo">Nome do arquivo</param>
         /// <returns>Array de bytes do arquivo do certificado</returns>
+        /// <example>
+        /// Criando uma array bytes do arquivo do certificado para gravar em banco de dados (visando maior segurança) para resgatar o conteúdo da base de dados.
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var arrayByteCertificado = certificado.ToByteArray(@"d:\projetos\UnimakePV.pfx");;
+        /// </code>
+        /// Grave o conteúdo do variável "arrayByteCertificado" para gravar em sua base de dados
+        /// </example>
         public byte[] ToByteArray(string arquivo)
         {
             byte[] result = null;
@@ -262,6 +374,16 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado digital</param>
         /// <returns>true = Certificado vencido</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// if (certificado.Vencido(certificadoSelecionado))
+        /// {
+        ///    MessageBox.Show("Certificado digital vencido!!!");
+        /// }
+        /// </code>
+        /// </example>
 #if INTEROP
         public bool Vencido([MarshalAs(UnmanagedType.IDispatch)] X509Certificate2 certificado)
 #else
@@ -289,6 +411,13 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado que é para pegar a informação</param>
         /// <returns>Retorna o Thumbprint</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// var thumbPrint = certificado.GetThumbprint(certificadoSelecionado)
+        /// </code>
+        /// </example>
         public string GetThumbprint(X509Certificate2 certificado) => certificado.Thumbprint;
 
         /// <summary>
@@ -296,6 +425,13 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado que é para pegar a informação</param>
         /// <returns>Retorna o Subject</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// var subject = certificado.GetSubject(certificadoSelecionado)
+        /// </code>
+        /// </example>
         public string GetSubject(X509Certificate2 certificado) => certificado.Subject;
 
         /// <summary>
@@ -303,6 +439,13 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado que é para pegar a informação</param>
         /// <returns>Retorna o SerialNumber</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// var serialNumber = certificado.GetSerialNumber(certificadoSelecionado)
+        /// </code>
+        /// </example>
         public string GetSerialNumber(X509Certificate2 certificado) => certificado.SerialNumber;
 
         /// <summary>
@@ -310,6 +453,13 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado que é para pegar a informação</param>
         /// <returns>Retorna o Not AfterThumbprint</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// var validadeInicial = certificado.GetNotAfter(certificadoSelecionado)
+        /// </code>
+        /// </example>
         public string GetNotAfter(X509Certificate2 certificado) => certificado.NotAfter.ToString("dd/MM/yyyy HH:mm:ss");
 
         /// <summary>
@@ -317,6 +467,13 @@ namespace Unimake.Security.Platform
         /// </summary>
         /// <param name="certificado">Certificado que é para pegar a informação</param>
         /// <returns>Retorna o NotBefore</returns>
+        /// <example>
+        /// <code>
+        /// var certificado = new CertificadoDigital();
+        /// var certificadoSelecionado = certificado.CarregarCertificadoDigitalA1(@"d:\projetos\UnimakePV.pfx", "12345678");
+        /// var validadeFinal = certificado.GetNotBefore(certificadoSelecionado)
+        /// </code>
+        /// </example>
         public string GetNotBefore(X509Certificate2 certificado) => certificado.NotBefore.ToString("dd/MM/yyyy HH:mm:ss");
 
         #endregion Public Methods

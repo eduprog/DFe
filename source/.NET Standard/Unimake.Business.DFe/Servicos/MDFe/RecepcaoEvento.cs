@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.MDFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.MDFe
 {
@@ -18,25 +18,12 @@ namespace Unimake.Business.DFe.Servicos.MDFe
     [ProgId("Unimake.Business.DFe.Servicos.MDFe.RecepcaoEvento")]
     [ComVisible(true)]
 #endif
-    public class RecepcaoEvento: ServicoBase
+    public class RecepcaoEvento : ServicoBase
     {
         #region Private Fields
-        private EventoMDFe EventoMDFe
-        {
-            get
-            {
-                return new EventoMDFe().LerXML<EventoMDFe>(ConteudoXML);
-            }
-        }
+        private EventoMDFe EventoMDFe => new EventoMDFe().LerXML<EventoMDFe>(ConteudoXML);
 
         #endregion Private Fields
-
-        #region Private Constructors
-
-        private RecepcaoEvento(XmlDocument conteudoXML, Configuracao configuracao)
-            : base(conteudoXML, configuracao) { }
-
-        #endregion Private Constructors
 
         #region Private Methods
 
@@ -45,7 +32,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             var validar = new ValidarSchema();
             validar.Validar(xml, Configuracoes.TipoDFe.ToString() + "." + schemaArquivo, targetNS);
 
-            if(!validar.Success)
+            if (!validar.Success)
             {
                 throw new ValidarXMLException(validar.ErrorMessage);
             }
@@ -63,7 +50,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             var xml = new EventoMDFe();
             xml = xml.LerXML<EventoMDFe>(ConteudoXML);
 
-            if(!Configuracoes.Definida)
+            if (!Configuracoes.Definida)
             {
                 Configuracoes.CodigoUF = (int)xml.InfEvento.COrgao;
                 Configuracoes.TipoAmbiente = xml.InfEvento.TpAmb;
@@ -83,7 +70,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             var schemaArquivo = string.Empty;
             var schemaArquivoEspecifico = string.Empty;
 
-            if(Configuracoes.SchemasEspecificos.Count > 0)
+            if (Configuracoes.SchemasEspecificos.Count > 0)
             {
                 var tpEvento = ((int)xml.InfEvento.TpEvento);
 
@@ -100,14 +87,14 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             #region Validar a parte específica de cada evento
 
             var listEvento = ConteudoXML.GetElementsByTagName("eventoMDFe");
-            for(var i = 0; i < listEvento.Count; i++)
+            for (var i = 0; i < listEvento.Count; i++)
             {
                 var elementEvento = (XmlElement)listEvento[i];
 
-                if(elementEvento.GetElementsByTagName("infEvento")[0] != null)
+                if (elementEvento.GetElementsByTagName("infEvento")[0] != null)
                 {
                     var elementInfEvento = (XmlElement)elementEvento.GetElementsByTagName("infEvento")[0];
-                    if(elementInfEvento.GetElementsByTagName("tpEvento")[0] != null)
+                    if (elementInfEvento.GetElementsByTagName("tpEvento")[0] != null)
                     {
                         var xmlEspecifico = new XmlDocument();
                         xmlEspecifico.LoadXml(elementInfEvento.GetElementsByTagName(elementInfEvento.GetElementsByTagName("detEvento")[0].FirstChild.Name)[0].OuterXml);
@@ -141,7 +128,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(RetornoWSString))
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
                     return XMLUtility.Deserializar<RetEventoMDFe>(RetornoWSXML);
                 }
@@ -166,16 +153,21 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// Construtor
         /// </summary>
         /// <param name="envEvento">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public RecepcaoEvento(EventoMDFe envEvento, Configuracao configuracao)
-            : this(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RecepcaoEvento(EventoMDFe envEvento, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+        }
 
         /// <summary>
         /// Construtor
         /// </summary>
-        public RecepcaoEvento()
-        {
-        }
+        public RecepcaoEvento() : base() { }
 
         #endregion Public Constructors
 
@@ -199,15 +191,52 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         [ComVisible(true)]
         public void Executar(EventoMDFe envEvento, Configuracao configuracao)
         {
-            if(envEvento == null)
+            try
             {
-                throw new ArgumentNullException(nameof(envEvento));
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+                Executar();
             }
-
-            PrepararServico(envEvento.GerarXML(), configuracao);
-
-            Executar();
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="envEvento">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public void SetXMLConfiguracao(EventoMDFe envEvento, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ThrowHelper.Instance.Throw(ex);
+            }
+        }
+
 
 #endif
 
@@ -217,7 +246,14 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <param name="pasta">Pasta onde deve ser gravado o XML</param>
         public void GravarXmlDistribuicao(string pasta)
         {
-            GravarXmlDistribuicao(pasta, ProcEventoMDFeResult.NomeArquivoDistribuicao, ProcEventoMDFeResult.GerarXML().OuterXml);
+            try
+            {
+                GravarXmlDistribuicao(pasta, ProcEventoMDFeResult.NomeArquivoDistribuicao, ProcEventoMDFeResult.GerarXML().OuterXml);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
         /// <summary>
@@ -226,7 +262,14 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <param name="stream">Stream que vai receber o XML de distribuição</param>
         public void GravarXmlDistribuicao(Stream stream)
         {
-            GravarXmlDistribuicao(stream, ProcEventoMDFeResult.GerarXML().OuterXml);
+            try
+            {
+                GravarXmlDistribuicao(stream, ProcEventoMDFeResult.GerarXML().OuterXml);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
         #endregion Public Methods

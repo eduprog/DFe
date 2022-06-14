@@ -61,6 +61,25 @@ namespace Unimake.Business.DFe.Xml.NFe
             return xmlDoc;
         }
 
+        /// <summary>
+        /// Deserializar o XML EnviNFe no objeto EnviNFe
+        /// </summary>
+        /// <param name="filename">Localização do arquivo XML EnviNFe</param>
+        /// <returns>Objeto do EnviNFe</returns>
+        public EnviNFe LoadFromFile(string filename)
+        {
+            var doc = new XmlDocument();
+            doc.LoadXml(System.IO.File.ReadAllText(filename, Encoding.UTF8));
+            return XMLUtility.Deserializar<EnviNFe>(doc);
+        }
+
+        /// <summary>
+        /// Deserializar o XML EnviNFe no objeto EnviNFe
+        /// </summary>
+        /// <param name="xml">string do XML EnviNFe</param>
+        /// <returns>Objeto da EnviNFe</returns>
+        public EnviNFe LoadFromXML(string xml) => XMLUtility.Deserializar<EnviNFe>(xml);
+
 #if INTEROP
 
         /// <summary>
@@ -157,16 +176,23 @@ namespace Unimake.Business.DFe.Xml.NFe
 
 #endif
         /// <summary>
-        /// Deserializar o XML no objeto MDFe
+        /// Deserializar o XML NFe no objeto NFe
         /// </summary>
-        /// <param name="filename">Localização do arquivo XML</param>
-        /// <returns>Objeto do MDFe</returns>
+        /// <param name="filename">Localização do arquivo XML NFe</param>
+        /// <returns>Objeto da NFe</returns>
         public NFe LoadFromFile(string filename)
         {
             var doc = new XmlDocument();
             doc.LoadXml(System.IO.File.ReadAllText(filename, Encoding.UTF8));
             return XMLUtility.Deserializar<NFe>(doc);
         }
+
+        /// <summary>
+        /// Deserializar o XML NFe no objeto NFe
+        /// </summary>
+        /// <param name="xml">string do XML NFe</param>
+        /// <returns>Objeto da NFe</returns>
+        public NFe LoadFromXML(string xml) => XMLUtility.Deserializar<NFe>(xml);
     }
 
 #if INTEROP
@@ -190,7 +216,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public Emit Emit { get; set; }
 
         /// <summary>
-        /// Esta tag é de uso exclusivo do FISCO, não precisa gerar nada, só temos ela para caso de alguma necessidade de deserialização.
+        /// Esta TAG é de uso exclusivo do FISCO, não precisa gerar nada, só temos ela para caso de alguma necessidade de deserialização.
         /// </summary>
         [XmlElement("avulsa")]
         public Avulsa Avulsa { get; set; }
@@ -383,9 +409,9 @@ namespace Unimake.Business.DFe.Xml.NFe
                 string retorno;
                 if (string.IsNullOrWhiteSpace(CNFField))
                 {
-                    if (NNF == 0)
+                    if (NNF < 0)
                     {
-                        throw new Exception("Defina antes o conteúdo da TAG <nNF>, pois o mesmo é utilizado como base para calcular o código numérico.");
+                        throw new Exception("Defina o conteúdo da TAG <nNF>, pois a mesma é utilizada como base para calcular o código numérico.");
                     }
 
                     retorno = XMLUtility.GerarCodigoNumerico(NNF).ToString("00000000");
@@ -646,7 +672,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
                 if (!mesesValidos.Contains(value.Substring(2)))
                 {
-                    throw new Exception("Conteúdo da TAG <AAMM> da <refNF> inválido! Mês informado deve estar entre 01 e 12.");
+                    throw new Exception("Conteúdo da TAG <AAMM>, filha da TAG <refNF>, inválido! Mês informado deve estar entre 01 e 12.");
                 }
 
                 AAMMField = value;
@@ -664,7 +690,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             {
                 if (value != "01" && value != "02")
                 {
-                    throw new Exception("Conteúdo da TAG <mod> da <refNF> inválido! Valores aceitos: 01 e 02.");
+                    throw new Exception("Conteúdo da TAG <mod>, filha da TAG da <refNF>, inválido! Valores aceitos: 01 e 02.");
                 }
 
                 ModField = value;
@@ -710,7 +736,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
                 if (!mesesValidos.Contains(value.Substring(2)))
                 {
-                    throw new Exception("Conteúdo da TAG <AAMM> da <refNFP> inválido! Mês informado deve estar entre 01 e 12.");
+                    throw new Exception("Conteúdo da TAG <AAMM>, filha da TAG <refNFP>, inválido! Mês informado deve estar entre 01 e 12.");
                 }
 
                 AAMMField = value;
@@ -734,7 +760,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             {
                 if (value != "01" && value != "04")
                 {
-                    throw new Exception("Conteúdo da TAG <mod> da <refNF> inválido! Valores aceitos: 01 e 04.");
+                    throw new Exception("Conteúdo da TAG <mod>, filha da TAG <refNF>, inválido! Valores aceitos: 01 e 04.");
                 }
 
                 ModField = value;
@@ -775,7 +801,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             {
                 if (value != "2B" && value != "2C" && value != "2D")
                 {
-                    throw new Exception("Conteúdo da TAG <mod> da <refECF> inválido! Valores aceitos: 2B, 2C e 2D.");
+                    throw new Exception("Conteúdo da TAG <mod>, filha da TAG <refECF>, inválido! Valores aceitos: 2B, 2C e 2D.");
                 }
 
                 ModField = value;
@@ -1122,8 +1148,36 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => XBairroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
         }
 
+        #region cMun
+
+        private int _CMun;
+
+        [XmlIgnore]
+        public int CMun
+        {
+            get => _CMun;
+            set
+            {
+                if (value <= 0 || value == null)
+                {
+                    throw new Exception("Código do município do destinatário (tag <cMun> da <enderDest>) está sem conteúdo. É obrigatório informar o código IBGE do município.");
+                }
+
+                _CMun = value;
+            }
+        }
+
         [XmlElement("cMun")]
-        public int CMun { get; set; }
+        public string CMunField
+        {
+            get => CMun.ToString();
+            set
+            {
+                CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
+            }
+        }
+
+        #endregion
 
         [XmlElement("xMun")]
         public string XMun
@@ -1217,8 +1271,36 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => XBairroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
         }
 
+        #region cMun
+
+        private int _CMun;
+
+        [XmlIgnore]
+        public int CMun
+        {
+            get => _CMun;
+            set
+            {
+                if (value <= 0 || value == null)
+                {
+                    throw new Exception("Código do município do local de " + GetType().Name.ToLower() + " (tag <cMun> da <" + GetType().Name.ToLower() + ">) está sem conteúdo. É obrigatório informar o código IBGE do município.");
+                }
+
+                _CMun = value;
+            }
+        }
+
         [XmlElement("cMun")]
-        public int CMun { get; set; }
+        public string CMunField
+        {
+            get => CMun.ToString();
+            set
+            {
+                CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
+            }
+        }
+
+        #endregion
 
         [XmlElement("xMun")]
         public string XMun
@@ -1256,7 +1338,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeXCpl() => !string.IsNullOrWhiteSpace(XCpl);
 
-        public bool ShouldSerializeCNPJ() => string.IsNullOrWhiteSpace(CPF); //Se não tiver o CPF tenho que colocar a tag de CNPJ em branco ou gera erro de schema
+        public bool ShouldSerializeCNPJ() => string.IsNullOrWhiteSpace(CPF); //Se não tiver o CPF tenho que colocar a TAG de CNPJ em branco ou gera erro de schema
 
         public bool ShouldSerializeCPF() => !string.IsNullOrWhiteSpace(CPF);
 
@@ -1348,6 +1430,9 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => string.IsNullOrWhiteSpace(InfAdProdField) ? null : InfAdProdField;
             set => InfAdProdField = XMLUtility.UnescapeReservedCharacters(value).Truncate(500);
         }
+
+        [XmlElement("obsItem")]
+        public ObsItem ObsItem { get; set; }
     }
 
 #if INTEROP
@@ -1364,8 +1449,40 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("cProd")]
         public string CProd { get; set; }
 
+        private string CEANField = "";
+
         [XmlElement("cEAN")]
-        public string CEAN { get; set; } = "";
+        public string CEAN
+        {
+            get => CEANField;
+            set
+            {
+                if (value.ToUpper().Trim() != "SEM GTIN")
+                {
+                    if (!string.IsNullOrWhiteSpace(value) && value.Length != 0 && value.Length != 8 && value.Length != 12 && value.Length != 13 && value.Length != 14)
+                    {
+                        throw new Exception("Código EAN (código de barra) informado (" + value + ") no produto de código " + CProd + " está incorreto. EAN deve ter 0,8,12,13 ou 14 de tamanho e somente números, ou seja, não pode conter letras.");
+                    }
+
+                    for (var i = 0; i < value.Length; i++)
+                    {
+                        if (!"0123456789".Contains(value.Substring(i, 1)))
+                        {
+                            throw new Exception("Código EAN (código de barra) informado (" + value + ") no produto de código " + CProd + " está incorreto. Não pode conter letras, somente números.");
+                        }
+                    }
+                }
+                else
+                {
+                    if (value != "SEM GTIN")
+                    {
+                        throw new Exception("Código EAN (código de barra) informado (" + "\"" + value + "\") tem que ser igual a \"SEM GTIN\", ou seja, tudo maiúsculo e sem espaços no final ou inicio da sentença.");
+                    }
+                }
+
+                CEANField = value;
+            }
+        }
 
         [XmlElement("cBarra")]
         public string CBarra { get; set; } = "";
@@ -1409,7 +1526,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string UCom { get; set; }
 
         [XmlElement("qCom")]
-        public double QCom { get; set; }
+        public decimal QCom { get; set; }
 
         [XmlElement("vUnCom")]
         public decimal VUnCom { get; set; }
@@ -1424,8 +1541,40 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => VProd = Converter.ToDouble(value);
         }
 
+        private string CEANTribField = "";
+
         [XmlElement("cEANTrib")]
-        public string CEANTrib { get; set; } = "";
+        public string CEANTrib
+        {
+            get => CEANTribField;
+            set
+            {
+                if (value.ToUpper().Trim() != "SEM GTIN")
+                {
+                    if (!string.IsNullOrWhiteSpace(value) && value.Length != 0 && value.Length != 8 && value.Length != 12 && value.Length != 13 && value.Length != 14)
+                    {
+                        throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + value + ") no produto de código " + CProd + " está incorreto. EAN deve ter 0,8,12,13 ou 14 de tamanho e somente números, ou seja, não pode conter letras.");
+                    }
+
+                    for (var i = 0; i < value.Length; i++)
+                    {
+                        if (!"0123456789".Contains(value.Substring(i, 1)))
+                        {
+                            throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + value + ") no produto de código " + CProd + " está incorreto. Não pode conter letras, somente números.");
+                        }
+                    }
+                }
+                else
+                {
+                    if (value != "SEM GTIN")
+                    {
+                        throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + "\"" + value + "\") tem que ser igual a \"SEM GTIN\", ou seja, tudo maiúsculo e sem espaços no final ou inicio da sentença.");
+                    }
+                }
+
+                CEANTribField = value;
+            }
+        }
 
         [XmlElement("cBarraTrib")]
         public string CBarraTrib { get; set; } = "";
@@ -1434,7 +1583,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string UTrib { get; set; }
 
         [XmlElement("qTrib")]
-        public double QTrib { get; set; }
+        public decimal QTrib { get; set; }
 
         [XmlElement("vUnTrib")]
         public decimal VUnTrib { get; set; }
@@ -2061,7 +2210,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("qLote")]
         public string QLoteField
         {
-            get => QLote.ToString("F2", CultureInfo.InvariantCulture);
+            get => QLote.ToString("F3", CultureInfo.InvariantCulture);
             set => QLote = Converter.ToDouble(value);
         }
 
@@ -2765,7 +2914,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializePFCPField() => PFCP > 0;
 
-        public bool ShouldSerializeVFCPField() => VFCP > 0;
+        public bool ShouldSerializeVFCPField() => PFCP > 0 || VFCP > 0;
 
         #endregion
     }
@@ -2852,22 +3001,22 @@ namespace Unimake.Business.DFe.Xml.NFe
         public ModalidadeBaseCalculoICMSST ModBCST { get; set; }
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -2952,9 +3101,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeVFCPField() => VFCP > 0;
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
         public bool ShouldSerializeVBCFCPSTField() => VBCFCPST > 0;
 
@@ -3104,22 +3253,22 @@ namespace Unimake.Business.DFe.Xml.NFe
         public ModalidadeBaseCalculoICMSST ModBCST { get; set; }
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -3198,9 +3347,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
         public bool ShouldSerializeVBCFCPSTField() => VBCFCPST > 0;
 
@@ -3241,7 +3390,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <ICMS40> inválido! Valores aceitos: 40, 41 ou 50.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMS40>, inválido! Valores aceitos: 40, 41 ou 50.");
                 }
             }
         }
@@ -3302,62 +3451,62 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
-        public double VBC { get; set; }
+        public double? VBC { get; set; }
 
         [XmlElement("vBC")]
         public string VBCField
         {
-            get => VBC.ToString("F2", CultureInfo.InvariantCulture);
+            get => VBC?.ToString("F2", CultureInfo.InvariantCulture);
             set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PICMS { get; set; }
+        public double? PICMS { get; set; }
 
         [XmlElement("pICMS")]
         public string PICMSField
         {
-            get => PICMS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PICMS?.ToString("F4", CultureInfo.InvariantCulture);
             set => PICMS = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VICMSOp { get; set; }
+        public double? VICMSOp { get; set; }
 
         [XmlElement("vICMSOp")]
         public string VICMSOpField
         {
-            get => VICMSOp.ToString("F2", CultureInfo.InvariantCulture);
+            get => VICMSOp?.ToString("F2", CultureInfo.InvariantCulture);
             set => VICMSOp = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PDif { get; set; }
+        public double? PDif { get; set; }
 
         [XmlElement("pDif")]
         public string PDifField
         {
-            get => PDif.ToString("F4", CultureInfo.InvariantCulture);
+            get => PDif?.ToString("F4", CultureInfo.InvariantCulture);
             set => PDif = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VICMSDif { get; set; }
+        public double? VICMSDif { get; set; }
 
         [XmlElement("vICMSDif")]
         public string VICMSDifField
         {
-            get => VICMSDif.ToString("F2", CultureInfo.InvariantCulture);
+            get => VICMSDif?.ToString("F2", CultureInfo.InvariantCulture);
             set => VICMSDif = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VICMS { get; set; }
+        public double? VICMS { get; set; }
 
         [XmlElement("vICMS")]
         public string VICMSField
         {
-            get => VICMS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VICMS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VICMS = Converter.ToDouble(value);
         }
 
@@ -3424,14 +3573,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         #region ShouldSerialize
 
         public bool ShouldSerializeModBC() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1);
-        public bool ShouldSerializePRedBCField() => PRedBC != null && PRedBC > 0;
-        public bool ShouldSerializeVBCField() => (VBC + PICMS + VICMSOp) > 0;
-        public bool ShouldSerializPICMSeField() => (VBC + PICMS + VICMSOp) > 0;
-        public bool ShouldSerializeVICMSOpField() => (VBC + PICMS + VICMSOp) > 0;
+        public bool ShouldSerializePRedBCField() => PRedBC != null;
+        public bool ShouldSerializeVBCField() => VBC != null;
+        public bool ShouldSerializPICMSeField() => PICMS != null;
+        public bool ShouldSerializeVICMSOpField() => VICMSOp != null;
 
-        public bool ShouldSerializePDifField() => (PDif + VICMSDif + VICMS) > 0;
-        public bool ShouldSerializeVICMSDifField() => (PDif + VICMSDif + VICMS) > 0;
-        public bool ShouldSerializeVICMSField() => (VBC + VICMSDif + VICMS) > 0;
+        public bool ShouldSerializePDifField() => PDif != null;
+        public bool ShouldSerializeVICMSDifField() => VICMSDif != null;
+        public bool ShouldSerializeVICMSField() => VICMS != null;
 
         public bool ShouldSerializeVBCFCPField() => (VBCFCP + VFCP + PFCP) > 0;
         public bool ShouldSerializePFCPField() => (VBCFCP + VFCP + PFCP) > 0;
@@ -3611,12 +3760,12 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
 
         [XmlIgnore]
-        public double PRedBC { get; set; }
+        public double? PRedBC { get; set; }
 
         [XmlElement("pRedBC")]
         public string PRedBCField
         {
-            get => PRedBC.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBC?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBC = Converter.ToDouble(value);
         }
 
@@ -3702,22 +3851,22 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -3815,7 +3964,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public virtual bool ShouldSerializeVBCField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1);
 
-        public virtual bool ShouldSerializePRedBCField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1) && PRedBC > 0;
+        public virtual bool ShouldSerializePRedBCField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1) && PRedBC != null;
 
         public virtual bool ShouldSerializePICMSField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1);
 
@@ -3827,9 +3976,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public virtual bool ShouldSerializeVFCPField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1) && (VBCFCP + PFCP + VFCP) > 0;
 
-        public virtual bool ShouldSerializePMVASTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PMVAST > 0;
+        public virtual bool ShouldSerializePMVASTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PMVAST != null;
 
-        public virtual bool ShouldSerializePRedBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PRedBCST > 0;
+        public virtual bool ShouldSerializePRedBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PRedBCST != null;
 
         public virtual bool ShouldSerializeVBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1);
 
@@ -3972,22 +4121,22 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -4097,9 +4246,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public virtual bool ShouldSerializeVFCPField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1) && (VBCFCP + PFCP + VFCP) > 0;
 
-        public virtual bool ShouldSerializePMVASTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PMVAST > 0;
+        public virtual bool ShouldSerializePMVASTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PMVAST != null;
 
-        public virtual bool ShouldSerializePRedBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PRedBCST > 0;
+        public virtual bool ShouldSerializePRedBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1) && PRedBCST != null;
 
         public virtual bool ShouldSerializeVBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1);
 
@@ -4154,7 +4303,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <ICMSPart> inválido! Valores aceitos: 10 ou 90.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMSPart>, inválido! Valores aceitos: 10 ou 90.");
                 }
             }
         }
@@ -4213,22 +4362,22 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -4263,6 +4412,36 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
+        public double VBCFCPST { get; set; }
+
+        [XmlElement("vBCFCPST")]
+        public string VBCFCPSTField
+        {
+            get => VBCFCPST.ToString("F2", CultureInfo.InvariantCulture);
+            set => VBCFCPST = Converter.ToDouble(value);
+        }
+
+        [XmlIgnore]
+        public double PFCPST { get; set; }
+
+        [XmlElement("pFCPST")]
+        public string PFCPSTField
+        {
+            get => PFCPST.ToString("F4", CultureInfo.InvariantCulture);
+            set => PFCPST = Converter.ToDouble(value);
+        }
+
+        [XmlIgnore]
+        public double VFCPST { get; set; }
+
+        [XmlElement("vFCPST")]
+        public string VFCPSTField
+        {
+            get => VFCPST.ToString("F2", CultureInfo.InvariantCulture);
+            set => VFCPST = Converter.ToDouble(value);
+        }
+
+        [XmlIgnore]
         public double PBCOp { get; set; }
 
         [XmlElement("pBCOp")]
@@ -4279,9 +4458,15 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializePRedBCField() => PRedBC > 0;
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
+
+        public bool ShouldSerializeVBCFCPSTField() => VBCFCPST > 0;
+
+        public bool ShouldSerializePFCPSTField() => PFCPST > 0;
+
+        public bool ShouldSerializeVFCPSTField() => VFCPST > 0;
 
         #endregion
     }
@@ -4312,7 +4497,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN101> inválido! Valor aceito: 101.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN101>, inválido! Valor aceito: 101.");
                 }
             }
         }
@@ -4364,7 +4549,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN102> inválido! Valores aceitos: 102, 103, 300 ou 400.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN102>, inválido! Valores aceitos: 102, 103, 300 ou 400.");
                 }
             }
         }
@@ -4396,7 +4581,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN201> inválido! Valor aceito: 201.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN201>, inválido! Valor aceito: 201.");
                 }
             }
         }
@@ -4412,22 +4597,22 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -4513,9 +4698,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
 
         public bool ShouldSerializeVBCFCPSTField() => (VBCFCPST + PFCPST + VFCPST) > 0;
         public bool ShouldSerializePFCPSTField() => (VBCFCPST + PFCPST + VFCPST) > 0;
@@ -4553,7 +4738,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN202> inválido! Valores aceitos: 202 ou 203.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN202>, inválido! Valores aceitos: 202 ou 203.");
                 }
             }
         }
@@ -4569,22 +4754,22 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -4650,9 +4835,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
 
         public bool ShouldSerializeVBCFCPSTField() => (VBCFCPST + PFCPST + VFCPST) > 0;
         public bool ShouldSerializePFCPSTField() => (VBCFCPST + PFCPST + VFCPST) > 0;
@@ -4687,7 +4872,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN500> inválido! Valor aceito: 500.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN500>, inválido! Valor aceito: 500.");
                 }
             }
         }
@@ -4847,7 +5032,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CSOSN> da <ICMSSN900> inválido! Valor aceito: 900.");
+                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN900>, inválido! Valor aceito: 900.");
                 }
             }
         }
@@ -4870,12 +5055,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
-        public double PRedBC { get; set; }
+        public double? PRedBC { get; set; }
 
         [XmlElement("pRedBC")]
         public string PRedBCField
         {
-            get => PRedBC.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBC?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBC = Converter.ToDouble(value);
         }
 
@@ -4921,22 +5106,22 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
 
         [XmlIgnore]
-        public double PMVAST { get; set; }
+        public double? PMVAST { get; set; }
 
         [XmlElement("pMVAST")]
         public string PMVASTField
         {
-            get => PMVAST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PMVAST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PMVAST = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PRedBCST { get; set; }
+        public double? PRedBCST { get; set; }
 
         [XmlElement("pRedBCST")]
         public string PRedBCSTField
         {
-            get => PRedBCST.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBCST?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBCST = Converter.ToDouble(value);
         }
 
@@ -5024,31 +5209,31 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeModBC() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1);
 
-        public bool ShouldSerializeVBCField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializeVBCField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta TAG
 
-        public bool ShouldSerializePRedBCField() => PRedBC > 0;
+        public bool ShouldSerializePRedBCField() => PRedBC != null;
 
-        public bool ShouldSerializePICMSField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializePICMSField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta TAG
 
-        public bool ShouldSerializeVICMSField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializeVICMSField() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1); //Se a modalidade for informada tem que ir esta TAG
 
         public bool ShouldSerializeModBCST() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1);
 
-        public bool ShouldSerializePMVASTField() => PMVAST > 0;
+        public bool ShouldSerializePMVASTField() => PMVAST != null;
 
-        public bool ShouldSerializePRedBCSTField() => PRedBCST > 0;
+        public bool ShouldSerializePRedBCSTField() => PRedBCST != null;
 
-        public bool ShouldSerializeVBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializeVBCSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta TAG
 
-        public bool ShouldSerializePICMSSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializePICMSSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta TAG
 
-        public bool ShouldSerializeVICMSSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta tag
+        public bool ShouldSerializeVICMSSTField() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1); //Se a modalidade for informada tem que ir esta TAG
 
         public bool ShouldSerializeVBCFCPSTField() => VBCFCPST > 0;
 
-        public bool ShouldSerializePFCPSTField() => VBCFCPST > 0; // Se tiver base é obrigatório ter algo nesta tag
+        public bool ShouldSerializePFCPSTField() => VBCFCPST > 0; // Se tiver base é obrigatório ter algo nesta TAG
 
-        public bool ShouldSerializeVFCPSTField() => VBCFCPST > 0; // Se tiver base é obrigatório ter algo nesta tag
+        public bool ShouldSerializeVFCPSTField() => VBCFCPST > 0; // Se tiver base é obrigatório ter algo nesta TAG
 
         public bool ShouldSerializePCredSNField() => PCredSN != null;
         public bool ShouldSerializeVCredICMSSNField() => VCredICMSSN != null || PCredSN != null;
@@ -5082,7 +5267,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <ICMSST> inválido! Valores aceitos: 41 ou 60.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMSST>, inválido! Valores aceitos: 41 ou 60.");
                 }
             }
         }
@@ -5349,7 +5534,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <IPINT> inválido! Valores aceitos: 01, 02, 03, 04, 05, 51, 52, 53, 54 ou 55.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <IPINT>, inválido! Valores aceitos: 01, 02, 03, 04, 05, 51, 52, 53, 54 ou 55.");
                 }
             }
         }
@@ -5379,7 +5564,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <IPITrib> inválido! Valores aceitos: 00, 49, 50 ou 99.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <IPITrib>, inválido! Valores aceitos: 00, 49, 50 ou 99.");
                 }
             }
         }
@@ -5628,7 +5813,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <PISAliq> inválido! Valores aceitos: 01 ou 02.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISAliq>, inválido! Valores aceitos: 01 ou 02.");
                 }
             }
         }
@@ -5685,7 +5870,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
                 if (!int.TryParse(value, out var cst) || cst < 4 || cst > 9)
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <PISNT> inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISNT>, inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
                 }
 
                 _cstField = cst.ToString();
@@ -5719,54 +5904,54 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <PISOutr> inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISOutr>, inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
                 }
             }
         }
 
         [XmlIgnore]
-        public double VBC { get; set; }
+        public double? VBC { get; set; }
 
         [XmlElement("vBC")]
         public string VBCField
         {
-            get => VBC.ToString("F2", CultureInfo.InvariantCulture);
+            get => VBC?.ToString("F2", CultureInfo.InvariantCulture);
             set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PPIS { get; set; }
+        public double? PPIS { get; set; }
 
         [XmlElement("pPIS")]
         public string PPISField
         {
-            get => PPIS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PPIS?.ToString("F4", CultureInfo.InvariantCulture);
             set => PPIS = Converter.ToDouble(value);
         }
 
         [XmlElement("qBCProd")]
-        public double QBCProd { get; set; }
+        public double? QBCProd { get; set; }
 
         [XmlElement("vAliqProd")]
-        public double VAliqProd { get; set; }
+        public double? VAliqProd { get; set; }
 
         [XmlIgnore]
-        public double VPIS { get; set; }
+        public double? VPIS { get; set; }
 
         [XmlElement("vPIS")]
         public string VPISField
         {
-            get => VPIS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VPIS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VPIS = Converter.ToDouble(value);
         }
 
         #region ShouldSerialize
 
-        public bool ShouldSerializePPISField() => (PPIS + VBC >= 0) && (QBCProd + VAliqProd + VPIS <= 0);
-        public bool ShouldSerializeVBCField() => (PPIS + VBC >= 0) && (QBCProd + VAliqProd + VPIS <= 0);
-        public bool ShouldSerializeQBCProd() => (QBCProd + VAliqProd + VPIS > 0);
-        public bool ShouldSerializeVAliqProd() => (QBCProd + VAliqProd + VPIS > 0);
-        public bool ShouldSerializeVPISField() => (QBCProd + VAliqProd + VPIS > 0) || (PPIS + VBC >= 0);
+        public bool ShouldSerializePPISField() => PPIS != null;
+        public bool ShouldSerializeVBCField() => VBC != null;
+        public bool ShouldSerializeQBCProd() => QBCProd != null;
+        public bool ShouldSerializeVAliqProd() => VAliqProd != null;
+        public bool ShouldSerializeVPISField() => VPIS != null;
 
         #endregion
     }
@@ -5782,9 +5967,6 @@ namespace Unimake.Business.DFe.Xml.NFe
     {
         private string CSTField;
 
-        [XmlElement("orig")]
-        public OrigemMercadoria Orig { get; set; }
-
         [XmlElement("CST")]
         public string CST
         {
@@ -5797,7 +5979,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <PISQtde> inválido! Valor aceito: 03");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISQtde>, inválido! Valor aceito: 03");
                 }
             }
         }
@@ -5829,39 +6011,39 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class PISST
     {
         [XmlIgnore]
-        public double VBC { get; set; }
+        public double? VBC { get; set; }
 
         [XmlElement("vBC")]
         public string VBCField
         {
-            get => VBC.ToString("F2", CultureInfo.InvariantCulture);
+            get => VBC?.ToString("F2", CultureInfo.InvariantCulture);
             set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PPIS { get; set; }
+        public double? PPIS { get; set; }
 
         [XmlElement("pPIS")]
         public string PPISField
         {
-            get => PPIS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PPIS?.ToString("F4", CultureInfo.InvariantCulture);
             set => PPIS = Converter.ToDouble(value);
         }
 
 
         [XmlElement("qBCProd")]
-        public double QBCProd { get; set; }
+        public double? QBCProd { get; set; }
 
         [XmlElement("vAliqProd")]
-        public double VAliqProd { get; set; }
+        public double? VAliqProd { get; set; }
 
         [XmlIgnore]
-        public double VPIS { get; set; }
+        public double? VPIS { get; set; }
 
         [XmlElement("vPIS")]
         public string VPISField
         {
-            get => VPIS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VPIS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VPIS = Converter.ToDouble(value);
         }
 
@@ -5874,11 +6056,11 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializePPISField() => (PPIS + VBC >= 0) && (QBCProd + VAliqProd + VPIS <= 0);
-        public bool ShouldSerializeVBCField() => (PPIS + VBC >= 0) && (QBCProd + VAliqProd + VPIS <= 0);
-        public bool ShouldSerializeQBCProd() => (QBCProd + VAliqProd + VPIS > 0);
-        public bool ShouldSerializeVAliqProd() => (QBCProd + VAliqProd + VPIS > 0);
-        public bool ShouldSerializeVPISField() => (QBCProd + VAliqProd + VPIS > 0) || (PPIS + VBC >= 0);
+        public bool ShouldSerializePPISField() => PPIS != null;
+        public bool ShouldSerializeVBCField() => VBC != null;
+        public bool ShouldSerializeQBCProd() => QBCProd != null;
+        public bool ShouldSerializeVAliqProd() => VAliqProd != null;
+        public bool ShouldSerializeVPISField() => VPIS != null;
         public bool ShouldSerializeIndSomaPISST() => IndSomaPISST != null && IndSomaPISST != (IndicaSomaPISST)(-1);
 
         #endregion
@@ -5929,7 +6111,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <COFINSAliq> inválido! Valores aceitos: 01 ou 02.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSAliq>, inválido! Valores aceitos: 01 ou 02.");
                 }
             }
         }
@@ -5986,7 +6168,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
                 if (!int.TryParse(value, out var cst) || cst < 4 || cst > 9)
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <COFINSNT> inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSNT>, inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
                 }
 
                 _cstField = cst.ToString();
@@ -6020,54 +6202,54 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <COFINSOutr> inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSOutr>, inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
                 }
             }
         }
 
         [XmlIgnore]
-        public double VBC { get; set; }
+        public double? VBC { get; set; }
 
         [XmlElement("vBC")]
         public string VBCField
         {
-            get => VBC.ToString("F2", CultureInfo.InvariantCulture);
+            get => VBC?.ToString("F2", CultureInfo.InvariantCulture);
             set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PCOFINS { get; set; }
+        public double? PCOFINS { get; set; }
 
         [XmlElement("pCOFINS")]
         public string PCOFINSField
         {
-            get => PCOFINS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PCOFINS?.ToString("F4", CultureInfo.InvariantCulture);
             set => PCOFINS = Converter.ToDouble(value);
         }
 
         [XmlElement("qBCProd")]
-        public double QBCProd { get; set; }
+        public double? QBCProd { get; set; }
 
         [XmlElement("vAliqProd")]
-        public double VAliqProd { get; set; }
+        public double? VAliqProd { get; set; }
 
         [XmlIgnore]
-        public double VCOFINS { get; set; }
+        public double? VCOFINS { get; set; }
 
         [XmlElement("vCOFINS")]
         public string VCOFINSField
         {
-            get => VCOFINS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VCOFINS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VCOFINS = Converter.ToDouble(value);
         }
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVBCField() => (PCOFINS + VBC >= 0) && (QBCProd + VAliqProd + VCOFINS <= 0);
-        public bool ShouldSerializePCOFINSField() => (PCOFINS + VBC >= 0) && (QBCProd + VAliqProd + VCOFINS <= 0);
-        public bool ShouldSerializeQBCProd() => (QBCProd + VAliqProd + VCOFINS > 0);
-        public bool ShouldSerializeVAliqProd() => (QBCProd + VAliqProd + VCOFINS > 0);
-        public bool ShouldSerializeVCOFINSField() => (QBCProd + VAliqProd + VCOFINS > 0) || (PCOFINS + VBC >= 0);
+        public bool ShouldSerializeVBCField() => VBC != null;
+        public bool ShouldSerializePCOFINSField() => PCOFINS != null;
+        public bool ShouldSerializeQBCProd() => QBCProd != null;
+        public bool ShouldSerializeVAliqProd() => VAliqProd != null;
+        public bool ShouldSerializeVCOFINSField() => VCOFINS != null;
 
         #endregion
     }
@@ -6083,9 +6265,6 @@ namespace Unimake.Business.DFe.Xml.NFe
     {
         private string CSTField;
 
-        [XmlElement("orig")]
-        public OrigemMercadoria Orig { get; set; }
-
         [XmlElement("CST")]
         public string CST
         {
@@ -6098,7 +6277,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <CST> da <COFINSQtde> inválido! Valor aceito: 03");
+                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSQtde>, inválido! Valor aceito: 03");
                 }
             }
         }
@@ -6130,38 +6309,38 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class COFINSST
     {
         [XmlIgnore]
-        public double VBC { get; set; }
+        public double? VBC { get; set; }
 
         [XmlElement("vBC")]
         public string VBCField
         {
-            get => VBC.ToString("F2", CultureInfo.InvariantCulture);
+            get => VBC?.ToString("F2", CultureInfo.InvariantCulture);
             set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double PCOFINS { get; set; }
+        public double? PCOFINS { get; set; }
 
         [XmlElement("pCOFINS")]
         public string PCOFINSField
         {
-            get => PCOFINS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PCOFINS?.ToString("F4", CultureInfo.InvariantCulture);
             set => PCOFINS = Converter.ToDouble(value);
         }
 
         [XmlElement("qBCProd")]
-        public double QBCProd { get; set; }
+        public double? QBCProd { get; set; }
 
         [XmlElement("vAliqProd")]
-        public double VAliqProd { get; set; }
+        public double? VAliqProd { get; set; }
 
         [XmlIgnore]
-        public double VCOFINS { get; set; }
+        public double? VCOFINS { get; set; }
 
         [XmlElement("vCOFINS")]
         public string VCOFINSField
         {
-            get => VCOFINS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VCOFINS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VCOFINS = Converter.ToDouble(value);
         }
 
@@ -6174,11 +6353,11 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVBCField() => (PCOFINS + VBC >= 0) && (QBCProd + VAliqProd + VCOFINS <= 0);
-        public bool ShouldSerializePCOFINSField() => (PCOFINS + VBC >= 0) && (QBCProd + VAliqProd + VCOFINS <= 0);
-        public bool ShouldSerializeQBCProd() => (QBCProd + VAliqProd + VCOFINS > 0);
-        public bool ShouldSerializeVAliqProd() => (QBCProd + VAliqProd + VCOFINS > 0);
-        public bool ShouldSerializeVCOFINSField() => (QBCProd + VAliqProd + VCOFINS > 0) || (PCOFINS + VBC >= 0);
+        public bool ShouldSerializeVBCField() => VBC != null;
+        public bool ShouldSerializePCOFINSField() => PCOFINS != null;
+        public bool ShouldSerializeQBCProd() => QBCProd != null;
+        public bool ShouldSerializeVAliqProd() => VAliqProd != null;
+        public bool ShouldSerializeVCOFINSField() => VCOFINS != null;
         public bool ShouldSerializeIndSomaCOFINSST() => IndSomaCOFINSST != null && IndSomaCOFINSST != (IndicaSomaCOFINSST)(-1);
 
         #endregion
@@ -6247,7 +6426,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 }
                 else
                 {
-                    throw new Exception("Conteúdo da TAG <PICMSInter> da tag <ICMSUFDest> inválido! Valores aceitos: 4, 7 ou 12.");
+                    throw new Exception("Conteúdo da TAG <PICMSInter>, filha da TAG <ICMSUFDest>, inválido! Valores aceitos: 4, 7 ou 12.");
                 }
             }
         }
@@ -6331,6 +6510,94 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         [XmlElement("IPI")]
         public IPIDevol IPI { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.ObsItem")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class ObsItem
+    {
+        [XmlElement("obsCont")]
+        public List<ObsCont> ObsCont { get; set; }
+
+        [XmlElement("obsFisco")]
+        public List<ObsFisco> ObsFisco { get; set; }
+
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="obsCont">Elemento</param>
+        public void AddObsCont(ObsCont obsCont)
+        {
+            if (ObsCont == null)
+            {
+                ObsCont = new List<ObsCont>();
+            }
+
+            ObsCont.Add(obsCont);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista ObsCont (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da ObsCont</returns>
+        public ObsCont GetObsCont(int index)
+        {
+            if ((ObsCont?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return ObsCont[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista ObsCont
+        /// </summary>
+        public int GetObsContCount => (ObsCont != null ? ObsCont.Count : 0);
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="obsFisco">Elemento</param>
+        public void AddObsFisco(ObsFisco obsFisco)
+        {
+            if (ObsFisco == null)
+            {
+                ObsFisco = new List<ObsFisco>();
+            }
+
+            ObsFisco.Add(obsFisco);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista ObsFisco (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da ObsFisco</returns>
+        public ObsFisco GetObsFisco(int index)
+        {
+            if ((ObsFisco?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return ObsFisco[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista ObsFisco
+        /// </summary>
+        public int GetObsFiscoCount => (ObsFisco != null ? ObsFisco.Count : 0);
+
+#endif
     }
 
 #if INTEROP
@@ -7570,7 +7837,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             {
                 if (value.Length < 2 || value.Length > 60)
                 {
-                    throw new Exception("Conteúdo da tag <idCadIntTran> filha da tag <infIntermed> deve ter entre 2 até 60 caracteres.");
+                    throw new Exception("Conteúdo da TAG <idCadIntTran> filha da TAG <infIntermed> deve ter entre 2 até 60 caracteres.");
                 }
 
                 IdCadIntTranField = value;
@@ -7789,6 +8056,21 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         [XmlElement("indProc")]
         public IndicadorOrigemProcesso IndProc { get; set; }
+
+#if INTEROP
+        [XmlElement("tpAto")]
+        public TipoAtoConcessorio TpAto { get; set; } = (TipoAtoConcessorio)(-1);
+
+#else
+        [XmlElement("tpAto")]
+        public TipoAtoConcessorio? TpAto { get; set; }
+#endif
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeTpAto() => TpAto != null && TpAto != (TipoAtoConcessorio)(-1);
+
+        #endregion
     }
 
 #if INTEROP

@@ -8,7 +8,7 @@ using System.Xml;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.MDFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.MDFe
 {
@@ -255,20 +255,21 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <summary>
         /// Construtor
         /// </summary>
-        public AutorizacaoSinc()
-            : base() => MdfeProcs.Clear();
+        public AutorizacaoSinc() : base() => MdfeProcs.Clear();
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="mdfe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public AutorizacaoSinc(Xml.MDFe.MDFe mdfe, Configuracao configuracao)
-            : base(mdfe?.GerarXML() ?? throw new ArgumentNullException(nameof(mdfe)), configuracao)
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public AutorizacaoSinc(Xml.MDFe.MDFe mdfe, Configuracao configuracao) : this()
         {
-            Inicializar();
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-            MdfeProcs.Clear();
+            Inicializar(mdfe?.GerarXML() ?? throw new ArgumentNullException(nameof(mdfe)), configuracao);
         }
 
         #endregion Public Constructors
@@ -335,15 +336,57 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 #if INTEROP
 
         /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// Executa o serviço: Assina o XML, valida e envia para o web-service
         /// </summary>
         /// <param name="mdfe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o webservice</param>
+        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         [ComVisible(true)]
         public void Executar(Xml.MDFe.MDFe mdfe, Configuracao configuracao)
         {
-            PrepararServico(mdfe?.GerarXML() ?? throw new ArgumentNullException(nameof(mdfe)), configuracao);
-            Executar();
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(mdfe?.GerarXML() ?? throw new ArgumentNullException(nameof(mdfe)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="mdfe">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public void SetXMLConfiguracao(Xml.MDFe.MDFe mdfe, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(mdfe?.GerarXML() ?? throw new ArgumentNullException(nameof(mdfe)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
         /// <summary>
@@ -363,16 +406,23 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <param name="pasta">Pasta onde deve ser gravado o XML</param>
         public void GravarXmlDistribuicao(string pasta)
         {
-            foreach (var item in MDFeProcResults)
+            try
             {
-                if (item.Value.ProtMDFe != null)
+                foreach (var item in MDFeProcResults)
                 {
-                    GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtMDFe != null)
+                    {
+                        GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 
@@ -385,16 +435,23 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 #endif
         public void GravarXmlDistribuicao(Stream stream)
         {
-            foreach (var item in MDFeProcResults)
+            try
             {
-                if (item.Value.ProtMDFe != null)
+                foreach (var item in MDFeProcResults)
                 {
-                    GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtMDFe != null)
+                    {
+                        GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 

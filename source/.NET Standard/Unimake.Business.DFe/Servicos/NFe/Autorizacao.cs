@@ -1,5 +1,6 @@
 ﻿#if INTEROP
 using System.Runtime.InteropServices;
+using Unimake.Exceptions;
 #endif
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Unimake.Business.DFe.Xml.NFe;
 namespace Unimake.Business.DFe.Servicos.NFe
 {
     /// <summary>
-    /// Enviar o XML de NFe para o webservice
+    /// Enviar o XML de NFe para o web-service
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -123,11 +124,17 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// </summary>
         public void SetNullRetConsReciNFe() => RetConsReciNFe = null;
 
+        /// <summary>
+        /// Adicionar o retorno da consulta situação da NFe na lista dos retornos para elaboração do XML de distribuição
+        /// </summary>
+        /// <param name="item">Resultado da consulta situação do NFe</param>
+        public void AddRetConsSitNFes(RetConsSitNFe item) => (RetConsSitNFes ?? (RetConsSitNFes = new List<RetConsSitNFe>())).Add(item);
+
 #endif
 
 
         /// <summary>
-        /// Propriedade com o conteúdo retornado da consulta situção do NFe
+        /// Lista com o conteúdo retornado das consultas situação do NFes enviadas
         /// </summary>
         public List<RetConsSitNFe> RetConsSitNFes = new List<RetConsSitNFe>();
 
@@ -270,6 +277,13 @@ namespace Unimake.Business.DFe.Servicos.NFe
             return retornar;
         }
 
+        /// <summary>
+        /// Recupera o conteúdo de uma NFe específica, assinada, existente no lote gerado de NFe´s
+        /// </summary>
+        /// <param name="index">Index da NFe existe no lote (Se no lote de NFe tem 3 notas, pode ser 0, 1 ou 2, por exemplo.)</param>
+        /// <returns>Retorna o conteúdo de uma NFe específica, assinada, existente no lote gerado de NFe´s</returns>
+        public string GetConteudoNFeAssinada(int index) => (ConteudoXMLAssinado != null ? ConteudoXMLAssinado.GetElementsByTagName("NFe")[index].OuterXml : "");
+
 #endif
 
         /// <summary>
@@ -322,18 +336,22 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// <summary>
         /// Construtor
         /// </summary>
-        public Autorizacao()
-            : base()
-        {
-        }
+        public Autorizacao() : base() { }
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="enviNFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public Autorizacao(EnviNFe enviNFe, Configuracao configuracao)
-            : base(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao) => Inicializar();
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Autorizacao(EnviNFe enviNFe, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao);
+        }
 
         #endregion Public Constructors
 
@@ -347,16 +365,6 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
         public override void Executar()
         {
-            if (!Configuracoes.Definida)
-            {
-                if (EnviNFe == null)
-                {
-                    throw new NullReferenceException($"{nameof(EnviNFe)} não pode ser nulo.");
-                }
-
-                DefinirConfiguracao();
-            }
-
             base.Executar();
 
             MudarConteudoTagRetornoXMotivo();
@@ -365,15 +373,52 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #if INTEROP
 
         /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// Executa o serviço: Assina o XML, valida e envia para o web-service
         /// </summary>
         /// <param name="enviNFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o webservice</param>
-        [ComVisible(true)]
+        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         public void Executar(EnviNFe enviNFe, Configuracao configuracao)
         {
-            PrepararServico(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao);
-            Executar();
+            try
+            {
+                Inicializar(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao);
+
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="enviNFe">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public void SetXMLConfiguracao(EnviNFe enviNFe, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
 #endif
@@ -387,16 +432,23 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
         public void GravarXmlDistribuicao(string pasta)
         {
-            foreach (var item in NfeProcResults)
+            try
             {
-                if (item.Value.ProtNFe != null)
+                foreach (var item in NfeProcResults)
                 {
-                    GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtNFe != null)
+                    {
+                        GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ThrowHelper.Instance.Throw(ex);
             }
         }
 
@@ -409,16 +461,23 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
         public void GravarXmlDistribuicao(System.IO.Stream stream)
         {
-            foreach (var item in NfeProcResults)
+            try
             {
-                if (item.Value.ProtNFe != null)
+                foreach (var item in NfeProcResults)
                 {
-                    GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtNFe != null)
+                    {
+                        GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ThrowHelper.Instance.Throw(ex);
             }
         }
 

@@ -6,6 +6,7 @@ using System.IO;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.GNRE;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.GNRE
 {
@@ -17,7 +18,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
     [ProgId("Unimake.Business.DFe.Servicos.GNRE.ConsultaResultadoLote")]
     [ComVisible(true)]
 #endif
-    public class ConsultaResultadoLote: ServicoBase, IInteropService<TConsLoteGNRE>
+    public class ConsultaResultadoLote : ServicoBase, IInteropService<TConsLoteGNRE>
     {
         #region Protected Methods
 
@@ -29,7 +30,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
             var xml = new TConsLoteGNRE();
             xml = xml.LerXML<TConsLoteGNRE>(ConteudoXML);
 
-            if(!Configuracoes.Definida)
+            if (!Configuracoes.Definida)
             {
                 Configuracoes.Servico = Servico.GNREConsultaResultadoLote;
                 Configuracoes.TipoAmbiente = xml.Ambiente;
@@ -50,7 +51,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(RetornoWSString))
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
                     return XMLUtility.Deserializar<TResultLoteGNRE>(RetornoWSXML);
                 }
@@ -73,18 +74,22 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <summary>
         /// Construtor
         /// </summary>
-        public ConsultaResultadoLote()
-            : base()
-        {
-        }
+        public ConsultaResultadoLote() : base() { }
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="tConsLoteGNRE">Objeto contendo o XML da consulta do lote da GNRE</param>
         /// <param name="configuracao">Objeto contendo as configurações a serem utilizadas na consulta do lote da GNRE</param>
-        public ConsultaResultadoLote(TConsLoteGNRE tConsLoteGNRE, Configuracao configuracao)
-                    : base(tConsLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsLoteGNRE)), configuracao) { }
+        public ConsultaResultadoLote(TConsLoteGNRE tConsLoteGNRE, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(tConsLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsLoteGNRE)), configuracao);
+        }
 
         #endregion Public Constructors
 
@@ -100,9 +105,29 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         [ComVisible(true)]
         public void Executar(TConsLoteGNRE tConsLoteGNRE, Configuracao configuracao)
         {
-            PrepararServico(tConsLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsLoteGNRE)), configuracao);
-            Executar();
-        } 
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(tConsLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsLoteGNRE)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -111,7 +136,17 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// </summary>
         /// <param name="pasta">Pasta onde será gravado o XML retornado</param>
         /// <param name="nomeArquivo">Nome do arquivo que será gravado</param>
-        public void GravarXmlRetorno(string pasta, string nomeArquivo) => GravarXmlDistribuicao(pasta, nomeArquivo);
+        public void GravarXmlRetorno(string pasta, string nomeArquivo)
+        {
+            try
+            {
+                GravarXmlDistribuicao(pasta, nomeArquivo);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
         /// <summary>
         /// Grava o XML de Distribuição em uma pasta definida retornado pelo webservice
@@ -120,9 +155,16 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <param name="nomeArquivo">Nome para o arquivo XML</param>
         public void GravarXmlDistribuicao(string pasta, string nomeArquivo)
         {
-            if(!string.IsNullOrWhiteSpace(RetornoWSString))
+            try
             {
-                GravarXmlDistribuicao(pasta, nomeArquivo, RetornoWSString);
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
+                {
+                    GravarXmlDistribuicao(pasta, nomeArquivo, RetornoWSString);
+                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 
@@ -135,16 +177,16 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         {
             try
             {
-                if(Result.Resultado == null || string.IsNullOrWhiteSpace(Result.Resultado.PDFGuias))
+                if (Result.Resultado == null || string.IsNullOrWhiteSpace(Result.Resultado.PDFGuias))
                 {
-                    throw new Exception("Webservice não retornou guias, em PDF, na consulta do lote da GNRE. Verifique se as GNRE´s foram realmente autorizadas.");
+                    throw new Exception("Web-service não retornou guias, em PDF, na consulta do lote da GNRE. Verifique se as GNRE´s foram realmente autorizadas.");
                 }
 
                 Converter.Base64ToPDF(Result.Resultado.PDFGuias, Path.Combine(pasta, nomeArquivo));
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 

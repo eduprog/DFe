@@ -4,19 +4,19 @@ using System.Runtime.InteropServices;
 using System;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.NFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.NFCe
 {
     /// <summary>
-    /// Enviar o XML de NFCe para o webservice
+    /// Enviar o XML de NFCe para o web-service
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Servicos.NFCe.Autorizacao")]
     [ComVisible(true)]
 #endif
-    public class Autorizacao: NFe.Autorizacao
+    public class Autorizacao : NFe.Autorizacao
     {
         #region Private Methods
 
@@ -25,20 +25,20 @@ namespace Unimake.Business.DFe.Servicos.NFCe
         /// </summary>
         private void MontarQrCode()
         {
-            for(var i = 0; i < EnviNFe.NFe.Count; i++)
+            for (var i = 0; i < EnviNFe.NFe.Count; i++)
             {
                 EnviNFe = new EnviNFe().LerXML<EnviNFe>(ConteudoXML);
 
-                if(EnviNFe.NFe[i].InfNFeSupl == null)
+                if (EnviNFe.NFe[i].InfNFeSupl == null)
                 {
                     if (string.IsNullOrWhiteSpace(Configuracoes.CSC))
                     {
-                        throw new Exception("Para montagem do QRCode é necessario informar o conteúdo da propriedade \"Configuracao.CSC\"");
+                        throw new Exception("Para montagem do QRCode é necessário informar o conteúdo da propriedade \"Configuracao.CSC\"");
                     }
 
                     if (Configuracoes.CSCIDToken <= 0)
                     {
-                        throw new Exception("Para montagem do QRCode é necessario informar o conteúdo da propriedade \"Configuracao.CSCIDToken\"");
+                        throw new Exception("Para montagem do QRCode é necessário informar o conteúdo da propriedade \"Configuracao.CSCIDToken\"");
                     }
 
                     EnviNFe.NFe[i].InfNFeSupl = new InfNFeSupl();
@@ -47,7 +47,7 @@ namespace Unimake.Business.DFe.Servicos.NFCe
                     var urlChave = (Configuracoes.TipoAmbiente == TipoAmbiente.Homologacao ? Configuracoes.UrlChaveHomologacao : Configuracoes.UrlChaveProducao);
                     string paramLinkQRCode;
 
-                    if(EnviNFe.NFe[i].InfNFe[0].Ide.TpEmis == TipoEmissao.ContingenciaOffLine)
+                    if (EnviNFe.NFe[i].InfNFe[0].Ide.TpEmis == TipoEmissao.ContingenciaOffLine)
                     {
                         paramLinkQRCode = EnviNFe.NFe[i].InfNFe[0].Chave + "|" +
                             "2" + "|" +
@@ -97,7 +97,7 @@ namespace Unimake.Business.DFe.Servicos.NFCe
             var validar = new ValidarSchema();
             validar.Validar(ConteudoXML, TipoDFe.NFe.ToString() + "." + Configuracoes.SchemaArquivo, Configuracoes.TargetNS);
 
-            if(!validar.Success)
+            if (!validar.Success)
             {
                 throw new ValidarXMLException(validar.ErrorMessage);
             }
@@ -111,18 +111,13 @@ namespace Unimake.Business.DFe.Servicos.NFCe
         /// Construtor
         /// </summary>
         /// <param name="enviNFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public Autorizacao(EnviNFe enviNFe, Configuracao configuracao)
-                                      : base(enviNFe, configuracao)
-        {
-        }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Autorizacao(EnviNFe enviNFe, Configuracao configuracao) : base(enviNFe, configuracao) { }
 
         /// <summary>
         /// Construtor
         /// </summary>
-        public Autorizacao()
-        {
-        }
+        public Autorizacao() : base() { }
 
         #endregion Public Constructors
     }

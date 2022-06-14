@@ -7,6 +7,7 @@ using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.CTe;
 using Unimake.Business.DFe.Xml.CTeOS;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.CTeOS
 {
@@ -49,7 +50,7 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
         #region Private Fields
 
         private Xml.CTeOS.CTeOS _cteOS;
-        private Dictionary<string, CteOSProc> CteOSProcs = new Dictionary<string, CteOSProc>();
+        private readonly Dictionary<string, CteOSProc> CteOSProcs = new Dictionary<string, CteOSProc>();
 
         #endregion Private Fields
 
@@ -95,7 +96,7 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
         }
 
         /// <summary>
-        /// Efetuar um Ajustse no XML da NFCe logo depois de assinado
+        /// Efetuar um Ajustes no XML da NFCe logo depois de assinado
         /// </summary>
         protected override void AjustarXMLAposAssinado()
         {
@@ -107,13 +108,23 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
 
         #region Public Properties
 
+#if INTEROP
+
         /// <summary>
-        /// Propriedade com o conteúdo retornado da consulta situção do CTe
+        /// Adicionar o retorno da consulta situação do CTeOS na lista dos retornos para elaboração do XML de Distribuição
+        /// </summary>
+        /// <param name="item">Resultado da consulta situação do CTe</param>
+        public void AddRetConsSitCTes(RetConsSitCTe item) => (RetConsSitCTes ?? (RetConsSitCTes = new List<RetConsSitCTe>())).Add(item);
+
+#endif
+
+        /// <summary>
+        /// Propriedade com o conteúdo retornado da consulta situação do CTe
         /// </summary>
         public List<RetConsSitCTe> RetConsSitCTes = new List<RetConsSitCTe>();
 
         /// <summary>
-        /// Propriedade contendo o XML da CTe com o protocolo de autorização anexado - Envio Assincrono
+        /// Propriedade contendo o XML da CTe com o protocolo de autorização anexado - Envio Assíncrono
         /// </summary>
         public Dictionary<string, CteOSProc> CteOSProcResults
         {
@@ -240,20 +251,21 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
         /// <summary>
         /// Construtor
         /// </summary>
-        public Autorizacao()
-            : base() => CteOSProcs.Clear();
+        public Autorizacao() : base() => CteOSProcs.Clear();
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="cteOS">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public Autorizacao(Xml.CTeOS.CTeOS cteOS, Configuracao configuracao)
-            : base(cteOS?.GerarXML() ?? throw new ArgumentNullException(nameof(cteOS)), configuracao)
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Autorizacao(Xml.CTeOS.CTeOS cteOS, Configuracao configuracao) : this()
         {
-            Inicializar();
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-            CteOSProcs.Clear();
+            Inicializar(cteOS?.GerarXML() ?? throw new ArgumentNullException(nameof(cteOS)), configuracao);
         }
 
         #endregion Public Constructors
@@ -284,16 +296,58 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
 #if INTEROP
 
         /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// Executa o serviço: Assina o XML, valida e envia para o web-service
         /// </summary>
         /// <param name="cteOS">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o webservice</param>
+        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         [ComVisible(true)]
         public void Executar(Xml.CTeOS.CTeOS cteOS, Configuracao configuracao)
         {
-            PrepararServico(cteOS?.GerarXML() ?? throw new ArgumentNullException(nameof(cteOS)), configuracao);
-            Executar();
-        } 
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(cteOS?.GerarXML() ?? throw new ArgumentNullException(nameof(cteOS)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="cteOS">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public void SetXMLConfiguracao(Xml.CTeOS.CTeOS cteOS, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(cteOS?.GerarXML() ?? throw new ArgumentNullException(nameof(cteOS)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -303,35 +357,49 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
         /// <param name="pasta">Pasta onde deve ser gravado o XML</param>
         public void GravarXmlDistribuicao(string pasta)
         {
-            foreach (var item in CteOSProcResults)
+            try
             {
-                if (item.Value.ProtCTe != null)
+                foreach (var item in CteOSProcResults)
                 {
-                    GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtCTe != null)
+                    {
+                        GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 
         /// <summary>
-        /// Grava o XML de dsitribuição no stream
+        /// Grava o XML de distribuição no stream
         /// </summary>
         /// <param name="stream">Stream que vai receber o XML de distribuição</param>
         public void GravarXmlDistribuicao(System.IO.Stream stream)
         {
-            foreach (var item in CteOSProcResults)
+            try
             {
-                if (item.Value.ProtCTe != null)
+                foreach (var item in CteOSProcResults)
                 {
-                    GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtCTe != null)
+                    {
+                        GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 

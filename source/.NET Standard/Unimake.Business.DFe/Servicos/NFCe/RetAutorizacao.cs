@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 #endif
 using System;
 using Unimake.Business.DFe.Xml.NFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.NFCe
 {
     /// <summary>
-    /// Enviar o XML da consulta recibo do lote da NFCe para o webservice
+    /// Enviar o XML da consulta recibo do lote da NFCe para o web-service
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -23,16 +23,13 @@ namespace Unimake.Business.DFe.Servicos.NFCe
         /// Construtor
         /// </summary>
         /// <param name="consReciNFe">Objeto do XML da consulta recibo da NFCe</param>
-        /// <param name="configuracao">Configurações a serem utilizadas para conexão e envio do XML para o webservice</param>
-        public RetAutorizacao(ConsReciNFe consReciNFe, Configuracao configuracao)
-            : base(consReciNFe, configuracao) { }
+        /// <param name="configuracao">Configurações a serem utilizadas para conexão e envio do XML para o web-service</param>
+        public RetAutorizacao(ConsReciNFe consReciNFe, Configuracao configuracao) : base(consReciNFe, configuracao) { }
 
         /// <summary>
         /// Construtor
         /// </summary>
-        public RetAutorizacao()
-        {
-        }
+        public RetAutorizacao() : base() { }
 
         #endregion Public Constructors
 

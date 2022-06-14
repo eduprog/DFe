@@ -5,6 +5,7 @@ using System;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.GNRE;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.GNRE
 {
@@ -28,7 +29,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
             //var xml = new TLoteGNRE();
             //xml = xml.LerXML<TLoteGNRE>(ConteudoXML);
 
-            if(!Configuracoes.Definida)
+            if (!Configuracoes.Definida)
             {
                 Configuracoes.Servico = Servico.GNRELoteRecepcao;
                 Configuracoes.SchemaVersao = "2.00";
@@ -48,7 +49,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(RetornoWSString))
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
                     return XMLUtility.Deserializar<TRetLoteGNRE>(RetornoWSXML);
                 }
@@ -71,18 +72,22 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <summary>
         /// Construtor
         /// </summary>
-        public LoteRecepcao()
-            : base()
-        {
-        }
+        public LoteRecepcao() : base() { }
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="tLoteGNRE">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public LoteRecepcao(TLoteGNRE tLoteGNRE, Configuracao configuracao)
-                    : base(tLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tLoteGNRE)), configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public LoteRecepcao(TLoteGNRE tLoteGNRE, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(tLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tLoteGNRE)), configuracao);
+        }
 
         #endregion Public Constructors
 
@@ -91,15 +96,57 @@ namespace Unimake.Business.DFe.Servicos.GNRE
 #if INTEROP
 
         /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// Executa o serviço: Assina o XML, valida e envia para o web-service
         /// </summary>
         /// <param name="tLoteGNRE">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o webservice</param>
+        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         [ComVisible(true)]
         public void Executar(TLoteGNRE tLoteGNRE, Configuracao configuracao)
         {
-            PrepararServico(tLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tLoteGNRE)), configuracao);
-            Executar();
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(tLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tLoteGNRE)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="tLoteGNRE">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public void SetXMLConfiguracao(TLoteGNRE tLoteGNRE, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(tLoteGNRE?.GerarXML() ?? throw new ArgumentNullException(nameof(tLoteGNRE)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
 #endif
@@ -109,7 +156,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <param name="pasta">Pasta onde é para ser gravado do XML</param>
         /// <param name="nomeArquivo">Nome para o arquivo XML</param>
         /// <param name="conteudoXML">Conteúdo do XML</param>
-        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) => throw new System.Exception("Não existe XML de distribuição para consulta status do serviço.");
+        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) => ThrowHelper.Instance.Throw(new Exception("Não existe XML de distribuição para consulta status do serviço."));
 
         #endregion Public Methods
     }

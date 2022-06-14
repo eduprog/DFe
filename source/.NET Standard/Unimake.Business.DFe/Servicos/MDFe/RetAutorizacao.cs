@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
-using System.Xml;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.MDFe;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.MDFe
 {
@@ -18,13 +18,6 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 #endif
     public class RetAutorizacao : ServicoBase
     {
-        #region Private Constructors
-
-        private RetAutorizacao(XmlDocument conteudoXML, Configuracao configuracao)
-                            : base(conteudoXML, configuracao) { }
-
-        #endregion Private Constructors
-
         #region Protected Methods
 
         /// <summary>
@@ -77,19 +70,21 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// Construtor
         /// </summary>
         /// <param name="consReciMDFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public RetAutorizacao(ConsReciMDFe consReciMDFe, Configuracao configuracao)
-            : this(consReciMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciMDFe)), configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RetAutorizacao(ConsReciMDFe consReciMDFe, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-#if INTEROP
+            Inicializar(consReciMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciMDFe)), configuracao);
+        }
+
         /// <summary>
         /// Inicia uma instância desta classe
         /// </summary>
-        public RetAutorizacao()
-        {
-        }
-
-#endif
+        public RetAutorizacao() : base() { }
 
         #endregion Public Constructors
 
@@ -105,14 +100,29 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         [ComVisible(true)]
         public void Executar(ConsReciMDFe consReciMDFe, Configuracao configuracao)
         {
-            if (configuracao is null)
+            try
             {
-                throw new ArgumentNullException(nameof(configuracao));
-            }
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
 
-            PrepararServico(consReciMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciMDFe)), configuracao);
-            Executar();
-        } 
+                Inicializar(consReciMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciMDFe)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -122,8 +132,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <param name="pasta">Pasta onde é para ser gravado do XML</param>
         /// <param name="nomeArquivo">Nome para o arquivo XML</param>
         /// <param name="conteudoXML">Conteúdo do XML</param>
-        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) =>
-            throw new Exception("Não existe XML de distribuição para consulta do recibo de lote.");
+        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) => ThrowHelper.Instance.Throw(new Exception("Não existe XML de distribuição para consulta do recibo de lote."));
 
         #endregion Public Methods
     }

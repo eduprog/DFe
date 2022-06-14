@@ -6,18 +6,19 @@ using System.Xml;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.NFe;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.NFe
 {
     /// <summary>
-    /// Enviar o XML de consulta recibo do lote de NFe para o webservice
+    /// Enviar o XML de consulta recibo do lote de NFe para o web-service
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Servicos.NFe.RetAutorizacao")]
     [ComVisible(true)]
 #endif
-    public class RetAutorizacao: ServicoBase, IInteropService<ConsReciNFe>
+    public class RetAutorizacao : ServicoBase, IInteropService<ConsReciNFe>
     {
         #region Private Methods
 
@@ -26,27 +27,27 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// </summary>
         private void MudarConteudoTagRetornoXMotivo()
         {
-            if(EnviNFe != null)
+            if (EnviNFe != null)
             {
                 try
                 {
                     var alterouXMotivo = false;
 
                     var retConsReciNFeList = RetornoWSXML.GetElementsByTagName("retConsReciNFe");
-                    foreach(var retConsReciNFeNode in retConsReciNFeList)
+                    foreach (var retConsReciNFeNode in retConsReciNFeList)
                     {
                         var retConsReciNFeElement = (XmlElement)retConsReciNFeNode;
 
                         var protNFeList = retConsReciNFeElement.GetElementsByTagName("protNFe");
-                        foreach(var protNFeNode in protNFeList)
+                        foreach (var protNFeNode in protNFeList)
                         {
                             var protNFeElement = (XmlElement)protNFeNode;
 
-                            if(protNFeElement.GetElementsByTagName("xMotivo") != null)
+                            if (protNFeElement.GetElementsByTagName("xMotivo") != null)
                             {
                                 var xMotivo = protNFeElement.GetElementsByTagName("xMotivo")[0].InnerText;
 
-                                if(xMotivo.Contains("[nItem:"))
+                                if (xMotivo.Contains("[nItem:"))
                                 {
                                     var nItem = Convert.ToInt32((xMotivo.Substring(xMotivo.IndexOf("[nItem:") + 7)).Substring(0, (xMotivo.Substring(xMotivo.IndexOf("[nItem:") + 7)).Length - 1));
                                     protNFeElement.GetElementsByTagName("xMotivo")[0].InnerText = xMotivo + "[cProd:" + EnviNFe.NFe[0].InfNFe[0].Det[nItem - 1].Prod.CProd + "][xProd:" + EnviNFe.NFe[0].InfNFe[0].Det[nItem - 1].Prod.XProd + "]";
@@ -56,7 +57,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
                         }
                     }
 
-                    if(alterouXMotivo)
+                    if (alterouXMotivo)
                     {
                         RetornoWSString = RetornoWSXML.OuterXml;
                     }
@@ -87,7 +88,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
             var xml = new ConsReciNFe();
             xml = xml.LerXML<ConsReciNFe>(ConteudoXML);
 
-            if(!Configuracoes.Definida)
+            if (!Configuracoes.Definida)
             {
                 Configuracoes.Servico = Servico.NFeConsultaRecibo;
                 Configuracoes.TipoAmbiente = xml.TpAmb;
@@ -102,13 +103,13 @@ namespace Unimake.Business.DFe.Servicos.NFe
         #region Public Properties
 
         /// <summary>
-        /// Conteúdo retornado pelo webservice depois do envio do XML
+        /// Conteúdo retornado pelo web-service depois do envio do XML
         /// </summary>
         public RetConsReciNFe Result
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(RetornoWSString))
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
                     return XMLUtility.Deserializar<RetConsReciNFe>(RetornoWSXML);
                 }
@@ -128,17 +129,22 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// <summary>
         /// Construtor
         /// </summary>
-        public RetAutorizacao()
-        {
-        }
+        public RetAutorizacao() : base() { }
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="consReciNFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public RetAutorizacao(ConsReciNFe consReciNFe, Configuracao configuracao)
-            : base(consReciNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciNFe)), configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RetAutorizacao(ConsReciNFe consReciNFe, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(consReciNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciNFe)), configuracao);
+        }
 
         #endregion Public Constructors
 
@@ -152,11 +158,6 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
         public override void Executar()
         {
-            if(!Configuracoes.Definida)
-            {
-                DefinirConfiguracao();
-            }
-
             base.Executar();
 
             MudarConteudoTagRetornoXMotivo();
@@ -165,16 +166,36 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #if INTEROP
 
         /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// Executa o serviço: Assina o XML, valida e envia para o web-service
         /// </summary>
         /// <param name="consReciNFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o webservice</param>
+        /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         [ComVisible(true)]
         public void Executar(ConsReciNFe consReciNFe, Configuracao configuracao)
         {
-            PrepararServico(consReciNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciNFe)), configuracao);
-            Executar();
-        } 
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(consReciNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(consReciNFe)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -184,8 +205,17 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// <param name="pasta">Pasta onde é para ser gravado do XML</param>
         /// <param name="nomeArquivo">Nome para o arquivo XML</param>
         /// <param name="conteudoXML">Conteúdo do XML</param>
-        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) =>
-                    throw new Exception("Não existe XML de distribuição para consulta do recibo de lote.");
+        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML)
+        {
+            try
+            {
+                throw new Exception("Não existe XML de distribuição para consulta do recibo de lote.");
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
         #endregion Public Methods
     }

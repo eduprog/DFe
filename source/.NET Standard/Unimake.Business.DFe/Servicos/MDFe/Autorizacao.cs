@@ -8,7 +8,7 @@ using System.Xml;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.MDFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.MDFe
 {
@@ -80,7 +80,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         #region Protected Methods
 
         /// <summary>
-        /// Efetuar um Ajustse no XML da NFCe logo depois de assinado
+        /// Efetuar ajustes no XML da NFCe logo depois de assinado
         /// </summary>
         protected override void AjustarXMLAposAssinado()
         {
@@ -119,7 +119,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         #region Public Fields
 
         /// <summary>
-        /// Propriedade com o conteúdo retornado da consulta situção do MDFe
+        /// Propriedade com o conteúdo retornado da consulta situação do MDFe
         /// </summary>
         public List<RetConsSitMDFe> RetConsSitMDFe = new List<RetConsSitMDFe>();
 
@@ -241,10 +241,16 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             return retornar;
         }
 
+        /// <summary>
+        /// Recupera o conteúdo o único MDFe, assinado, existente no lote gerado de MDFe´s
+        /// </summary>
+        /// <returns>Retorna o conteúdo do MDFe, assinado, existente no lote gerado de MDFe´s</returns>
+        public string GetConteudoMDFeAssinado() => (ConteudoXMLAssinado != null ? ConteudoXMLAssinado.GetElementsByTagName("MDFe")[0].OuterXml : "");
+
 #endif
 
         /// <summary>
-        /// Conteúdo retornado pelo webservice depois do envio do XML
+        /// Conteúdo retornado pelo web-service depois do envio do XML
         /// </summary>
         public RetEnviMDFe Result
         {
@@ -284,20 +290,21 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <summary>
         /// Construtor
         /// </summary>
-        public Autorizacao()
-            : base() => MdfeProcs.Clear();
+        public Autorizacao() : base() => MdfeProcs.Clear();
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="enviMDFe">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public Autorizacao(EnviMDFe enviMDFe, Configuracao configuracao)
-            : base(enviMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviMDFe)), configuracao)
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Autorizacao(EnviMDFe enviMDFe, Configuracao configuracao) : this()
         {
-            Inicializar();
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-            MdfeProcs.Clear();
+            Inicializar(enviMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviMDFe)), configuracao);
         }
 
         #endregion Public Constructors
@@ -371,17 +378,57 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         [ComVisible(true)]
         public void Executar(EnviMDFe enviMDFe, Configuracao configuracao)
         {
-            PrepararServico(enviMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviMDFe)), configuracao);
-            Executar();
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(enviMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviMDFe)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
         }
 
         /// <summary>
-        /// Adiciona um retorno da consulta situação da MDF-e.
-        /// Este método está disponível apenas para interop
+        /// Adicionar o retorno da consulta situação da CTe na lista dos retornos para elaboração do XML de Distribuição
         /// </summary>
-        /// <param name="item">Item que será adicionado</param>
-        [ComVisible(true)]
+        /// <param name="item">Resultado da consulta situação do MDFe</param>
         public void AddRetConsSitMDFe(RetConsSitMDFe item) => (RetConsSitMDFe ?? (RetConsSitMDFe = new List<RetConsSitMDFe>())).Add(item);
+
+        /// <summary>
+        /// Definir o objeto contendo o XML a ser enviado e configuração de conexão e envio do XML para web-service
+        /// </summary>
+        /// <param name="enviMDFe">Objeto contendo o XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o self-service</param>
+        public void SetXMLConfiguracao(EnviMDFe enviMDFe, Configuracao configuracao)
+        {
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(enviMDFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviMDFe)), configuracao);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -391,16 +438,23 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// <param name="pasta">Pasta onde deve ser gravado o XML</param>
         public void GravarXmlDistribuicao(string pasta)
         {
-            foreach (var item in MDFeProcResults)
+            try
             {
-                if (item.Value.ProtMDFe != null)
+                foreach (var item in MDFeProcResults)
                 {
-                    GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtMDFe != null)
+                    {
+                        GravarXmlDistribuicao(pasta, item.Value.NomeArquivoDistribuicao, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 
@@ -413,16 +467,23 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 #endif
         public void GravarXmlDistribuicao(Stream stream)
         {
-            foreach (var item in MDFeProcResults)
+            try
             {
-                if (item.Value.ProtMDFe != null)
+                foreach (var item in MDFeProcResults)
                 {
-                    GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    if (item.Value.ProtMDFe != null)
+                    {
+                        GravarXmlDistribuicao(stream, item.Value.GerarXML().OuterXml);
+                    }
+                    else
+                    {
+                        throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
+                    }
                 }
-                else
-                {
-                    throw new Exception("Não foi localizado no retorno da consulta o protocolo da chave, abaixo, para a elaboração do arquivo de distribuição. Verifique se a chave ou recibo consultado estão de acordo com a informada na sequencia:\r\n\r\n" + Format.ChaveDFe(item.Key));
-                }
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
             }
         }
 

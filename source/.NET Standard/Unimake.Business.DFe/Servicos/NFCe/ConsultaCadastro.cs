@@ -3,12 +3,12 @@ using System.Runtime.InteropServices;
 #endif
 using System;
 using Unimake.Business.DFe.Xml.NFe;
-using Unimake.Security.Exceptions;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.NFCe
 {
     /// <summary>
-    /// Enviar o XML de consulta cadastro do contribuinte para o webservice
+    /// Enviar o XML de consulta cadastro do contribuinte para o web-service
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -23,16 +23,13 @@ namespace Unimake.Business.DFe.Servicos.NFCe
         /// Construtor
         /// </summary>
         /// <param name="consCad">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public ConsultaCadastro(ConsCad consCad, Configuracao configuracao)
-            : base(consCad, configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public ConsultaCadastro(ConsCad consCad, Configuracao configuracao) : base(consCad, configuracao) { }
 
         /// <summary>
         /// Construtor
         /// </summary>
-        public ConsultaCadastro()
-        {
-        }
+        public ConsultaCadastro() : base() { }
 
         #endregion Public Constructors
 

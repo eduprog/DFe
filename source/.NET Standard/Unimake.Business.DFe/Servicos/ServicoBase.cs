@@ -6,6 +6,7 @@ using System.Xml;
 using Unimake.Business.DFe.Security;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos
 {
@@ -31,7 +32,8 @@ namespace Unimake.Business.DFe.Servicos
         /// Verifica se o XML está assinado, se não estiver assina. Só faz isso para XMLs que tem tag de assinatura, demais ele mantem como está, sem assinar.
         /// </summary>
         /// <param name="tagAssinatura">Tag de assinatura</param>
-        private void VerificarAssinarXML(string tagAssinatura)
+        /// <param name="tagAtributoID">Tag que detêm o atributo ID</param>
+        private void VerificarAssinarXML(string tagAssinatura, string tagAtributoID)
         {
             if (!string.IsNullOrWhiteSpace(tagAssinatura))
             {
@@ -41,7 +43,7 @@ namespace Unimake.Business.DFe.Servicos
                 }
                 else
                 {
-                    AssinaturaDigital.Assinar(ConteudoXML, tagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id", true);
+                    AssinaturaDigital.Assinar(ConteudoXML, tagAssinatura, tagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id", true);
 
                     AjustarXMLAposAssinado();
                 }
@@ -78,17 +80,7 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// Construtor
         /// </summary>
-        protected ServicoBase()
-        {
-        }
-
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        /// <param name="conteudoXML">Conteúdo do XML a ser enviado para o webservice</param>
-        /// <param name="configuracao">Configurações a serem utilizadas para conexão e envio do XML para o webservice</param>
-        protected ServicoBase(XmlDocument conteudoXML, Configuracao configuracao)
-                    : this() => PrepararServico(conteudoXML, configuracao);
+        protected ServicoBase() { }
 
         #endregion Protected Constructors
 
@@ -103,19 +95,6 @@ namespace Unimake.Business.DFe.Servicos
         /// Defini o valor das propriedades do objeto "Configuracoes"
         /// </summary>
         protected abstract void DefinirConfiguracao();
-
-        /// <summary>
-        /// Preparar o ambiente para consumir o serviço
-        /// </summary>
-        /// <param name="conteudoXML">XML que será enviado para o webservice</param>
-        /// <param name="configuracao">Configurações que serão utilizadas para conexão e envio do XML para o webservice</param>
-        protected void PrepararServico(XmlDocument conteudoXML, Configuracao configuracao)
-        {
-            Configuracoes = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
-            ConteudoXML = conteudoXML ?? throw new ArgumentNullException(nameof(conteudoXML));
-            Inicializar();
-            System.Diagnostics.Trace.WriteLine(ConteudoXML?.InnerXml, "Unimake.DFe");
-        }
 
         /// <summary>
         /// Validar o schema do XML
@@ -134,11 +113,16 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// Inicializa configurações, parâmetros e propriedades para execução do serviço.
         /// </summary>
+        /// <param name="conteudoXML">Conteúdo do XML a ser enviado para o web-service</param>
+        /// <param name="configuracao">Configurações a serem utilizadas para conexão e envio do XML para o web-service</param>
 #if INTEROP
         [ComVisible(false)]
 #endif
-        protected internal void Inicializar()
+        protected internal void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
         {
+            Configuracoes = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
+            ConteudoXML = conteudoXML ?? throw new ArgumentNullException(nameof(conteudoXML));
+
             if (!Configuracoes.Definida)
             {
                 DefinirConfiguracao();
@@ -146,6 +130,8 @@ namespace Unimake.Business.DFe.Servicos
 
             //Esta linha tem que ficar fora do if acima, pois tem que carregar esta parte, independente, pois o que é carregado sempre é automático. Mudar isso, vai gerar falha no UNINFE, principalmente no envio dos eventos, onde eu defino as configurações manualmente. Wandrey 07/12/2020
             Configuracoes.Load(GetType().Name);
+
+            System.Diagnostics.Trace.WriteLine(ConteudoXML?.InnerXml, "Unimake.DFe");
         }
 
         #endregion Protected Internal Methods
@@ -164,8 +150,8 @@ namespace Unimake.Business.DFe.Servicos
         {
             get
             {
-                VerificarAssinarXML(Configuracoes.TagAssinatura);
-                VerificarAssinarXML(Configuracoes.TagLoteAssinatura);
+                VerificarAssinarXML(Configuracoes.TagAssinatura, Configuracoes.TagAtributoID);
+                VerificarAssinarXML(Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID);
 
                 return ConteudoXML;
             }
@@ -174,8 +160,9 @@ namespace Unimake.Business.DFe.Servicos
 #if INTEROP
 
         /// <summary>
-        /// Conteúdo do XML assinado no formato string.
+        /// Recupera o conteúdo do XML assinado.
         /// </summary>
+        /// <returns>Retorna conteúdo do XML assinado</returns>
         public string GetConteudoXMLAssinado() => (ConteudoXMLAssinado != null ? ConteudoXMLAssinado.OuterXml : "");
 
 #endif
@@ -191,7 +178,7 @@ namespace Unimake.Business.DFe.Servicos
         public string RetornoWSString { get; set; }
 
         /// <summary>
-        /// XML retornado pelo Webservice
+        /// XML retornado pelo Web-service
         /// </summary>
         public XmlDocument RetornoWSXML { get; set; }
 
@@ -206,7 +193,7 @@ namespace Unimake.Business.DFe.Servicos
         #region Public Methods
 
         /// <summary>
-        /// Executar o serviço para consumir o webservice
+        /// Executar o serviço para consumir o web-service
         /// </summary>
 #if INTEROP
         [ComVisible(false)]
@@ -232,6 +219,7 @@ namespace Unimake.Business.DFe.Servicos
                 VersaoSoap = Configuracoes.WebSoapVersion,
                 SoapString = Configuracoes.WebSoapString,
                 ContentType = Configuracoes.WebContentType,
+                TimeOutWebServiceConnect = Configuracoes.TimeOutWebServiceConnect,
                 Proxy = (Configuracoes.HasProxy ? Proxy.DefinirServidor(Configuracoes.ProxyAutoDetect,
                                                                         Configuracoes.ProxyUser,
                                                                         Configuracoes.ProxyPassword) : null)

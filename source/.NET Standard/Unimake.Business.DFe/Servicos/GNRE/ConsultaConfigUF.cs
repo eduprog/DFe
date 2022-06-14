@@ -5,6 +5,7 @@ using System;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.GNRE;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.GNRE
 {
@@ -16,7 +17,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
     [ProgId("Unimake.Business.DFe.Servicos.GNRE.ConsultaConfigUF")]
     [ComVisible(true)]
 #endif
-    public class ConsultaConfigUF: ServicoBase, IInteropService<TConsultaConfigUf>
+    public class ConsultaConfigUF : ServicoBase, IInteropService<TConsultaConfigUf>
     {
         #region Protected Methods
 
@@ -28,7 +29,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
             var xml = new TConsultaConfigUf();
             xml = xml.LerXML<TConsultaConfigUf>(ConteudoXML);
 
-            if(!Configuracoes.Definida)
+            if (!Configuracoes.Definida)
             {
                 Configuracoes.Servico = Servico.GNREConsultaConfigUF;
                 Configuracoes.CodigoUF = (int)xml.UF;
@@ -50,7 +51,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         {
             get
             {
-                if(!string.IsNullOrWhiteSpace(RetornoWSString))
+                if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
                     return XMLUtility.Deserializar<TConfigUf>(RetornoWSXML);
                 }
@@ -73,18 +74,22 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <summary>
         /// Construtor
         /// </summary>
-        public ConsultaConfigUF()
-            : base()
-        {
-        }
+        public ConsultaConfigUF() : base() { }
 
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="tConsultaConfigUf">Objeto contendo o XML a ser enviado</param>
-        /// <param name="configuracao">Configurações para conexão e envio do XML para o webservice</param>
-        public ConsultaConfigUF(TConsultaConfigUf tConsultaConfigUf, Configuracao configuracao)
-                    : base(tConsultaConfigUf?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsultaConfigUf)), configuracao) { }
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public ConsultaConfigUF(TConsultaConfigUf tConsultaConfigUf, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            Inicializar(tConsultaConfigUf?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsultaConfigUf)), configuracao);
+        }
 
         #endregion Public Constructors
 
@@ -100,9 +105,29 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         [ComVisible(true)]
         public void Executar(TConsultaConfigUf tConsultaConfigUf, Configuracao configuracao)
         {
-            PrepararServico(tConsultaConfigUf?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsultaConfigUf)), configuracao);
-            Executar();
-        } 
+            try
+            {
+                if (configuracao is null)
+                {
+                    throw new ArgumentNullException(nameof(configuracao));
+                }
+
+                Inicializar(tConsultaConfigUf?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsultaConfigUf)), configuracao);
+                Executar();
+            }
+            catch (ValidarXMLException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (CertificadoDigitalException ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+        }
 
 #endif
 
@@ -112,7 +137,7 @@ namespace Unimake.Business.DFe.Servicos.GNRE
         /// <param name="pasta">Pasta onde é para ser gravado do XML</param>
         /// <param name="nomeArquivo">Nome para o arquivo XML</param>
         /// <param name="conteudoXML">Conteúdo do XML</param>
-        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) => throw new System.Exception("Não existe XML de distribuição para consulta status do serviço.");
+        public override void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML) => ThrowHelper.Instance.Throw(new Exception("Não existe XML de distribuição para consulta status do serviço."));
 
         #endregion Public Methods
     }

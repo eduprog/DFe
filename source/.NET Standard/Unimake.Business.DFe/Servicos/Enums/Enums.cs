@@ -4,12 +4,13 @@ using System.Xml.Serialization;
 namespace Unimake.Business.DFe.Servicos
 {
     #region Servico
+
     /// <summary>
-    /// Serviços disponíveis
+    /// Serviços disponíveis na DLL para integração com os documentos fiscais eletrônicos
     /// </summary>
     public enum Servico
     {
-        #region NFe
+        #region Serviço
 
         /// <summary>
         /// Consulta status serviço NFe/NFCe
@@ -59,10 +60,6 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Distribuição de documentos fiscais eletrônicos da NFe")]
         NFeDistribuicaoDFe = 7,
 
-        #endregion
-
-        #region CTe
-
         /// <summary>
         /// Consulta status serviço CTe
         /// </summary>
@@ -105,10 +102,6 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Autorização do CTeOS")]
         CTeAutorizacaoOS = 14,
 
-        #endregion
-
-        #region MDFe
-
         /// <summary>
         /// Consulta status serviço MDFe
         /// </summary>
@@ -145,10 +138,6 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Autorização do MDFe")]
         MDFeAutorizacaoSinc = 20,
 
-        #endregion
-
-        #region GNRE
-
         /// <summary>
         /// GNRE - Consultar Configurações da UF
         /// </summary>
@@ -166,10 +155,6 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [Description("Enviar Lote de GNRE")]
         GNRELoteRecepcao = 23,
-
-        #endregion
-
-        #region NFSe
 
         /// <summary>
         /// Enviar o XML de cancelamento da NFS-e para prefeiutura
@@ -255,6 +240,72 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Consulta/Download do PDF da NFSe")]
         NFSeConsultarNfsePDF = 37,
 
+        /// <summary>
+        /// GNRE - Consultar Lote Recepção Consulta
+        /// </summary>
+        [Description("Consultar Lote Recepção Consulta")]
+        GNREConsultaLoteRecepcao = 38,
+
+        /// <summary>
+        /// GNRE - Consultar Resultado do Lote da Consulta de GNRE enviado
+        /// </summary>
+        [Description("Consultar Resultado do Lote da Consulta de GNRE")]
+        GNREConsultaResultadoLoteConsulta = 39,
+
+        /// <summary>
+        /// Enviar o XML de consulta situação lote RPS para a prefeitura
+        /// </summary>
+        [Description("Consultar Situacao Lote Rps")]
+        NFSeConsultarSituacaoLoteRps = 40,
+
+        /// <summary>
+        /// Enviar o XML de consulta nfse recebidas para a prefeitura
+        /// </summary>
+        [Description("Consulta NFSe Recebidas")]
+        NFSeConsultaNFeRecebidas = 41,
+
+        /// <summary>
+        /// Enviar o XML de consulta nfse emitidas para a prefeitura
+        /// </summary>
+        [Description("Consulta NFSe Emitidas")]
+        NFSeConsultaNFeEmitidas = 42,
+
+        /// <summary>
+        /// Enviar o XML de teste envio lote rps para a prefeitura
+        /// </summary>
+        [Description("Teste Envio Lote RPS")]
+        NFSeTesteEnvioLoteRps = 43,
+
+        /// <summary>
+        /// Enviar o XML de envio lote rps para a prefeitura
+        /// </summary>
+        [Description("Envio Lote RPS")]
+        NFSeEnvioLoteRps = 44,
+
+        /// <summary>
+        /// Enviar o XML deenvio rps para a prefeitura
+        /// </summary>
+        [Description("Envio RPS")]
+        NFSeEnvioRps = 45,
+
+        /// <summary>
+        /// Enviar o XML de cancelamento nfse para a prefeitura
+        /// </summary>
+        [Description("Cancelamento NFSe")]
+        NFSeCancelamentoNfe = 46,
+
+        /// <summary>
+        /// Enviar o XML de consulta informações lote para a prefeitura
+        /// </summary>
+        [Description("Consulta Informações Lote")]
+        NFSeConsultaInformacoesLote = 47,
+
+        /// <summary>
+        /// Enviar o XML de consulta lote para a prefeitura
+        /// </summary>
+        [Description("Consulta Lote")]
+        NFSeConsultaLote = 48,
+
         #endregion
 
         #region Gerais
@@ -266,55 +317,62 @@ namespace Unimake.Business.DFe.Servicos
 
         #endregion
     }
+
     #endregion
 
-    #region DFE
+    #region TipoDFe
+
     /// <summary>
     /// Tipos de DFe´s existentes
     /// </summary>
     public enum TipoDFe
     {
         /// <summary>
-        /// Evento desconhecido
+        /// -1 - Evento desconhecido
         /// </summary>
         Desconhecido = -1,
         /// <summary>
-        /// NF-e - Nota Fiscal Eletrônica
+        /// 0 - NF-e - Nota Fiscal Eletrônica 
         /// </summary>
         NFe = 0,
         /// <summary>
-        /// NFC-e - Nota Fiscal de Venda a Consumidor Eletrônica
+        /// 1 - NFC-e - Nota Fiscal de Venda a Consumidor Eletrônica
         /// </summary>
         NFCe = 1,
         /// <summary>
-        /// CT-e - Conhecimento de Transporte Eletrônico
+        /// 2 - CT-e - Conhecimento de Transporte Eletrônico
         /// </summary>
         CTe = 2,
         /// <summary>
-        /// CT-e - Conhecimento de Transporte Eletrônico para Outros Serviços
+        /// 3 - CT-e - Conhecimento de Transporte Eletrônico para Outros Serviços
         /// </summary>
         CTeOS = 3,
         /// <summary>
-        /// MDF-e - Manifesto Eletrônico de Documentos Fiscais
+        /// 4 - MDF-e - Manifesto Eletrônico de Documentos Fiscais
         /// </summary>
         MDFe = 4,
         /// <summary>
-        /// Nota Fiscal de Serviço Eletrônica
+        /// 5 - Nota Fiscal de Serviço Eletrônica
         /// </summary>
         NFSe = 5,
         /// <summary>
-        /// CFe-SAT - Sistema Autenticador e Transmissor de Cupons Fiscais Eletrônicos
+        /// 6 - CFe-SAT - Sistema Autenticador e Transmissor de Cupons Fiscais Eletrônicos
         /// </summary>
         SAT = 6,
         /// <summary>
-        /// Cupom Fiscal Eletrônico
+        /// 7 - Cupom Fiscal Eletrônico
         /// </summary>
         CFe = 7,
         /// <summary>
-        /// GNRE - Guia Nacional de Recolhimento de Tributos Estaduais
+        /// 8 - GNRE - Guia Nacional de Recolhimento de Tributos Estaduais
         /// </summary>
-        GNRE = 8
+        GNRE = 8,
+        /// <summary>
+        /// 9 - SNCM - Sistema Nacional de Controle de Medicamentos
+        /// </summary>
+        SNCM = 9
     }
+
     #endregion       
 
     #region UF
@@ -656,6 +714,30 @@ namespace Unimake.Business.DFe.Servicos
         ManifestacaoOperacaoNaoRealizada = 210240,
 
         /// <summary>
+        /// SEFAZ do emitente declara que NF-e é um "Documento Fiscal Inidôneo". (400200)
+        /// </summary>
+        [XmlEnum("400200")]
+        DocumentoFiscalInidoneo = 400200,
+
+        /// <summary>
+        /// Cancelamento do evento 400200 (400201)
+        /// </summary>
+        [XmlEnum("400201")]
+        CancelamentoEventoFisco400200 = 400201,
+
+        /// <summary>
+        /// Possibilita que a SEFAZ marque uma NF-e emitida em função de uma situação específica prevista em legislação, ex.: transferência de crédito, ressarcimento. (400300)
+        /// </summary>
+        [XmlEnum("400300")]
+        VistoEletronicoDoFisco = 400300,
+
+        /// <summary>
+        /// O evento da Nota Fiscal Referenciada é gerado sempre que uma nova NF-e referenciar uma ou mais outras Notas Fiscais Eletrônicas. Não serão gerados eventos de "NF-e Referenciada" para os documentos diferentes do Modelo 55. (410300)
+        /// </summary>
+        [XmlEnum("410300")]
+        NFeReferenciada = 410300,
+
+        /// <summary>
         /// Resposta ao pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411500) - 1o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411500")]
@@ -677,7 +759,115 @@ namespace Unimake.Business.DFe.Servicos
         /// Resposta ao cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411503) - 2o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411503")]
-        RespostaCancelamentoPedidoProrrogacaoPrazo2 = 411503
+        RespostaCancelamentoPedidoProrrogacaoPrazo2 = 411503,
+
+        /// <summary>
+        /// Registro de Passagem da NF-e no Posto Fiscal (610500)
+        /// </summary>
+        [XmlEnum("610500")]
+        RegistroPassagemNFe = 610500,
+
+        /// <summary>
+        /// Cancelamento do evento 610500 (610501)
+        /// </summary>
+        [XmlEnum("610501")]
+        CancelamentoRegistroPassagemNFe = 610501,
+
+        /// <summary>
+        /// Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Sistema MDF-e. (610510)
+        /// </summary>
+        [XmlEnum("610510")]
+        RegistroDePassagemMDFe = 610510,
+
+        /// <summary>
+        /// Cancelamento do evento 610511 (610511)
+        /// </summary>
+        [XmlEnum("610511")]
+        CancelamentoRegistroDePassagemMDFe = 610511,
+
+        /// <summary>
+        /// Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Ambiente Nacional. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e. (610514)
+        /// </summary>
+        [XmlEnum("610514")]
+        RegistroDePassagemMDFeComCTe = 610514,
+
+        /// <summary>
+        /// Cancelamento do evento 610514. (610515)
+        /// </summary>
+        [XmlEnum("610515")]
+        CancelamentoRegistroDePassagemMDFeComCTe = 610515,
+
+        /// <summary>
+        /// Registro de Passagem do MDF-e, capturado por antenas do Projeto Brasil ID. Evento eliminado (BT 2017.002), substituído pelo Registro de Passagem Automático MDF-e. (610550)
+        /// </summary>
+        [XmlEnum("610550")]
+        RegistroPassagemNFeBRId = 610550,
+
+        /// <summary>
+        /// Registro de Passagem do MDF-e capturado de forma automática (antena, leitura de placa por OCR, etc.), propagado pelo Sistema MDFe. Nota: A Chave de Acesso da NF-e está citada no MDF-e. (610552)
+        /// </summary>
+        [XmlEnum("610552")]
+        RegistroDePassagemAutomaticoMDFe = 610552,
+
+        /// <summary>
+        /// Cancelamento do evento 610552 (610554)
+        /// </summary>
+        [XmlEnum("610554")]
+        RegistroDePassagemAutomaticoMDFeComCTe = 610554,
+
+        /// <summary>
+        /// Documenta na NF-e a ocorrência de CT-e autorizado, no momento do compartilhamento do CT-e com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CTe. (610600)
+        /// </summary>
+        [XmlEnum("610600")]
+        CTeAutorizado = 610600,
+
+        /// <summary>
+        /// Documenta na NF-e a ocorrência de cancelamento de CT-e autorizado, no momento do compartilhamento do evento com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CT-e. (610601)
+        /// </summary>
+        [XmlEnum("610601")]
+        CTeCancelado = 610601,
+
+        /// <summary>
+        /// Evento que documenta na NF-e a ocorrência de MDF-e autorizado.Nota: A Chave de Acesso da NF-e está citada no MDF-e. (610610)
+        /// </summary>
+        [XmlEnum("610610")]
+        MDFeAutorizado = 610610,
+
+        /// <summary>
+        /// Cancelamento do MDF-e (610611)
+        /// </summary>
+        [XmlEnum("610611")]
+        MDFeCancelado = 610611,
+
+        /// <summary>
+        /// Evento que documenta na NF-e a ocorrência de MDF-e autorizado. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e. (610614)
+        /// </summary>
+        [XmlEnum("610614")]
+        MDFeAutorizadoComCTe = 610614,
+
+        /// <summary>
+        /// Cancelamento do evento 610614. (610615)
+        /// </summary>
+        [XmlEnum("610615")]
+        CancelamentoDoMDFeAutorizadoComCTe = 610615,
+
+        /// <summary>
+        /// Evento que indica a quantidade de mercadoria na unidade tributável que foi efetivamente embarcada para o exterior referente a um certo item de uma NF-e. Gerado e enviado pelo sistema Portal Único do Comércio Exterior (PUCOMEX) Receita Federal do Brasil (RFB) para o Ambiente Nacional da NF-e (790700)
+        /// </summary>
+        [XmlEnum("790700")]
+        AverbacaoDeExportacao = 790700,
+
+        /// <summary>
+        /// Registro da ocorrência da Vistoria do processo de internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA. (990900)
+        /// </summary>
+        [XmlEnum("990900")]
+        VistoriaSUFRAMA = 990900,
+
+        /// <summary>
+        /// Confirmação da internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA. (990910)
+        /// </summary>
+        [XmlEnum("990910")]
+        InternalizacaoSUFRAMA = 990910
     }
 
     #endregion
@@ -786,6 +976,18 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("110116")]
         PagamentoOperacao = 110116,
+
+        /// <summary>
+        /// Confirmação do Serviço de Transporte (110117)
+        /// </summary>
+        [XmlEnum("110117")]
+        ConfirmacaoServicoTransporte = 110117,
+
+        /// <summary>
+        /// Alteração Pagamento Serviço MDFe = 110118
+        /// </summary>
+        [XmlEnum("110118")]
+        AlteracaoPagamentoServico = 110118,
 
         /// <summary>
         /// EncerramentoFisco (Evento exclusivo do fisco) (310112)
@@ -1553,10 +1755,46 @@ namespace Unimake.Business.DFe.Servicos
     public enum MotivoDesoneracaoICMS
     {
         /// <summary>
+        /// 1=Táxi
+        /// </summary>
+        [XmlEnum("1")]
+        Taxi = 1,
+
+        /// <summary>
         /// 3=Uso na agropecuária
         /// </summary>
         [XmlEnum("3")]
         UsoAgropecuaria = 3,
+
+        /// <summary>
+        /// 4=Frotista/Locadora
+        /// </summary>
+        [XmlEnum("4")]
+        FrotistaLocadora = 4,
+
+        /// <summary>
+        /// 5=Diplomático/Consular
+        /// </summary>
+        [XmlEnum("5")]
+        DiplomaticoConsular = 5,
+
+        /// <summary>
+        /// 6=Utilitários e Motocicletas da Amazônia Ocidental e Áreas de Livre Comércio (Resolução 714/88 e 790/94 – CONTRAN e suas alterações)
+        /// </summary>
+        [XmlEnum("6")]
+        UtilitariosMotocicletas = 6,
+
+        /// <summary>
+        /// 7=SUFRAMA
+        /// </summary>
+        [XmlEnum("7")]
+        SUFRAMA = 7,
+
+        /// <summary>
+        /// 8=Venda a órgão Público
+        /// </summary>
+        [XmlEnum("8")]
+        VendaOrgaoPublico = 8,
 
         /// <summary>
         /// 9=Outros
@@ -1565,10 +1803,34 @@ namespace Unimake.Business.DFe.Servicos
         Outro = 9,
 
         /// <summary>
+        /// 10=Deficiente Condutor
+        /// </summary>
+        [XmlEnum("10")]
+        DeficienteCondutor = 10,
+
+        /// <summary>
+        /// 11=Deficiente não condutor
+        /// </summary>
+        [XmlEnum("11")]
+        DeficienteNaoCondutor = 11,
+
+        /// <summary>
         /// 12=Órgão de fomento e desenvolvimento agropecuário
         /// </summary>
         [XmlEnum("12")]
-        OrgaoFomentoDesenvolvimentoAgropecuario = 12
+        OrgaoFomentoDesenvolvimentoAgropecuario = 12,
+
+        /// <summary>
+        /// 16=Olimpíadas Rio 2016
+        /// </summary>
+        [XmlEnum("16")]
+        OlimpiadasRio2016 = 16,
+
+        /// <summary>
+        /// 90=Solicitado pelo Fisco
+        /// </summary>
+        [XmlEnum("90")]
+        SolicitadoPeloFisco = 90
     }
 
     #endregion
@@ -1938,13 +2200,13 @@ namespace Unimake.Business.DFe.Servicos
     public enum IndicadorPagamento
     {
         /// <summary>
-        /// Pagamento à Vista
+        /// 0=Pagamento à Vista
         /// </summary>
         [XmlEnum("0")]
         PagamentoVista = 0,
 
         /// <summary>
-        /// Pagamento à Prazo
+        /// 1=Pagamento à Prazo
         /// </summary>
         [XmlEnum("1")]
         PagamentoPrazo = 1
@@ -4860,10 +5122,40 @@ namespace Unimake.Business.DFe.Servicos
         c05_referencia,
 
         /// <summary>
+        /// ufFavorecida
+        /// </summary>
+        [XmlEnum("ufFavorecida")]
+        ufFavorecida,
+
+        /// <summary>
+        /// receita
+        /// </summary>
+        [XmlEnum("receita")]
+        receita,
+
+        /// <summary>
+        /// detalhamentoReceita
+        /// </summary>
+        [XmlEnum("detalhamentoReceita")]
+        detalhamentoReceita,
+
+        /// <summary>
         /// periodo
         /// </summary>
         [XmlEnum("periodo")]
         periodo,
+
+        /// <summary>
+        /// produto
+        /// </summary>
+        [XmlEnum("produto")]
+        produto,
+
+        /// <summary>
+        /// referencia
+        /// </summary>
+        [XmlEnum("referencia")]
+        referencia,
 
         /// <summary>
         /// mes
@@ -4882,6 +5174,36 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("parcela")]
         parcela,
+
+        /// <summary>
+        /// documentoOrigem
+        /// </summary>
+        [XmlEnum("documentoOrigem")]
+        documentoOrigem,
+
+        /// <summary>
+        /// dataVencimento
+        /// </summary>
+        [XmlEnum("dataVencimento")]
+        dataVencimento,
+
+        /// <summary>
+        /// dataPagamento
+        /// </summary>
+        [XmlEnum("dataPagamento")]
+        dataPagamento,
+
+        /// <summary>
+        /// convenio
+        /// </summary>
+        [XmlEnum("convenio")]
+        convenio,
+
+        /// <summary>
+        /// camposExtras
+        /// </summary>
+        [XmlEnum("camposExtras")]
+        camposExtras,
 
         /// <summary>
         /// c39_campoExtra1
@@ -5182,7 +5504,11 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// linhaDigitavel
         /// </summary>        
-        linhaDigitavel
+        linhaDigitavel,
+        /// <summary>
+        /// valor
+        /// </summary>
+        valor
     }
 
     #endregion
@@ -5585,85 +5911,127 @@ namespace Unimake.Business.DFe.Servicos
         /// Não definido / Nenhum
         /// </summary>
         [Description("Nenhum")]
-        None,
+        None = 0,
 
         /// <summary>
         /// BETHA Sistemas
         /// </summary>
         [Description("BETHA Sistemas")]
-        BETHA,
+        BETHA = 1,
 
         /// <summary>
         /// SIGCORP - Tecnologia da informação
         /// </summary>
         [Description("SIGCORP - Tecnologia da informação")]
-        SIGCORP,
+        SIGCORP = 2,
 
         /// <summary>
         /// PRODATA - Gestão Estratégica
         /// </summary>
         [Description("PRODATA - Gestão Estratégica")]
-        PRODATA,
+        PRODATA = 3,
 
         /// <summary>
         /// EL - Produções de Software
         /// </summary>
         [Description("EL - Produções de Software")]
-        EL,
+        EL = 4,
 
         /// <summary>
         /// NOTAINTELIGENTE
         /// </summary>
         [Description("Nota Inteligente")]
-        NOTAINTELIGENTE,
+        NOTAINTELIGENTE = 5,
 
         /// <summary>
         /// AVMB Soluções em TI
         /// </summary>
         [Description("AVMB Soluções em TI")]
-        AVMB,
+        AVMB = 6,
 
         /// <summary>
         /// WebISS
         /// </summary>
         [Description("WebISS")]
-        WEBISS,
+        WEBISS = 7,
 
         /// <summary>
         /// SIMPLISS Sistema de Informação LTDA
         /// </summary>
         [Description("SIMPLISS Sistema de Informação LTDA")]
-        SIMPLISS,
+        SIMPLISS = 8,
 
         /// <summary>
         /// COPLAN
         /// </summary>
         [Description("Coplan")]
-        COPLAN,
+        COPLAN = 9,
 
         /// <summary>
         /// Próprio Joinville SC 
         /// </summary>
         [Description("Próprio Joinville SC")]
-        PROPRIOJOINVILLESC,
+        PROPRIOJOINVILLESC = 10,
 
         /// <summary>
         /// Sonner - Sistemas integrados, governos inteligentes (Antigo GOVDIGITAL)
         /// </summary>
         [Description("SONNER - Sistemas integrados")]
-        SONNER,
+        SONNER = 11,
 
         /// <summary>
         /// SMARAPD
         /// </summary>
         [Description("SMARAPD")]
-        SMARAPD,
+        SMARAPD = 12,
 
         /// <summary>
         /// NobeSistemas - Software de gestão integrada
         /// </summary>
         [Description("NOBESISTEMAS")]
-        NOBESISTEMAS
+        NOBESISTEMAS = 13,
+
+        /// <summary>
+        /// TRIBUTUS - Gestão integrada
+        /// </summary>
+        [Description("TRIBUTUS")]
+        TRIBUTUS = 14,
+
+        /// <summary>
+        /// BHISS Digital
+        /// </summary>
+        [Description("BHISS")]
+        BHISS = 15,
+
+        /// <summary>
+        /// PAULISTANA
+        /// </summary>
+        [Description("PAULISTANA")]
+        PAULISTANA = 16,
+
+        /// <summary>
+        /// DSF - Desenvolvimento de Sistemas Fiscais Ltda
+        /// </summary>
+        [Description("DSF")]
+        DSF = 17,
+
+        /// <summary>
+        /// Digifred - Soluções em Tecnologia para a Gestão Pública
+        /// </summary>
+        [Description("DIGIFRED")]
+        DIGIFRED = 18,
+
+        /// <summary>
+        /// VersaTEC – Tecnologia, Educação e Comunicação
+        /// </summary>
+        [Description("VERSATEC")]
+        VERSATEC = 19,
+
+        /// <summary>
+        /// GINFES – Gestão Inteligente da Nota Fiscal de Serviço Eletrônica
+        /// </summary>
+        [Description("GINFES")]
+        GINFES = 20,
     }
 
     #endregion
@@ -5892,6 +6260,8 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion
 
+    #region Tipos de Consultas da GNRE
+
     /// <summary>
     /// Tipos de Consultas da GNRE
     /// </summary>
@@ -5915,4 +6285,84 @@ namespace Unimake.Business.DFe.Servicos
         [XmlEnum("D")]
         ConsultaPorDocumentOrigem = 2,
     }
+
+    #endregion
+
+    #region Tipos de ato concessório
+
+    /// <summary>
+    /// Tipos do ato concessório
+    /// </summary>
+    public enum TipoAtoConcessorio
+    {
+        /// <summary>
+        /// 08 - Termo de Acordo
+        /// </summary>
+        [XmlEnum("08")]
+        TermoDeAcordo = 08,
+
+        /// <summary>
+        /// 10 - Regime Especial
+        /// </summary>
+        [XmlEnum("10")]
+        RegimeEspecial = 10,
+
+        /// <summary>
+        /// 12 = Autorização Específica
+        /// </summary>
+        [XmlEnum("12")]
+        AutorizacaoEspecifica = 12
+    }
+
+    #endregion
+
+    #region IdentificacaoAmbiente
+
+    /// <summary>
+    /// Identificação do ambiente (Produção ou Teste) - SNCM
+    /// </summary>
+    public enum IdentificacaoAmbiente
+    {
+        /// <summary>
+        /// 0-Produção
+        /// </summary>
+        [XmlEnum("0")]
+        Producao = 0,
+
+        /// <summary>
+        /// 1-Teste
+        /// </summary>
+        [XmlEnum("1")]
+        Teste = 1
+    }
+
+    #endregion
+
+    #region Tipo de permissão em relação a antecipação das parcelas referente ao pagamento de transportes - MDFe
+
+    /// <summary>
+    /// Tipo de permissão em relação a antecipação das parcelas referente a pagamento de transportes
+    /// </summary>
+    public enum TipoPermissaoAtencipacaoParcela
+    {
+        /// <summary>
+        /// 0 - Não permite antecipar parcelas
+        /// </summary>
+        [XmlEnum("0")]
+        NaoPermiteAnteciparParcelas = 0,
+
+        /// <summary>
+        /// 1 - Permite antecipar Parcelas
+        /// </summary>
+        [XmlEnum("1")]
+        PermiteAnteciparParcelas = 1,
+
+        /// <summary>
+        /// 2 - Permite antecipar as parcelas mediante confirmação
+        /// </summary>
+        [XmlEnum("2")]
+        PermiteAnteciparParcelasMedianteConfirmacao = 2
+    }
+
+    #endregion
 }
