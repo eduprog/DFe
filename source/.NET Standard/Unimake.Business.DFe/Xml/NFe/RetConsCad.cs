@@ -60,13 +60,21 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CPF { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhCons { get; set; }
+#else
+        public DateTimeOffset DhCons { get; set; }
+#endif
 
         [XmlElement("dhCons")]
         public string DhConsField
         {
             get => DhCons.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhCons = DateTime.Parse(value);
+#else
+            set => DhCons = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlIgnore]
@@ -84,14 +92,8 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeCNPJ()
-        {
-            return !string.IsNullOrWhiteSpace(CNPJ);
-        }
-        public bool ShouldSerializeCPF()
-        {
-            return !string.IsNullOrWhiteSpace(CPF);
-        }
+        public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
+        public bool ShouldSerializeCPF() => !string.IsNullOrWhiteSpace(CPF);
 
         #endregion
     }
@@ -147,7 +149,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => DIniAtiv.ToString("yyyy-MM-dd");
             set => DIniAtiv = DateTime.Parse(value);
         }
-                     
+
         [XmlIgnore]
         public DateTime DUltSit { get; set; }
 
@@ -179,14 +181,8 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeCNPJ()
-        {
-            return !string.IsNullOrWhiteSpace(CNPJ);
-        }
-        public bool ShouldSerializeCPF()
-        {
-            return !string.IsNullOrWhiteSpace(CPF);
-        }
+        public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
+        public bool ShouldSerializeCPF() => !string.IsNullOrWhiteSpace(CPF);
 
         #endregion
     }

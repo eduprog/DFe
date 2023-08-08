@@ -59,6 +59,19 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         }
 
         /// <summary>
+        /// Inicializa configurações, parâmetros e propriedades para execução do serviço.
+        /// </summary>
+        /// <param name="conteudoXML">Conteúdo do XML a ser enviado para o web-service</param>
+        /// <param name="configuracao">Configurações a serem utilizadas para conexão e envio do XML para o web-service</param>
+#if INTEROP
+        [ComVisible(false)]
+#endif
+        protected override void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
+        {
+            base.Inicializar(conteudoXML, configuracao);
+        }
+
+        /// <summary>
         /// Validar, o conteúdo das tags do XML, alguns validações manuais que o schema não faz. Vamos implementando novas regras na medida da necessidade de cada serviço.
         /// </summary>
         protected override void XmlValidarConteudo() { }
@@ -75,16 +88,19 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 #endif
         public override void Executar()
         {
-            if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
+            if (Configuracoes.UsaCertificadoDigital)
             {
-                AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
-            }
+                if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
+                {
+                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
+                }
 
-            if (!string.IsNullOrWhiteSpace(Configuracoes.TagLoteAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagLoteAssinatura))
-            {
-                AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
+                if (!string.IsNullOrWhiteSpace(Configuracoes.TagLoteAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagLoteAssinatura))
+                {
+                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
+                }
             }
-
+            
             AjustarXMLAposAssinado();
 
             XmlValidar();

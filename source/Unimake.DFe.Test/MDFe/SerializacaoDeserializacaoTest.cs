@@ -1,20 +1,19 @@
-﻿using Diag = System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using Unimake.Business.DFe.Servicos;
+using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.MDFe;
 using Xunit;
-using Unimake.Business.DFe.Utility;
 
 namespace Unimake.DFe.Test.MDFe
 {
     /// <summary>
-    /// Testar a serialização e deserialização dos XMLs do MDFe
+    /// Testar a serialização e desserialização dos XMLs do MDFe
     /// </summary>
     public class SerializacaoDeserializacaoTest
     {
         /// <summary>
-        /// Testar a serialização e deserialização do XML EnviMDFe
+        /// Testar a serialização e desserialização do XML EnviMDFe
         /// </summary>
         [Theory]
         [Trait("DFe", "MDFe")]
@@ -24,7 +23,7 @@ namespace Unimake.DFe.Test.MDFe
         [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalRodoviario.xml")]
         public void SerializacaoDeserializacaoEnviMDFe(string arqXML)
         {
-            Diag.Debug.Assert(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/deserialização.");
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
 
             var doc = new XmlDocument();
             doc.Load(arqXML);
@@ -40,20 +39,20 @@ namespace Unimake.DFe.Test.MDFe
 
             var autorizacao = new Unimake.Business.DFe.Servicos.MDFe.Autorizacao(xml, configuracao);
 
-            Diag.Debug.Assert(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
 
         /// <summary>
-        /// Testar a serialização e deserialização do XML MdfeProc
+        /// Testar a serialização e desserialização do XML MdfeProc
         /// </summary>
-        /// <param name="arqXML">Arquivo a ser deserializado</param>
+        /// <param name="arqXML">Arquivo a ser desserializado</param>
         [Theory]
         [Trait("DFe", "MDFe")]
         [InlineData(@"..\..\..\MDFe\Resources\99999999999999999999999999999999999999999999-procMDFe.xml")]
         public void SerializacaoDeserializacaoMdfeProc(string arqXML)
         {
-            Diag.Debug.Assert(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/deserialização.");
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
 
             var doc = new XmlDocument();
             doc.Load(arqXML);
@@ -62,19 +61,19 @@ namespace Unimake.DFe.Test.MDFe
             xml = xml.LoadFromFile(arqXML);
             var xmlSerializado = xml.GerarXML();
 
-            Diag.Debug.Assert(doc.InnerText == xmlSerializado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == xmlSerializado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
         /// <summary>
-        /// Testar a serialização e deserialização do XML MdfeProc
+        /// Testar a serialização e desserialização do XML MdfeProc
         /// </summary>
-        /// <param name="arqXML">Arquivo a ser deserializado</param>
+        /// <param name="arqXML">Arquivo a ser desserializado</param>
         [Theory]
         [Trait("DFe", "MDFe")]
         [InlineData(@"..\..\..\MDFe\Resources\EventoMDFePagamentoOperacaoMDFe.xml")]
         public void SerializacaoDeserializacaoEventoMDFe(string arqXML)
         {
-            Diag.Debug.Assert(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/deserialização.");
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
 
             var doc = new XmlDocument();
             doc.Load(arqXML);
@@ -82,7 +81,49 @@ namespace Unimake.DFe.Test.MDFe
             var xml = XMLUtility.Deserializar<EventoMDFe>(doc);
             var doc2 = xml.GerarXML();
 
-            Diag.Debug.Assert(doc.InnerText == doc2.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == doc2.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
+
+        /// <summary>
+        /// Testar a serialização e desserialização do XML retConsSitMDFe
+        /// </summary>
+        /// <param name="arqXML">Arquivo a ser desserializado</param>
+        [Theory]
+        [Trait("DFe", "MDFe")]
+        [InlineData(@"..\..\..\MDFe\Resources\retConsSitMDFe-com-evento-de-cancelamento.xml")]
+        [InlineData(@"..\..\..\MDFe\Resources\retConsSitMDFe-com-evento-de-encerramento.xml")]
+        public void SerializacaoDeserializacaoRetConsSitMDFe(string arqXML)
+        {
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
+
+            var doc = new XmlDocument();
+            doc.Load(arqXML);
+
+            var xml = XMLUtility.Deserializar<RetConsSitMDFe>(doc);
+            var doc2 = xml.GerarXML();
+
+            Assert.True(doc.InnerText == doc2.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+        }
+
+        /// <summary>
+        /// Testar a serialização e desserialização do XML retConsSitMDFe
+        /// </summary>
+        /// <param name="arqXML">Arquivo a ser desserializado</param>
+        [Theory]
+        [Trait("DFe", "MDFe")]
+        [InlineData(@"..\..\..\MDFe\Resources\procEventoMDFe_Encerramento_110112_01.xml")]
+        public void SerializacaoDeserializacaoProcEventoMDFe(string arqXML)
+        {
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
+
+            var doc = new XmlDocument();
+            doc.Load(arqXML);
+
+            var xml = XMLUtility.Deserializar<ProcEventoMDFe>(doc);
+            var doc2 = xml.GerarXML();
+
+            Assert.True(doc.InnerText == doc2.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+        }
+
     }
 }

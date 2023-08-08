@@ -34,13 +34,21 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Carimbo de tempo realizado pelo Sistema Cliente no instante da comunicação com o SNCM.
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime CcTime { get; set; }
+#else
+        public DateTimeOffset CcTime { get; set; }
+#endif
 
         [XmlElement("ccTime")]
         public string CcTimeField
         {
             get => CcTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => CcTime = DateTime.Parse(value);
+#else
+            set => CcTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -82,7 +90,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string UsrAgt
         {
             get => UsrAgtField;
-            set => UsrAgtField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => UsrAgtField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -194,13 +202,21 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Data e horário em que a instância de evento ocorreu.
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime PastTime { get; set; }
+#else
+        public DateTimeOffset PastTime { get; set; }
+#endif
 
         [XmlElement("pastTime")]
         public string PastTimeField
         {
             get => PastTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => PastTime = DateTime.Parse(value);
+#else
+            set => PastTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -340,13 +356,21 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Data e hora da ocorrência da instância de evento.Sempre anterior à data e hora da comunicação.
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime PastTime { get; set; }
+#else
+        public DateTimeOffset PastTime { get; set; }
+#endif
 
         [XmlElement("pastTime")]
         public string PastTimeField
         {
             get => PastTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => PastTime = DateTime.Parse(value);
+#else
+            set => PastTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -420,7 +444,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string BizTransType
         {
             get => BizTransTypeField;
-            set => BizTransTypeField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => BizTransTypeField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
     }
 
@@ -464,13 +488,21 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Data e hora da ocorrência da instância de evento.Sempre anterior à data e hora da comunicação.
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime PastTime { get; set; }
+#else
+        public DateTimeOffset PastTime { get; set; }
+#endif
 
         [XmlElement("pastTime")]
         public string PastTimeField
         {
             get => PastTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => PastTime = DateTime.Parse(value);
+#else
+            set => PastTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -675,7 +707,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -711,7 +743,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Pnn
         {
             get => PnnField;
-            set => PnnField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => PnnField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         private string PnnSNCRField { get; set; }
@@ -723,7 +755,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string PnnSNCR
         {
             get => PnnSNCRField;
-            set => PnnSNCRField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => PnnSNCRField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -818,7 +850,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -900,7 +932,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
     }
 
@@ -1377,7 +1409,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         #region ShouldSerialize
@@ -1430,7 +1462,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Receiver
         {
             get => ReceiverField;
-            set => ReceiverField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => ReceiverField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
     }
 
@@ -1454,7 +1486,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
 #if INTEROP
@@ -1544,7 +1576,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Desc
         {
             get => DescField;
-            set => DescField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => DescField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
     }
 

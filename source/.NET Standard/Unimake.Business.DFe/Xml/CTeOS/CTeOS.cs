@@ -66,6 +66,13 @@ namespace Unimake.Business.DFe.Xml.CTeOS
             doc.LoadXml(System.IO.File.ReadAllText(filename, Encoding.UTF8));
             return XMLUtility.Deserializar<CTeOS>(doc);
         }
+
+        /// <summary>
+        /// Deserializar o XML CTeOS no objeto CTeOS
+        /// </summary>
+        /// <param name="xml">string do XML CTeOS</param>
+        /// <returns>Objeto da CTeOS</returns>
+        public CTeOS LoadFromXML(string xml) => XMLUtility.Deserializar<CTeOS>(xml);
     }
 
 #if INTEROP
@@ -188,6 +195,12 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public int GetAutXMLCount => (AutXML != null ? AutXML.Count : 0);
 
 #endif
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeInfCteAnu() => Convert.ToDecimal(Versao) <= 300;
+
+        #endregion
     }
 
 #if INTEROP
@@ -254,13 +267,21 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public int NCT { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEmi { get; set; }
+#else
+        public DateTimeOffset DhEmi { get; set; }
+#endif
 
         [XmlElement("dhEmi")]
         public string DhEmiField
         {
             get => DhEmi.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEmi = DateTime.Parse(value);
+#else
+            set => DhEmi = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("tpImp")]
@@ -378,13 +399,21 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public List<InfPercurso> InfPercurso { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhCont { get; set; }
+#else
+        public DateTimeOffset DhCont { get; set; }
+#endif
 
         [XmlElement("dhCont")]
         public string DhContField
         {
             get => DhCont.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhCont = DateTime.Parse(value);
+#else
+            set => DhCont = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("xJust")]
@@ -1028,7 +1057,7 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         [XmlElement("pRedBC")]
         public string PRedBCField
         {
-            get => PRedBC.ToString("F4", CultureInfo.InvariantCulture);
+            get => PRedBC.ToString("F2", CultureInfo.InvariantCulture);
             set => PRedBC = Utility.Converter.ToDouble(value);
         }
 
@@ -1328,62 +1357,62 @@ namespace Unimake.Business.DFe.Xml.CTeOS
     public class InfTribFed
     {
         [XmlIgnore]
-        public double VPIS { get; set; }
+        public double? VPIS { get; set; }
 
         [XmlElement("vPIS")]
         public string VPISField
         {
-            get => VPIS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VPIS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VPIS = Utility.Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VCOFINS { get; set; }
+        public double? VCOFINS { get; set; }
 
         [XmlElement("vCOFINS")]
         public string VCOFINSField
         {
-            get => VCOFINS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VCOFINS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VCOFINS = Utility.Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VIR { get; set; }
+        public double? VIR { get; set; }
 
         [XmlElement("vIR")]
         public string VIRField
         {
-            get => VIR.ToString("F2", CultureInfo.InvariantCulture);
+            get => VIR?.ToString("F2", CultureInfo.InvariantCulture);
             set => VIR = Utility.Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VINSS { get; set; }
+        public double? VINSS { get; set; }
 
         [XmlElement("vINSS")]
         public string VINSSField
         {
-            get => VINSS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VINSS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VINSS = Utility.Converter.ToDouble(value);
         }
 
         [XmlIgnore]
-        public double VCSLL { get; set; }
+        public double? VCSLL { get; set; }
 
         [XmlElement("vCSLL")]
         public string VCSLLField
         {
-            get => VCSLL.ToString("F2", CultureInfo.InvariantCulture);
+            get => VCSLL?.ToString("F2", CultureInfo.InvariantCulture);
             set => VCSLL = Utility.Converter.ToDouble(value);
         }
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVPISField() => VPIS > 0;
-        public bool ShouldSerializeVCOFINSField() => VCOFINS > 0;
-        public bool ShouldSerializeVIRField() => VIR > 0;
-        public bool ShouldSerializeVINSSField() => VINSS > 0;
-        public bool ShouldSerializeVCSLLField() => VCSLL > 0;
+        public bool ShouldSerializeVPISField() => VPIS != null;
+        public bool ShouldSerializeVCOFINSField() => VCOFINS != null;
+        public bool ShouldSerializeVIRField() => VIR != null;
+        public bool ShouldSerializeVINSSField() => VINSS != null;
+        public bool ShouldSerializeVCSLLField() => VCSLL != null;
 
         #endregion
     }
@@ -1607,7 +1636,7 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         [XmlElement("vDoc")]
         public string VDocField
         {
-            get => VDoc.ToString("F4", CultureInfo.InvariantCulture);
+            get => VDoc.ToString("F2", CultureInfo.InvariantCulture);
             set => VDoc = Utility.Converter.ToDouble(value);
         }
 
@@ -1660,8 +1689,13 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         [XmlElement("chCte")]
         public string ChCte { get; set; }
 
+        //TODO: Wandrey - Remover a tag RefCteAnu quando a versão 3.00 do CTe não existir mais.
+        /// <summary>
+        /// Propriedade só existe até a versão 3.00 do schema do CTe
+        /// </summary>
         [XmlElement("refCteAnu")]
         public string RefCteAnu { get; set; }
+
 
         [XmlElement("tomaICMS")]
         public TomaICMS TomaICMS { get; set; }
@@ -2022,30 +2056,14 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public string CNPJ
         {
             get => CNPJField;
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(CPFField))
-                {
-                    throw new Exception("Não é permitido informar conteúdo na TAG <CPF> e <CNPJ>, filhas da TAG <auxXML>, ao mesmo tempo. Somente uma delas pode ter conteúdo.");
-                }
-
-                CNPJField = value;
-            }
+            set => CNPJField = value;
         }
 
         [XmlElement("CPF")]
         public string CPF
         {
             get => CPFField;
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(CNPJField))
-                {
-                    throw new Exception("Não é permitido informar conteúdo na TAG <CPF> e <CNPJ>, filhas da TAG <auxXML>, ao mesmo tempo. Somente uma delas pode ter conteúdo.");
-                }
-
-                CPFField = value;
-            }
+            set => CPFField = value;
         }
 
         #region ShouldSerialize
@@ -2200,7 +2218,7 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public bool ShouldSerializeRENAVAM() => !string.IsNullOrWhiteSpace(RENAVAM);
         public bool ShouldSerializeUF() => UF != null && UF != UFBrasil.NaoDefinido;
 
-#endregion
+        #endregion
     }
 
 #if INTEROP
@@ -2263,13 +2281,13 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         [XmlElement("tpProp")]
         public TipoProprietarioMDFe TpProp { get; set; }
 
-#region ShouldSerialize
+        #region ShouldSerialize
 
         public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
         public bool ShouldSerializeCPF() => !string.IsNullOrWhiteSpace(CPF);
         public bool ShouldSerializeTpProp() => TpProp != TipoProprietarioMDFe.NaoDefinido;
 
-#endregion
+        #endregion
     }
 
 #if INTEROP
@@ -2285,19 +2303,27 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public TipoFretamentoCTeOS TpFretamento { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhViagem { get; set; }
+#else
+        public DateTimeOffset DhViagem { get; set; }
+#endif
 
         [XmlElement("dhViagem")]
         public string DhViagemField
         {
             get => DhViagem.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhViagem = DateTime.Parse(value);
+#else
+            set => DhViagem = DateTimeOffset.Parse(value);
+#endif
         }
 
-#region ShouldSerialize
+        #region ShouldSerialize
 
         public bool ShouldSerializeDhViagemField() => DhViagem > DateTime.MinValue;
 
-#endregion
+        #endregion
     }
 }

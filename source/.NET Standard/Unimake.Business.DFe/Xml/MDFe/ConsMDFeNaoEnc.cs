@@ -17,13 +17,13 @@ namespace Unimake.Business.DFe.Xml.MDFe
     public class ConsMDFeNaoEnc : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
-        public string Versao { get; set; }
+        public string Versao { get; set; } = "3.00";
 
         [XmlElement("tpAmb")]
         public TipoAmbiente TpAmb { get; set; }
 
         [XmlElement("xServ")]
-        public string XServ { get; set; }
+        public string XServ { get; set; } = "CONSULTAR NÃO ENCERRADOS";
 
         [XmlElement("CNPJ")]
         public string CNPJ { get; set; }

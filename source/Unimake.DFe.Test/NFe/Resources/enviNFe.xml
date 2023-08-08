@@ -30,9 +30,11 @@
 				<xJust>xJust_________1</xJust>
 				<NFref>
 					<refNFe>refNFe1</refNFe>
+					<refNFeSig>refNFeSig1</refNFeSig>
 				</NFref>
 				<NFref>
 					<refNFe>refNFe2</refNFe>
+					<refNFeSig>refNFeSig2</refNFeSig>
 				</NFref>
 				<NFref>
 					<refNFe>refNFe3</refNFe>
@@ -354,6 +356,11 @@
 						<lota>1</lota>
 						<tpRest>0</tpRest>
 					</veicProd>
+					<med>
+						<cProdANVISA>123456</cProdANVISA>
+						<xMotivoIsencao>teste de texto de isenção</xMotivoIsencao>
+						<vPMC>0.00</vPMC>
+					</med>
 				</prod>
 				<imposto>
 					<vTotTrib>1.00</vTotTrib>

@@ -5,6 +5,8 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Unimake.Cryptography;
+using Unimake.Business.Security;
+using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Utility
 {
@@ -12,9 +14,7 @@ namespace Unimake.Business.DFe.Utility
     /// Classe para conversão de objetos
     /// </summary>
 #if INTEROP
-    [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Utility.Converter")]
-    [ComVisible(true)]
+    [ComVisible(false)]
 #endif
     public static class Converter
     {
@@ -33,7 +33,7 @@ namespace Unimake.Business.DFe.Utility
         #region Public Methods
 
         /// <summary>
-        /// Converter string para MemoryStream com  UTF8 Encoding
+        /// Converter string para MemoryStream com UTF8 Encoding
         /// </summary>
         /// <param name="contentConvert">Conteúdo a ser convertido</param>
         /// <returns>Conteúdo convertido para MemoryStrem com UTF8 Encoding</returns>
@@ -112,4 +112,66 @@ namespace Unimake.Business.DFe.Utility
 
         #endregion Public Methods
     }
+
+#if INTEROP
+
+    /// <summary>
+    /// Classe para conversão de objetos - Específico INTEROP
+    /// </summary>
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Utility.ConverterInterop")]
+    [ComVisible(true)]
+    public class ConverterInterop
+    {
+        /// <summary>
+        /// Criptografa uma string com RSA-SHA1 e retorna o conteúdo convertido para Base64String
+        /// </summary>
+        /// <param name="certificado">certificado utilizado na criptografia</param>
+        /// <param name="value">Conteúdo a ser criptografado</param>
+        /// <returns>Retorna a string assinada com RSA SHA1 e convertida para Base64String</returns>
+        public string ToRSASHA1(X509Certificate2 certificado, string value) => Converter.ToRSASHA1(certificado, value);
+
+        /// <summary>
+        /// Criptografa uma string com RSA-SHA1 e retorna o conteúdo convertido para Base64String
+        /// </summary>
+        /// <param name="serialNumberOrThumbPrint">Serial Number ou Thumbprint do certificado a ser utilizado na criptografia</param>
+        /// <param name="value">Conteúdo a ser criptografado</param>
+        /// <returns>Retorna a string assinada com RSA SHA1 e convertida para Base64String</returns>
+        public string ToRSASHA1SerialNumber(string serialNumberOrThumbPrint, string value)
+        {
+            var retorno = string.Empty;
+            try
+            {
+                var certificado = new CertificadoDigital().BuscarCertificadoDigital(serialNumberOrThumbPrint);
+
+                retorno = ToRSASHA1(certificado, value);
+            }
+            catch (Exception ex)
+            {
+                ThrowHelper.Instance.Throw(ex);
+            }
+
+            return retorno;
+        }
+
+        /// <summary>
+        /// Escreve uma string base64 em um arquivo PDF.
+        /// <para>A string já deve ser um PDF válido. Este método apenas escreve o arquivo</para>
+        /// </summary>
+        /// <param name="content">Conteúdo que será escrito no arquivo</param>
+        /// <param name="path">Pasta e nome do arquivo onde deve ser gravado o PDF</param>
+        /// <exception cref="ArgumentNullException">Se o <paramref name="content"/> for nulo</exception>
+        /// <exception cref="ArgumentException">Se o <paramref name="path"/> for nulo, vazio ou espaços</exception>
+        public void Base64ToPDF(string content, string path) => Converter.Base64ToPDF(content, path);
+
+        /// <summary>
+        /// Converte conteúdo para HSA1HashData
+        /// </summary>
+        /// <param name="data">Conteúdo a ser convertido</param>
+        /// <param name="toUpper">Resultado todo em maiúsculo?</param>
+        /// <returns>Conteúdo convertido para SH1HashData</returns>
+        public static string ToSHA1HashData(string data, bool toUpper) => Converter.ToSHA1HashData(data, toUpper);
+    }
+
+#endif
 }

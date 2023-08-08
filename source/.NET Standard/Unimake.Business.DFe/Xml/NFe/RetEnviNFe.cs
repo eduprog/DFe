@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 
 namespace Unimake.Business.DFe.Xml.NFe
-{ 
+{
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.NFe.RetEnviNFe")]
@@ -16,7 +16,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
     [Serializable()]
     [XmlRoot("retEnviNFe", Namespace = "http://www.portalfiscal.inf.br/nfe", IsNullable = false)]
-    public class RetEnviNFe: XMLBase
+    public class RetEnviNFe : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
         public string Versao { get; set; }
@@ -44,13 +44,21 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
 
         [XmlElement("dhRecbto")]
         public string DhRecbtoField
         {
             get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("infRec")]

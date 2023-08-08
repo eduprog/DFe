@@ -12,7 +12,7 @@ using Unimake.Exceptions;
 namespace Unimake.Business.DFe.Servicos.CTe
 {
     /// <summary>
-    /// Envio do XML de lote de CTe para o WebService
+    /// Envio do XML de lote de CTe para o WebService - Envio assíncrono
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -188,7 +188,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
 
 #endif
 
-
         /// <summary>
         /// Propriedade com o conteúdo retornado da consulta situação do CTe
         /// </summary>
@@ -333,7 +332,8 @@ namespace Unimake.Business.DFe.Servicos.CTe
             {
                 if (!string.IsNullOrWhiteSpace(RetornoWSString))
                 {
-                    return XMLUtility.Deserializar<RetEnviCTe>(RetornoWSXML);
+                    var retEnviCTe = new RetEnviCTe();
+                    return retEnviCTe.LerXML<RetEnviCTe>(RetornoWSXML);
                 }
 
                 return new RetEnviCTe

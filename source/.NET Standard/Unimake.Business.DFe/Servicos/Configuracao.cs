@@ -24,7 +24,7 @@ namespace Unimake.Business.DFe.Servicos
         #region Private Fields
 
         private X509Certificate2 _certificadoDigital;
-        private Assembly _assembly = Assembly.GetExecutingAssembly();
+        private readonly Assembly _assembly = Assembly.GetExecutingAssembly();
 
         #endregion Private Fields
 
@@ -50,25 +50,69 @@ namespace Unimake.Business.DFe.Servicos
         /// <returns>Objeto do certificado digital</returns>
         private X509Certificate2 GetX509Certificate()
         {
-            if (_certificadoDigital != null ||
-               string.IsNullOrWhiteSpace(CertificadoSenha) ||
-               string.IsNullOrWhiteSpace(CertificadoArquivo))
+            //Se já tem certificado digital informado
+            if (_certificadoDigital != null)
             {
                 return _certificadoDigital;
             }
 
-            //tentar carregar o certificado pelas informações passadas.
-            // Não vou validar as informações, vou deixar o certificado dar o erro.
+            #region Tenta carregar certificado A1 apontando direto o caminho do .PFX
 
-            var fi = new FileInfo(CertificadoArquivo);
-            _certificadoDigital = new X509Certificate2();
-
-            using (var fs = fi.OpenRead())
+            if (!string.IsNullOrWhiteSpace(CertificadoArquivo) && !string.IsNullOrWhiteSpace(CertificadoSenha))
             {
-                var buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
+                var fi = new FileInfo(CertificadoArquivo);
+                _certificadoDigital = new X509Certificate2();
+
+                using (var fs = fi.OpenRead())
+                {
+                    var buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    _certificadoDigital = new X509Certificate2(buffer, CertificadoSenha);
+                }
+            }
+
+            #endregion
+
+            #region Tenta carregar o certificado A1 de um base64
+
+            else if (!string.IsNullOrWhiteSpace(CertificadoBase64) && !string.IsNullOrWhiteSpace(CertificadoSenha))
+            {
+                var buffer = Convert.FromBase64String(CertificadoBase64);
+
                 _certificadoDigital = new X509Certificate2(buffer, CertificadoSenha);
             }
+
+            #endregion
+
+            #region Tenta encontrar o certificado digital no repositório do windows via SerialNumber ou Thumbprint
+
+            else if (!string.IsNullOrWhiteSpace(CertificadoSerialNumberOrThumbPrint))
+            {
+                var store = new X509Store("MY", StoreLocation.CurrentUser);
+                store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                var collection = store.Certificates;
+                var collection1 = collection.Find(X509FindType.FindByTimeValid, DateTime.Now, false);
+                var collection2 = collection1.Find(X509FindType.FindByKeyUsage, X509KeyUsageFlags.DigitalSignature, false);
+
+                //Primeiro tento encontrar pelo thumbprint
+                var collection3 = collection2.Find(X509FindType.FindByThumbprint, CertificadoSerialNumberOrThumbPrint, false);
+                if (collection3.Count > 0)
+                {
+                    _certificadoDigital = collection3[0];
+                }
+                else
+                {
+                    //Se não encontrou pelo thumbprint tento pelo SerialNumber pegando o mesmo thumbprint que veio no arquivo de configurações para ver se não encontro.
+                    collection3 = collection2.Find(X509FindType.FindBySerialNumber, CertificadoSerialNumberOrThumbPrint, false);
+
+                    if (collection3.Count > 0)
+                    {
+                        _certificadoDigital = collection3[0];
+                    }
+                }
+            }
+
+            #endregion
 
             return _certificadoDigital;
         }
@@ -178,6 +222,11 @@ namespace Unimake.Business.DFe.Servicos
                                 WebTagRetorno = XMLUtility.TagRead(elementPropriedades, "WebTagRetorno");
                             }
 
+                            if (XMLUtility.TagExist(elementPropriedades, "WebTagRetornoHomologacao"))
+                            {
+                                WebTagRetornoHomologacao = XMLUtility.TagRead(elementPropriedades, "WebTagRetornoHomologacao");
+                            }
+
                             if (XMLUtility.TagExist(elementPropriedades, "WebEncodingRetorno"))
                             {
                                 WebEncodingRetorno = XMLUtility.TagRead(elementPropriedades, "WebEncodingRetorno");
@@ -248,6 +297,45 @@ namespace Unimake.Business.DFe.Servicos
                                 UrlChaveProducao = XMLUtility.TagRead(elementPropriedades, "UrlChaveProducao");
                             }
 
+                            if (XMLUtility.TagExist(elementPropriedades, "RequestURIProducao"))
+                            {
+                                RequestURIProducao = XMLUtility.TagRead(elementPropriedades, "RequestURIProducao");
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "RequestURIHomologacao"))
+                            {
+                                RequestURIHomologacao = XMLUtility.TagRead(elementPropriedades, "RequestURIHomologacao");
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "MetodoAPI"))
+                            {
+                                MetodoAPI = XMLUtility.TagRead(elementPropriedades, "MetodoAPI");
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "LoginConexao"))
+                            {
+                                LoginConexao = XMLUtility.TagRead(elementPropriedades, "LoginConexao").ToLower() == "true" ? true : false;
+                            }
+                            if (XMLUtility.TagExist(elementPropriedades, "ResponseMediaType"))
+                            {
+                                ResponseMediaType = XMLUtility.TagRead(elementPropriedades, "ResponseMediaType");
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "CodigoTom"))
+                            {
+                                CodigoTom = XMLUtility.TagRead(elementPropriedades, "CodigoTom");
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "UsaCertificadoDigital"))
+                            {
+                                UsaCertificadoDigital = XMLUtility.TagRead(elementPropriedades, "UsaCertificadoDigital").ToLower() == "true" ? true : false;
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "ConverteSenhaBase64"))
+                            {
+                                ConverteSenhaBase64 = XMLUtility.TagRead(elementPropriedades, "ConverteSenhaBase64").ToLower() == "true" ? true : false;
+                            }
+
                             //Verificar se existem schemas específicos de validação
                             if (XMLUtility.TagExist(elementPropriedades, "SchemasEspecificos"))
                             {
@@ -298,11 +386,11 @@ namespace Unimake.Business.DFe.Servicos
                         throw new Exception(Nome + " não disponibiliza o serviço de " + Servico.GetAttributeDescription() + " para o ambiente de " + (TipoAmbiente == TipoAmbiente.Homologacao ? "homologação." : "produção."));
                     }
                 }
-                else if (TipoAmbiente == TipoAmbiente.Homologacao && string.IsNullOrWhiteSpace(WebEnderecoHomologacao))
+                else if (TipoAmbiente == TipoAmbiente.Homologacao && (string.IsNullOrWhiteSpace(WebEnderecoHomologacao) && string.IsNullOrWhiteSpace(RequestURIHomologacao)))
                 {
                     throw new Exception(Nome + " não disponibiliza o serviço de " + Servico.GetAttributeDescription() + " para o ambiente de homologação.");
                 }
-                else if (TipoAmbiente == TipoAmbiente.Producao && string.IsNullOrWhiteSpace(WebEnderecoProducao))
+                else if (TipoAmbiente == TipoAmbiente.Producao && (string.IsNullOrWhiteSpace(WebEnderecoProducao) && string.IsNullOrWhiteSpace(RequestURIProducao)))
                 {
                     throw new Exception(Nome + " não disponibiliza o serviço de " + Servico.GetAttributeDescription() + " para o ambiente de produção.");
                 }
@@ -357,12 +445,45 @@ namespace Unimake.Business.DFe.Servicos
         }
 
         /// <summary>
-        /// Efetua a leitura do XML que contem configurações específicas de cada webservice e atribui o conteúdo nas propriedades do objeto "Configuracoes"
+        /// Busca o arquivo de configuração específica da SEFAZ, Receita Federal ou Prefeitura. Analisa se é para pegar o arquivo de configuração embutido na DLL ou um que esteja em uma pasta.
         /// </summary>
-        private void LerXmlConfigEspecifico(string xmlConfigEspecifico)
+        /// <param name="xmlConfigEspecifico">Nome do XML de configuração específica embutido na DLL</param>
+        /// <returns>XML de configuração</returns>
+        private XmlDocument BuscarArquivoConfiguracao(string xmlConfigEspecifico)
         {
             var doc = new XmlDocument();
-            doc.Load(LoadXmlConfig(xmlConfigEspecifico));
+
+            switch (BuscarConfiguracaoPastaBase)
+            {
+                case true:
+                    var arqConfig = Path.Combine(PastaArquivoConfiguracao, xmlConfigEspecifico.Substring(NamespaceConfig.Length));
+
+                    if (File.Exists(arqConfig))
+                    {
+                        doc.Load(arqConfig);
+                    }
+                    else
+                    {
+                        goto default;
+                    }
+
+                    break;
+
+                default:
+                    doc.Load(LoadXmlConfig(xmlConfigEspecifico));
+                    break;
+            }
+
+            return doc;
+        }
+
+        /// <summary>
+        /// Efetua a leitura do XML que contem configurações específicas de cada web-service e atribui o conteúdo nas propriedades do objeto "Configuracoes"
+        /// </summary>
+        /// <param name="xmlConfigEspecifico">Nome do XML de configuração específica embutido na DLL</param>
+        private void LerXmlConfigEspecifico(string xmlConfigEspecifico)
+        {
+            var doc = BuscarArquivoConfiguracao(xmlConfigEspecifico);
 
             #region Leitura do XML do SVC - Sistema Virtual de Contingência
 
@@ -389,11 +510,11 @@ namespace Unimake.Business.DFe.Servicos
                 default:
                     if (svc)
                     {
-                        doc.Load(LoadXmlConfig(arqConfigSVC));
+                        doc = BuscarArquivoConfiguracao(arqConfigSVC);
                         LerConfig(doc, arqConfigSVC, true);
 
                         //Sobrepor algumas configurações do SVC com os do estado, tais como a URL de QRCode. Isso para os estados que tem.
-                        doc.Load(LoadXmlConfig(xmlConfigEspecifico));
+                        doc = BuscarArquivoConfiguracao(xmlConfigEspecifico);
                         LerConfigEspecifica(doc);
                     }
                     break;
@@ -413,10 +534,10 @@ namespace Unimake.Business.DFe.Servicos
 
                     temHeranca = true;
 
-                    doc.Load(LoadXmlConfig(arqConfigHeranca));
+                    doc = BuscarArquivoConfiguracao(arqConfigHeranca);
                     LerConfig(doc, arqConfigHeranca, true);
 
-                    doc.Load(LoadXmlConfig(xmlConfigEspecifico));
+                    doc = BuscarArquivoConfiguracao(xmlConfigEspecifico);
                 }
 
                 #endregion Leitura do XML herdado, quando tem herança.
@@ -442,10 +563,49 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         private void SubstituirValorPropriedadeVariavel()
         {
-            if (!string.IsNullOrWhiteSpace(MunicipioToken))
+            if (!string.IsNullOrWhiteSpace(MunicipioToken) && !string.IsNullOrEmpty(WebEnderecoHomologacao))
             {
                 WebEnderecoHomologacao = WebEnderecoHomologacao.Replace("{MunicipioToken}", MunicipioToken);
+            }
+            else if (!string.IsNullOrWhiteSpace(MunicipioToken) && !string.IsNullOrEmpty(RequestURIHomologacao))
+            {
+                RequestURIHomologacao = RequestURIHomologacao.Replace("{MunicipioToken}", MunicipioToken);
+            }
+
+            if (!string.IsNullOrWhiteSpace(MunicipioToken) && !string.IsNullOrEmpty(WebEnderecoProducao))
+            {
                 WebEnderecoProducao = WebEnderecoProducao.Replace("{MunicipioToken}", MunicipioToken);
+            }
+            else if (!string.IsNullOrWhiteSpace(MunicipioToken) && !string.IsNullOrEmpty(RequestURIProducao))
+            {
+                RequestURIProducao = RequestURIProducao.Replace("{MunicipioToken}", MunicipioToken);
+            }
+
+            if (!string.IsNullOrWhiteSpace(TokenSoap))
+            {
+                WebSoapString = WebSoapString.Replace("{TokenSoap}", TokenSoap);
+            }
+
+            if (!string.IsNullOrWhiteSpace(CodigoMunicipio.ToString()))
+            {
+                WebSoapString = WebSoapString.Replace("{CodigoMunicipio}", CodigoMunicipio.ToString());
+            }
+
+            if (!string.IsNullOrWhiteSpace(MunicipioUsuario))
+            {
+                WebSoapString = WebSoapString.Replace("{MunicipioUsuario}", MunicipioUsuario);
+            }
+
+            if (!string.IsNullOrWhiteSpace(MunicipioSenha))
+            {
+                if (ConverteSenhaBase64)
+                {
+                    WebSoapString = WebSoapString.Replace("{MunicipioSenha}", MunicipioSenha.Base64Encode());
+                }
+                else
+                {
+                    WebSoapString = WebSoapString.Replace("{MunicipioSenha}", MunicipioSenha);
+                }
             }
 
             if (TipoAmbiente == TipoAmbiente.Homologacao)
@@ -547,6 +707,21 @@ namespace Unimake.Business.DFe.Servicos
                             TargetNS = XMLUtility.TagRead(elementVersao, "TargetNS");
                         }
 
+                        if (XMLUtility.TagExist(elementVersao, "RequestURIProducao"))
+                        {
+                            RequestURIProducao = XMLUtility.TagRead(elementVersao, "RequestURIProducao");
+                        }
+
+                        if (XMLUtility.TagExist(elementVersao, "RequestURIHomologacao"))
+                        {
+                            RequestURIHomologacao = XMLUtility.TagRead(elementVersao, "RequestURIHomologacao");
+                        }
+
+                        if (XMLUtility.TagExist(elementVersao, "MetodoAPI"))
+                        {
+                            MetodoAPI = XMLUtility.TagRead(elementVersao, "MetodoAPI");
+                        }
+
                         break;
                     }
                 }
@@ -572,9 +747,24 @@ namespace Unimake.Business.DFe.Servicos
         #region Public Properties
 
         /// <summary>
-        /// Caminho completo do certificado digital
+        /// SerialNumber ou ThumbPrint do Certificado Digital
+        /// </summary>
+        public string CertificadoSerialNumberOrThumbPrint { get; set; }
+
+        /// <summary>
+        /// BASE64 do certificado digital A1
+        /// </summary>
+        public string CertificadoBase64 { get; set; }
+
+        /// <summary>
+        /// Caminho completo do certificado digital A1
         /// </summary>
         public string CertificadoArquivo { get; set; }
+
+        /// <summary>
+        /// Senha de instalação/uso do certificado digital A1
+        /// </summary>
+        public string CertificadoSenha { get; set; }
 
         /// <summary>
         /// Certificado digital
@@ -584,11 +774,6 @@ namespace Unimake.Business.DFe.Servicos
             get => GetX509Certificate();
             set => _certificadoDigital = value;
         }
-
-        /// <summary>
-        /// Senha do certificado digital
-        /// </summary>
-        public string CertificadoSenha { get; set; }
 
         /// <summary>
         /// Código da configuração
@@ -718,6 +903,17 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         public string TagExtraAtributoID { get; set; }
 
+
+        /// <summary>
+        /// Nome da tag onde você escolhe como deseja que seja tratado o retorno.
+        /// </summary>
+        public string ResponseMediaType { get; set; }
+
+        /// <summary>
+        /// Nome da tag onde é definido o CodigoTOM da cidade
+        /// </summary>
+        public string CodigoTom { get; set; }
+
         /// <summary>
         /// Namespace do XML para validação de schema
         /// </summary>
@@ -792,6 +988,57 @@ namespace Unimake.Business.DFe.Servicos
         public string WebEnderecoProducao { get; set; }
 
         /// <summary>
+        /// Endereco para consumo de API - no ambiente de homologação
+        /// </summary>
+        public string RequestURIHomologacao { get; set; }
+
+        /// <summary>
+        /// Endereco para consumo de API - no ambiente de producao
+        /// </summary>
+        public string RequestURIProducao { get; set; }
+
+        /// <summary>
+        /// Chave de acesso utilizada nos URLs do padrão NACIONAL *(quando se necessita fazer o replace na url)
+        /// </summary>
+        public string ChaveAcesso { get; set; }
+
+        /// <summary>
+        /// O serviço consome API? true ou false
+        /// </summary>
+        public bool IsAPI
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(RequestURIProducao) || !string.IsNullOrWhiteSpace(RequestURIHomologacao))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Propriedade para habilitar o uso de usuário e senha para consumo pela API
+        /// </summary>
+        public bool LoginConexao { get; set; }
+
+        /// <summary>
+        /// Propriedade para habilitar o uso de certificado digital (default == True)
+        /// </summary>
+        public bool UsaCertificadoDigital { get; set; } = true;
+
+        /// <summary>
+        /// Propriedade para habilitar a conversao de alguma configuração para Base64 antes do envio (default == True)
+        /// </summary>
+        public bool ConverteSenhaBase64 { get; set; } = false;
+
+        /// <summary>
+        /// Método de solicitação da API
+        /// </summary>
+        public string MetodoAPI { get; set; }
+
+        /// <summary>
         /// String do Soap para envio para o webservice;
         /// </summary>
         /// <example>
@@ -836,10 +1083,7 @@ namespace Unimake.Business.DFe.Servicos
                     return _webSoapStringHomologacao;
                 }
             }
-            set
-            {
-                _webSoapStringHomologacao = value;
-            }
+            set => _webSoapStringHomologacao = value;
         }
 
         private string _webSoapStringProducao;
@@ -871,10 +1115,7 @@ namespace Unimake.Business.DFe.Servicos
                     return _webSoapStringProducao;
                 }
             }
-            set
-            {
-                _webSoapStringProducao = value;
-            }
+            set => _webSoapStringProducao = value;
         }
 
         /// <summary>
@@ -893,6 +1134,11 @@ namespace Unimake.Business.DFe.Servicos
         public string WebTagRetorno { get; set; }
 
         /// <summary>
+        /// Nome da tag de retorno do serviço
+        /// </summary>
+        public string WebTagRetornoHomologacao { get; set; }
+
+        /// <summary>
         /// Encoding do XML retornado pelo webservice (Padrão é UTF-8, mas tem webservices que retornam em encodings diferentes, para estes tem que definir para que os caracteres fiquem corretos.)
         /// </summary>
         public string WebEncodingRetorno { get; set; }
@@ -901,6 +1147,11 @@ namespace Unimake.Business.DFe.Servicos
         /// Token de acesso ao webservice/api do município
         /// </summary>
         public string MunicipioToken { get; set; }
+
+        /// <summary>
+        /// Token de acesso ao soap do município
+        /// </summary>
+        public string TokenSoap { get; set; }
 
         /// <summary>
         /// Usuário de acesso ao webservice/api do município
@@ -919,11 +1170,38 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         public int TimeOutWebServiceConnect
         {
+            get => _TimeOutWebServiceConnect <= 0 ? (_TimeOutWebServiceConnect = 60000) : _TimeOutWebServiceConnect;
+            set => _TimeOutWebServiceConnect = value;
+        }
+
+        /// <summary>
+        /// Buscar o arquivo de configuração na pasta base definida na propriedade "PastaDLL"? (true or false)
+        /// Se existir o arquivo de configuração, da SEFAZ ou Prefeitura, na pasta definida na propriedade "PastaDLL", a DLL vai priorizar buscar as informações deste arquivo. 
+        /// Muito útil quando a SEFAZ ou Prefeitura muda as configurações dos web-services sem aviso prévio, com isso podemos fazer os ajustes no XML de configuração rapidamente e 
+        /// colocar o arquivo na pasta em questão que a DLL assuma as novas orientações sem precisar atualizar a DLL.
+        /// Ativar esta configuração pode deixar a rotina, fração de segundos, mais lenta, pois vai fazer um acesso ao HD em busca do arquivo.
+        /// Quando não ativamos esta propriedade a DLL continua buscando o arquivo de configuração somente nos recursos embutidos da mesma, e isso é muito rápido pois trabalha unicamente na memória.
+        /// </summary>
+        public bool BuscarConfiguracaoPastaBase { get; set; }
+
+        private string _PastaDLL = string.Empty;
+
+        /// <summary>
+        /// Por padrão é a pasta base onde a DLL está instalada de onde está sendo executada, mas o desenvolvedor pode mudar esta pasta definindo a que lhe for melhor.
+        /// </summary>
+        public string PastaArquivoConfiguracao
+        {
             get
             {
-                return _TimeOutWebServiceConnect <= 0 ? (_TimeOutWebServiceConnect = 60000) : _TimeOutWebServiceConnect;
+                if (string.IsNullOrWhiteSpace(_PastaDLL))
+                {
+                    _PastaDLL = System.IO.Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+                }
+
+                return _PastaDLL;
             }
-            set => _TimeOutWebServiceConnect = value;
+
+            set => _PastaDLL = value;
         }
 
         #endregion Public Properties

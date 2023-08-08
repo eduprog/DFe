@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Diag = System.Diagnostics;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.NFCe;
 using Unimake.Business.DFe.Xml.NFe;
@@ -77,14 +76,12 @@ namespace Unimake.DFe.Test.NFCe
         [InlineData(UFBrasil.TO, TipoAmbiente.Producao)]
         public void EnviarNFCeSincrono(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente)
         {
-            try
+            var xml = new EnviNFe
             {
-                var xml = new EnviNFe
-                {
-                    Versao = "4.00",
-                    IdLote = "000000000000001",
-                    IndSinc = SimNao.Sim,
-                    NFe = new List<Business.DFe.Xml.NFe.NFe> {
+                Versao = "4.00",
+                IdLote = "000000000000001",
+                IndSinc = SimNao.Sim,
+                NFe = new List<Business.DFe.Xml.NFe.NFe> {
                         new Business.DFe.Xml.NFe.NFe
                         {
                             InfNFe = new List<InfNFe> {
@@ -174,20 +171,18 @@ namespace Unimake.DFe.Test.NFCe
                                                 VUnTrib = 84.9000000000M,
                                                 IndTot = SimNao.Sim,
                                                 XPed = "300474",
-                                                NItemPed = 1
+                                                NItemPed = "1"
                                             },
                                             Imposto = new Imposto
                                             {
                                                 VTotTrib = 12.63,
-                                                ICMS = new List<ICMS> {
-                                                    new ICMS
+                                                ICMS = new ICMS
+                                                {
+                                                    ICMSSN101 = new ICMSSN101
                                                     {
-                                                        ICMSSN101 = new ICMSSN101
-                                                        {
-                                                            Orig = OrigemMercadoria.Nacional,
-                                                            PCredSN = 2.8255,
-                                                            VCredICMSSN = 2.40
-                                                        }
+                                                        Orig = OrigemMercadoria.Nacional,
+                                                        PCredSN = 2.8255,
+                                                        VCredICMSSN = 2.40
                                                     }
                                                 },
                                                 PIS = new PIS
@@ -300,29 +295,24 @@ namespace Unimake.DFe.Test.NFCe
                             }
                         }
                     }
-                };
+            };
 
-                var configuracao = new Configuracao
-                {
-                    TipoDFe = TipoDFe.NFCe,
-                    TipoEmissao = TipoEmissao.Normal,
-                    CertificadoDigital = PropConfig.CertificadoDigital,
-                    CSC = "121233",
-                    CSCIDToken = 1
-                };
-
-                var autorizacao = new Autorizacao(xml, configuracao);
-                autorizacao.Executar();
-
-                Diag.Debug.Assert(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
-                Diag.Debug.Assert(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
-                Diag.Debug.Assert(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
-                Diag.Debug.Assert(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
-            }
-            catch(Exception ex)
+            var configuracao = new Configuracao
             {
-                Diag.Debug.Assert(false, ex.Message, ex.StackTrace);
-            }
+                TipoDFe = TipoDFe.NFCe,
+                TipoEmissao = TipoEmissao.Normal,
+                CertificadoDigital = PropConfig.CertificadoDigital,
+                CSC = "121233",
+                CSCIDToken = 1
+            };
+
+            var autorizacao = new Autorizacao(xml, configuracao);
+            autorizacao.Executar();
+
+            Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
+            Assert.True(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
+            Assert.True(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
+            Assert.True(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
         }
 
         /// <summary>
@@ -389,14 +379,12 @@ namespace Unimake.DFe.Test.NFCe
         [InlineData(UFBrasil.TO, TipoAmbiente.Producao)]
         public void EnviarNFCeAssincrono(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente)
         {
-            try
+            var xml = new EnviNFe
             {
-                var xml = new EnviNFe
-                {
-                    Versao = "4.00",
-                    IdLote = "000000000000001",
-                    IndSinc = SimNao.Nao,
-                    NFe = new List<Business.DFe.Xml.NFe.NFe> {
+                Versao = "4.00",
+                IdLote = "000000000000001",
+                IndSinc = SimNao.Nao,
+                NFe = new List<Business.DFe.Xml.NFe.NFe> {
                         new Business.DFe.Xml.NFe.NFe
                         {
                             InfNFe = new List<InfNFe> {
@@ -486,20 +474,18 @@ namespace Unimake.DFe.Test.NFCe
                                                 VUnTrib = 84.9000000000M,
                                                 IndTot = SimNao.Sim,
                                                 XPed = "300474",
-                                                NItemPed = 1
+                                                NItemPed = "001"
                                             },
                                             Imposto = new Imposto
                                             {
                                                 VTotTrib = 12.63,
-                                                ICMS = new List<ICMS> {
-                                                    new ICMS
+                                                ICMS = new ICMS
+                                                {
+                                                    ICMSSN101 = new ICMSSN101
                                                     {
-                                                        ICMSSN101 = new ICMSSN101
-                                                        {
-                                                            Orig = OrigemMercadoria.Nacional,
-                                                            PCredSN = 2.8255,
-                                                            VCredICMSSN = 2.40
-                                                        }
+                                                        Orig = OrigemMercadoria.Nacional,
+                                                        PCredSN = 2.8255,
+                                                        VCredICMSSN = 2.40
                                                     }
                                                 },
                                                 PIS = new PIS
@@ -612,30 +598,24 @@ namespace Unimake.DFe.Test.NFCe
                             }
                         }
                     }
-                };
+            };
 
-                var configuracao = new Configuracao
-                {
-                    TipoDFe = TipoDFe.NFCe,
-                    TipoEmissao = TipoEmissao.Normal,
-                    CertificadoDigital = PropConfig.CertificadoDigital,
-                    CSC = "121233",
-                    CSCIDToken = 1
-                };
-
-                var autorizacao = new Autorizacao(xml, configuracao);
-                autorizacao.Executar();
-
-                Diag.Debug.Assert(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
-                Diag.Debug.Assert(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
-                Diag.Debug.Assert(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
-                Diag.Debug.Assert(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
-            }
-            catch(Exception ex)
+            var configuracao = new Configuracao
             {
-                Diag.Debug.Assert(false, ex.Message, ex.StackTrace);
-            }
-        }
+                TipoDFe = TipoDFe.NFCe,
+                TipoEmissao = TipoEmissao.Normal,
+                CertificadoDigital = PropConfig.CertificadoDigital,
+                CSC = "121233",
+                CSCIDToken = 1
+            };
 
+            var autorizacao = new Autorizacao(xml, configuracao);
+            autorizacao.Executar();
+
+            Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
+            Assert.True(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
+            Assert.True(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
+            Assert.True(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
+        }
     }
 }

@@ -96,6 +96,34 @@ namespace Unimake.Business.DFe.Xml.CTe
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoCancelamentoPrestDesacordo")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoCancelamentoPrestDesacordo : EventoDetalhe
+    {
+        [XmlElement("descEvento", Order = 0)]
+        public override string DescEvento { get; set; } = "Cancelamento Prestacao do Servico em Desacordo";
+
+        [XmlElement("nProtEvPrestDes", Order = 1)]
+        public string NProtEvPrestDes { get; set; }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            writer.WriteRaw($@"
+            <evPrestDesacordo>
+            <descEvento>{DescEvento}</descEvento>
+            <nProtEvPrestDes>{NProtEvPrestDes}</nProtEvPrestDes>
+            </evPrestDesacordo>");
+        }
+    }
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoCancCompEntrega")]
     [ComVisible(true)]
 #endif
@@ -373,11 +401,20 @@ namespace Unimake.Business.DFe.Xml.CTe
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEmi
         {
             get => EvEPECCTe.DhEmi;
             set => EvEPECCTe.DhEmi = value;
         }
+#else
+        public DateTimeOffset DhEmi
+        {
+            get => EvEPECCTe.DhEmi;
+            set => EvEPECCTe.DhEmi = value;
+        }
+#endif
+
 
         [XmlIgnore]
         public string DhEmiField
@@ -506,19 +543,28 @@ namespace Unimake.Business.DFe.Xml.CTe
         public TipoCTe TpCTe { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEmi { get; set; }
+#else
+        public DateTimeOffset DhEmi { get; set; }
+#endif
+
 
         [XmlElement("dhEmi", Order = 11)]
         public string DhEmiField
         {
             get => DhEmi.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEmi = DateTime.Parse(value);
+#else
+            set => DhEmi = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
-        /// Executa o processamento do XMLReader recebido na deserialização
+        /// Executa o processamento do XMLReader recebido na desserialização
         /// </summary>
-        ///<param name="document">XmlDocument recebido durante o processo de deserialização</param>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
         public void ReadXml(XmlDocument document)
         {
 
@@ -619,11 +665,19 @@ namespace Unimake.Business.DFe.Xml.CTe
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEntrega
         {
             get => EventoCECTe.DhEntrega;
             set => EventoCECTe.DhEntrega = value;
         }
+#else
+        public DateTimeOffset DhEntrega
+        {
+            get => EventoCECTe.DhEntrega;
+            set => EventoCECTe.DhEntrega = value;
+        }
+#endif
 
         [XmlIgnore]
         public string DhEntregaField
@@ -633,11 +687,19 @@ namespace Unimake.Business.DFe.Xml.CTe
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhHashEntrega
         {
             get => EventoCECTe.DhHashEntrega;
             set => EventoCECTe.DhHashEntrega = value;
         }
+#else
+        public DateTimeOffset DhHashEntrega
+        {
+            get => EventoCECTe.DhHashEntrega;
+            set => EventoCECTe.DhHashEntrega = value;
+        }
+#endif
 
         [XmlIgnore]
         public string DhHashEntregaField
@@ -820,23 +882,39 @@ namespace Unimake.Business.DFe.Xml.CTe
         public override string DescEvento { get; set; } = "Comprovante de Entrega do CT-e";
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEntrega { get; set; }
+#else
+        public DateTimeOffset DhEntrega { get; set; }
+#endif
 
         [XmlElement("dhEntrega", Order = 2)]
         public string DhEntregaField
         {
             get => DhEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEntrega = DateTime.Parse(value);
+#else
+            set => DhEntrega = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhHashEntrega { get; set; }
+#else
+        public DateTimeOffset DhHashEntrega { get; set; }
+#endif
 
         [XmlElement("dhHashEntrega", Order = 8)]
         public string DhHashEntregaField
         {
             get => DhHashEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhHashEntrega = DateTime.Parse(value);
+#else
+            set => DhHashEntrega = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("hashEntrega", Order = 7)]
@@ -978,7 +1056,7 @@ namespace Unimake.Business.DFe.Xml.CTe
 
                 var xml = new StringBuilder();
                 xml.Append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-                xml.Append($"<eventoCTe versao=\"3.00\" xmlns=\"{xmlEl.NamespaceURI}\">");
+                xml.Append($"<eventoCTe versao=\"{eventos[0].Attributes["versao"].Value}\" xmlns=\"{xmlEl.NamespaceURI}\">");
                 xml.Append($"{xmlEl.InnerXml}</eventoCTe>");
 
                 var envEvt = XMLUtility.Deserializar<EventoCTe>(xml.ToString());
@@ -989,6 +1067,25 @@ namespace Unimake.Business.DFe.Xml.CTe
 
             return (T)(object)retornar;
         }
+
+        /// <summary>
+        /// Desserializar o XML no objeto EventoCTe
+        /// </summary>
+        /// <param name="filename">Localização do arquivo XML do eventoCTe</param>
+        /// <returns>Objeto do EventoCTe</returns>
+        public EventoCTe LoadFromFile(string filename)
+        {
+            var doc = new XmlDocument();
+            doc.LoadXml(System.IO.File.ReadAllText(filename, Encoding.UTF8));
+            return XMLUtility.Deserializar<EventoCTe>(doc);
+        }
+
+        /// <summary>
+        /// Desserializar o XML eventoCTe no objeto EventoCTe
+        /// </summary>
+        /// <param name="xml">string do XML eventoCTe</param>
+        /// <returns>Objeto da EventoCTe</returns>
+        public EventoCTe LoadFromXML(string xml) => XMLUtility.Deserializar<EventoCTe>(xml);
 
         #endregion Public Methods
     }
@@ -1002,9 +1099,11 @@ namespace Unimake.Business.DFe.Xml.CTe
     [XmlInclude(typeof(DetEventoCCE))]
     [XmlInclude(typeof(DetEventoCancCompEntrega))]
     [XmlInclude(typeof(DetEventoCompEntrega))]
+    [XmlInclude(typeof(DetEventoInsucessoEntrega))]
     [XmlInclude(typeof(EventoCECTe))]
     [XmlInclude(typeof(DetEventoPrestDesacordo))]
     [XmlInclude(typeof(DetEventoFiscoMDFeCancelado))]
+    [XmlInclude(typeof(DetEventoFiscoMDFeAutorizado))]
     public class EventoDetalhe : System.Xml.Serialization.IXmlSerializable
     {
         #region Private Fields
@@ -1017,6 +1116,9 @@ namespace Unimake.Business.DFe.Xml.CTe
         {
             "DhEntrega",
             "DhHashEntrega",
+            "DhTentativaEntrega",
+            "DhHashTentativaEntrega",
+            "NTentativa",
             "VICMS",
             "VICMSST",
             "VTPrest",
@@ -1025,7 +1127,8 @@ namespace Unimake.Business.DFe.Xml.CTe
             "UFIni",
             "UFFim",
             "TpCTe",
-            "DhEmi"
+            "DhEmi",
+            "DhRecbto"
         };
 
         #endregion Private Fields
@@ -1175,15 +1278,9 @@ namespace Unimake.Business.DFe.Xml.CTe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/cte")]
     public class InfEntrega
     {
-        #region Private Fields
-
         private string ChNFeField;
 
-        #endregion Private Fields
-
-        #region Public Properties
-
-        [XmlElement("chNFe", Order = 0)]
+        [XmlElement("chNFe")]
         public string ChNFe
         {
             get => ChNFeField;
@@ -1197,8 +1294,6 @@ namespace Unimake.Business.DFe.Xml.CTe
                 ChNFeField = value;
             }
         }
-
-        #endregion Public Properties
     }
 
 #if INTEROP
@@ -1241,13 +1336,21 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string ChCTe { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEvento { get; set; }
+#else
+        public DateTimeOffset DhEvento { get; set; }
+#endif
 
         [XmlElement("dhEvento", Order = 5)]
         public string DhEventoField
         {
             get => DhEvento.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEvento = DateTime.Parse(value);
+#else
+            set => DhEvento = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("tpEvento", Order = 6)]
@@ -1288,12 +1391,29 @@ namespace Unimake.Business.DFe.Xml.CTe
                         _detEvento = new DetEventoPrestDesacordo();
                         break;
 
+                    case TipoEventoCTe.CancelamentoPrestDesacordo:
+                        _detEvento = new DetEventoCancelamentoPrestDesacordo();
+                        break;
+
+
                     case TipoEventoCTe.EPEC:
                         _detEvento = new DetEventoEPEC();
                         break;
 
                     case TipoEventoCTe.MDFeCancelado:
                         _detEvento = new DetEventoFiscoMDFeCancelado();
+                        break;
+
+                    case TipoEventoCTe.MDFeAutorizado:
+                        _detEvento = new DetEventoFiscoMDFeAutorizado();
+                        break;
+
+                    case TipoEventoCTe.InsucessoEntrega:
+                        _detEvento = new DetEventoInsucessoEntrega();
+                        break;
+
+                    case TipoEventoCTe.RegistroPassagemAutomatico:
+                        _detEvento = new DetEventoRegistroPassagemAutomatico();
                         break;
 
                     default:
@@ -1311,7 +1431,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlAttribute(DataType = "ID", AttributeName = "Id")]
         public string Id
         {
-            get => "ID" + ((int)TpEvento).ToString() + ChCTe + NSeqEvento.ToString("00");
+            get => "ID" + ((int)TpEvento).ToString() + ChCTe + NSeqEvento.ToString((Convert.ToDecimal(DetEvento.VersaoEvento) >= 400 ? "000" : "00"));
             set => _ = value;
         }
 
@@ -1330,6 +1450,327 @@ namespace Unimake.Business.DFe.Xml.CTe
         public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
 
         #endregion Public Methods
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoInsucessoEntrega")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoInsucessoEntrega : EventoDetalhe
+    {
+        private EvIECTe _eventoIECTe;
+
+        internal override void SetValue(PropertyInfo pi)
+        {
+            if (pi.Name == nameof(InfEntrega))
+            {
+                XmlReader.Read();
+                InfEntrega.Add(new InfEntrega
+                {
+                    ChNFe = XmlReader.GetValue<string>(nameof(Xml.CTe.InfEntrega.ChNFe))
+                });
+
+                return;
+            }
+
+            if (pi.Name == nameof(TpMotivo))
+            {
+                TpMotivo = XmlReader.GetValue<TipoMotivoInsucessoEntrega>(nameof(TpMotivo));
+
+                return;
+            }
+
+            base.SetValue(pi);
+        }
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EventoIECTe.DescEvento;
+            set => EventoIECTe.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public string NProt
+        {
+            get => EventoIECTe.NProt;
+            set => EventoIECTe.NProt = value;
+        }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhTentativaEntrega
+        {
+            get => EventoIECTe.DhTentativaEntrega;
+            set => EventoIECTe.DhTentativaEntrega = value;
+        }
+#else
+        public DateTimeOffset DhTentativaEntrega
+        {
+            get => EventoIECTe.DhTentativaEntrega;
+            set => EventoIECTe.DhTentativaEntrega = value;
+        }
+#endif
+
+        [XmlIgnore]
+        public string DhTentativaEntregaField
+        {
+            get => EventoIECTe.DhTentativaEntregaField;
+            set => EventoIECTe.DhTentativaEntregaField = value;
+        }
+
+
+        [XmlIgnore]
+        public int NTentativa
+        {
+            get => EventoIECTe.NTentativa;
+            set => EventoIECTe.NTentativa = value;
+        }
+
+
+        [XmlIgnore]
+        public TipoMotivoInsucessoEntrega TpMotivo
+        {
+            get => EventoIECTe.TpMotivo;
+            set => EventoIECTe.TpMotivo = value;
+        }
+
+        [XmlIgnore]
+        public string XJustMotivo
+        {
+            get => EventoIECTe.XJustMotivo;
+            set => EventoIECTe.XJustMotivo = value;
+        }
+
+        [XmlIgnore]
+        public string Latitude
+        {
+            get => EventoIECTe.Latitude;
+            set => EventoIECTe.Latitude = value;
+        }
+
+        [XmlIgnore]
+        public string Longitude
+        {
+            get => EventoIECTe.Longitude;
+            set => EventoIECTe.Longitude = value;
+        }
+
+        [XmlIgnore]
+        public string HashTentativaEntrega
+        {
+            get => EventoIECTe.HashTentativaEntrega;
+            set => EventoIECTe.HashTentativaEntrega = value;
+        }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhHashTentativaEntrega
+        {
+            get => EventoIECTe.DhHashTentativaEntrega;
+            set => EventoIECTe.DhHashTentativaEntrega = value;
+        }
+#else
+        public DateTimeOffset DhHashTentativaEntrega
+        {
+            get => EventoIECTe.DhHashTentativaEntrega;
+            set => EventoIECTe.DhHashTentativaEntrega = value;
+        }
+#endif
+
+        [XmlIgnore]
+        public string DhHashTentativaEntregaField
+        {
+            get => EventoIECTe.DhHashTentativaEntregaField;
+            set => EventoIECTe.DhHashTentativaEntregaField = value;
+        }
+
+
+        [XmlIgnore]
+        public List<InfEntrega> InfEntrega
+        {
+            get => EventoIECTe.InfEntrega;
+            set => EventoIECTe.InfEntrega = value;
+        }
+
+        [XmlElement(ElementName = "evIECTe")]
+        public EvIECTe EventoIECTe
+        {
+            get => _eventoIECTe ?? (_eventoIECTe = new EvIECTe());
+            set => _eventoIECTe = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evIECTe>
+                <descEvento>{DescEvento}</descEvento>
+                <nProt>{NProt}</nProt>
+                <dhTentativaEntrega>{DhTentativaEntregaField}</dhTentativaEntrega>";
+
+            if (NTentativa > 0)
+            {
+                writeRaw += $@"<nTentativa>{NTentativa}</nTentativa>";
+            }
+
+            writeRaw += $@"<tpMotivo>{((int)TpMotivo).ToString()}</tpMotivo>";
+
+            if (TpMotivo == TipoMotivoInsucessoEntrega.Outros)
+            {
+                writeRaw += $@"<xJustMotivo>{XJustMotivo}</xJustMotivo>";
+            }
+
+            if (!string.IsNullOrWhiteSpace(Latitude))
+            {
+                writeRaw += $@"<latitude>{Latitude}</latitude>";
+            }
+
+            if (!string.IsNullOrWhiteSpace(Longitude))
+            {
+                writeRaw += $@"<longitude>{Longitude}</longitude>";
+            }
+
+            writeRaw += $@"<hashTentativaEntrega>{HashTentativaEntrega}</hashTentativaEntrega>
+                <dhHashTentativaEntrega>{DhHashTentativaEntregaField}</dhHashTentativaEntrega>";
+
+            foreach (var infEntrega in InfEntrega)
+            {
+                writeRaw += $@"<infEntrega><chNFe>{infEntrega.ChNFe}</chNFe></infEntrega>";
+            }
+
+            writeRaw += $@"</evIECTe>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvIECTe")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evIECTe")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvIECTe : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento")]
+        public string DescEvento { get; set; } = "Insucesso na Entrega do CT-e";
+
+        [XmlElement("nProt")]
+        public string NProt { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhTentativaEntrega { get; set; }
+#else
+        public DateTimeOffset DhTentativaEntrega { get; set; }
+#endif
+
+        [XmlElement("dhTentativaEntrega")]
+        public string DhTentativaEntregaField
+        {
+            get => DhTentativaEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhTentativaEntrega = DateTime.Parse(value);
+#else
+            set => DhTentativaEntrega = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        [XmlElement("nTentativa")]
+        public int NTentativa { get; set; }
+
+        [XmlElement("tpMotivo")]
+        public TipoMotivoInsucessoEntrega TpMotivo { get; set; }
+
+        [XmlElement("xJustMotivo")]
+        public string XJustMotivo { get; set; }
+
+        [XmlElement("latitude")]
+        public string Latitude { get; set; }
+
+        [XmlElement("longitude")]
+        public string Longitude { get; set; }
+
+        [XmlElement("hashTentativaEntrega")]
+        public string HashTentativaEntrega { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhHashTentativaEntrega { get; set; }
+#else
+        public DateTimeOffset DhHashTentativaEntrega { get; set; }
+#endif
+
+        [XmlElement("dhHashTentativaEntrega")]
+        public string DhHashTentativaEntregaField
+        {
+            get => DhHashTentativaEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhHashTentativaEntrega = DateTime.Parse(value);
+#else
+            set => DhHashTentativaEntrega = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        [XmlElement("infEntrega")]
+        public List<InfEntrega> InfEntrega { get; set; } = new List<InfEntrega>();
+
+
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="infentrega">Elemento</param>
+        public void AddInfEntrega(InfEntrega infentrega)
+        {
+            if (InfEntrega == null)
+            {
+                InfEntrega = new List<InfEntrega>();
+            }
+
+            InfEntrega.Add(infentrega);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista InfEntrega (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da InfEntrega</returns>
+        public InfEntrega GetInfEntrega(int index)
+        {
+            if ((InfEntrega?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return InfEntrega[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista InfEntrega
+        /// </summary>
+        public int GetInfEntregaCount => (InfEntrega != null ? InfEntrega.Count : 0);
+
+#endif
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
     }
 
     #region Eventos exclusivos do fisco (Gerados pelo fisco)
@@ -1416,9 +1857,9 @@ namespace Unimake.Business.DFe.Xml.CTe
         public EvCTeCanceladoMDFeMDFe MDFe { get; set; }
 
         /// <summary>
-        /// Executa o processamento do XMLReader recebido na deserialização
+        /// Executa o processamento do XMLReader recebido na desserialização
         /// </summary>
-        ///<param name="document">XmlDocument recebido durante o processo de deserialização</param>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
         public void ReadXml(XmlDocument document)
         {
 
@@ -1448,6 +1889,443 @@ namespace Unimake.Business.DFe.Xml.CTe
 
         [XmlElement("nProtCanc", Order = 1)]
         public string NProtCanc { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoFiscoMDFeAutorizado")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoFiscoMDFeAutorizado : EventoDetalhe
+    {
+        private EvCTeAutorizadoMDFe _evCTeAutorizadoMDFe;
+
+        internal override void SetValue(PropertyInfo pi)
+        {
+            if (pi?.Name == nameof(MDFe))
+            {
+                XmlReader.Read();
+
+                MDFe = new EvCTeAutorizadoMDFeMDFe();
+                MDFe.ChMDFe = XmlReader.GetValue<string>(nameof(MDFe.ChMDFe));
+                MDFe.Modal = XmlReader.GetValue<ModalidadeTransporteCTe>(nameof(MDFe.Modal));
+#if INTEROP
+                MDFe.DhEmi = XmlReader.GetValue<DateTime>(nameof(MDFe.DhEmi));
+#else
+                MDFe.DhEmi = XmlReader.GetValue<DateTimeOffset>(nameof(MDFe.DhEmi));
+#endif
+                MDFe.NProt = XmlReader.GetValue<string>(nameof(MDFe.NProt));
+
+#if INTEROP
+                MDFe.DhRecbto = XmlReader.GetValue<DateTime>(nameof(MDFe.DhRecbto));
+#else
+                MDFe.DhRecbto = XmlReader.GetValue<DateTimeOffset>(nameof(MDFe.DhRecbto));
+#endif
+
+                return;
+            }
+
+            if (pi?.Name == nameof(Emit))
+            {
+                XmlReader.Read();
+
+                Emit = new EvCTeAutorizadoMDFeEmit();
+                Emit.CNPJ = XmlReader.GetValue<string>(nameof(Emit.CNPJ));
+                Emit.IE = XmlReader.GetValue<string>(nameof(Emit.IE));
+                Emit.XNome = XmlReader.GetValue<string>(nameof(Emit.XNome));
+
+                return;
+            }
+
+            base.SetValue(pi);
+        }
+
+        [XmlElement(ElementName = "evCTeAutorizadoMDFe", Order = 0)]
+        public EvCTeAutorizadoMDFe EvCTeAutorizadoMDFe
+        {
+            get => _evCTeAutorizadoMDFe ?? (_evCTeAutorizadoMDFe = new EvCTeAutorizadoMDFe());
+            set => _evCTeAutorizadoMDFe = value;
+        }
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EvCTeAutorizadoMDFe.DescEvento;
+            set => EvCTeAutorizadoMDFe.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeAutorizadoMDFeMDFe MDFe
+        {
+            get => EvCTeAutorizadoMDFe.MDFe;
+            set => EvCTeAutorizadoMDFe.MDFe = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeAutorizadoMDFeEmit Emit
+        {
+            get => EvCTeAutorizadoMDFe.Emit;
+            set => EvCTeAutorizadoMDFe.Emit = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evCTeAutorizadoMDFe>";
+
+            writeRaw += $@"<descEvento>{DescEvento}</descEvento>";
+
+            writeRaw += $@"<MDFe>";
+            writeRaw += $@"<chMDFe>{MDFe.ChMDFe}</chMDFe>";
+            writeRaw += $@"<modal>{(int)MDFe.Modal:00}</modal>";
+            writeRaw += $@"<dhEmi>{MDFe.DhEmiField}</dhEmi>";
+            writeRaw += $@"<nProt>{MDFe.NProt}</nProt>";
+            writeRaw += $@"<dhRecbto>{MDFe.DhRecbtoField}</dhRecbto>";
+            writeRaw += $@"</MDFe>";
+
+            writeRaw += $@"<emit>";
+            writeRaw += $@"<CNPJ>{Emit.CNPJ}</CNPJ>";
+            writeRaw += $@"<IE>{Emit.IE}</IE>";
+            writeRaw += $@"<xNome>{Emit.XNome}</xNome>";
+            writeRaw += $@"</emit>";
+
+            writeRaw += $@"</evCTeAutorizadoMDFe>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeAutorizadoMDFe")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evCTeAutorizadoMDFe")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvCTeAutorizadoMDFe : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento", Order = 0)]
+        public string DescEvento { get; set; } = "MDF-e Autorizado";
+
+        [XmlElement("MDFe", Order = 1)]
+        public EvCTeAutorizadoMDFeMDFe MDFe { get; set; }
+
+        [XmlElement("emit", Order = 2)]
+        public EvCTeAutorizadoMDFeEmit Emit { get; set; }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na desserialização
+        /// </summary>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeAutorizadoMDFeMDFe")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/cte")]
+    public class EvCTeAutorizadoMDFeMDFe
+    {
+        [XmlElement("chMDFe")]
+        public string ChMDFe { get; set; }
+
+        [XmlElement("modal")]
+        public ModalidadeTransporteCTe Modal { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhEmi { get; set; }
+#else
+        public DateTimeOffset DhEmi { get; set; }
+#endif
+
+        [XmlElement("dhEmi")]
+        public string DhEmiField
+        {
+            get => DhEmi.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhEmi = DateTime.Parse(value);
+#else
+            set => DhEmi = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        [XmlElement("nProt")]
+        public string NProt { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
+
+        [XmlElement("dhRecbto")]
+        public string DhRecbtoField
+        {
+            get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
+        }
+    }
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeAutorizadoMDFeEmit")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/cte")]
+    public class EvCTeAutorizadoMDFeEmit
+    {
+        [XmlElement("CNPJ")]
+        public string CNPJ { get; set; }
+
+        [XmlElement("IE")]
+        public string IE { get; set; }
+
+        [XmlElement("xNome")]
+        public string XNome { get; set; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoRegistroPassagemAutomatico")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoRegistroPassagemAutomatico : EventoDetalhe
+    {
+        private EvCTeRegPassagemAuto _evCTeRegPassagemAuto;
+
+        internal override void SetValue(PropertyInfo pi)
+        {
+            if (pi?.Name == nameof(InfPass))
+            {
+                XmlReader.Read();
+                InfPass = new EvCTeRegPassagemAutoInfPass();
+                InfPass.CUFTransito = XmlReader.GetValue<string>(nameof(InfPass.CUFTransito));
+                InfPass.CIdEquip = XmlReader.GetValue<string>(nameof(InfPass.CIdEquip));
+                InfPass.XIdEquip = XmlReader.GetValue<string>(nameof(InfPass.XIdEquip));
+                InfPass.TpEquip = XmlReader.GetValue<string>(nameof(InfPass.TpEquip));
+                InfPass.Placa = XmlReader.GetValue<string>(nameof(InfPass.Placa));
+                InfPass.TpSentido = XmlReader.GetValue<string>(nameof(InfPass.TpSentido));
+#if INTEROP
+                InfPass.DhPass = XmlReader.GetValue<DateTime>(nameof(InfPass.DhPass));
+#else
+                InfPass.DhPass = XmlReader.GetValue<DateTimeOffset>(nameof(InfPass.DhPass));
+#endif
+                InfPass.Latitude = XmlReader.GetValue<string>(nameof(InfPass.Latitude));
+                InfPass.Longitude = XmlReader.GetValue<string>(nameof(InfPass.Longitude));
+                InfPass.NSU = XmlReader.GetValue<string>(nameof(InfPass.NSU));
+
+                return;
+            }
+
+            base.SetValue(pi);
+        }
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EvCTeRegPassagemAuto.DescEvento;
+            set => EvCTeRegPassagemAuto.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public string TpTransm
+        {
+            get => EvCTeRegPassagemAuto.TpTransm;
+            set => EvCTeRegPassagemAuto.TpTransm = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeRegPassagemAutoInfPass InfPass
+        {
+            get => EvCTeRegPassagemAuto.InfPass;
+            set => EvCTeRegPassagemAuto.InfPass = value;
+        }
+
+        [XmlIgnore]
+        public string ChMDFe
+        {
+            get => EvCTeRegPassagemAuto.ChMDFe;
+            set => EvCTeRegPassagemAuto.ChMDFe = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeRegPassagemAuto EvCTeRegPassagemAuto
+        {
+            get => _evCTeRegPassagemAuto ?? (_evCTeRegPassagemAuto = new EvCTeRegPassagemAuto());
+            set => _evCTeRegPassagemAuto = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evCTeRegPassagemAuto>
+                <descEvento>{DescEvento}</descEvento>
+                <tpTransm>{TpTransm}</tpTransm>";
+
+            writeRaw += "<infPass>";
+
+            writeRaw += $@"<cUFTransito>{InfPass.CUFTransito}</cUFTransito>
+                <cIdEquip>{InfPass.CIdEquip}</cIdEquip>
+                <xIdEquip>{InfPass.XIdEquip}</xIdEquip>
+                <tpEquip>{InfPass.TpEquip}</tpEquip>
+                <placa>{InfPass.Placa}</placa>
+                <tpSentido>{InfPass.TpSentido}</tpSentido>
+                <dhPass>{InfPass.DhPassField}</dhPass>
+                <latitude>{InfPass.Latitude}</latitude>
+                <longitude>{InfPass.Longitude}</longitude>
+                <NSU>{InfPass.NSU}</NSU>";
+
+            writeRaw += "</infPass>";
+
+            writeRaw += $@"<chMDFe>{ChMDFe}</chMDFe>";
+
+            writeRaw += "</evCTeRegPassagemAuto>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeRegPassagemAuto")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evCTeRegPassagemAuto")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvCTeRegPassagemAuto : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento")]
+        public string DescEvento { get; set; } = "Registro de Passagem Automático";
+
+        [XmlElement("tpTransm")]
+        public string TpTransm { get; set; }
+
+        [XmlElement("infPass")]
+        public EvCTeRegPassagemAutoInfPass InfPass { get; set; }
+
+        [XmlElement("chMDFe")]
+        public string ChMDFe { get; set; }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na desserialização
+        /// </summary>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeRegPassagemAutoInfPass")]
+    [ComVisible(true)]
+#endif
+
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/cte")]
+    public class EvCTeRegPassagemAutoInfPass
+    {
+        [XmlElement("cUFTransito")]
+        public string CUFTransito { get; set; }
+
+        [XmlElement("cIdEquip")]
+        public string CIdEquip { get; set; }
+
+        [XmlElement("xIdEquip")]
+        public string XIdEquip { get; set; }
+
+        [XmlElement("tpEquip")]
+        public string TpEquip { get; set; }
+
+        [XmlElement("placa")]
+        public string Placa { get; set; }
+
+        [XmlElement("tpSentido")]
+        public string TpSentido { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhPass { get; set; }
+#else
+        public DateTimeOffset DhPass { get; set; }
+#endif
+
+        [XmlElement("dhPass")]
+        public string DhPassField
+        {
+            get => DhPass.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhPass = DateTime.Parse(value);
+#else
+            set => DhPass = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        [XmlElement("latitude")]
+        public string Latitude { get; set; }
+
+        [XmlElement("longitude")]
+        public string Longitude { get; set; }
+
+        [XmlElement("NSU")]
+        public string NSU { get; set; }
     }
 
     #endregion

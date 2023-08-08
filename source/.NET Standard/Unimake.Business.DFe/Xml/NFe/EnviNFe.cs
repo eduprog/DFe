@@ -62,7 +62,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         /// <summary>
-        /// Deserializar o XML EnviNFe no objeto EnviNFe
+        /// Desserializar o XML EnviNFe no objeto EnviNFe
         /// </summary>
         /// <param name="filename">Localização do arquivo XML EnviNFe</param>
         /// <returns>Objeto do EnviNFe</returns>
@@ -74,7 +74,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         /// <summary>
-        /// Deserializar o XML EnviNFe no objeto EnviNFe
+        /// Desserializar o XML EnviNFe no objeto EnviNFe
         /// </summary>
         /// <param name="xml">string do XML EnviNFe</param>
         /// <returns>Objeto da EnviNFe</returns>
@@ -430,7 +430,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string NatOp
         {
             get => _natOp;
-            set => _natOp = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => _natOp = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("mod")]
@@ -443,23 +443,39 @@ namespace Unimake.Business.DFe.Xml.NFe
         public int NNF { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEmi { get; set; }
+#else
+        public DateTimeOffset DhEmi { get; set; }
+#endif
 
         [XmlElement("dhEmi")]
         public string DhEmiField
         {
             get => DhEmi.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEmi = DateTime.Parse(value);
+#else
+            set => DhEmi = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhSaiEnt { get; set; }
+#else
+        public DateTimeOffset DhSaiEnt { get; set; }
+#endif
 
         [XmlElement("dhSaiEnt")]
         public string DhSaiEntField
         {
             get => DhSaiEnt.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhSaiEnt = DateTime.Parse(value);
+#else
+            set => DhSaiEnt = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("tpNF")]
@@ -510,20 +526,28 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string VerProc { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhCont { get; set; }
+#else
+        public DateTimeOffset DhCont { get; set; }
+#endif
 
         [XmlElement("dhCont")]
         public string DhContField
         {
             get => DhCont.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhCont = DateTime.Parse(value);
+#else
+            set => DhCont = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("xJust")]
         public string XJust
         {
             get => XJustField;
-            set => XJustField = XMLUtility.UnescapeReservedCharacters(value).Truncate(256);
+            set => XJustField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(256).Trim());
         }
 
         [XmlElement("NFref")]
@@ -616,8 +640,17 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class NFref
     {
+        /// <summary>
+        /// Referencia uma NF-e (modelo 55) emitida anteriormente, vinculada a NF-e atual, ou uma NFC-e(modelo 65)
+        /// </summary>
         [XmlElement("refNFe")]
         public string RefNFe { get; set; }
+
+        /// <summary>
+        /// Referencia uma NF-e (modelo 55) emitida anteriormente pela sua Chave de Acesso com código numérico zerado, permitindo manter o sigilo da NF-e referenciada.
+        /// </summary>
+        [XmlElement("refNFeSig")]
+        public string RefNFeSig { get; set; }
 
         [XmlElement("refNF")]
         public RefNF RefNF { get; set; }
@@ -634,6 +667,8 @@ namespace Unimake.Business.DFe.Xml.NFe
         #region ShouldSerialize
 
         public bool ShouldSerializeRefNFe() => !string.IsNullOrWhiteSpace(RefNFe);
+
+        public bool ShouldSerializeRefNFeSig() => !string.IsNullOrWhiteSpace(RefNFeSig);
 
         public bool ShouldSerializeRefCTe() => !string.IsNullOrWhiteSpace(RefCTe);
 
@@ -686,15 +721,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string Mod
         {
             get => ModField;
-            set
-            {
-                if (value != "01" && value != "02")
-                {
-                    throw new Exception("Conteúdo da TAG <mod>, filha da TAG da <refNF>, inválido! Valores aceitos: 01 e 02.");
-                }
-
-                ModField = value;
-            }
+            set => ModField = value;
         }
 
         [XmlElement("serie")]
@@ -838,14 +865,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XNome
         {
             get => XNomeField;
-            set => XNomeField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XNomeField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xFant")]
         public string XFant
         {
             get => XFantField;
-            set => XFantField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XFantField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("enderEmit")]
@@ -899,28 +926,38 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XLgr
         {
             get => XLgrField;
-            set => XLgrField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XLgrField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("nro")]
         public string Nro
         {
             get => NroField;
-            set => NroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => NroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xCpl")]
         public string XCpl
         {
             get => XCplField;
-            set => XCplField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set
+            {
+                if (value == null)
+                {
+                    XCplField = value;
+                }
+                else
+                {
+                    XCplField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
+                }
+            }
         }
 
         [XmlElement("xBairro")]
         public string XBairro
         {
             get => XBairroField;
-            set => XBairroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XBairroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("cMun")]
@@ -930,7 +967,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XMun
         {
             get => XMunField;
-            set => XMunField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XMunField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("UF")]
@@ -946,7 +983,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XPais
         {
             get => XPaisField;
-            set => XPaisField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XPaisField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("fone")]
@@ -1062,7 +1099,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XNome
         {
             get => XNomeField;
-            set => XNomeField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XNomeField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("enderDest")]
@@ -1124,28 +1161,28 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XLgr
         {
             get => XLgrField;
-            set => XLgrField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XLgrField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("nro")]
         public string Nro
         {
             get => NroField;
-            set => NroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => NroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xCpl")]
         public string XCpl
         {
             get => XCplField;
-            set => XCplField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XCplField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xBairro")]
         public string XBairro
         {
             get => XBairroField;
-            set => XBairroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XBairroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         #region cMun
@@ -1171,10 +1208,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CMunField
         {
             get => CMun.ToString();
-            set
-            {
-                CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
-            }
+            set => CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
         }
 
         #endregion
@@ -1183,7 +1217,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XMun
         {
             get => XMunField;
-            set => XMunField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XMunField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("UF")]
@@ -1199,7 +1233,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XPais
         {
             get => XPaisField;
-            set => XPaisField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XPaisField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("fone")]
@@ -1240,35 +1274,35 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XNome
         {
             get => XNomeField;
-            set => XNomeField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XNomeField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xLgr")]
         public string XLgr
         {
             get => XLgrField;
-            set => XLgrField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XLgrField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("nro")]
         public string Nro
         {
             get => NroField;
-            set => NroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => NroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xCpl")]
         public string XCpl
         {
             get => XCplField;
-            set => XCplField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XCplField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xBairro")]
         public string XBairro
         {
             get => XBairroField;
-            set => XBairroField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XBairroField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         #region cMun
@@ -1294,10 +1328,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CMunField
         {
             get => CMun.ToString();
-            set
-            {
-                CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
-            }
+            set => CMun = Convert.ToInt32(string.IsNullOrWhiteSpace(value) ? "0" : value);
         }
 
         #endregion
@@ -1306,7 +1337,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XMun
         {
             get => XMunField;
-            set => XMunField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XMunField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("UF")]
@@ -1322,7 +1353,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XPais
         {
             get => XPaisField;
-            set => XPaisField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XPaisField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("fone")]
@@ -1428,7 +1459,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string InfAdProd
         {
             get => string.IsNullOrWhiteSpace(InfAdProdField) ? null : InfAdProdField;
-            set => InfAdProdField = XMLUtility.UnescapeReservedCharacters(value).Truncate(500);
+            set => InfAdProdField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(500).Trim());
         }
 
         [XmlElement("obsItem")]
@@ -1455,33 +1486,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CEAN
         {
             get => CEANField;
-            set
-            {
-                if (value.ToUpper().Trim() != "SEM GTIN")
-                {
-                    if (!string.IsNullOrWhiteSpace(value) && value.Length != 0 && value.Length != 8 && value.Length != 12 && value.Length != 13 && value.Length != 14)
-                    {
-                        throw new Exception("Código EAN (código de barra) informado (" + value + ") no produto de código " + CProd + " está incorreto. EAN deve ter 0,8,12,13 ou 14 de tamanho e somente números, ou seja, não pode conter letras.");
-                    }
-
-                    for (var i = 0; i < value.Length; i++)
-                    {
-                        if (!"0123456789".Contains(value.Substring(i, 1)))
-                        {
-                            throw new Exception("Código EAN (código de barra) informado (" + value + ") no produto de código " + CProd + " está incorreto. Não pode conter letras, somente números.");
-                        }
-                    }
-                }
-                else
-                {
-                    if (value != "SEM GTIN")
-                    {
-                        throw new Exception("Código EAN (código de barra) informado (" + "\"" + value + "\") tem que ser igual a \"SEM GTIN\", ou seja, tudo maiúsculo e sem espaços no final ou inicio da sentença.");
-                    }
-                }
-
-                CEANField = value;
-            }
+            set => CEANField = value;
         }
 
         [XmlElement("cBarra")]
@@ -1491,7 +1496,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XProd
         {
             get => XProdField;
-            set => XProdField = XMLUtility.UnescapeReservedCharacters(value).Truncate(120);
+            set => XProdField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(120).Trim());
         }
 
         [XmlElement("NCM")]
@@ -1547,33 +1552,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CEANTrib
         {
             get => CEANTribField;
-            set
-            {
-                if (value.ToUpper().Trim() != "SEM GTIN")
-                {
-                    if (!string.IsNullOrWhiteSpace(value) && value.Length != 0 && value.Length != 8 && value.Length != 12 && value.Length != 13 && value.Length != 14)
-                    {
-                        throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + value + ") no produto de código " + CProd + " está incorreto. EAN deve ter 0,8,12,13 ou 14 de tamanho e somente números, ou seja, não pode conter letras.");
-                    }
-
-                    for (var i = 0; i < value.Length; i++)
-                    {
-                        if (!"0123456789".Contains(value.Substring(i, 1)))
-                        {
-                            throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + value + ") no produto de código " + CProd + " está incorreto. Não pode conter letras, somente números.");
-                        }
-                    }
-                }
-                else
-                {
-                    if (value != "SEM GTIN")
-                    {
-                        throw new Exception("Código EAN (código de barra) da unidade tributável informado (" + "\"" + value + "\") tem que ser igual a \"SEM GTIN\", ou seja, tudo maiúsculo e sem espaços no final ou inicio da sentença.");
-                    }
-                }
-
-                CEANTribField = value;
-            }
+            set => CEANTribField = value;
         }
 
         [XmlElement("cBarraTrib")]
@@ -1641,7 +1620,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XPed { get; set; }
 
         [XmlElement("nItemPed")]
-        public int? NItemPed { get; set; }
+        public string NItemPed { get; set; }
 
         [XmlElement("nFCI")]
         public string NFCI { get; set; }
@@ -1656,20 +1635,20 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("infProdEmb")]
         public InfProdEmb InfProdEmb { get; set; }
 
+        [XmlElement("veicProd")]
+        public List<VeicProd> VeicProd { get; set; }
+
+        [XmlElement("med")]
+        public Med Med { get; set; }
+
         [XmlElement("arma")]
         public List<Arma> Arma { get; set; }
 
         [XmlElement("comb")]
         public List<Comb> Comb { get; set; }
 
-        [XmlElement("med")]
-        public List<Med> Med { get; set; }
-
         [XmlElement("nRECOPI")]
         public string NRECOPI { get; set; }
-
-        [XmlElement("veicProd")]
-        public List<VeicProd> VeicProd { get; set; }
 
         #region ShouldSerialize
 
@@ -1747,7 +1726,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Adicionar novo elemento a lista
         /// </summary>
         /// <param name="di">Elemento</param>
-        public void AddEvento(DI di)
+        public void AddDI(DI di)
         {
             if (DI == null)
             {
@@ -1912,40 +1891,6 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Retorna a quantidade de elementos existentes na lista Comb
         /// </summary>
         public int GetCombCount => (Comb != null ? Comb.Count : 0);
-
-        /// <summary>
-        /// Adicionar novo elemento a lista
-        /// </summary>
-        /// <param name="med">Elemento</param>
-        public void AddMed(Med med)
-        {
-            if (Med == null)
-            {
-                Med = new List<Med>();
-            }
-
-            Med.Add(med);
-        }
-
-        /// <summary>
-        /// Retorna o elemento da lista Med (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
-        /// </summary>
-        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
-        /// <returns>Conteúdo do index passado por parâmetro da Med</returns>
-        public Med GetMed(int index)
-        {
-            if ((Med?.Count ?? 0) == 0)
-            {
-                return default;
-            };
-
-            return Med[index];
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de elementos existentes na lista Med
-        /// </summary>
-        public int GetMedCount => (Med != null ? Med.Count : 0);
 
         /// <summary>
         /// Adicionar novo elemento a lista
@@ -2176,7 +2121,7 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class ExportInd
     {
         [XmlElement("nRE")]
-        public ulong NRE { get; set; }
+        public string NRE { get; set; }
 
         [XmlElement("chNFe")]
         public string ChNFe { get; set; }
@@ -2337,7 +2282,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string Descr
         {
             get => DescrField;
-            set => DescrField = XMLUtility.UnescapeReservedCharacters(value).Truncate(256);
+            set => DescrField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(256).Trim());
         }
     }
 
@@ -2418,6 +2363,25 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("encerrante")]
         public Encerrante Encerrante { get; set; }
 
+        /// <summary>
+        /// Percentual do índice de mistura do Biodiesel (B100) no Óleo Diesel B instituído pelo órgão regulamentador
+        /// </summary>
+        [XmlIgnore]
+        public double PBio { get; set; }
+
+        [XmlElement("pBio")]
+        public string PBioField
+        {
+            get => PBio.ToString("F4", CultureInfo.InvariantCulture);
+            set => PBio = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Grupo indicador da origem do combustível
+        /// </summary>
+        [XmlElement("origComb")]
+        public List<OrigComb> OrigComb { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializePGLPField() => PGLP > 0;
@@ -2432,7 +2396,47 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeQTempField() => QTemp > 0;
 
+        public bool ShouldSerializePBioField() => PBio > 0;
+
         #endregion
+
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddOrigComb(OrigComb item)
+        {
+            if (OrigComb == null)
+            {
+                OrigComb = new List<OrigComb>();
+            }
+
+            OrigComb.Add(item);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista OrigComb (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da OrigComb</returns>
+        public OrigComb GetOrigComb(int index)
+        {
+            if ((OrigComb?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return OrigComb[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista OrigComb
+        /// </summary>
+        public int GetOrigCombCount => (OrigComb != null ? OrigComb.Count : 0);
+
+#endif
     }
 
 #if INTEROP
@@ -2515,6 +2519,49 @@ namespace Unimake.Business.DFe.Xml.NFe
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.OrigComb")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class OrigComb
+    {
+        /// <summary>
+        /// Indicador de importação
+        /// </summary>
+        [XmlElement("indImport")]
+        public IndicadorImportacao IndImport { get; set; }
+
+        /// <summary>
+        /// UF de origem do produtor ou do importado
+        /// </summary>
+        [XmlIgnore]
+        public UFBrasil CUFOrig { get; set; }
+
+        [XmlElement("cUFOrig")]
+        public int CUFOrigField
+        {
+            get => (int)CUFOrig;
+            set => CUFOrig = (UFBrasil)Enum.Parse(typeof(UFBrasil), value.ToString());
+        }
+
+        /// <summary>
+        /// Percentual do índice de mistura do Biodiesel (B100) no Óleo Diesel B instituído pelo órgão regulamentador
+        /// </summary>
+        [XmlIgnore]
+        public double POrig { get; set; }
+
+        [XmlElement("pOrig")]
+        public string POrigField
+        {
+            get => POrig.ToString("F4", CultureInfo.InvariantCulture);
+            set => POrig = Converter.ToDouble(value);
+        }
+
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.NFe.Med")]
     [ComVisible(true)]
 #endif
@@ -2531,7 +2578,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XMotivoIsencao
         {
             get => XMotivoIsencaoField;
-            set => XMotivoIsencaoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(255);
+            set => XMotivoIsencaoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(255).Trim());
         }
 
         [XmlIgnore]
@@ -2642,16 +2689,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlElement("ICMS")]
-        public List<ICMS> ICMS { get; set; }
+        public ICMS ICMS { get; set; }
 
         [XmlElement("IPI")]
         public IPI IPI { get; set; }
 
         [XmlElement("II")]
-        public List<II> II { get; set; }
+        public II II { get; set; }
 
         [XmlElement("ISSQN")]
-        public List<ISSQN> ISSQN { get; set; }
+        public ISSQN ISSQN { get; set; }
 
         [XmlElement("PIS")]
         public PIS PIS { get; set; }
@@ -2667,112 +2714,6 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         [XmlElement("ICMSUFDest")]
         public ICMSUFDest ICMSUFDest { get; set; }
-
-#if INTEROP
-
-        /// <summary>
-        /// Adicionar novo elemento a lista
-        /// </summary>
-        /// <param name="icms">Elemento</param>
-        public void AddICMS(ICMS icms)
-        {
-            if (ICMS == null)
-            {
-                ICMS = new List<ICMS>();
-            }
-
-            ICMS.Add(icms);
-        }
-
-        /// <summary>
-        /// Retorna o elemento da lista ICMS (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
-        /// </summary>
-        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
-        /// <returns>Conteúdo do index passado por parâmetro da ICMS</returns>
-        public ICMS GetICMS(int index)
-        {
-            if ((ICMS?.Count ?? 0) == 0)
-            {
-                return default;
-            };
-
-            return ICMS[index];
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de elementos existentes na lista ICMS
-        /// </summary>
-        public int GetICMSCount => (ICMS != null ? ICMS.Count : 0);
-
-        /// <summary>
-        /// Adicionar novo elemento a lista
-        /// </summary>
-        /// <param name="ii">Elemento</param>
-        public void AddII(II ii)
-        {
-            if (II == null)
-            {
-                II = new List<II>();
-            }
-
-            II.Add(ii);
-        }
-
-        /// <summary>
-        /// Retorna o elemento da lista II (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
-        /// </summary>
-        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
-        /// <returns>Conteúdo do index passado por parâmetro da II</returns>
-        public II GetII(int index)
-        {
-            if ((II?.Count ?? 0) == 0)
-            {
-                return default;
-            };
-
-            return II[index];
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de elementos existentes na lista II
-        /// </summary>
-        public int GetIICount => (II != null ? II.Count : 0);
-
-        /// <summary>
-        /// Adicionar novo elemento a lista
-        /// </summary>
-        /// <param name="issQN">Elemento</param>
-        public void AddISSQN(ISSQN issQN)
-        {
-            if (ISSQN == null)
-            {
-                ISSQN = new List<ISSQN>();
-            }
-
-            ISSQN.Add(issQN);
-        }
-
-        /// <summary>
-        /// Retorna o elemento da lista ISSQN (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
-        /// </summary>
-        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
-        /// <returns>Conteúdo do index passado por parâmetro da ISSQN</returns>
-        public ISSQN GetISSQN(int index)
-        {
-            if ((ISSQN?.Count ?? 0) == 0)
-            {
-                return default;
-            };
-
-            return ISSQN[index];
-        }
-
-        /// <summary>
-        /// Retorna a quantidade de elementos existentes na lista ISSQN
-        /// </summary>
-        public int GetISSQNCount => (ISSQN != null ? ISSQN.Count : 0);
-
-#endif
 
         #region ShouldSerialize
 
@@ -2793,8 +2734,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("ICMS00")]
         public ICMS00 ICMS00 { get; set; }
 
+        [XmlElement("ICMS02")]
+        public ICMS02 ICMS02 { get; set; }
+
         [XmlElement("ICMS10")]
         public ICMS10 ICMS10 { get; set; }
+
+        [XmlElement("ICMS15")]
+        public ICMS15 ICMS15 { get; set; }
 
         [XmlElement("ICMS20")]
         public ICMS20 ICMS20 { get; set; }
@@ -2808,8 +2755,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("ICMS51")]
         public ICMS51 ICMS51 { get; set; }
 
+        [XmlElement("ICMS53")]
+        public ICMS53 ICMS53 { get; set; }
+
         [XmlElement("ICMS60")]
         public ICMS60 ICMS60 { get; set; }
+
+        [XmlElement("ICMS61")]
+        public ICMS61 ICMS61 { get; set; }
 
         [XmlElement("ICMS70")]
         public ICMS70 ICMS70 { get; set; }
@@ -2915,6 +2868,66 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializePFCPField() => PFCP > 0;
 
         public bool ShouldSerializeVFCPField() => PFCP > 0 || VFCP > 0;
+
+        #endregion
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.ICMS02")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class ICMS02
+    {
+        /// <summary>
+        /// Origem da mercadoria
+        /// </summary>
+        [XmlElement("orig")]
+        public OrigemMercadoria Orig { get; set; }
+
+        /// <summary>
+        /// CST - Código da situação tributária
+        /// </summary>
+        [XmlElement("CST")]
+        public string CST { get; set; } = "02";
+
+        /// <summary>
+        /// Quantidade tributada - Informar a BC do ICMS próprio em quantidade conforme unidade de medida estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlElement("qBCMono")]
+        public double QBCMono { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do imposto. Alíquota ad rem do ICMS, estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMS { get; set; }
+
+        [XmlElement("adRemICMS")]
+        public string AdRemICMSField
+        {
+            get => AdRemICMS.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMS = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS próprio - O valor do ICMS é obtido pela multiplicação da alíquota ad rem pela quantidade do produto conforme unidade de medida estabelecida na legislação.
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMono { get; set; }
+
+        [XmlElement("vICMSMono")]
+        public string VICMSMonoField
+        {
+            get => VICMSMono.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMono = Converter.ToDouble(value);
+        }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeQBCMono() => QBCMono > 0;
 
         #endregion
     }
@@ -3114,6 +3127,120 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVICMSSTDesonField() => VICMSSTDeson > 0;
 
         public bool ShouldSerializeMotDesICMSST() => VICMSSTDeson > 0;
+
+        #endregion
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.ICMS15")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class ICMS15
+    {
+        /// <summary>
+        /// Origem da mercadoria
+        /// </summary>
+        [XmlElement("orig")]
+        public OrigemMercadoria Orig { get; set; }
+
+        /// <summary>
+        /// CST - Código da situação tributária
+        /// </summary>
+        [XmlElement("CST")]
+        public string CST { get; set; } = "15";
+
+        /// <summary>
+        /// Quantidade tributada - Informar a BC do ICMS próprio em quantidade conforme unidade de medida estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlElement("qBCMono")]
+        public double QBCMono { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do imposto.
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMS { get; set; }
+
+        [XmlElement("adRemICMS")]
+        public string AdRemICMSField
+        {
+            get => AdRemICMS.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMS = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS próprio
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMono { get; set; }
+
+        [XmlElement("vICMSMono")]
+        public string VICMSMonoField
+        {
+            get => VICMSMono.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMono = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Quantidade tributada sujeita a retenção - Informar a BC do ICMS sujeito a retenção em quantidade conforme unidade de medida estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlElement("qBCMonoReten")]
+        public double QBCMonoReten { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do imposto com retenção
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMSReten { get; set; }
+
+        [XmlElement("adRemICMSReten")]
+        public string AdRemICMSRetenField
+        {
+            get => AdRemICMSReten.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMSReten = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS próprio com retenção
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoReten { get; set; }
+
+        [XmlElement("vICMSMonoReten")]
+        public string VICMSMonoRetenField
+        {
+            get => VICMSMonoReten.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoReten = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Percentual de redução do valor da alíquota ad rem do ICMS
+        /// </summary>
+        [XmlIgnore]
+        public double PRedAdRem { get; set; }
+
+        [XmlElement("pRedAdRem")]
+        public string PRedAdRemField
+        {
+            get => PRedAdRem.ToString("F2", CultureInfo.InvariantCulture);
+            set => PRedAdRem = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Motivo da redução do adrem do ICMS. Só preencher se o pRedAdRem for maior que zero.
+        /// </summary>
+        [XmlElement("motRedAdRem")]
+        public MotivoReducaoAdRem MotRedAdRem { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeQBCMono() => QBCMono > 0;
+        public bool ShouldSerializeQBCMonoReten() => QBCMonoReten > 0;
+        public bool ShouldSerializePRedAdRemField() => PRedAdRem > 0;
+        public bool ShouldSerializeMotRedAdRem() => PRedAdRem > 0;
 
         #endregion
     }
@@ -3373,27 +3500,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMS40
     {
-        private string CSTField;
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("40") || value.Equals("41") || value.Equals("50"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMS40>, inválido! Valores aceitos: 40, 41 ou 50.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double VICMSDeson { get; set; }
@@ -3595,6 +3706,131 @@ namespace Unimake.Business.DFe.Xml.NFe
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.ICMS53")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class ICMS53
+    {
+        /// <summary>
+        /// Origem da mercadoria
+        /// </summary>
+        [XmlElement("orig")]
+        public OrigemMercadoria Orig { get; set; }
+
+        /// <summary>
+        /// CST - Código da situação tributária
+        /// </summary>
+        [XmlElement("CST")]
+        public string CST { get; set; } = "53";
+
+        /// <summary>
+        /// Quantidade tributada - Informar a BC do ICMS em quantidade conforme unidade de medida estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlElement("qBCMono")]
+        public double QBCMono { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do ICMS estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMS { get; set; }
+
+        [XmlElement("adRemICMS")]
+        public string AdRemICMSField
+        {
+            get => AdRemICMS.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMS = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS da operação - O valor do ICMS é obtido pela multiplicação da alíquota ad rem pela quantidade do produto conforme unidade de medida estabelecida em legislação, como se não houvesse o diferimento
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoOp { get; set; }
+
+        [XmlElement("vICMSMonoOp")]
+        public string VICMSMonoOpField
+        {
+            get => VICMSMonoOp.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoOp = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Percentual do diferimento - No caso de diferimento total, informar o percentual de diferimento "100".
+        /// </summary>
+        [XmlIgnore]
+        public double PDif { get; set; }
+
+        [XmlElement("pDif")]
+        public string PDifField
+        {
+            get => PDif.ToString("F4", CultureInfo.InvariantCulture);
+            set => PDif = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS próprio
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoDif { get; set; }
+
+        [XmlElement("vICMSMonoDif")]
+        public string VICMSMonoDifField
+        {
+            get => VICMSMonoDif.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoDif = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS próprio devido - O valor do ICMS próprio devido é o resultado do valor do ICMS da operação menos valor do ICMS diferido.
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMono { get; set; }
+
+        [XmlElement("vICMSMono")]
+        public string VICMSMonoField
+        {
+            get => VICMSMono.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMono = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Quantidade tributada diferida - Informar a BC do ICMS diferido em quantidade conforme unidade de medida estabelecida na legislação para o produto.
+        /// </summary>
+        [XmlElement("qBCMonoDif")]
+        public double QBCMonoDif { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do imposto diferido
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMSDif { get; set; }
+
+        [XmlElement("adRemICMSDif")]
+        public string AdRemICMSDifField
+        {
+            get => AdRemICMSDif.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMSDif = Converter.ToDouble(value);
+        }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeQBCMono() => QBCMono > 0;
+        public bool ShouldSerializeAdRemICMSField() => AdRemICMS > 0;
+        public bool ShouldSerializeVICMSMonoOpField() => VICMSMonoOp > 0;
+        public bool ShouldSerializePDifField() => PDif > 0;
+        public bool ShouldSerializeVICMSMonoDifField() => VICMSMonoDif > 0;
+        public bool ShouldSerializeVICMSMonoField() => VICMSMono > 0;
+        public bool ShouldSerializeQBCMonoDif() => QBCMonoDif > 0;
+        public bool ShouldSerializeAdRemICMSDifField() => AdRemICMSDif > 0;
+
+        #endregion
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.NFe.ICMS60")]
     [ComVisible(true)]
 #endif
@@ -3733,6 +3969,66 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVBCEfetField() => VBCEfet > 0;
         public bool ShouldSerializePICMSEfetField() => VBCEfet > 0;
         public bool ShouldSerializeVICMSEfetField() => VBCEfet > 0;
+
+        #endregion
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.ICMS61")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class ICMS61
+    {
+        /// <summary>
+        /// Origem da mercadoria
+        /// </summary>
+        [XmlElement("orig")]
+        public OrigemMercadoria Orig { get; set; }
+
+        /// <summary>
+        /// CST - Código da situação tributária
+        /// </summary>
+        [XmlElement("CST")]
+        public string CST { get; set; } = "61";
+
+        /// <summary>
+        /// Quantidade tributada retida anteriormente - Informar a BC do ICMS em quantidade conforme unidade de medida estabelecida na legislação.
+        /// </summary>
+        [XmlElement("qBCMonoRet")]
+        public double QBCMonoRet { get; set; }
+
+        /// <summary>
+        /// Alíquota ad rem do imposto retido anteriormente
+        /// </summary>
+        [XmlIgnore]
+        public double AdRemICMSRet { get; set; }
+
+        [XmlElement("adRemICMSRet")]
+        public string AdRemICMSRetField
+        {
+            get => AdRemICMSRet.ToString("F4", CultureInfo.InvariantCulture);
+            set => AdRemICMSRet = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS retido anteriormente
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoRet { get; set; }
+
+        [XmlElement("vICMSMonoRet")]
+        public string VICMSMonoRetField
+        {
+            get => VICMSMonoRet.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoRet = Converter.ToDouble(value);
+        }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeQBCMonoRet() => QBCMonoRet > 0;
 
         #endregion
     }
@@ -4286,27 +4582,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSPart
     {
-        private string CSTField;
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("10") || value.Equals("90"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMSPart>, inválido! Valores aceitos: 10 ou 90.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlElement("modBC")]
         public ModalidadeBaseCalculoICMS ModBC { get; set; }
@@ -4480,27 +4760,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN101
     {
-        private string CSOSNField = "101";
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("101"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN101>, inválido! Valor aceito: 101.");
-                }
-            }
-        }
+        public string CSOSN { get; set; } = "101";
 
         [XmlIgnore]
         public double PCredSN { get; set; }
@@ -4532,27 +4796,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN102
     {
-        private string CSOSNField;
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public virtual string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("102") || value.Equals("103") || value.Equals("300") || value.Equals("400"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN102>, inválido! Valores aceitos: 102, 103, 300 ou 400.");
-                }
-            }
-        }
+        public virtual string CSOSN { get; set; }
     }
 
 #if INTEROP
@@ -4564,27 +4812,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN201
     {
-        private string CSOSNField = "201";
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("201"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN201>, inválido! Valor aceito: 201.");
-                }
-            }
-        }
+        public string CSOSN { get; set; } = "201";
 
         [XmlIgnore]
         public ModalidadeBaseCalculoICMSST ModBCSTField { get; set; }
@@ -4721,27 +4953,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN202
     {
-        private string CSOSNField;
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("202") || value.Equals("203"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN202>, inválido! Valores aceitos: 202 ou 203.");
-                }
-            }
-        }
+        public string CSOSN { get; set; }
 
         [XmlIgnore]
         public ModalidadeBaseCalculoICMSST ModBCSTField { get; set; }
@@ -4855,27 +5071,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN500
     {
-        private string CSOSNField = "500";
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("500"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN500>, inválido! Valor aceito: 500.");
-                }
-            }
-        }
+        public string CSOSN { get; set; } = "500";
 
         [XmlIgnore]
         public double? VBCSTRet { get; set; }
@@ -5015,27 +5215,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSSN900
     {
-        private string CSOSNField = "900";
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public string CSOSN
-        {
-            get => CSOSNField;
-            set
-            {
-                if (value.Equals("900"))
-                {
-                    CSOSNField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CSOSN>, filha da TAG <ICMSSN900>, inválido! Valor aceito: 900.");
-                }
-            }
-        }
+        public string CSOSN { get; set; } = "900";
 
         [XmlElement("modBC")]
 #if INTEROP
@@ -5250,27 +5434,11 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class ICMSST
     {
-        private string CSTField;
-
         [XmlElement("orig")]
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("41") || value.Equals("60"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <ICMSST>, inválido! Valores aceitos: 41 ou 60.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double VBCSTRet { get; set; }
@@ -5517,27 +5685,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class IPINT
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("01") || value.Equals("02") || value.Equals("03") ||
-                    value.Equals("04") || value.Equals("05") || value.Equals("51") ||
-                    value.Equals("52") || value.Equals("53") || value.Equals("54") ||
-                    value.Equals("55"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <IPINT>, inválido! Valores aceitos: 01, 02, 03, 04, 05, 51, 52, 53, 54 ou 55.");
-                }
-            }
-        }
+        public string CST { get; set; }
     }
 
 #if INTEROP
@@ -5549,25 +5698,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class IPITrib
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("00") || value.Equals("49") || value.Equals("50") ||
-                    value.Equals("99"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <IPITrib>, inválido! Valores aceitos: 00, 49, 50 ou 99.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double VBC { get; set; }
@@ -5799,24 +5931,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class PISAliq
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("01") || value.Equals("02"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISAliq>, inválido! Valores aceitos: 01 ou 02.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double VBC { get; set; }
@@ -5858,24 +5974,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class PISNT
     {
-        private string _cstField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => _cstField?.PadLeft(2, '0');
-            set
-            {
-                _cstField = string.Empty;
-
-                if (!int.TryParse(value, out var cst) || cst < 4 || cst > 9)
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISNT>, inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
-                }
-
-                _cstField = cst.ToString();
-            }
-        }
+        public string CST { get; set; }
     }
 
 #if INTEROP
@@ -5887,27 +5987,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class PISOutr
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("49") || value.Equals("50") || value.Equals("51") || value.Equals("52") || value.Equals("53") || value.Equals("54") ||
-                    value.Equals("55") || value.Equals("56") || value.Equals("60") || value.Equals("61") || value.Equals("62") || value.Equals("63") ||
-                    value.Equals("64") || value.Equals("65") || value.Equals("66") || value.Equals("67") || value.Equals("70") || value.Equals("71") ||
-                    value.Equals("72") || value.Equals("73") || value.Equals("74") || value.Equals("75") || value.Equals("98") || value.Equals("99"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISOutr>, inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double? VBC { get; set; }
@@ -5965,24 +6046,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class PISQtde
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("03"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <PISQtde>, inválido! Valor aceito: 03");
-                }
-            }
-        }
+        public string CST { get; set; } = "03";
 
         [XmlElement("qBCProd")]
         public double QBCProd { get; set; }
@@ -6097,24 +6162,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class COFINSAliq
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("01") || value.Equals("02"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSAliq>, inválido! Valores aceitos: 01 ou 02.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double VBC { get; set; }
@@ -6156,24 +6205,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class COFINSNT
     {
-        private string _cstField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => _cstField?.PadLeft(2, '0');
-            set
-            {
-                _cstField = string.Empty;
-
-                if (!int.TryParse(value, out var cst) || cst < 4 || cst > 9)
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSNT>, inválido! Valores aceitos: 04, 05, 06, 07, 08 ou 09.");
-                }
-
-                _cstField = cst.ToString();
-            }
-        }
+        public string CST { get; set; }
     }
 
 #if INTEROP
@@ -6185,27 +6218,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class COFINSOutr
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("49") || value.Equals("50") || value.Equals("51") || value.Equals("52") || value.Equals("53") || value.Equals("54") ||
-                    value.Equals("55") || value.Equals("56") || value.Equals("60") || value.Equals("61") || value.Equals("62") || value.Equals("63") ||
-                    value.Equals("64") || value.Equals("65") || value.Equals("66") || value.Equals("67") || value.Equals("70") || value.Equals("71") ||
-                    value.Equals("72") || value.Equals("73") || value.Equals("74") || value.Equals("75") || value.Equals("98") || value.Equals("99"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSOutr>, inválido! Valores aceitos: 49, 50, 51, 52, 53, 54, 55, 56, 60, 61, 62, 63, 64, 65, 66, 67, 70, 71, 72, 73, 74, 75, 98 ou 99.");
-                }
-            }
-        }
+        public string CST { get; set; }
 
         [XmlIgnore]
         public double? VBC { get; set; }
@@ -6263,24 +6277,8 @@ namespace Unimake.Business.DFe.Xml.NFe
     [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class COFINSQtde
     {
-        private string CSTField;
-
         [XmlElement("CST")]
-        public string CST
-        {
-            get => CSTField;
-            set
-            {
-                if (value.Equals("03"))
-                {
-                    CSTField = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <CST>, filha da TAG <COFINSQtde>, inválido! Valor aceito: 03");
-                }
-            }
-        }
+        public string CST { get; set; } = "03";
 
         [XmlElement("qBCProd")]
         public double QBCProd { get; set; }
@@ -6412,24 +6410,8 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => PICMSUFDest = Converter.ToDouble(value);
         }
 
-        private double PICMSInterField2;
-
         [XmlIgnore]
-        public double PICMSInter
-        {
-            get => PICMSInterField2;
-            set
-            {
-                if (value == 4 || value == 7 || value == 12)
-                {
-                    PICMSInterField2 = value;
-                }
-                else
-                {
-                    throw new Exception("Conteúdo da TAG <PICMSInter>, filha da TAG <ICMSUFDest>, inválido! Valores aceitos: 4, 7 ou 12.");
-                }
-            }
-        }
+        public double PICMSInter { get; set; }
 
         [XmlElement("pICMSInter")]
         public string PICMSInterField
@@ -6748,6 +6730,85 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => VFCPSTRet = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Valor total da quantidade tributada do ICMS monofásico próprio
+        /// </summary>
+        [XmlIgnore]
+        public double QBCMono { get; set; }
+
+        [XmlElement("qBCMono")]
+        public string QBCMonoField
+        {
+            get => QBCMono.ToString("F2", CultureInfo.InvariantCulture);
+            set => QBCMono = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico próprio
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMono { get; set; }
+
+        [XmlElement("vICMSMono")]
+        public string VICMSMonoField
+        {
+            get => VICMSMono.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMono = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor total da quantidade tributada do ICMS monofásico sujeito a retenção
+        /// </summary>
+        [XmlIgnore]
+        public double QBCMonoReten { get; set; }
+
+        [XmlElement("qBCMonoReten")]
+        public string QBCMonoRetenField
+        {
+            get => QBCMonoReten.ToString("F2", CultureInfo.InvariantCulture);
+            set => QBCMonoReten = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor total do ICMS monofásico sujeito a retenção
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoReten { get; set; }
+
+        [XmlElement("vICMSMonoReten")]
+        public string VICMSMonoRetenField
+        {
+            get => VICMSMonoReten.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoReten = Converter.ToDouble(value);
+        }
+
+
+        /// <summary>
+        /// Valor total da quantidade tributada do ICMS monofásico retido anteriormente
+        /// </summary>
+        [XmlIgnore]
+        public double QBCMonoRet { get; set; }
+
+        [XmlElement("qBCMonoRet")]
+        public string QBCMonoRetField
+        {
+            get => QBCMonoRet.ToString("F2", CultureInfo.InvariantCulture);
+            set => QBCMonoRet = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do ICMS monofásico retido anteriormente
+        /// </summary>
+        [XmlIgnore]
+        public double VICMSMonoRet { get; set; }
+
+        [XmlElement("vICMSMonoRet")]
+        public string VICMSMonoRetField
+        {
+            get => VICMSMonoRet.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSMonoRet = Converter.ToDouble(value);
+        }
+
         [XmlIgnore]
         public double VProd { get; set; }
         [XmlElement("vProd")]
@@ -6865,6 +6926,18 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVICMSUFRemetField() => VICMSUFRemet > 0;
 
         public bool ShouldSerializeVTotTribField() => VTotTrib > 0;
+
+        public bool ShouldSerializeQBCMonoField() => QBCMono > 0;
+
+        public bool ShouldSerializeVICMSMonoField() => VICMSMono > 0;
+
+        public bool ShouldSerializeQBCMonoRetenField() => QBCMonoReten > 0;
+
+        public bool ShouldSerializeVICMSMonoRetenField() => VICMSMonoReten > 0;
+
+        public bool ShouldSerializeVICMSMonoRetField() => VICMSMonoRet > 0;
+
+        public bool ShouldSerializeQBCMonoRetField() => QBCMonoRet > 0;
 
         #endregion
     }
@@ -7149,14 +7222,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string Vagao
         {
             get => VagaoField;
-            set => VagaoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(20);
+            set => VagaoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(20).Trim());
         }
 
         [XmlElement("balsa")]
         public string Balsa
         {
             get => BalsaField;
-            set => BalsaField = XMLUtility.UnescapeReservedCharacters(value).Truncate(20);
+            set => BalsaField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(20).Trim());
         }
 
         [XmlElement("vol")]
@@ -7167,6 +7240,30 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVagao() => !string.IsNullOrWhiteSpace(Vagao);
 
         public bool ShouldSerializeBalsa() => !string.IsNullOrWhiteSpace(Balsa);
+
+        public bool ShouldSerializeVol()
+        {
+            if (Vol.Count <= 0)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < Vol.Count; i++)
+            {
+
+                if (Vol[i].QVol > 0 ||
+                    !string.IsNullOrWhiteSpace(Vol[i].Esp) ||
+                    !string.IsNullOrWhiteSpace(Vol[i].Marca) ||
+                    !string.IsNullOrWhiteSpace(Vol[i].NVol) ||
+                    Vol[i].PesoL > 0 ||
+                    Vol[i].PesoB > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         #endregion
 
@@ -7266,7 +7363,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XNome
         {
             get => XNomeField;
-            set => XNomeField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XNomeField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("IE")]
@@ -7276,14 +7373,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XEnder
         {
             get => XEnderField;
-            set => XEnderField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XEnderField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xMun")]
         public string XMun
         {
             get => XMunField;
-            set => XMunField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XMunField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
 #if INTEROP
@@ -7424,14 +7521,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string Esp
         {
             get => EspField;
-            set => EspField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => EspField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("marca")]
         public string Marca
         {
             get => MarcaField;
-            set => MarcaField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => MarcaField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("nVol")]
@@ -7758,7 +7855,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XPag
         {
             get => XPagField;
-            set => XPagField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XPagField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlIgnore]
@@ -7799,18 +7896,26 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CNPJ { get; set; }
 
         [XmlElement("tBand")]
-        public BandeiraOperadoraCartao TBand { get; set; }
+#if INTEROP
+        public BandeiraOperadoraCartao TBand { get; set; } = (BandeiraOperadoraCartao)(-1);
+#else
+        public BandeiraOperadoraCartao? TBand { get; set; }
+#endif
 
         [XmlElement("cAut")]
         public string CAut { get; set; }
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeCNPJ() => TpIntegra == TipoIntegracaoPagamento.PagamentoIntegrado;
+        public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
 
-        public bool ShouldSerializeTBand() => TpIntegra == TipoIntegracaoPagamento.PagamentoIntegrado;
+#if INTEROP
+        public bool ShouldSerializeTBand() => TBand != (BandeiraOperadoraCartao)(-1);
+#else
+        public bool ShouldSerializeTBand() => TBand != null;
+#endif
 
-        public bool ShouldSerializeCAut() => TpIntegra == TipoIntegracaoPagamento.PagamentoIntegrado;
+        public bool ShouldSerializeCAut() => !string.IsNullOrWhiteSpace(CAut);
 
         #endregion
     }
@@ -7861,14 +7966,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string InfAdFisco
         {
             get => InfAdFiscoField;
-            set => InfAdFiscoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(2000);
+            set => InfAdFiscoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(2000).Trim());
         }
 
         [XmlElement("infCpl")]
         public string InfCpl
         {
             get => InfCplField;
-            set => InfCplField = XMLUtility.UnescapeReservedCharacters(value).Truncate(5000);
+            set => InfCplField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(5000).Trim());
         }
 
         [XmlElement("obsCont")]
@@ -8013,7 +8118,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XTexto
         {
             get => XTextoField;
-            set => XTextoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XTextoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlAttribute(AttributeName = "xCampo")]
@@ -8035,7 +8140,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XTexto
         {
             get => XTextoField;
-            set => XTextoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XTextoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlAttribute(AttributeName = "xCampo")]
@@ -8107,14 +8212,14 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XLocExporta
         {
             get => XLocExportaField;
-            set => XLocExportaField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XLocExportaField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("xLocDespacho")]
         public string XLocDespacho
         {
             get => XLocDespachoField;
-            set => XLocDespachoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XLocDespachoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         #region ShouldSerialize
@@ -8345,7 +8450,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XDed
         {
             get => XDedField;
-            set => XDedField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XDedField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlIgnore]
@@ -8377,7 +8482,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string XContato
         {
             get => XContatoField;
-            set => XContatoField = XMLUtility.UnescapeReservedCharacters(value).Truncate(60);
+            set => XContatoField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
         }
 
         [XmlElement("email")]

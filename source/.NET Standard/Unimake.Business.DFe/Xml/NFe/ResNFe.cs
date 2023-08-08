@@ -4,8 +4,10 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
+using System.Globalization;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
+using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Xml.NFe
 {
@@ -33,32 +35,54 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string IE { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhEmi { get; set; }
+#else
+        public DateTimeOffset DhEmi { get; set; }
+#endif
 
         [XmlElement("dhEmi")]
         public string DhEmiField
         {
             get => DhEmi.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhEmi = DateTime.Parse(value);
+#else
+            set => DhEmi = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("tpNF")]
         public TipoOperacao TpNF { get; set; }
 
+        [XmlIgnore]
+        public double VNF { get; set; }
         [XmlElement("vNF")]
-        public string VNF { get; set; }
+        public string VNFField
+        {
+            get => VNF.ToString("F2", CultureInfo.InvariantCulture);
+            set => VNF = Converter.ToDouble(value);
+        }
 
         [XmlElement("digVal")]
         public string DigVal { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
 
         [XmlElement("dhRecbto")]
         public string DhRecbtoField
         {
             get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("nProt")]

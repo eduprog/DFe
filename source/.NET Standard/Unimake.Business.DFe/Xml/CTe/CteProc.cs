@@ -19,7 +19,7 @@ namespace Unimake.Business.DFe.Xml.CTe
 #endif
     [Serializable()]
     [XmlRoot("cteProc", Namespace = "http://www.portalfiscal.inf.br/cte", IsNullable = false)]
-    public class CteProc: XMLBase
+    public class CteProc : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
         public string Versao { get; set; }
@@ -37,13 +37,21 @@ namespace Unimake.Business.DFe.Xml.CTe
         public int NPortaCon { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhConexao { get; set; }
+#else
+        public DateTimeOffset DhConexao { get; set; }
+#endif
 
         [XmlAttribute("dhConexao")]
         public string DhConexaoField
         {
             get => DhConexao.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhConexao = DateTime.Parse(value);
+#else
+            set => DhConexao = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -54,7 +62,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         {
             get
             {
-                switch(ProtCTe.InfProt.CStat)
+                switch (ProtCTe.InfProt.CStat)
                 {
                     case 110: //Uso Denegado
                     case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
@@ -96,12 +104,12 @@ namespace Unimake.Business.DFe.Xml.CTe
             return XMLUtility.Deserializar<CteProc>(doc);
         }
 
-        #region ShouldSerialize
+#region ShouldSerialize
 
         public bool ShouldSerializeIpTransmissor() => !string.IsNullOrWhiteSpace(IpTransmissor);
         public bool ShouldSerializeNPortaCon() => NPortaCon > 0;
         public bool ShouldSerializeDhConexaoField() => DhConexao > DateTime.MinValue;
 
-        #endregion
+#endregion
     }
 }

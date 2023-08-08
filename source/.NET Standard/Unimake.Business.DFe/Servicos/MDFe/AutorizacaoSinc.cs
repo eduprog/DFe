@@ -119,7 +119,7 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         #region Public Fields
 
         /// <summary>
-        /// Propriedade com o conteúdo retornado da consulta situção do MDFe
+        /// Propriedade com o conteúdo retornado da consulta situação do MDFe
         /// </summary>
         public List<RetConsSitMDFe> RetConsSitMDFe = new List<RetConsSitMDFe>();
 
@@ -397,6 +397,13 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         [ComVisible(true)]
         public void AddRetConsSitMDFe(RetConsSitMDFe item) =>
             (RetConsSitMDFe ?? (RetConsSitMDFe = new List<RetConsSitMDFe>())).Add(item);
+
+
+        /// <summary>
+        /// Recupera o conteúdo o único MDFe, assinado, existente no lote gerado de MDFe´s
+        /// </summary>
+        /// <returns>Retorna o conteúdo do MDFe, assinado, existente no lote gerado de MDFe´s</returns>
+        public string GetConteudoMDFeAssinado() => (ConteudoXMLAssinado != null ? ConteudoXMLAssinado.OuterXml : "");
 
 #endif
 

@@ -31,7 +31,11 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Carimbo de tempo realizado pelo Sistema Cliente no instante da comunicação com o SNCM.
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime CcTime { get; set; }
+#else
+        public DateTimeOffset CcTime { get; set; }
+#endif
 
         /// <summary>
         /// Auxiliar da propriedade "CcTime" - utilize a propriedade "CcTime" para atribuir valor.
@@ -40,7 +44,11 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string CcTimeField
         {
             get => CcTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => CcTime = DateTime.Parse(value);
+#else
+            set => CcTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -82,7 +90,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string UsrAgt
         {
             get => UsrAgtField;
-            set => UsrAgtField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => UsrAgtField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -179,7 +187,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Reason
         {
             get => ReasonField;
-            set => ReasonField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => ReasonField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
     }
 }

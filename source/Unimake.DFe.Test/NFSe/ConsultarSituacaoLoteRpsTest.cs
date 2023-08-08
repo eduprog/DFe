@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Diag = System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Unimake.Business.DFe.Servicos;
@@ -29,32 +27,35 @@ namespace Unimake.DFe.Test.NFSe
         public void ConsultarSituacaoLoteRps(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
         {
             var nomeXMLEnvio = "ConsultarSituacaoLoteRpsEnvio-ped-sitloterps.xml";
-            var arqXML = "..\\..\\..\\NFSe\\Resources\\" + padraoNFSe.ToString() + "\\" + versaoSchema + "\\" + nomeXMLEnvio;
 
-            Diag.Debug.Assert(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado.");
+            string arqXML;
 
-            try
+            if (codMunicipio == 4125506)
             {
-                var conteudoXML = new XmlDocument();
-                conteudoXML.Load(arqXML);
-
-                var configuracao = new Configuracao
-                {
-                    TipoDFe = TipoDFe.NFSe,
-                    CertificadoDigital = PropConfig.CertificadoDigital,
-                    TipoAmbiente = tipoAmbiente,
-                    CodigoMunicipio = codMunicipio,
-                    Servico = Servico.NFSeConsultarSituacaoLoteRps,
-                    SchemaVersao = versaoSchema
-                };
-
-                var consultarSituacaoLoteRps = new ConsultarSituacaoLoteRps(conteudoXML, configuracao);
-                consultarSituacaoLoteRps.Executar();
+                arqXML = "..\\..\\..\\NFSe\\Resources\\" + padraoNFSe.ToString() + "\\3.00 - SaoJoseDosPinhais\\" + nomeXMLEnvio;
             }
-            catch (Exception ex)
+            else
             {
-                Diag.Debug.Assert(false, "Falha na hora de consumir o serviço: " + nomeMunicipio + " - IBGE: " + codMunicipio + " - Padrão: " + padraoNFSe.ToString() + " - Versão schema: " + versaoSchema + "\r\nExceção: " + ex.Message, ex.StackTrace);
+                arqXML = "..\\..\\..\\NFSe\\Resources\\" + padraoNFSe.ToString() + "\\" + versaoSchema + "\\" + nomeXMLEnvio;
             }
+
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado.");
+
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(arqXML);
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                CertificadoDigital = PropConfig.CertificadoDigital,
+                TipoAmbiente = tipoAmbiente,
+                CodigoMunicipio = codMunicipio,
+                Servico = Servico.NFSeConsultarSituacaoLoteRps,
+                SchemaVersao = versaoSchema
+            };
+
+            var consultarSituacaoLoteRps = new ConsultarSituacaoLoteRps(conteudoXML, configuracao);
+            consultarSituacaoLoteRps.Executar();
         }
     }
 }

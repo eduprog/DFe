@@ -4,10 +4,10 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
-using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Xml.CTe
 {
@@ -18,7 +18,7 @@ namespace Unimake.Business.DFe.Xml.CTe
 #endif
     [Serializable()]
     [XmlRoot("procEventoCTe", Namespace = "http://www.portalfiscal.inf.br/cte", IsNullable = false)]
-    public class ProcEventoCTe: XMLBase
+    public class ProcEventoCTe : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
         public string Versao { get; set; }
@@ -36,13 +36,21 @@ namespace Unimake.Business.DFe.Xml.CTe
         public int NPortaCon { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhConexao { get; set; }
+#else
+        public DateTimeOffset DhConexao { get; set; }
+#endif
 
         [XmlAttribute("dhConexao")]
         public string DhConexaoField
         {
             get => DhConexao.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhConexao = DateTime.Parse(value);
+#else
+            set => DhConexao = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -71,34 +79,29 @@ namespace Unimake.Business.DFe.Xml.CTe
 
         public override void ReadXml(XmlDocument document)
         {
-            base.ReadXml(document);
+            var nodeListEvento = document.GetElementsByTagName("eventoCTe");
 
-            var reader = XmlReader.Create(new StringReader(document.InnerXml));
-
-            while(reader.Read())
+            if (nodeListEvento != null)
             {
-                if(reader.NodeType != XmlNodeType.Element)
+                EventoCTe = XMLUtility.Deserializar<EventoCTe>(((XmlElement)nodeListEvento[0]).OuterXml);
+                var nodeListEventoSignature = ((XmlElement)nodeListEvento[0]).GetElementsByTagName("Signature");
+                if (nodeListEventoSignature != null)
                 {
-                    continue;
+                    if (nodeListEventoSignature.Count > 0)
+                    {
+                        var signature = ((XmlElement)nodeListEventoSignature[0]).OuterXml;
+
+                        signature = signature.Replace("<Signature xmlns=\"http://www.portalfiscal.inf.br/cte\">", "<Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\">");
+
+                        EventoCTe.Signature = XMLUtility.Deserializar<Signature>(signature);
+                    }
                 }
+            }
 
-                switch(reader.Name)
-                {
-                    case "Signature":
-                        EventoCTe.Signature = reader.ToSignature();
-                        break;
-
-                    case "retEventoCTe":
-                        var versao = reader.GetAttribute("versao");
-                        var infEvento = reader.DeserializeTo<RetEventoCTeInfEvento>();
-
-                        RetEventoCTe = new RetEventoCTe
-                        {
-                            Versao = versao,
-                            InfEvento = infEvento
-                        };
-                        break;
-                }
+            var nodeListRetEvento = document.GetElementsByTagName("retEventoCTe");
+            if (nodeListRetEvento != null)
+            {
+                RetEventoCTe = XMLUtility.Deserializar<RetEventoCTe>(((XmlElement)nodeListRetEvento[0]).OuterXml);
             }
         }
 

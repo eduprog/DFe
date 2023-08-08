@@ -7,6 +7,8 @@ using Unimake.Business.DFe.Security;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml;
 using Unimake.Exceptions;
+using Unimake.Business.DFe.Validator;
+using Unimake.Business.Security;
 
 namespace Unimake.Business.DFe.Servicos
 {
@@ -118,7 +120,7 @@ namespace Unimake.Business.DFe.Servicos
 #if INTEROP
         [ComVisible(false)]
 #endif
-        protected internal void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
+        protected virtual void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
         {
             Configuracoes = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
             ConteudoXML = conteudoXML ?? throw new ArgumentNullException(nameof(conteudoXML));
@@ -129,11 +131,14 @@ namespace Unimake.Business.DFe.Servicos
             }
 
             //Esta linha tem que ficar fora do if acima, pois tem que carregar esta parte, independente, pois o que é carregado sempre é automático. Mudar isso, vai gerar falha no UNINFE, principalmente no envio dos eventos, onde eu defino as configurações manualmente. Wandrey 07/12/2020
-            Configuracoes.Load(GetType().Name);
+           Configuracoes.Load(GetType().Name);
 
             System.Diagnostics.Trace.WriteLine(ConteudoXML?.InnerXml, "Unimake.DFe");
-        }
 
+            //Forçar criar a tag QrCode bem como assinatura para que o usuário possa acessar o conteúdo no objeto do XML antes de enviar
+                _ = ConteudoXMLAssinado;
+            }
+            
         #endregion Protected Internal Methods
 
         #region Public Properties
@@ -164,6 +169,13 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         /// <returns>Retorna conteúdo do XML assinado</returns>
         public string GetConteudoXMLAssinado() => (ConteudoXMLAssinado != null ? ConteudoXMLAssinado.OuterXml : "");
+
+        /// <summary>
+        /// Recupera o conteúdo do XML original.
+        /// </summary>
+        /// <returns>Retorna conteúdo do XML original</returns>
+        public string GetConteudoXMLOriginal() => (ConteudoXMLOriginal != null ? ConteudoXMLOriginal.OuterXml : "");
+
 
 #endif
 
@@ -200,6 +212,11 @@ namespace Unimake.Business.DFe.Servicos
 #endif
         public virtual void Executar()
         {
+            if (!(ValidatorFactory.BuidValidator(ConteudoXML.InnerXml)?.Validate() ?? true))
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura))
             {
                 if (!AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
@@ -209,27 +226,63 @@ namespace Unimake.Business.DFe.Servicos
                 }
             }
 
-            var soap = new WSSoap
+            if (Configuracoes.IsAPI)
             {
-                EnderecoWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebEnderecoProducao : Configuracoes.WebEnderecoHomologacao),
-                ActionWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebActionProducao : Configuracoes.WebActionHomologacao),
-                TagRetorno = Configuracoes.WebTagRetorno,
-                EncodingRetorno = Configuracoes.WebEncodingRetorno,
-                GZIPCompress = Configuracoes.GZIPCompress,
-                VersaoSoap = Configuracoes.WebSoapVersion,
-                SoapString = Configuracoes.WebSoapString,
-                ContentType = Configuracoes.WebContentType,
-                TimeOutWebServiceConnect = Configuracoes.TimeOutWebServiceConnect,
-                Proxy = (Configuracoes.HasProxy ? Proxy.DefinirServidor(Configuracoes.ProxyAutoDetect,
-                                                                        Configuracoes.ProxyUser,
-                                                                        Configuracoes.ProxyPassword) : null)
-            };
+                var apiConfig = new APIConfig
+                {
+                    ContentType = Configuracoes.WebContentType,
+                    RequestURI = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.RequestURIProducao : Configuracoes.RequestURIHomologacao),
+                    TagRetorno = Configuracoes.WebTagRetorno,
+                    GZipCompress = Configuracoes.GZIPCompress,
+                    WebSoapString = Configuracoes.WebSoapString,
+                    MetodoAPI = Configuracoes.MetodoAPI,
+                    Token = Configuracoes.MunicipioToken,
+                    WebAction = Configuracoes.WebActionProducao,
+                    MunicipioSenha = Configuracoes.MunicipioSenha,
+                    MunicipioUsuario = Configuracoes.MunicipioUsuario,
+                    PadraoNFSe = Configuracoes.PadraoNFSe,
+                    LoginConexao = Configuracoes.LoginConexao,
+                    ResponseMediaType = Configuracoes.ResponseMediaType,
+                    CodigoTom = Configuracoes.CodigoTom,
+                    UsaCertificadoDigital = Configuracoes.UsaCertificadoDigital
+                };
 
-            var consumirWS = new ConsumirWS();
-            consumirWS.ExecutarServico(ConteudoXML, soap, Configuracoes.CertificadoDigital);
+                var consumirAPI = new ConsumirAPI();
+                consumirAPI.ExecutarServico(ConteudoXML, apiConfig, Configuracoes.CertificadoDigital);
 
-            RetornoWSString = consumirWS.RetornoServicoString;
-            RetornoWSXML = consumirWS.RetornoServicoXML;
+                RetornoWSString = consumirAPI.RetornoServicoString;
+                RetornoWSXML = consumirAPI.RetornoServicoXML;
+            }
+            else
+            {
+                var soap = new WSSoap
+                {
+                    EnderecoWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebEnderecoProducao : Configuracoes.WebEnderecoHomologacao),
+                    ActionWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebActionProducao : Configuracoes.WebActionHomologacao),
+                    TagRetorno = Configuracoes.WebTagRetorno,
+                    TagRetornoHomologacao = Configuracoes.WebTagRetornoHomologacao,
+                    EncodingRetorno = Configuracoes.WebEncodingRetorno,
+                    GZIPCompress = Configuracoes.GZIPCompress,
+                    VersaoSoap = Configuracoes.WebSoapVersion,
+                    SoapString = Configuracoes.WebSoapString,
+                    ContentType = Configuracoes.WebContentType,
+                    TimeOutWebServiceConnect = Configuracoes.TimeOutWebServiceConnect,
+                    PadraoNFSe = Configuracoes.PadraoNFSe,
+                    UsaCertificadoDigital = Configuracoes.UsaCertificadoDigital,
+                    TipoAmbiente = Configuracoes.TipoAmbiente,
+                    ConverteSenhaBase64 = Configuracoes.ConverteSenhaBase64,
+                    MunicipioSenha = Configuracoes.ConverteSenhaBase64 ? Configuracoes.MunicipioSenha.Base64Encode() : Configuracoes.MunicipioSenha,
+                    Proxy = (Configuracoes.HasProxy ? Proxy.DefinirServidor(Configuracoes.ProxyAutoDetect,
+                                                                            Configuracoes.ProxyUser,
+                                                                            Configuracoes.ProxyPassword) : null)
+                };
+
+                var consumirWS = new ConsumirWS();
+                consumirWS.ExecutarServico(ConteudoXML, soap, Configuracoes.CertificadoDigital);
+
+                RetornoWSString = consumirWS.RetornoServicoString;
+                RetornoWSXML = consumirWS.RetornoServicoXML;
+            }
         }
 
         /// <summary>

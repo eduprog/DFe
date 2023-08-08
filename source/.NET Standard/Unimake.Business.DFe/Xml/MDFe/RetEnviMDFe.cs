@@ -17,7 +17,7 @@ namespace Unimake.Business.DFe.Xml.MDFe
     [Serializable()]
     [XmlType(Namespace = "http://www.portalfiscal.inf.br/mdfe")]
     [XmlRoot("retEnviMDFe", Namespace = "http://www.portalfiscal.inf.br/mdfe", IsNullable = false)]
-    public class RetEnviMDFe: XMLBase
+    public class RetEnviMDFe : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
         public string Versao { get; set; }
@@ -61,13 +61,21 @@ namespace Unimake.Business.DFe.Xml.MDFe
         public string NRec { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
 
         [XmlElement("dhRecbto")]
         public string DhRecbtoField
         {
             get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("tMed")]

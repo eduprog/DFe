@@ -83,9 +83,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
     [Serializable]
     [XmlType(Namespace = "http://www.portalfiscal.inf.br/nfe")]
-    public class RetEvento
+    [XmlRoot("retEvento", Namespace = "http://www.portalfiscal.inf.br/nfe", IsNullable = false)]
+    public class RetEvento : XMLBase
     {
-
         [XmlElement("infEvento", Order = 0)]
         public InfEventoRetEvento InfEvento { get; set; }
 
@@ -149,16 +149,37 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string EmailDest { get; set; }
 
         [XmlIgnore]
-        public DateTime DhRegEvento { get; set; }
+        public UFBrasil COrgaoAutor { get; set; } = UFBrasil.NaoDefinido;
 
-        [XmlElement("dhRegEvento", Order = 12)]
+        [XmlElement("cOrgaoAutor", Order = 12)]
+        public int COrgaoAutorField
+        {
+            get => (int)COrgaoAutor;
+            set => COrgaoAutor = (UFBrasil)Enum.Parse(typeof(UFBrasil), value.ToString());
+        }        
+
+        [XmlElement("chCTe", Order = 13)]
+        public string ChCTe { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhRegEvento { get; set; }
+#else
+        public DateTimeOffset DhRegEvento { get; set; }
+#endif
+
+        [XmlElement("dhRegEvento", Order = 14)]
         public string DhRegEventoField
         {
             get => DhRegEvento.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRegEvento = DateTime.Parse(value);
+#else
+            set => DhRegEvento = DateTimeOffset.Parse(value);
+#endif
         }
 
-        [XmlElementAttribute("nProt", Order = 13)]
+        [XmlElement("nProt", Order = 15)]
         public string NProt { get; set; }
 
         #region ShouldSerialize
@@ -166,6 +187,10 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeCNPJDest() => !string.IsNullOrWhiteSpace(CNPJDest);
 
         public bool ShouldSerializeCPFDest() => !string.IsNullOrWhiteSpace(CPFDest);
+
+        public bool ShouldSerializeChCTe() => !string.IsNullOrWhiteSpace(ChCTe);
+
+        public bool ShouldSerializeCOrgaoAutorField() => COrgaoAutor != UFBrasil.NaoDefinido;
 
         #endregion
     }

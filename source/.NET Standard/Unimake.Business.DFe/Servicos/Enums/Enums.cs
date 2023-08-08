@@ -13,305 +13,389 @@ namespace Unimake.Business.DFe.Servicos
         #region Serviço
 
         /// <summary>
-        /// Consulta status serviço NFe/NFCe
+        /// 0 - Consulta status serviço NFe/NFCe
         /// </summary>
         [Description("Consulta status do serviço da NFe/NFCe")]
         NFeStatusServico = 0,
 
         /// <summary>
-        /// Consulta protocolo da NFe/NFCe
+        /// 1 - Consulta protocolo da NFe/NFCe
         /// </summary>
         [Description("Consulta situação da NFe/NFCe")]
         NFeConsultaProtocolo = 1,
 
         /// <summary>
-        /// Consulta recibo NFe/NFCe
+        /// 2 - Consulta recibo NFe/NFCe
         /// </summary>
         [Description("Consulta recibo da NFe/NFCe")]
         NFeConsultaRecibo = 2,
 
         /// <summary>
-        /// Inutilização de números da nota fiscal eletrônica
+        /// 3 - Inutilização de números da nota fiscal eletrônica
         /// </summary>
         [Description("Inutilização de números da NFe/NFCE")]
         NFeInutilizacao = 3,
 
         /// <summary>
-        /// Consulta cadastro do contribuinte
+        /// 4 - Consulta cadastro do contribuinte
         /// </summary>
         [Description("Consulta cadastro de contribuinte")]
         NFeConsultaCadastro = 4,
 
         /// <summary>
-        /// Envio de Eventos (Cancelamento, CCe, EPEC, etc...)
+        /// 5 - Envio de Eventos (Cancelamento, CCe, EPEC, etc...)
         /// </summary>
         [Description("Envio de eventos da NFe/NFCe")]
         NFeRecepcaoEvento = 5,
 
         /// <summary>
-        /// Envio do XML de lote de NFe/NFCe
+        /// 6 - Envio do XML de lote de NFe/NFCe
         /// </summary>
         [Description("Autorização da NFe/NFCe")]
         NFeAutorizacao = 6,
 
         /// <summary>
-        /// Envio do XML de consulta dos documentos fiscais eletrônicos destinados - NFe
+        /// 7 - Envio do XML de consulta dos documentos fiscais eletrônicos destinados - NFe
         /// </summary>
         [Description("Distribuição de documentos fiscais eletrônicos da NFe")]
         NFeDistribuicaoDFe = 7,
 
         /// <summary>
-        /// Consulta status serviço CTe
+        /// 8 - Consulta status serviço CTe
         /// </summary>
         [Description("Consulta status do serviço do CTe")]
         CTeStatusServico = 8,
 
         /// <summary>
-        /// Consulta protocolo do CTe
+        /// 9 - Consulta protocolo do CTe
         /// </summary>
         [Description("Consulta situação do CTe")]
         CTeConsultaProtocolo = 9,
 
         /// <summary>
-        /// Inutilização de números do Conhecimetno de Transporte Eletrônico (CTe)
-        /// </summary>
-        [Description("Inutilização de números do CTe")]
-        CTeInutilizacao = 10,
-
-        /// <summary>
-        /// Envio do XML de consulta dos documentos fiscais eletrônicos destinados - CTe
+        /// 11 - Envio do XML de consulta dos documentos fiscais eletrônicos destinados - CTe
         /// </summary>
         [Description("Distribuição de documentos fiscais eletrônicos do CTe")]
         CTeDistribuicaoDFe = 11,
 
         /// <summary>
-        /// Consulta recibo CTe
+        /// 12 - Consulta recibo CTe
         /// </summary>
         [Description("Consulta recibo do CTe")]
         CTeConsultaRecibo = 12,
 
         /// <summary>
-        /// Envio do XML de CTe
+        /// 13 - Envio do lote de XML de CTe - Assíncrono
         /// </summary>
         [Description("Autorização do CTe")]
         CTeAutorizacao = 13,
 
         /// <summary>
-        /// Envio do XML de CTeOS
+        /// 14 - Envio do XML de CTeOS
         /// </summary>
         [Description("Autorização do CTeOS")]
         CTeAutorizacaoOS = 14,
 
         /// <summary>
-        /// Consulta status serviço MDFe
+        /// 15 - Consulta status serviço MDFe
         /// </summary>
         [Description("Consulta status do serviço do MDFe")]
         MDFeStatusServico = 15,
 
         /// <summary>
-        /// Consulta protocolo do MDFe
+        /// 16 - Consulta protocolo do MDFe
         /// </summary>
         [Description("Consulta situação do MDFe")]
         MDFeConsultaProtocolo = 16,
 
         /// <summary>
-        /// Consulta recibo MDFe
+        /// 17 - Consulta recibo MDFe
         /// </summary>
         [Description("Consulta recibo do MDFe")]
         MDFeConsultaRecibo = 17,
 
         /// <summary>
-        /// Consulta MDFe não encerrado
+        /// 18 - Consulta MDFe não encerrado
         /// </summary>
         [Description("Consulta de MDFe´s não encerrados")]
         MDFeConsultaNaoEnc = 18,
 
         /// <summary>
-        /// Envio do XML de MDFe em lote no modo assíncrono
+        /// 19 - Envio do XML de MDFe em lote no modo assíncrono
         /// </summary>
         [Description("Autorização do MDFe")]
         MDFeAutorizacao = 19,
 
         /// <summary>
-        /// Envio do XML de MDFe no modo síncrono
+        /// 20 - Envio do XML de MDFe no modo síncrono
         /// </summary>
         [Description("Autorização do MDFe")]
         MDFeAutorizacaoSinc = 20,
 
         /// <summary>
-        /// GNRE - Consultar Configurações da UF
+        /// 21 - GNRE - Consultar Configurações da UF
         /// </summary>
         [Description("GNRE - Consultar Configurações da UF")]
         GNREConsultaConfigUF = 21,
 
         /// <summary>
-        /// GNRE - Consultar Resultado do Lote de GNRE enviado
+        /// 22 - GNRE - Consultar Resultado do Lote de GNRE enviado
         /// </summary>
         [Description("Consultar Resultado do Lote de GNRE enviado")]
         GNREConsultaResultadoLote = 22,
 
         /// <summary>
-        /// GNRE - Enviar Lote de GNRE
+        /// 23 - GNRE - Enviar Lote de GNRE
         /// </summary>
         [Description("Enviar Lote de GNRE")]
         GNRELoteRecepcao = 23,
 
         /// <summary>
-        /// Enviar o XML de cancelamento da NFS-e para prefeiutura
+        /// 24 - Enviar o XML de cancelamento da NFS-e para prefeitura
         /// </summary>
         [Description("Cancelamento da NFS-e")]
         NFSeCancelarNfse = 24,
 
         /// <summary>
-        /// Enviar o XML de consulta NFS-e do prestador para a prefeitura
+        /// 25 - Enviar o XML de consulta NFS-e do prestador para a prefeitura
         /// </summary>
         [Description("Consulta NFS-e do prestador")]
         NFSeConsultarNotaPrestador = 25,
 
         /// <summary>
-        /// Enviar o XML de consulta NFS-e valida para a prefeitura
+        /// 26 - Enviar o XML de consulta NFS-e valida para a prefeitura
         /// </summary>
         [Description("Consulta NFS-e valida")]
         NFSeConsultarNotaValida = 26,
 
         /// <summary>
-        /// Enviar o XML da NFS-e para a prefeitura
+        /// 27 - Enviar o XML da NFS-e para a prefeitura
         /// </summary>
         [Description("Envio da NFS-e")]
         NFSeGerarNfse = 27,
 
         /// <summary>
-        /// Enviar o XML do Lote de RPS para gerar NFSe para a prefeitura
+        /// 28 - Enviar o XML do Lote de RPS para gerar NFSe para a prefeitura
         /// </summary>
         [Description("Envio do lote RPS para gerar NFSe")]
         NFSeRecepcionarLoteRps = 28,
 
         /// <summary>
-        /// Enviar o XML do Lote de RPS no modo síncrono para gerar NFSe para a prefeitura
+        /// 29 - Enviar o XML do Lote de RPS no modo síncrono para gerar NFSe para a prefeitura
         /// </summary>
         [Description("Envio do lote RPS no modo síncrono para gerar NFSe")]
         NFSeRecepcionarLoteRpsSincrono = 29,
 
         /// <summary>
-        /// Enviar o XML para Substituir NFSe
+        /// 30 - Enviar o XML para Substituir NFSe
         /// </summary>
         [Description("Envio da substituição da NFS-e")]
         NFSeSubstituirNfse = 30,
 
         /// <summary>
-        /// Enviar o XML de consulta lote RPS para a prefeitura
+        /// 31 - Enviar o XML de consulta lote RPS para a prefeitura
         /// </summary>
         [Description("Consulta lote RPS")]
         NFSeConsultarLoteRps = 31,
 
         /// <summary>
-        /// Enviar o XML de consulta NFSe para a prefeitura
+        /// 32 - Enviar o XML de consulta NFSe para a prefeitura
         /// </summary>
         [Description("Consulta NFSe")]
         NFSeConsultarNfse = 32,
 
         /// <summary>
-        /// Enviar o XML de consulta NFSe serviço prestado para a prefeitura
+        /// 33 - Enviar o XML de consulta NFSe serviço prestado para a prefeitura
         /// </summary>
         [Description("Consulta NFSe serviço prestado")]
         NFSeConsultarNfseServicoPrestado = 33,
 
         /// <summary>
-        /// Enviar o XML de consulta NFSe serviço tomado para a prefeitura
+        /// 34 - Enviar o XML de consulta NFSe serviço tomado para a prefeitura
         /// </summary>
         [Description("Consulta NFSe serviço tomado")]
         NFSeConsultarNfseServicoTomado = 34,
 
         /// <summary>
-        /// Enviar o XML de consulta NFSe por faixa para a prefeitura
+        /// 35 - Enviar o XML de consulta NFSe por faixa para a prefeitura
         /// </summary>
         [Description("Consulta NFSe por Faixa")]
         NFSeConsultarNfseFaixa = 35,
 
         /// <summary>
-        /// Enviar o XML de consulta NFSe por RPS para a prefeitura
+        /// 36 - Enviar o XML de consulta NFSe por RPS para a prefeitura
         /// </summary>
         [Description("Consulta NFSe por RPS")]
         NFSeConsultarNfsePorRps = 36,
 
         /// <summary>
-        /// Enviar o XML de consulta/download do PDF NFSe para a prefeitura
+        /// 37 - Enviar o XML de consulta/download do PDF NFSe para a prefeitura
         /// </summary>
         [Description("Consulta/Download do PDF da NFSe")]
         NFSeConsultarNfsePDF = 37,
 
         /// <summary>
-        /// GNRE - Consultar Lote Recepção Consulta
+        /// 38 - GNRE - Consultar Lote Recepção Consulta
         /// </summary>
         [Description("Consultar Lote Recepção Consulta")]
         GNREConsultaLoteRecepcao = 38,
 
         /// <summary>
-        /// GNRE - Consultar Resultado do Lote da Consulta de GNRE enviado
+        /// 39 - GNRE - Consultar Resultado do Lote da Consulta de GNRE enviado
         /// </summary>
         [Description("Consultar Resultado do Lote da Consulta de GNRE")]
         GNREConsultaResultadoLoteConsulta = 39,
 
         /// <summary>
-        /// Enviar o XML de consulta situação lote RPS para a prefeitura
+        /// 40 - Enviar o XML de consulta situação lote RPS para a prefeitura
         /// </summary>
-        [Description("Consultar Situacao Lote Rps")]
+        [Description("Consultar Situação Lote Rps")]
         NFSeConsultarSituacaoLoteRps = 40,
 
         /// <summary>
-        /// Enviar o XML de consulta nfse recebidas para a prefeitura
+        /// 41 - Enviar o XML de consulta NFS-e recebidas para a prefeitura
         /// </summary>
         [Description("Consulta NFSe Recebidas")]
         NFSeConsultaNFeRecebidas = 41,
 
         /// <summary>
-        /// Enviar o XML de consulta nfse emitidas para a prefeitura
+        /// 42 - Enviar o XML de consulta NFS-e emitidas para a prefeitura
         /// </summary>
         [Description("Consulta NFSe Emitidas")]
         NFSeConsultaNFeEmitidas = 42,
 
         /// <summary>
-        /// Enviar o XML de teste envio lote rps para a prefeitura
+        /// 43 - Enviar o XML de teste envio lote rps para a prefeitura
         /// </summary>
         [Description("Teste Envio Lote RPS")]
         NFSeTesteEnvioLoteRps = 43,
 
         /// <summary>
-        /// Enviar o XML de envio lote rps para a prefeitura
+        /// 44 - Enviar o XML de envio lote rps para a prefeitura
         /// </summary>
         [Description("Envio Lote RPS")]
         NFSeEnvioLoteRps = 44,
 
         /// <summary>
-        /// Enviar o XML deenvio rps para a prefeitura
+        /// 45 - Enviar o XML de envio rps para a prefeitura
         /// </summary>
         [Description("Envio RPS")]
         NFSeEnvioRps = 45,
 
         /// <summary>
-        /// Enviar o XML de cancelamento nfse para a prefeitura
+        /// 46 - Enviar o XML de cancelamento NFS-e para a prefeitura
         /// </summary>
         [Description("Cancelamento NFSe")]
         NFSeCancelamentoNfe = 46,
 
         /// <summary>
-        /// Enviar o XML de consulta informações lote para a prefeitura
+        /// 47 - Enviar o XML de consulta informações lote para a prefeitura
         /// </summary>
         [Description("Consulta Informações Lote")]
         NFSeConsultaInformacoesLote = 47,
 
         /// <summary>
-        /// Enviar o XML de consulta lote para a prefeitura
+        /// 48 - Enviar o XML de consulta lote para a prefeitura
         /// </summary>
         [Description("Consulta Lote")]
         NFSeConsultaLote = 48,
+
+        /// <summary>
+        /// 49 - Consulta Centralizada de Código GTIN (CCG)
+        /// </summary>
+        [Description("Consulta Centralizada de Código GTIN (CCG)")]
+        CCGConsGTIN = 49,
+
+        /// <summary>
+        /// 50 - Enviar o XML de cancelamento da NFS-e para prefeitura
+        /// </summary>
+        [Description("Cancela NFS-e")]
+        NFSeCancelaNota = 50,
+
+        /// <summary>
+        /// 51 - Enviar o XML de emissão da NFS-e para prefeitura
+        /// </summary>
+        [Description("Emissão NFS-e")]
+        NFSeEmissaoNota = 51,
+
+        /// <summary>
+        /// 52 - Cancela o XML de emissão da NFS-e para prefeitura
+        /// </summary>
+        [Description("Cancela NFS-e")]
+        NFSeCancelarNotaFiscal = 52,
+
+        /// <summary>
+        /// 53 - Consulta o XML de emissão da NFS-e para prefeitura
+        /// </summary>
+        [Description("Consulta NFS-e")]
+        NFSeConsultaNotaFiscal = 53,
+
+        /// <summary>
+        /// 54 - Envia o lote de XML da NFS-e para prefeitura
+        /// </summary>
+        [Description("Envia o lote NFS-e")]
+        NFSeEnviarLoteNotas = 54,
+
+        /// <summary>
+        /// 55 - Consultar Rps Serviço Prestado da NFS-e para prefeitura
+        /// </summary>
+        [Description("Consultar Rps Serviço Prestado")]
+        NFSeConsultarRpsServicoPrestado = 55,
+
+        /// <summary>
+        /// 56 - Envio do XML de CTe - Síncrono
+        /// </summary>
+        [Description("Autorização do CTe")]
+        CTeAutorizacaoSinc = 56,
+
+        /// <summary>
+        /// 57 - Obter Critica Lote de XML da NFS-e para prefeitura
+        /// </summary>
+        [Description("Obter Critica Lote")]
+        NFSeObterCriticaLote = 57,
+
+        /// <summary>
+        /// 58 - Consultar URL da NFS-e para prefeitura
+        /// </summary>
+        [Description("Consultar Url Nfse")]
+        NFSeConsultarUrlNfse = 58,
+
+        /// <summary>
+        /// 59 - Consultar dados cadastrais da NFS-e
+        /// </summary>
+        [Description("Consultar Dados Cadastrais")]
+        NFSeConsultarDadosCadastrais = 59,
+
+        /// <summary>
+        /// 60 - Consultar RPS Disponivel
+        /// </summary>
+        [Description("Consulta RPS Disponivel")]
+        NFSeConsultarRpsDisponivel = 60,
+
+        /// <summary>
+        /// 61 - Consultar sequencia lote nota RPS
+        /// </summary>
+        [Description("Consultar sequencia lote nota RPS")]
+        NFSeConsultarSequenciaLoteNotaRPS = 61,
+
+        /// <summary>
+        /// 62 - Obter Nota Fiscal Xml da NFS-e
+        /// </summary>
+        [Description("Obter Nota Fiscal Xml")]
+        NFSeObterNotaFiscalXml = 62,
+
+        /// <summary>
+        /// 63 - Inutilizacao NFSe
+        /// </summary>
+        [Description("Solicitar Inutilizacao NFSe")]
+        NFSeSolicitacaoInutilizacao = 63,
 
         #endregion
 
         #region Gerais
 
         /// <summary>
-        /// Serviço não definido
+        /// 9999 - Serviço não definido
         /// </summary>
         Nulo = 9999
 
@@ -370,7 +454,16 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// 9 - SNCM - Sistema Nacional de Controle de Medicamentos
         /// </summary>
-        SNCM = 9
+        SNCM = 9,
+        /// <summary>
+        /// 10 - CCG - Consulta Centralizada de GTIN
+        /// </summary>
+        CCG = 10,
+        /// <summary>
+        /// 11 - EFDReinf - Escrituração Fiscal Digital de Retenções e Outras Informações Fiscais
+        /// </summary>
+        EFDReinf = 11
+
     }
 
     #endregion       
@@ -383,172 +476,174 @@ namespace Unimake.Business.DFe.Servicos
     public enum UFBrasil
     {
         /// <summary>
-        /// Acre - AC (12)
+        /// 12 - Acre - AC
         /// </summary>
         AC = 12,
 
         /// <summary>
-        /// Alagoas - AL (27)
+        /// 27 - Alagoas - AL
         /// </summary>
         AL = 27,
 
         /// <summary>
-        /// Amapá - AP (16)
+        /// 16 - Amapá - AP
         /// </summary>
         AP = 16,
 
         /// <summary>
-        /// Amazonas - AM (13)
+        /// 13 - Amazonas - AM
         /// </summary>
         AM = 13,
 
         /// <summary>
-        /// Bahia - BA (29)
+        /// 29 - Bahia - BA
         /// </summary>
         BA = 29,
 
         /// <summary>
-        /// Ceará - CE (23)
+        /// 23 - Ceará - CE
         /// </summary>
         CE = 23,
 
         /// <summary>
-        /// Distrito Federal - DF (53)
+        /// 53 - Distrito Federal - DF
         /// </summary>
         DF = 53,
 
         /// <summary>
-        /// Espírito Santo - ES (32)
+        /// 32 - Espírito Santo - ES
         /// </summary>
         ES = 32,
 
         /// <summary>
-        /// Goiás - GO (52)
+        /// 52 - Goiás - GO
         /// </summary>
         GO = 52,
 
         /// <summary>
-        /// Maranhão - MA (21)
+        /// 21 - Maranhão - MA
         /// </summary>
         MA = 21,
 
         /// <summary>
-        /// Mato Grosso - MT (51)
+        /// 51 - Mato Grosso - MT
         /// </summary>
         MT = 51,
 
         /// <summary>
-        /// Mato Grosso do Sul - MS (50)
+        /// 50 - Mato Grosso do Sul - MS
         /// </summary>
         MS = 50,
 
         /// <summary>
-        /// Minas Gerais - MG (31)
+        /// 31 - Minas Gerais - MG
         /// </summary>
         MG = 31,
 
         /// <summary>
-        /// Pará - PA (15)
+        /// 15 - Pará - PA
         /// </summary>
         PA = 15,
 
         /// <summary>
-        /// Paraíba - PB (25)
+        /// 25 - Paraíba - PB
         /// </summary>
         PB = 25,
 
         /// <summary>
-        /// Paraná - PR (41)
+        /// 41 - Paraná - PR
         /// </summary>
         PR = 41,
 
         /// <summary>
-        /// Pernambuco - PE (26)
+        /// 26 - Pernambuco - PE
         /// </summary>
         PE = 26,
 
         /// <summary>
-        /// Piauí - PI (22)
+        /// 22 - Piauí - PI
         /// </summary>
         PI = 22,
 
         /// <summary>
-        /// Rio de Janeiro - RJ (33)
+        /// 33 - Rio de Janeiro - RJ
         /// </summary>
         RJ = 33,
 
         /// <summary>
-        /// Rio Grande do Norte - RN (24)
+        /// 24 - Rio Grande do Norte - RN
         /// </summary>
         RN = 24,
 
         /// <summary>
-        /// Rio Grande do Sul - RS (43)
+        /// 43 - Rio Grande do Sul - RS
         /// </summary>
         RS = 43,
 
         /// <summary>
-        /// Rondônia - RO (11)
+        /// 11 - Rondônia - RO
         /// </summary>
         RO = 11,
 
         /// <summary>
-        /// Roraima - RR (14)
+        /// 14 - Roraima - RR
         /// </summary>
         RR = 14,
 
         /// <summary>
-        /// Santa Catarina - SC (42)
+        /// 42 - Santa Catarina - SC
         /// </summary>
         SC = 42,
 
         /// <summary>
-        /// São Paulo - SP (35)
+        /// 35 - São Paulo - SP
         /// </summary>
         SP = 35,
 
         /// <summary>
-        /// Sergipe - SE (28)
+        /// 28 - Sergipe - SE
         /// </summary>
         SE = 28,
 
         /// <summary>
-        /// Tocantins - TO (17)
+        /// 17 - Tocantins - TO
         /// </summary>
         TO = 17,
 
         ///<summary>
-        /// SUFRAMA (90)
+        /// 90 - SUFRAMA
         /// </summary>
         SUFRAMA = 90,
 
         /// <summary>
-        /// RFB - Ambiente Nacional - AN (91)
+        /// 91 - RFB - Ambiente Nacional - AN
         /// </summary>
         AN = 91,
 
+        //Existe um código 92, mas como não sei o que é e não encontrei nada na internet que identifique, não criei ainda este código no ENUM. Wandrey 30/01/2023
+
         /// <summary>
-        /// SVCRS - Servico Virtual de Contingência do Rio Grande do Sul (94)
+        /// 94 - SVCRS - Serviço Virtual de Contingência do Rio Grande do Sul
         /// </summary>
         SVCRS = 94,
 
         /// <summary>
-        /// SVCRS - Servico Virtual de Contingência de São Paulo (95)
+        /// 95 - SVCRS - Serviço Virtual de Contingência de São Paulo
         /// </summary>
         SVCSP = 95,
 
         /// <summary>
-        /// Sincronização de chaves do estado do Rio Grande do Sul com o Sistema Virtual de São Paulo (96)
+        /// 96 - Sincronização de chaves do estado do Rio Grande do Sul com o Sistema Virtual de São Paulo
         /// </summary>
         SincChavesRSparaSVSP = 96,
 
         /// <summary>
-        /// Exportação
+        /// 99 - Exportação
         /// </summary>
         EX = 99,
 
         /// <summary>
-        /// Não definido (0)
+        /// 0 - Não definido
         /// </summary>
         NaoDefinido = 0
     }
@@ -563,12 +658,12 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoAmbiente
     {
         /// <summary>
-        /// Ambiente de Produção
+        /// 1 - Ambiente de Produção
         /// </summary>
         [XmlEnum("1")]
         Producao = 1,
         /// <summary>
-        /// Ambiente de Homologação
+        /// 2 - Ambiente de Homologação / Produção Restrita
         /// </summary>
         [XmlEnum("2")]
         Homologacao = 2
@@ -624,247 +719,265 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoEventoNFe
     {
         /// <summary>
-        /// Evento desconhecido
+        /// 0 - Evento desconhecido
         /// </summary>
         [XmlEnum("0")]
         Desconhecido = 0,
 
         /// <summary>
-        /// Carta de correção eletrônica (110110)
+        /// 110110 - Carta de correção eletrônica
         /// </summary>
         [XmlEnum("110110")]
         CartaCorrecao = 110110,
 
         /// <summary>
-        /// Cancelamento NFe (110111)
+        /// 110111 - Cancelamento NFe
         /// </summary>
         [XmlEnum("110111")]
         Cancelamento = 110111,
 
         /// <summary>
-        /// Cancelamento da NFCe sendo substituída por outra NFCe (110112)
+        /// 110112 - Cancelamento da NFCe sendo substituída por outra NFCe
         /// </summary>
         [XmlEnum("110112")]
         CancelamentoPorSubstituicao = 110112,
 
         /// <summary>
-        /// Comprovante de Entrega da NF-e
+        /// 110130 - Comprovante de Entrega da NF-e
         /// </summary>
         [XmlEnum("110130")]
         ComprovanteEntregaNFe = 110130,
 
         /// <summary>
-        /// Cancelamento do Comprovante de Entrega da NF-e
+        /// 110131 - Cancelamento do Comprovante de Entrega da NF-e
         /// </summary>
         [XmlEnum("110131")]
         CancelamentoComprovanteEntregaNFe = 110131,
 
         /// <summary>
-        /// EPEC - Evento Prévio de Emissão em Contingência (110140)
+        /// 110140 - EPEC - Evento Prévio de Emissão em Contingência
         /// </summary>
         [XmlEnum("110140")]
         EPEC = 110140,
 
         /// <summary>
-        /// Pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (111500) - 1o Prazo
+        /// 111500 - Pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 1o Prazo
         /// </summary>
         [XmlEnum("111500")]
         PedidoProrrogacaoPrazo1 = 111500,
 
         /// <summary>
-        /// Pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (111501) - 2o Prazo
+        /// 111501 - Pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 2o Prazo
         /// </summary>
         [XmlEnum("111501")]
         PedidoProrrogacaoPrazo2 = 111501,
 
         /// <summary>
-        /// Cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (111502) - 1o Prazo
+        /// 111502 - Cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 1o Prazo
         /// </summary>
         [XmlEnum("111502")]
         CancelamentoPedidoProrrogacaoPrazo1 = 111502,
 
         /// <summary>
-        /// Cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (111503) - 2o Prazo
+        /// 111503 - Cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 2o Prazo
         /// </summary>
         [XmlEnum("111503")]
         CancelamentoPedidoProrrogacaoPrazo2 = 111503,
 
         /// <summary>
-        /// Manifestação do Destinatário - Confirmação da Operação (210200)
+        /// 210200 - Manifestação do Destinatário - Confirmação da Operação
         /// </summary>
         [XmlEnum("210200")]
         ManifestacaoConfirmacaoOperacao = 210200,
 
         /// <summary>
-        /// Manifestação do Destinatário - Ciência da Operação (210210)
+        /// 210210 - Manifestação do Destinatário - Ciência da Operação
         /// </summary>
         [XmlEnum("210210")]
         ManifestacaoCienciaOperacao = 210210,
 
         /// <summary>
-        /// Manifestação do Destinatário - Desconhecimento da Operação (210220)
+        /// 210220 - Manifestação do Destinatário - Desconhecimento da Operação
         /// </summary>
         [XmlEnum("210220")]
         ManifestacaoDesconhecimentoOperacao = 210220,
 
         /// <summary>
-        /// Manifestação do Destinatário - Operação não realizada (210240)
+        /// 210240 - Manifestação do Destinatário - Operação não realizada
         /// </summary>
         [XmlEnum("210240")]
         ManifestacaoOperacaoNaoRealizada = 210240,
 
         /// <summary>
-        /// SEFAZ do emitente declara que NF-e é um "Documento Fiscal Inidôneo". (400200)
+        /// 400200 - SEFAZ do emitente declara que NF-e é um "Documento Fiscal Inidôneo".
         /// </summary>
         [XmlEnum("400200")]
         DocumentoFiscalInidoneo = 400200,
 
         /// <summary>
-        /// Cancelamento do evento 400200 (400201)
+        /// 400201 - Cancelamento do evento 400200
         /// </summary>
         [XmlEnum("400201")]
         CancelamentoEventoFisco400200 = 400201,
 
         /// <summary>
-        /// Possibilita que a SEFAZ marque uma NF-e emitida em função de uma situação específica prevista em legislação, ex.: transferência de crédito, ressarcimento. (400300)
+        /// 400300 - Possibilita que a SEFAZ marque uma NF-e emitida em função de uma situação específica prevista em legislação, ex.: transferência de crédito, ressarcimento.
         /// </summary>
         [XmlEnum("400300")]
         VistoEletronicoDoFisco = 400300,
 
         /// <summary>
-        /// O evento da Nota Fiscal Referenciada é gerado sempre que uma nova NF-e referenciar uma ou mais outras Notas Fiscais Eletrônicas. Não serão gerados eventos de "NF-e Referenciada" para os documentos diferentes do Modelo 55. (410300)
+        /// 410300 - O evento da Nota Fiscal Referenciada é gerado sempre que uma nova NF-e referenciar uma ou mais outras Notas Fiscais Eletrônicas. Não serão gerados eventos de "NF-e Referenciada" para os documentos diferentes do Modelo 55.
         /// </summary>
         [XmlEnum("410300")]
         NFeReferenciada = 410300,
 
         /// <summary>
-        /// Resposta ao pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411500) - 1o Prazo (Evento exclusivo do fisco)
+        /// 411500 - Resposta ao pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 1o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411500")]
         RespostaPedidoProrrogacaoPrazo1 = 411500,
 
         /// <summary>
-        /// Resposta ao pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411501) - 2o Prazo (Evento exclusivo do fisco)
+        /// 411501 - Resposta ao pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 2o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411501")]
         RespostaPedidoProrrogacaoPrazo2 = 411501,
 
         /// <summary>
-        /// Resposta ao cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411502) - 1o Prazo (Evento exclusivo do fisco)
+        /// 411502 - Resposta ao cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 1o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411502")]
         RespostaCancelamentoPedidoProrrogacaoPrazo1 = 411502,
 
         /// <summary>
-        /// Resposta ao cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização (411503) - 2o Prazo (Evento exclusivo do fisco)
+        /// 411503 - Resposta ao cancelamento do pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 2o Prazo (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("411503")]
         RespostaCancelamentoPedidoProrrogacaoPrazo2 = 411503,
 
         /// <summary>
-        /// Registro de Passagem da NF-e no Posto Fiscal (610500)
+        /// 610130 - Comprovante de entrega do CTe
+        /// </summary>
+        [XmlEnum("610130")]
+        ComprovantedeEntregaCTe = 610130,
+
+        /// <summary>
+        /// 610131 - Cancelamento Comprovante de Entrega do CTe
+        /// </summary>
+        [XmlEnum("610131")]
+        CancelamentoComprovantedeEntregaCTe = 610131,
+
+        /// <summary>
+        /// 610500 - Registro de Passagem da NF-e no Posto Fiscal
         /// </summary>
         [XmlEnum("610500")]
         RegistroPassagemNFe = 610500,
 
         /// <summary>
-        /// Cancelamento do evento 610500 (610501)
+        /// 610501 - Cancelamento do evento 610500
         /// </summary>
         [XmlEnum("610501")]
         CancelamentoRegistroPassagemNFe = 610501,
 
         /// <summary>
-        /// Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Sistema MDF-e. (610510)
+        /// 610510 - Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Sistema MDF-e.
         /// </summary>
         [XmlEnum("610510")]
         RegistroDePassagemMDFe = 610510,
 
         /// <summary>
-        /// Cancelamento do evento 610511 (610511)
+        /// 610511 - Cancelamento do evento 610511
         /// </summary>
         [XmlEnum("610511")]
         CancelamentoRegistroDePassagemMDFe = 610511,
 
         /// <summary>
-        /// Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Ambiente Nacional. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e. (610514)
+        /// 610514 - Registro de Passagem do MDF-e no Posto Fiscal, propagado pelo Ambiente Nacional. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e.
         /// </summary>
         [XmlEnum("610514")]
         RegistroDePassagemMDFeComCTe = 610514,
 
         /// <summary>
-        /// Cancelamento do evento 610514. (610515)
+        /// 610515 - Cancelamento do evento 610514.
         /// </summary>
         [XmlEnum("610515")]
         CancelamentoRegistroDePassagemMDFeComCTe = 610515,
 
         /// <summary>
-        /// Registro de Passagem do MDF-e, capturado por antenas do Projeto Brasil ID. Evento eliminado (BT 2017.002), substituído pelo Registro de Passagem Automático MDF-e. (610550)
+        /// 610550 - Registro de Passagem do MDF-e, capturado por antenas do Projeto Brasil ID. Evento eliminado (BT 2017.002), substituído pelo Registro de Passagem Automático MDF-e.
         /// </summary>
         [XmlEnum("610550")]
         RegistroPassagemNFeBRId = 610550,
 
         /// <summary>
-        /// Registro de Passagem do MDF-e capturado de forma automática (antena, leitura de placa por OCR, etc.), propagado pelo Sistema MDFe. Nota: A Chave de Acesso da NF-e está citada no MDF-e. (610552)
+        /// 610552 - Registro de Passagem do MDF-e capturado de forma automática (antena, leitura de placa por OCR, etc.), propagado pelo Sistema MDFe. Nota: A Chave de Acesso da NF-e está citada no MDF-e.
         /// </summary>
         [XmlEnum("610552")]
         RegistroDePassagemAutomaticoMDFe = 610552,
 
         /// <summary>
-        /// Cancelamento do evento 610552 (610554)
+        /// 610554 - Cancelamento do evento 610552
         /// </summary>
         [XmlEnum("610554")]
         RegistroDePassagemAutomaticoMDFeComCTe = 610554,
 
         /// <summary>
-        /// Documenta na NF-e a ocorrência de CT-e autorizado, no momento do compartilhamento do CT-e com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CTe. (610600)
+        /// 610600 - Documenta na NF-e a ocorrência de CT-e autorizado, no momento do compartilhamento do CT-e com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CTe.
         /// </summary>
         [XmlEnum("610600")]
         CTeAutorizado = 610600,
 
         /// <summary>
-        /// Documenta na NF-e a ocorrência de cancelamento de CT-e autorizado, no momento do compartilhamento do evento com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CT-e. (610601)
+        /// 610601 - Documenta na NF-e a ocorrência de cancelamento de CT-e autorizado, no momento do compartilhamento do evento com o Ambiente Nacional. Nota: A Chave de Acesso da NF-e está citada no CT-e.
         /// </summary>
         [XmlEnum("610601")]
         CTeCancelado = 610601,
 
         /// <summary>
-        /// Evento que documenta na NF-e a ocorrência de MDF-e autorizado.Nota: A Chave de Acesso da NF-e está citada no MDF-e. (610610)
+        /// 610610 - Evento que documenta na NF-e a ocorrência de MDF-e autorizado.Nota: A Chave de Acesso da NF-e está citada no MDF-e.
         /// </summary>
         [XmlEnum("610610")]
         MDFeAutorizado = 610610,
 
         /// <summary>
-        /// Cancelamento do MDF-e (610611)
+        /// 610611 - Cancelamento do MDF-e
         /// </summary>
         [XmlEnum("610611")]
         MDFeCancelado = 610611,
 
         /// <summary>
-        /// Evento que documenta na NF-e a ocorrência de MDF-e autorizado. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e. (610614)
+        /// 610614 - Evento que documenta na NF-e a ocorrência de MDF-e autorizado. Nota: A Chave de Acesso da NF-e está vinculada a um CT-e citado no MDF-e.
         /// </summary>
         [XmlEnum("610614")]
         MDFeAutorizadoComCTe = 610614,
 
         /// <summary>
-        /// Cancelamento do evento 610614. (610615)
+        /// 610615 - Cancelamento do evento 610614.
         /// </summary>
         [XmlEnum("610615")]
         CancelamentoDoMDFeAutorizadoComCTe = 610615,
 
         /// <summary>
-        /// Evento que indica a quantidade de mercadoria na unidade tributável que foi efetivamente embarcada para o exterior referente a um certo item de uma NF-e. Gerado e enviado pelo sistema Portal Único do Comércio Exterior (PUCOMEX) Receita Federal do Brasil (RFB) para o Ambiente Nacional da NF-e (790700)
+        /// 790700 - Evento que indica a quantidade de mercadoria na unidade tributável que foi efetivamente embarcada para o exterior referente a um certo item de uma NF-e. Gerado e enviado pelo sistema Portal Único do Comércio Exterior (PUCOMEX) Receita Federal do Brasil (RFB) para o Ambiente Nacional da NF-e
         /// </summary>
         [XmlEnum("790700")]
         AverbacaoDeExportacao = 790700,
 
         /// <summary>
-        /// Registro da ocorrência da Vistoria do processo de internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA. (990900)
+        /// 630690 - Registro da ocorrência da Vistoria do processo de internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA.
+        /// </summary>
+        [XmlEnum("630690")]
+        VistoriaSUFRAMASEFAZ = 630690,
+
+        /// <summary>
+        /// 990900 - Registro da ocorrência da Vistoria do processo de internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA.
         /// </summary>
         [XmlEnum("990900")]
         VistoriaSUFRAMA = 990900,
 
         /// <summary>
-        /// Confirmação da internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA. (990910)
+        /// 990910 - Confirmação da internalização de produtos industrializados de origem nacional com isenção de ICMS nas áreas sob controle da SUFRAMA.
         /// </summary>
         [XmlEnum("990910")]
         InternalizacaoSUFRAMA = 990910
@@ -880,24 +993,25 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoEventoCTe
     {
         /// <summary>
-        /// Evento desconhecido
+        /// 0 - Evento desconhecido
         /// </summary>
         [XmlEnum("0")]
         Desconhecido = 0,
+
         /// <summary>
-        /// Carta de Correção CTe (110110)
+        /// 110110 - Carta de Correção CTe
         /// </summary>
         [XmlEnum("110110")]
         CartaCorrecao = 110110,
 
         /// <summary>
-        /// Cancelamento CTe (110111)
+        /// 110111 - Cancelamento CTe
         /// </summary>
         [XmlEnum("110111")]
         Cancelamento = 110111,
 
         /// <summary>
-        /// EPEC = Evento Previo da Emissão em Contingência do CTe (110113)
+        /// 110113 - EPEC = Evento Prévio da Emissão em Contingência do CTe
         /// </summary>
         [XmlEnum("110113")]
         EPEC = 110113,
@@ -909,28 +1023,52 @@ namespace Unimake.Business.DFe.Servicos
         ComprovanteEntrega = 110180,
 
         /// <summary>
-        /// Cancelamento Comprovante de Entrega do CTe (110181)
+        /// 110181 - Cancelamento Comprovante de Entrega do CTe 
         /// </summary>
         [XmlEnum("110181")]
         CancelamentoComprovanteEntrega = 110181,
 
         /// <summary>
-        /// Prestação de serviço em desacordo CTe (610110)
+        /// 110190 - Evento de Insucesso na Entrega do CTe
+        /// </summary>
+        [XmlEnum("110190")]
+        InsucessoEntrega = 110190,
+
+        /// <summary>
+        /// 610110 - Evento de prestação de serviço em desacordo CTe
         /// </summary>
         [XmlEnum("610110")]
         PrestDesacordo = 610110,
 
         /// <summary>
-        /// Registro de Passagem CT-e (310620)
+        /// 610111 - Cancelamento evento prestação de serviço em desacordo CTe
+        /// </summary>
+        [XmlEnum("610111")]
+        CancelamentoPrestDesacordo = 610111,
+
+        /// <summary>
+        /// 310610 - MDFe Autorizado (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("310610")]
+        MDFeAutorizado = 310610,
+
+        /// <summary>
+        /// 310620 - Registro de Passagem CT-e (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("310620")]
         RegistroPassagem = 310620,
 
         /// <summary>
-        /// MDFe cancelado (310611) (Evento exclusivo do fisco)
+        /// 310611 - MDFe cancelado (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("310611")]
-        MDFeCancelado = 310611
+        MDFeCancelado = 310611,
+
+        /// <summary>
+        /// 510620 - Registro de Passagem Automático CTe (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("510620")]
+        RegistroPassagemAutomatico = 510620
     }
 
     #endregion
@@ -943,7 +1081,7 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoEventoMDFe
     {
         /// <summary>
-        /// Evento desconhecido
+        /// Evento desconhecido (0)
         /// </summary>
         [XmlEnum("0")]
         Desconhecido = 0,
@@ -1024,13 +1162,13 @@ namespace Unimake.Business.DFe.Servicos
     public enum SimNao
     {
         /// <summary>
-        /// Não (0)
+        /// 0 - Não
         /// </summary>
         [XmlEnum("0")]
         Nao = 0,
 
         /// <summary>
-        /// Sim (1)
+        /// 1 - Sim
         /// </summary>
         [XmlEnum("1")]
         Sim = 1
@@ -1046,13 +1184,13 @@ namespace Unimake.Business.DFe.Servicos
     public enum SimNao12
     {
         /// <summary>
-        /// Sim (1)
+        /// 1 - Sim
         /// </summary>
         [XmlEnum("1")]
         Sim = 1,
 
         /// <summary>
-        /// Não (2)
+        /// 2 - Não
         /// </summary>
         [XmlEnum("2")]
         Nao = 2
@@ -1068,12 +1206,13 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoOperacao
     {
         /// <summary>
-        /// Operação de entrada
+        /// 0 - Operação de entrada
         /// </summary>
         [XmlEnum("0")]
         Entrada = 0,
+
         /// <summary>
-        /// Operação de saída
+        /// 1 - Operação de saída
         /// </summary>
         [XmlEnum("1")]
         Saida = 1
@@ -1089,19 +1228,19 @@ namespace Unimake.Business.DFe.Servicos
     public enum DestinoOperacao
     {
         /// <summary>
-        /// Operação interna, ou seja, dentro do estado de origem
+        /// 1 - Operação interna, ou seja, dentro do estado de origem
         /// </summary>
         [XmlEnum("1")]
         OperacaoInterna = 1,
 
         /// <summary>
-        /// Operação interestadual, ou seja, estado diferente do de origem
+        /// 2 - Operação interestadual, ou seja, estado diferente do de origem
         /// </summary>
         [XmlEnum("2")]
         OperacaoInterestadual = 2,
 
         /// <summary>
-        /// Operação com o exterior, ou seja, fora do país de origem
+        /// 3 - Operação com o exterior, ou seja, fora do país de origem
         /// </summary>
         [XmlEnum("3")]
         OperacaoExterior = 3
@@ -1117,37 +1256,37 @@ namespace Unimake.Business.DFe.Servicos
     public enum FormatoImpressaoDANFE
     {
         /// <summary>
-        /// 0=Sem geração de DANFE
+        /// 0 - Sem geração de DANFE
         /// </summary>
         [XmlEnum("0")]
         SemGeracao = 0,
 
         /// <summary>
-        /// 1=DANFE normal, Retrato
+        /// 1 - DANFE normal, Retrato
         /// </summary>
         [XmlEnum("1")]
         NormalRetrato = 1,
 
         /// <summary>
-        /// 2=DANFE normal, Paisagem
+        /// 2 - DANFE normal, Paisagem
         /// </summary>
         [XmlEnum("2")]
         NormalPaisagem = 2,
 
         /// <summary>
-        /// 3=DANFE Simplificado
+        /// 3 - DANFE Simplificado
         /// </summary>
         [XmlEnum("3")]
         Simplificado = 3,
 
         /// <summary>
-        /// 4=DANFE NFC-e
+        /// 4 - DANFE NFC-e
         /// </summary>
         [XmlEnum("4")]
         NFCe = 4,
 
         /// <summary>
-        /// 5=DANFE NFC-e em mensagem eletrônica
+        /// 5 - DANFE NFC-e em mensagem eletrônica
         /// </summary>
         [XmlEnum("5")]
         NFCeMensagemEletronica = 5
@@ -1163,13 +1302,13 @@ namespace Unimake.Business.DFe.Servicos
     public enum FormatoImpressaoDACTE
     {
         /// <summary>
-        /// 1=Retrato
+        /// 1 - Retrato
         /// </summary>
         [XmlEnum("1")]
         NormalRetrato = 1,
 
         /// <summary>
-        /// 2=Paisagem
+        /// 2 - Paisagem
         /// </summary>
         [XmlEnum("2")]
         NormalPaisagem = 2
@@ -1185,55 +1324,55 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoEmissao
     {
         /// <summary>
-        /// 1=Emissão normal (não em contingência)
+        /// 1 - Emissão normal (não em contingência)
         /// </summary>
         [XmlEnum("1")]
         Normal = 1,
 
         /// <summary>
-        /// 2=Contingência FS-IA, com impressão do DANFE em formulário de segurança ou Para MDFe é impressão em formulário branco (sulfite)
+        /// 2 - Contingência FS-IA, com impressão do DANFE em formulário de segurança ou Para MDFe é impressão em formulário branco (sulfite)
         /// </summary>
         [XmlEnum("2")]
         ContingenciaFSIA = 2,
 
         /// <summary>
-        /// 3=Regime Especial NFF (Nota Fiscal Fácil)
+        /// 3 - Regime Especial NFF (Nota Fiscal Fácil)
         /// </summary>
         [XmlEnum("3")]
         RegimeEspecialNFF,
 
         /// <summary>
-        /// 4=Contingência EPEC (Evento Prévio de Emissão em Contingência)
+        /// 4 - Contingência EPEC (Evento Prévio de Emissão em Contingência)
         /// </summary>
         [XmlEnum("4")]
         ContingenciaEPEC = 4,
 
         /// <summary>
-        /// 5=Contingência FS-DA, com impressão do DANFE em formulário de segurança;
+        /// 5 - Contingência FS-DA, com impressão do DANFE em formulário de segurança;
         /// </summary>
         [XmlEnum("5")]
         ContingenciaFSDA = 5,
 
         /// <summary>
-        /// 6=Contingência SVC-AN (SEFAZ Virtual de Contingência do AN);
+        /// 6 - Contingência SVC-AN (SEFAZ Virtual de Contingência do AN);
         /// </summary>
         [XmlEnum("6")]
         ContingenciaSVCAN = 6,
 
         /// <summary>
-        /// 7=Contingência SVC-RS (SEFAZ Virtual de Contingência do RS);
+        /// 7 - Contingência SVC-RS (SEFAZ Virtual de Contingência do RS);
         /// </summary>
         [XmlEnum("7")]
         ContingenciaSVCRS = 7,
 
         /// <summary>
-        /// 8=Contingência SVC-SP (SEFAZ Virtual de Contingência de SP);
+        /// 8 - Contingência SVC-SP (SEFAZ Virtual de Contingência de SP);
         /// </summary>
         [XmlEnum("8")]
         ContingenciaSVCSP = 8,
 
         /// <summary>
-        /// 9=Contingência off-line da NFC-e
+        /// 9 - Contingência off-line da NFC-e
         /// </summary>
         [XmlEnum("9")]
         ContingenciaOffLine = 9
@@ -1249,25 +1388,25 @@ namespace Unimake.Business.DFe.Servicos
     public enum FinalidadeNFe
     {
         /// <summary>
-        /// 1=NF-e normal
+        /// 1 - NF-e normal
         /// </summary>
         [XmlEnum("1")]
         Normal = 1,
 
         /// <summary>
-        /// 2=NF-e complementar
+        /// 2 - NF-e complementar
         /// </summary>
         [XmlEnum("2")]
         Complementar = 2,
 
         /// <summary>
-        /// 3=NF-e de ajuste
+        /// 3 - NF-e de ajuste
         /// </summary>
         [XmlEnum("3")]
         Auste = 3,
 
         /// <summary>
-        /// 4=Devolução de mercadoria
+        /// 4 - Devolução de mercadoria
         /// </summary>
         [XmlEnum("4")]
         Devolucao = 4
@@ -1283,44 +1422,44 @@ namespace Unimake.Business.DFe.Servicos
     public enum IndicadorPresenca
     {
         /// <summary>
-        /// 0=Não se aplica (por exemplo, Nota Fiscal complementar ou de ajuste)
+        /// 0 - Não se aplica (por exemplo, Nota Fiscal complementar ou de ajuste)
         /// </summary>
         [XmlEnum("0")]
         NaoSeAplica = 0,
 
         /// <summary>
-        /// 1=Operação presencial
+        /// 1 - Operação presencial
         /// </summary>
         [XmlEnum("1")]
         OperacaoPresencial = 1,
 
         /// <summary>
-        /// 2=Operação não presencial, pela Internet
+        /// 2 - Operação não presencial, pela Internet
         /// </summary>
         [XmlEnum("2")]
         OperacaoInternet = 2,
 
         /// <summary>
-        /// 3=Operação não presencial, Teleatendimento
+        /// 3 - Operação não presencial, Teleatendimento
         /// </summary>
         [XmlEnum("3")]
         OperacaoTeleAtendimento = 3,
 
         /// <summary>
-        /// 4=NFC-e em operação com entrega a domicílio
+        /// 4 - NFC-e em operação com entrega a domicílio
         /// </summary>
         [XmlEnum("4")]
         NFCeEntregaDomicilio = 4,
 
         /// <summary>
-        /// Operação presencial, fora do estabelecimento
+        /// 5 - Operação presencial, fora do estabelecimento
         /// </summary>
         [XmlEnum("5")]
         [Description("Operação presencial, fora do estabelecimento")]
         PresencialForaEstabelecimento = 5,
 
         /// <summary>
-        /// 9=Operação não presencial, outros
+        /// 9 - Operação não presencial, outros
         /// </summary>
         [XmlEnum("9")]
         OperacaoOutros = 9
@@ -1336,25 +1475,25 @@ namespace Unimake.Business.DFe.Servicos
     public enum ProcessoEmissao
     {
         /// <summary>
-        /// 0=Emissão de NF-e com aplicativo do contribuinte
+        /// 0 - Emissão de NF-e com aplicativo do contribuinte
         /// </summary>
         [XmlEnum("0")]
         AplicativoContribuinte = 0,
 
         /// <summary>
-        /// 1=Emissão de NF-e avulsa pelo Fisco;
+        /// 1 - Emissão de NF-e avulsa pelo Fisco;
         /// </summary>
         [XmlEnum("1")]
         AvulsaPeloFisco = 1,
 
         /// <summary>
-        /// 2=Emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco;
+        /// 2 - Emissão de NF-e avulsa, pelo contribuinte com seu certificado digital, através do site do Fisco;
         /// </summary>
         [XmlEnum("2")]
         AvulsaPeloContribuinteSiteFisco = 2,
 
         /// <summary>
-        /// 3=Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco.
+        /// 3 - Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco.
         /// </summary>
         [XmlEnum("3")]
         AplicativoFisco = 3
@@ -1370,22 +1509,28 @@ namespace Unimake.Business.DFe.Servicos
     public enum CRT
     {
         /// <summary>
-        /// 1=Simples Nacional
+        /// 1 - Simples Nacional
         /// </summary>
         [XmlEnum("1")]
         SimplesNacional = 1,
 
         /// <summary>
-        /// 2=Simples Nacional, excesso sublimite de receita bruta
+        /// 2 - Simples Nacional, excesso sublimite de receita bruta
         /// </summary>
         [XmlEnum("2")]
         SimplesNacionalExcessoSublimite = 2,
 
         /// <summary>
-        /// 3=Regime Normal
+        /// 3 - Regime Normal
         /// </summary>
         [XmlEnum("3")]
-        RegimeNormal = 3
+        RegimeNormal = 3,
+
+        /// <summary>
+        /// 4 - Simples Nacional - Microempreendedor Individual – MEI
+        /// </summary>
+        [XmlEnum("4")]
+        SimplesNacionalMEI = 4
     }
 
     #endregion
@@ -1399,19 +1544,19 @@ namespace Unimake.Business.DFe.Servicos
     public enum IndicadorIEDestinatario
     {
         /// <summary>
-        /// 1=Contribuinte ICMS (informar a IE do destinatário)
+        /// 1 - Contribuinte ICMS (informar a IE do destinatário)
         /// </summary>
         [XmlEnum("1")]
         ContribuinteICMS = 1,
 
         /// <summary>
-        /// 2=Contribuinte isento de Inscrição no cadastro de Contribuintes do ICMS
+        /// 2 - Contribuinte isento de Inscrição no cadastro de Contribuintes do ICMS
         /// </summary>
         [XmlEnum("2")]
         ContribuinteIsento = 2,
 
         /// <summary>
-        /// 9=Não Contribuinte, que pode ou não possuir Inscrição Estadual no Cadastro de Contribuintes do ICMS
+        /// 9 - Não Contribuinte, que pode ou não possuir Inscrição Estadual no Cadastro de Contribuintes do ICMS
         /// </summary>
         [XmlEnum("9")]
         NaoContribuinte = 9
@@ -1449,31 +1594,31 @@ namespace Unimake.Business.DFe.Servicos
     public enum ViaTransporteInternacional
     {
         /// <summary>
-        /// 1=Marítima
+        /// 1 - Marítima
         /// </summary>
         [XmlEnum("1")]
         Maritima = 1,
 
         /// <summary>
-        /// 2=Fluvial
+        /// 2 - Fluvial
         /// </summary>
         [XmlEnum("2")]
         Fluvial = 2,
 
         /// <summary>
-        /// 3=Lacustre
+        /// 3 - Lacustre
         /// </summary>
         [XmlEnum("3")]
         Lacustre = 3,
 
         /// <summary>
-        /// 4=Aérea
+        /// 4 - Aérea
         /// </summary>
         [XmlEnum("4")]
         Aerea = 4,
 
         /// <summary>
-        /// 5=Postal
+        /// 5 - Postal
         /// </summary>
         [XmlEnum("5")]
         Postal = 5,
@@ -1485,43 +1630,43 @@ namespace Unimake.Business.DFe.Servicos
         Ferroviaria = 6,
 
         /// <summary>
-        /// 7=Rodoviária
+        /// 7 - Rodoviária
         /// </summary>
         [XmlEnum("7")]
         Rodoviaria = 7,
 
         /// <summary>
-        /// 8=Conduto / Rede Transmissão
+        /// 8 - Conduto / Rede Transmissão
         /// </summary>
         [XmlEnum("8")]
         CondutoRedeTransmissao = 8,
 
         /// <summary>
-        /// 9=Meios Próprios
+        /// 9 - Meios Próprios
         /// </summary>
         [XmlEnum("9")]
         MeiosProprios = 9,
 
         /// <summary>
-        /// 10=Entrada / Saída ficta
+        /// 10 - Entrada / Saída ficta
         /// </summary>
         [XmlEnum("10")]
         EntradaSaidaFicta = 10,
 
         /// <summary>
-        /// 11=Courier
+        /// 11 - Courier
         /// </summary>
         [XmlEnum("11")]
         Courier = 11,
 
         /// <summary>
-        /// 12=Em Mãos
+        /// 12 - Em Mãos
         /// </summary>
         [XmlEnum("12")]
         EmMaos = 12,
 
         /// <summary>
-        /// 13=Por Reboque
+        /// 13 - Por Reboque
         /// </summary>
         [XmlEnum("13")]
         PorReboque = 13
@@ -1537,19 +1682,19 @@ namespace Unimake.Business.DFe.Servicos
     public enum FormaImportacaoIntermediacao
     {
         /// <summary>
-        /// 1=Importação por conta própria
+        /// 1 - Importação por conta própria
         /// </summary>
         [XmlEnum("1")]
         ImportacaoPorContaPropria = 1,
 
         /// <summary>
-        /// 2=Importação por conta e ordem
+        /// 2 - Importação por conta e ordem
         /// </summary>
         [XmlEnum("2")]
         ImportacaoPorContaOrdem = 2,
 
         /// <summary>
-        /// 3=Importação por encomenda
+        /// 3 - Importação por encomenda
         /// </summary>
         [XmlEnum("3")]
         ImportacaoPorEncomenda = 3
@@ -1629,25 +1774,25 @@ namespace Unimake.Business.DFe.Servicos
     public enum ModalidadeBaseCalculoICMS
     {
         /// <summary>
-        /// 0=Margem Valor Agregado (%)
+        /// 0 - Margem Valor Agregado (%)
         /// </summary>
         [XmlEnum("0")]
         MargemValorAgregado = 0,
 
         /// <summary>
-        /// 1=Pauta (Valor)
+        /// 1 - Pauta (Valor)
         /// </summary>
         [XmlEnum("1")]
         Pauta = 1,
 
         /// <summary>
-        /// 2=Preço Tabelado Máx. (valor)
+        /// 2 - Preço Tabelado Máx. (valor)
         /// </summary>
         [XmlEnum("2")]
         PrecoTabeladoMaximo = 2,
 
         /// <summary>
-        /// 3=Valor da operação
+        /// 3 - Valor da operação
         /// </summary>
         [XmlEnum("3")]
         ValorOperacao = 3
@@ -1663,43 +1808,43 @@ namespace Unimake.Business.DFe.Servicos
     public enum ModalidadeBaseCalculoICMSST
     {
         /// <summary>
-        /// 0=Preço tabelado ou máximo sugerido
+        /// 0 - Preço tabelado ou máximo sugerido
         /// </summary>
         [XmlEnum("0")]
         PrecoTabeladoMaximoSugerido = 0,
 
         /// <summary>
-        /// 1=Lista Negativa (valor)
+        /// 1 - Lista Negativa (valor)
         /// </summary>
         [XmlEnum("1")]
         ListaNegativa = 1,
 
         /// <summary>
-        /// 2=Lista Positiva (valor)
+        /// 2 - Lista Positiva (valor)
         /// </summary>
         [XmlEnum("2")]
         ListaPositiva = 2,
 
         /// <summary>
-        /// 3=Lista Neutra (valor)
+        /// 3 - Lista Neutra (valor)
         /// </summary>
         [XmlEnum("3")]
         ListaNeutra = 3,
 
         /// <summary>
-        /// 4=Margem Valor Agregado (%)
+        /// 4 - Margem Valor Agregado (%)
         /// </summary>
         [XmlEnum("4")]
         MargemValorAgregado = 4,
 
         /// <summary>
-        /// 5=Pauta (valor)
+        /// 5 - Pauta (valor)
         /// </summary>
         [XmlEnum("5")]
         Pauta = 5,
 
         /// <summary>
-        /// 6=Valor da Operação
+        /// 6 - Valor da Operação
         /// </summary>
         [XmlEnum("6")]
         ValorOperacao = 6
@@ -1715,31 +1860,31 @@ namespace Unimake.Business.DFe.Servicos
     public enum IndicadorOrigemProcesso
     {
         /// <summary>
-        /// 0=SEFAZ
+        /// 0 - SEFAZ
         /// </summary>
         [XmlEnum("0")]
         SEFAZ = 0,
 
         /// <summary>
-        /// 1=Justiça Federal
+        /// 1 - Justiça Federal
         /// </summary>
         [XmlEnum("1")]
         JusticaFederal = 1,
 
         /// <summary>
-        /// 2=Justiça Estadual
+        /// 2 - Justiça Estadual
         /// </summary>
         [XmlEnum("2")]
         JusticaEstadual = 2,
 
         /// <summary>
-        /// 3=Secex/RFB
+        /// 3 - Secex/RFB
         /// </summary>
         [XmlEnum("3")]
         SecexRFB = 3,
 
         /// <summary>
-        /// 9=Outros
+        /// 9 - Outros
         /// </summary>
         [XmlEnum("9")]
         Outros = 9
@@ -3694,7 +3839,7 @@ namespace Unimake.Business.DFe.Servicos
         Complementar = 1,
 
         /// <summary>
-        /// 3=CTe de Anulação
+        /// 3=CTe de Anulação (Tipo obsoleto, só funciona para versão 3.00 do CTe)
         /// </summary>
         [XmlEnum("2")]
         Anulacao = 2,
@@ -6032,6 +6177,132 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [Description("GINFES")]
         GINFES = 20,
+
+        /// <summary>
+        /// QUASAR - Sistemas Inteligentes de Gestão
+        /// </summary>
+        [Description("QUASAR")]
+        QUASAR = 21,
+
+        /// <summary>
+        /// Próprio Goiânia GO
+        /// </summary>
+        [Description("Próprio Goiânia GO")]
+        PROPRIOGOIANIA = 22,
+
+        /// <summary>
+        /// OBARATEC
+        /// </summary>
+        [Description("OBARATEC")]
+        OBARATEC = 23,
+
+        /// <summary>
+        /// GIF
+        /// </summary>
+        [Description("GIF")]
+        GIF = 24,
+
+        /// <summary>
+        /// ISSNET
+        /// </summary>
+        [Description("ISSNET")]
+        ISSNET = 25,
+
+        /// <summary>
+        /// CENTI
+        /// </summary>
+        [Description("CENTI")]
+        CENTI = 26,
+
+        /// <summary>
+        /// NACIONAL
+        /// </summary>
+        [Description("NACIONAL")]
+        NACIONAL = 27,
+
+        /// <summary>
+        /// GIAP
+        /// </summary>
+        [Description("GIAP")]
+        GIAP = 28,
+
+        /// <summary>
+        /// EQUIPLANO 
+        /// </summary>
+        [Description("EQUIPLANO")]
+        EQUIPLANO = 29,
+
+        /// <summary>
+        /// MEMORY 
+        /// </summary>
+        [Description("MEMORY")]
+        MEMORY = 30,
+
+        /// <summary>
+        /// ABASE Sistemas
+        /// </summary>
+        [Description("ABASE")]
+        ABASE = 31,
+
+        /// <summary>
+        /// FIORILLI
+        /// </summary>
+        [Description("FIORILLI")]
+        FIORILLI = 32,
+
+        /// <summary>
+        /// IPM
+        /// </summary>
+        [Description("IPM")]
+        IPM = 33,
+
+        /// <summary>
+        /// TECNOSISTEMAS
+        /// </summary>
+        [Description("TECNOSISTEMAS")]
+        TECNOSISTEMAS = 34,
+
+        /// <summary>
+        /// BAUHAUS - Prefeitura Moderna
+        /// </summary>
+        [Description("BAUHAUS")]
+        BAUHAUS = 35,
+
+        /// <summary>
+        /// TINUS
+        /// </summary>
+        [Description("TINUS")]
+        TINUS = 36,
+
+        /// <summary>
+        /// EMBRAS
+        /// </summary>
+        [Description("EMBRAS")]
+        EMBRAS = 37,
+
+        /// <summary>
+        /// BSITBR
+        /// </summary>
+        [Description("BSITBR")]
+        BSITBR = 38,
+
+        /// <summary>
+        /// SIMPLE
+        /// </summary>
+        [Description("SIMPLE")]
+        SIMPLE = 39,
+
+        /// <summary>
+        /// PRONIM
+        /// </summary>
+        [Description("PRONIM")]
+        PRONIM = 40,
+
+        /// <summary>
+        /// PROPRIOBARUERISP
+        /// </summary>
+        [Description("PROPRIOBARUERISP")]
+        PROPRIOBARUERISP = 41,
     }
 
     #endregion
@@ -6095,55 +6366,61 @@ namespace Unimake.Business.DFe.Servicos
         /// XML de consulta status do serviço da NFe/NFCe
         /// </summary>
         [Description("XML de consulta status do serviço da NFe/NFCe")]
-        NFeStatusServico,
+        NFeStatusServico = 0,
 
         /// <summary>
         /// XML de consulta situação da NFe/NFCe
         /// </summary>
         [Description("XML de consulta situação da NFe/NFCe")]
-        NFeConsultaSituacao,
+        NFeConsultaSituacao = 1,
 
         /// <summary>
         /// XML de consulta do recibo do lote da NFe/NFCe
         /// </summary>
         [Description("XML de consulta do recibo do lote da NFe/NFCe")]
-        NFeConsultaRecibo,
+        NFeConsultaRecibo = 2,
 
         /// <summary>
         /// XML de consulta cadastro do contribuinte da NFe/NFCe
         /// </summary>
         [Description("XML de consulta cadastro do contribuinte da NFe/NFCe")]
-        NFeConsultaCadastro,
+        NFeConsultaCadastro = 3,
 
         /// <summary>
         /// XML de consulta dos documentos fiscais eletrônicos distribuídos da NFe/NFCe
         /// </summary>
         [Description("XML de consulta dos documentos fiscais eletrônicos distribuídos da NFe/NFCe")]
-        NFeDistribuicaoDFe,
+        NFeDistribuicaoDFe = 4,
 
         /// <summary>
         /// XML de envio de evento da NFe/NFCe
         /// </summary>
         [Description("XML de envio de evento da NFe/NFCe")]
-        NFeEnvioEvento,
+        NFeEnvioEvento = 5,
 
         /// <summary>
         /// XML de Inutilização da NFe/NFCe
         /// </summary>
         [Description("XML de Inutilização da NFe/NFCe")]
-        NFeInutilizacao,
+        NFeInutilizacao = 6,
 
         /// <summary>
         /// XML individual da NFe/NFCe
         /// </summary>
         [Description("XML individual da NFe/NFCe")]
-        NFe,
+        NFe = 7,
 
         /// <summary>
         /// XML de envio em lote da NFe/NFCe
         /// </summary>
         [Description("XML de envio em lote da NFe/NFCe")]
-        NFeEnvioEmLote,
+        NFeEnvioEmLote = 8,
+
+        /// <summary>
+        /// XML de distribuição da NFe com protocolo de autorização anexado
+        /// </summary>
+        [Description("XML de distribuição da NFe com protocolo de autorização anexado")]
+        NFeDistribuicao = 9,
 
         #endregion 
 
@@ -6153,55 +6430,55 @@ namespace Unimake.Business.DFe.Servicos
         /// XML de consulta status do serviço do CTe
         /// </summary>
         [Description("XML de consulta status do serviço do CTe")]
-        CTeStatusServico,
+        CTeStatusServico = 10,
 
         /// <summary>
         /// XML de consulta situação do CTe
         /// </summary>
         [Description("XML de consulta situação do CTe")]
-        CTeConsultaSituacao,
+        CTeConsultaSituacao = 11,
 
         /// <summary>
         /// XML de consulta do recibo do lote do CTe
         /// </summary>
         [Description("XML de consulta do recibo do lote do CTe")]
-        CTeConsultaRecibo,
+        CTeConsultaRecibo = 12,
 
         /// <summary>
         /// XML de envio de evento do CTe
         /// </summary>
         [Description("XML de envio de evento do CTe")]
-        CTeEnvioEvento,
-
-        /// <summary>
-        /// XML de Inutilização do CTe
-        /// </summary>
-        [Description("XML de Inutilização do CTe")]
-        CTeInutilizacao,
+        CTeEnvioEvento = 13,
 
         /// <summary>
         /// XML individual do CTe
         /// </summary>
         [Description("XML individual do CTe")]
-        CTe,
+        CTe = 15,
 
         /// <summary>
         /// XML de envio em lote do CTe
         /// </summary>
         [Description("XML de envio em lote do CTe")]
-        CTeEnvioEmLote,
+        CTeEnvioEmLote = 16,
 
         /// <summary>
         /// XML do CTeOS
         /// </summary>
         [Description("XML do CTeOS")]
-        CTeOS,
+        CTeOS = 17,
 
         /// <summary>
         /// XML de consulta dos documentos fiscais eletrônicos distribuídos do CTe
         /// </summary>
         [Description("XML de consulta dos documentos fiscais eletrônicos distribuídos do CTe")]
-        CTeDistribuicaoDFe,
+        CTeDistribuicaoDFe = 18,
+
+        /// <summary>
+        /// XML de distribuição da NFe com protocolo de autorização anexado
+        /// </summary>
+        [Description("XML de distribuição da NFe com protocolo de autorização anexado")]
+        CTeDistribuicao = 19,
 
         #endregion 
 
@@ -6211,43 +6488,49 @@ namespace Unimake.Business.DFe.Servicos
         /// XML de consulta status do serviço do MDFe
         /// </summary>
         [Description("XML de consulta status do serviço do MDFe")]
-        MDFeStatusServico,
+        MDFeStatusServico = 20,
 
         /// <summary>
         /// XML de consulta situação do MDFe
         /// </summary>
         [Description("XML de consulta situação do MDFe")]
-        MDFeConsultaSituacao,
+        MDFeConsultaSituacao = 21,
 
         /// <summary>
         /// XML de consulta do recibo do lote do MDFe
         /// </summary>
         [Description("XML de consulta do recibo do lote do MDFe")]
-        MDFeConsultaRecibo,
+        MDFeConsultaRecibo = 22,
 
         /// <summary>
         /// XML de envio de evento do MDFe
         /// </summary>
         [Description("XML de envio de evento do MDFe")]
-        MDFeEnvioEvento,
+        MDFeEnvioEvento = 23,
 
         /// <summary>
         /// XML individual do MDFe
         /// </summary>
         [Description("XML individual do MDFe")]
-        MDFe,
+        MDFe = 24,
 
         /// <summary>
         /// XML de envio em lote do MDFe
         /// </summary>
         [Description("XML de envio em lote do MDFe")]
-        MDFeEnvioEmLote,
+        MDFeEnvioEmLote = 25,
 
         /// <summary>
         /// XML de consulta dos MDFe´s não encerrados
         /// </summary>
         [Description("XML de consulta dos MDFe´s não encerrados")]
-        MDFeConsultaNaoEncerrado,
+        MDFeConsultaNaoEncerrado = 26,
+
+        /// <summary>
+        /// XML de distribuição da NFe com protocolo de autorização anexado
+        /// </summary>
+        [Description("XML de distribuição da NFe com protocolo de autorização anexado")]
+        MDFeDistribuicao = 27,
 
         #endregion 
 
@@ -6255,7 +6538,7 @@ namespace Unimake.Business.DFe.Servicos
         /// Não foi possível identificar o tipo do XML
         /// </summary>
         [Description("Não foi possível identificar o tipo do XML")]
-        NaoIdentificado
+        NaoIdentificado = 9999
     }
 
     #endregion
@@ -6365,4 +6648,487 @@ namespace Unimake.Business.DFe.Servicos
     }
 
     #endregion
+
+    #region Tipos de códigos GTIN
+
+    /// <summary>
+    /// Tipos de códigos GTIN
+    /// </summary>
+    public enum TipoCodigoGTIN
+    {
+        /// <summary>
+        /// 8 - GTIN8 (é codificado no código de barras EAN-8)
+        /// </summary>
+        [XmlEnum("8")]
+        GTIN8 = 8,
+
+        /// <summary>
+        /// 12 - GTIN12 (é mais utilizado no código de barras UPC-A)
+        /// </summary>
+        [XmlEnum("12")]
+        GTIN12 = 12,
+
+        /// <summary>
+        /// 13 - GTIN13 (é codificado no EAN-13)
+        /// </summary>
+        [XmlEnum("13")]
+        GTIN13 = 13,
+
+        /// <summary>
+        /// 14 - GTIN14 (é codificado no ITF-14)
+        /// </summary>
+        [XmlEnum("14")]
+        GTIN14 = 14
+    }
+
+    #endregion
+
+    #region Tipos de GNRE
+
+    /// <summary>
+    /// Tipos de GNRE
+    /// </summary>
+    public enum TiposDeGNRE
+    {
+        /// <summary>
+        /// 0 - GNRE Simples
+        /// </summary>
+        [XmlEnum("0")]
+        Simples = 0,
+
+        /// <summary>
+        /// 1 - GNRE Múltiplos Documentos
+        /// </summary>
+        [XmlEnum("1")]
+        MultiplosDocumentos = 1,
+
+        /// <summary>
+        /// 2 - GNRE Múltiplas Receitas
+        /// </summary>
+        [XmlEnum("2")]
+        MultiplasReceitas = 2
+    }
+
+    #endregion
+
+    #region Indicador de Importação
+
+    /// <summary>
+    /// Indicador de Importação
+    /// </summary>
+    public enum IndicadorImportacao
+    {
+        /// <summary>
+        /// 0 - Nacional
+        /// </summary>
+        [XmlEnum("0")]
+        Nacional = 0,
+
+        /// <summary>
+        /// 1 - Importado
+        /// </summary>
+        [XmlEnum("1")]
+        Importado = 1
+    }
+
+    #endregion
+
+    #region Motivos de redução do adrem do ICMS
+
+    /// <summary>
+    /// Motivos da redução do adrem do ICMS
+    /// </summary>
+    public enum MotivoReducaoAdRem
+    {
+        /// <summary>
+        /// 1 - Transporte coletivo de passageiros
+        /// </summary>
+        [XmlEnum("1")]
+        TransporteColetivoDePassageiros = 1,
+        /// <summary>
+        /// 9 = Outros
+        /// </summary>
+        [XmlEnum("9")]
+        Outros = 9
+    }
+
+    #endregion
+
+    #region Tipos dos XML retornados no DocZip
+
+    /// <summary>
+    /// Tipos de XML retornados na consulta distribuição de DFe (NFe/CTe) na tag docZip
+    /// </summary>
+    public enum TipoXMLDocZip
+    {
+        /// <summary>
+        /// XML de resumo de eventos
+        /// </summary>
+        ResEvento = 1,
+
+        /// <summary>
+        /// XML de resumo da NFe
+        /// </summary>
+        ResNFe = 2,
+
+        /// <summary>
+        /// XML de distribuição de eventos da NFe (XML completo do evento)
+        /// </summary>
+        ProcEventoNFe = 3,
+
+        /// <summary>
+        /// XML de distribuição da NFe (XML completo da NFe)
+        /// </summary>
+        ProcNFe = 4,
+
+        /// <summary>
+        /// XML de distribuição de eventos da CTe (XML completo do evento)
+        /// </summary>
+        ProcEventoCTe = 5,
+
+        /// <summary>
+        /// XML de distribuição do CTe (XML completo do CTe)
+        /// </summary>
+        ProcCTe = 6,
+
+        /// <summary>
+        /// XML desconhecido
+        /// </summary>
+        Desconhecido = 0
+    }
+
+    #endregion
+
+    #region Motivos de insucesso na entrega de mercadorias
+
+    /// <summary>
+    /// Motivos de insucesso na entrega da mercadoria
+    /// </summary>
+    public enum TipoMotivoInsucessoEntrega
+    {
+        /// <summary>
+        /// 1 - Recebedor não foi encontrado 
+        /// </summary>
+        [XmlEnum("1")]
+        RecebedorNaoEncontrado = 1,
+
+        /// <summary>
+        /// 2 - Recusa do recebedor
+        /// </summary>
+        [XmlEnum("2")]
+        RecusaDoRecebedor = 2,
+
+        /// <summary>
+        /// 3 - Endereço inexistente
+        /// </summary>
+        [XmlEnum("3")]
+        EnderecoInexistente = 3,
+
+        /// <summary>
+        /// 4 - Outros (exige informar justificativa)
+        /// </summary>
+        [XmlEnum("4")]
+        Outros = 4
+    }
+
+    #endregion
+
+    #region ProcessoEmissao
+
+    /// <summary>
+    /// Processo de emissão do evento do EFDReinf
+    /// </summary>
+    public enum ProcessoEmissaoReinf
+    {
+        /// <summary>
+        /// 1 - Aplicativo do contribuinte
+        /// </summary>
+        [XmlEnum("1")]
+        AplicativoContribuinte = 1,
+
+        /// <summary>
+        /// 2 - Aplicativo governamental
+        /// </summary>
+        [XmlEnum("2")]
+        AplicativoGovernamental = 2,
+    }
+
+    #endregion
+
+    #region Tipos De Inscrição
+
+    /// <summary>
+    /// Tipos de Inscrição
+    /// </summary>
+    public enum TiposInscricao
+    {
+        /// <summary>
+        /// 1 - CNPJ
+        /// </summary>
+        [XmlEnum("1")]
+        CNPJ = 1,
+
+        /// <summary>
+        /// 2 - CPF
+        /// </summary>
+        [XmlEnum("2")]
+        CPF = 2,
+    }
+
+    #endregion
+
+    #region Indicativo escrituração
+
+    /// <summary>
+    /// Indicativo da obrigatoriedade do contribuinte em fazer a sua escrituração contábil através da ECD Escrituração Contábil Digital
+    /// </summary>
+    public enum IndicativoEscrituracao
+    {
+        /// <summary>
+        /// 0 - Empresa NÃO obrigada à ECD.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoObrigada = 0,
+
+        /// <summary>
+        /// 1 - Empresa obrigada à ECD.
+        /// </summary>
+        [XmlEnum("1")]
+        Obrigada = 1,
+    }
+
+    #endregion
+
+    #region Indicativo de desoneração
+
+    /// <summary>
+    /// Indicativo de desoneração da folha de pagamento
+    /// </summary>
+    public enum IndicativoDesoneracao
+    {
+        /// <summary>
+        /// 0 - Não aplicável.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoAplicavel = 0,
+
+        /// <summary>
+        /// 1 - Empresa enquadrada nos artigos 7° a 9° da Lei 12.546/2011. Validação: Pode ser igual a [1] apenas se a classificação tributária for igual a [02, 03, 99]. Nos demais casos deve ser igual a [0].
+        /// </summary>
+        [XmlEnum("1")]
+        Aplicavel = 1,
+    }
+
+    #endregion
+
+    #region Indicativo acordo isenção de multa
+
+    /// <summary>
+    /// Indicativo da existência de acordo internacional para isenção de multa
+    /// Validação: Só pode ser igual a [1] se {classTrib} for igual a [60].
+    /// </summary>
+    public enum IndicativoIsencaoMulta
+    {
+        /// <summary>
+        /// 0 - Sem acordo.
+        /// </summary>
+        [XmlEnum("0")]
+        SemAcordo = 0,
+
+        /// <summary>
+        /// 1 - Com acordo.
+        /// </summary>
+        [XmlEnum("1")]
+        ComAcordo = 1,
+    }
+
+    #endregion
+
+    #region Indicativo situação pessoa jurídica
+
+    /// <summary>
+    /// Indicativo da situação da pessoa jurídica
+    /// Validação: Informação obrigatória e exclusiva para pessoa jurídica.
+    /// </summary>
+    public enum IndicativoSituacaoPJ
+    {
+        /// <summary>
+        /// 0 - Situação normal.
+        /// </summary>
+        [XmlEnum("0")]
+        Normal = 0,
+
+        /// <summary>
+        /// 1 - Extinção.
+        /// </summary>
+        [XmlEnum("1")]
+        Extincao = 1,
+
+        /// <summary>
+        /// 2 - Fusão.
+        /// </summary>
+        [XmlEnum("2")]
+        Fusao = 2,
+
+        /// <summary>
+        /// 3 - Cisão.
+        /// </summary>
+        [XmlEnum("3")]
+        Cisao = 3,
+
+        /// <summary>
+        /// 4 - Incorporação.
+        /// </summary>
+        [XmlEnum("4")]
+        Incorporacao = 4,
+    }
+
+    #endregion
+
+    #region Indicativo de entidade vinculada a União
+
+    /// <summary>
+    /// Indicativo de entidade vinculada a União
+    /// </summary>
+    public enum IndicativoUniao
+    {
+        /// <summary>
+        /// 0 - Não aplicável.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoAplicavel = 0,
+
+        /// <summary>
+        /// 1 - Órgão da Administração Pública Federal Direta, autarquias e fundações da Administração Pública Federal, empresas públicas, sociedades de economia mista, ou demais entidades em que a que União detenha maioria do capital social sujeito a voto, recebe recursos do Tesouro Nacional e está obrigada a registrar a execução orçamentária no Siafi. Validação: Informação obrigatória e exclusiva se a natureza jurídica do declarante for igual a: [101-5,104-0,107-4,110-4, 113-9, 116-3, 121-0, 122-8, 125-2, 126-0, 128-7, 131-7, 201-1, 203-8].
+        /// </summary>
+        [XmlEnum("1")]
+        Aplicavel = 1,
+    }
+
+    #endregion
+
+    #region Classificação tributária
+
+    /// <summary>
+    /// Classificação tributária
+    /// </summary>
+    public enum ClassificacaoTributaria
+    {
+        /// <summary>
+        /// 01 - Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída.
+        /// </summary>
+        [XmlEnum("01")]
+        SimplesNacionalTributacaoPrevidenciariaSubstituida = 1,
+
+        /// <summary>
+        /// 02 - Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária não substituída
+        /// </summary>
+        [XmlEnum("02")]
+        SimplesNacionalTributacaoPrevidenciariaNaoSubstituida = 2,
+
+        /// <summary>
+        /// 03 - Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída e não substituída
+        /// </summary>
+        [XmlEnum("03")]
+        SimplesNacionalTributacaoPrevidenciariaSubstituidaNaoSubstituida = 3,
+
+        /// <summary>
+        /// 04 - MEI - Micro Empreendedor Individual.
+        /// </summary>
+        [XmlEnum("04")]
+        MEI = 4,
+
+        /// <summary>
+        /// 06 - Agroindústria.
+        /// </summary>
+        [XmlEnum("06")]
+        Agroindustria = 6,
+
+        /// <summary>
+        /// 07 - Produtor rural pessoa jurídica.
+        /// </summary>
+        [XmlEnum("07")]
+        ProdutorRuralPessoaJuridica = 7,
+
+        /// <summary>
+        /// 08 - Consórcio simplificado de produtores rurais.
+        /// </summary>
+        [XmlEnum("08")]
+        ConsorcioSimplificadoDeProdutoresRurais = 8,
+
+        /// <summary>
+        /// 09 - Órgão gestor de mão de obra – OGMO
+        /// </summary>
+        [XmlEnum("09")]
+        OGMO = 9,
+
+        /// <summary>
+        /// 10 - Entidade sindical a que se refere a Lei 12.023/2009
+        /// </summary>
+        [XmlEnum("10")]
+        EntidadeSindical = 10,
+
+        /// <summary>
+        /// 11 - Associação desportiva que mantém clube de futebol profissional
+        /// </summary>
+        [XmlEnum("11")]
+        AssociacaoDesportiva = 11,
+
+        /// <summary>
+        /// 13 - Banco, caixa econômica, sociedade de crédito, financiamento e investimento e demais empresas relacionadas no parágrafo 1º do art. 22 da Lei 8.212./91
+        /// </summary>
+        [XmlEnum("13")]
+        InstituicaoFinanceira = 13,
+
+        /// <summary>
+        /// 14 - Sindicatos em geral, exceto aquele classificado no código [10]
+        /// </summary>
+        [XmlEnum("14")]
+        SindicatosGeral = 14,
+
+        /// <summary>
+        /// 21 - Pessoa física, exceto segurado especial
+        /// </summary>
+        [XmlEnum("21")]
+        PessoaFisica = 21,
+
+        /// <summary>
+        /// 22 - Segurado especial
+        /// </summary>
+        [XmlEnum("22")]
+        SeguradoEspecial = 22,
+
+        /// <summary>
+        /// 60 - Missão diplomática ou repartição consular de carreira estrangeira
+        /// </summary>
+        [XmlEnum("60")]
+        MissaoDiplomatica = 60,
+
+        /// <summary>
+        /// 70 - Empresa de que trata o Decreto 5.436/2005
+        /// </summary>
+        [XmlEnum("70")]
+        Decreto54362005 = 70,
+
+        /// <summary>
+        /// 80 - Entidade beneficente de assistência social isenta de contribuições sociais
+        /// </summary>
+        [XmlEnum("80")]
+        EntidadeBeneficente = 80,
+
+        /// <summary>
+        /// 85 - Administração direta da União, Estados, Distrito Federal e Municípios; Autarquias e fundações públicas
+        /// </summary>
+        [XmlEnum("85")]
+        AdministracaoDiretaUniao = 85,
+
+        /// <summary>
+        /// 99 - Pessoas jurídicas em geral
+        /// </summary>
+        [XmlEnum("99")]
+        PessoaJuridica = 99,
+    }
+    #endregion
 }
+
+

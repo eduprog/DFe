@@ -32,7 +32,11 @@ namespace Unimake.Business.DFe.Xml.SNCM
         /// Data e horário da recepção da mensagem de entrada
         /// </summary>
         [XmlIgnore]
+#if INTEROP
         public DateTime CrTime { get; set; }
+#else
+        public DateTimeOffset CrTime { get; set; }
+#endif
 
         /// <summary>
         /// Auxiliar de serialização da tag "crTime" - Use a propriedade "CrTime" para atribuir o valor.
@@ -41,7 +45,11 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string CrTimeField
         {
             get => CrTime.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => CrTime = DateTime.Parse(value);
+#else
+            set => CrTime = DateTimeOffset.Parse(value);
+#endif
         }
 
         /// <summary>
@@ -161,7 +169,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string Reason
         {
             get => ReasonField;
-            set => ReasonField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => ReasonField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>
@@ -202,7 +210,7 @@ namespace Unimake.Business.DFe.Xml.SNCM
         public string AtcDDD
         {
             get => AtcDDDField;
-            set => AtcDDDField = XMLUtility.UnescapeReservedCharacters(value).Truncate(140);
+            set => AtcDDDField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(140).Trim());
         }
 
         /// <summary>

@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
+using System.Xml;
+using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Xml.NFe
 {
@@ -44,13 +46,21 @@ namespace Unimake.Business.DFe.Xml.NFe
         }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
 
         [XmlElement("dhRecbto")]
         public string DhRecbtoField
         {
             get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("chNFe")]
@@ -85,5 +95,17 @@ namespace Unimake.Business.DFe.Xml.NFe
         public int GetProcEventoNFeCount => (ProcEventoNFe != null ? ProcEventoNFe.Count : 0);
 
 #endif
+
+        public override void ReadXml(XmlDocument document)
+        {
+            ProcEventoNFe.Clear();
+
+            var nodeListProcEventoNFe = document.GetElementsByTagName("procEventoNFe");
+
+            foreach (var item in nodeListProcEventoNFe)
+            {
+                ProcEventoNFe.Add(XMLUtility.Deserializar<ProcEventoNFe>(((XmlElement)item).OuterXml));
+            }
+        }
     }
 }

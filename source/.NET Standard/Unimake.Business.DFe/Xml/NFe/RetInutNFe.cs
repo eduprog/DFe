@@ -14,14 +14,15 @@ namespace Unimake.Business.DFe.Xml.NFe
     [ProgId("Unimake.Business.DFe.Xml.NFe.RetInutNFe")]
     [ComVisible(true)]
 #endif
+    [Serializable()]
     [XmlRoot("retInutNFe", Namespace = "http://www.portalfiscal.inf.br/nfe", IsNullable = false)]
     public class RetInutNFe : XMLBase
     {
         [XmlAttribute(AttributeName = "versao", DataType = "token")]
         public string Versao { get; set; }
 
-        [XmlElement(ElementName = "infInut")]
-        public InfInut InfInut = new InfInut();
+        [XmlElement("infInut")]
+        public InfInut InfInut { get; set; }
     }
 
 #if INTEROP
@@ -29,8 +30,10 @@ namespace Unimake.Business.DFe.Xml.NFe
     [ProgId("Unimake.Business.DFe.Xml.NFe.InfInut")]
     [ComVisible(true)]
 #endif
+    [Serializable()]
+    [XmlType("infInut", AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class InfInut
-    {     
+    {
         [XmlElement("tpAmb")]
         public TipoAmbiente TpAmb { get; set; }
 
@@ -79,13 +82,21 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string NNFFin { get; set; }
 
         [XmlIgnore]
+#if INTEROP
         public DateTime DhRecbto { get; set; }
+#else
+        public DateTimeOffset DhRecbto { get; set; }
+#endif
 
         [XmlElement("dhRecbto")]
         public string DhRecbtoField
         {
             get => DhRecbto.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
             set => DhRecbto = DateTime.Parse(value);
+#else
+            set => DhRecbto = DateTimeOffset.Parse(value);
+#endif
         }
 
         [XmlElement("nProt")]

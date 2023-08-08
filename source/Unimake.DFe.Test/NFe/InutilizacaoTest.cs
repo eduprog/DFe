@@ -1,6 +1,4 @@
-﻿using System;
-using Diag = System.Diagnostics;
-using Unimake.Business.DFe.Servicos;
+﻿using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.NFe;
 using Unimake.Business.DFe.Xml.NFe;
 using Xunit;
@@ -31,6 +29,7 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(UFBrasil.GO, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.MA, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.MT, TipoAmbiente.Homologacao)]
+        [InlineData(UFBrasil.MT, TipoAmbiente.Homologacao, "", "02111233456")]
         [InlineData(UFBrasil.MS, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.MG, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Homologacao)]
@@ -58,6 +57,7 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(UFBrasil.GO, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MA, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MT, TipoAmbiente.Producao)]
+        [InlineData(UFBrasil.MT, TipoAmbiente.Producao, "", "02111233456")]
         [InlineData(UFBrasil.MS, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MG, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Producao)]
@@ -74,52 +74,46 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(UFBrasil.SP, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.SE, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.TO, TipoAmbiente.Producao)]
-        public void InutilizarNumeroNFe(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente)
+        public void InutilizarNumeroNFe(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente, string cnpj = "01111222333444", string cpf = "")
         {
-            try
+            var xml = new InutNFe
             {
-                var xml = new InutNFe
+                Versao = "4.00",
+                InfInut = new InutNFeInfInut
                 {
-                    Versao = "4.00",
-                    InfInut = new InutNFeInfInut
-                    {
-                        Ano = "20",
-                        CNPJ = "01111222333444",
-                        CUF = ufBrasil,
-                        Mod = ModeloDFe.NFe,
-                        NNFIni = 1,
-                        NNFFin = 2,
-                        Serie = 1,
-                        TpAmb = tipoAmbiente,
-                        XJust = "Justificativa da inutilizacao de teste"
-                    }
-                };
-
-                var configuracao = new Configuracao
-                {
-                    TipoDFe = TipoDFe.NFe,
-                    TipoEmissao = TipoEmissao.Normal,
-                    CertificadoDigital = PropConfig.CertificadoDigital
-                };
-
-                var inutilizacao = new Inutilizacao(xml, configuracao);
-                inutilizacao.Executar();
-
-                Diag.Debug.Assert(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
-                Diag.Debug.Assert(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
-                if (inutilizacao.Result != null)
-                {
-                    Diag.Debug.Assert(inutilizacao.Result.InfInut.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
-                    Diag.Debug.Assert(inutilizacao.Result.InfInut.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
-                    if (inutilizacao.Result.InfInut.Id != null)
-                    {
-                        Diag.Debug.Assert(inutilizacao.Result.InfInut.Id.Equals(xml.InfInut.Id), "Webservice retornou uma chave da NFe diferente da enviada na consulta.");
-                    }
+                    Ano = "20",
+                    CNPJ = cnpj,
+                    CPF = cpf,
+                    CUF = ufBrasil,
+                    Mod = ModeloDFe.NFe,
+                    NNFIni = 1,
+                    NNFFin = 2,
+                    Serie = 1,
+                    TpAmb = tipoAmbiente,
+                    XJust = "Justificativa da inutilização de teste"
                 }
-            }
-            catch(Exception ex)
+            };
+
+            var configuracao = new Configuracao
             {
-                Diag.Debug.Assert(false, ex.Message, ex.StackTrace);
+                TipoDFe = TipoDFe.NFe,
+                TipoEmissao = TipoEmissao.Normal,
+                CertificadoDigital = PropConfig.CertificadoDigital
+            };
+
+            var inutilizacao = new Inutilizacao(xml, configuracao);
+            inutilizacao.Executar();
+
+            Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
+            Assert.True(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
+            if (inutilizacao.Result != null)
+            {
+                Assert.True(inutilizacao.Result.InfInut.CUF.Equals(ufBrasil), "Web-service retornou uma UF e está diferente de " + ufBrasil.ToString());
+                Assert.True(inutilizacao.Result.InfInut.TpAmb.Equals(tipoAmbiente), "Web-service retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
+                if (inutilizacao.Result.InfInut.Id != null)
+                {
+                    Assert.True(inutilizacao.Result.InfInut.Id.Equals(xml.InfInut.Id), "Web-service retornou uma chave da NFe diferente da enviada na consulta.");
+                }
             }
         }
     }

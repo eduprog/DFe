@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Unimake.Security.Platform.Exceptions;
 
@@ -182,11 +183,22 @@ namespace Unimake.Security.Platform
 
             var x509Cert = new X509Certificate2();
 
-            using (var fs = fi.OpenRead())
+            try
             {
-                var buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
-                x509Cert = new X509Certificate2(buffer, senha);
+                using (var fs = fi.OpenRead())
+                {
+                    var buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    x509Cert = new X509Certificate2(buffer, senha);
+                }
+            }
+            catch (CryptographicException)
+            {
+                throw new CertificadoDigitalException("Senha do certificado digital está incorreta.", ErrorCodes.SenhaCertificadoIncorreta);
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return x509Cert;
@@ -227,11 +239,22 @@ namespace Unimake.Security.Platform
 
             var x509Cert = new X509Certificate2();
 
-            using (var fs = fi.OpenRead())
+            try
             {
-                var buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
-                x509Cert = new X509Certificate2(buffer, senha, keyStorageFlags);
+                using (var fs = fi.OpenRead())
+                {
+                    var buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    x509Cert = new X509Certificate2(buffer, senha, keyStorageFlags);
+                }
+            }
+            catch (CryptographicException)
+            {
+                throw new CertificadoDigitalException("Senha do certificado digital está incorreta.", ErrorCodes.SenhaCertificadoIncorreta);
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return x509Cert;
@@ -304,12 +327,7 @@ namespace Unimake.Security.Platform
         /// </code>
         /// </example>
         [return: MarshalAs(UnmanagedType.IDispatch)]
-        public X509Certificate2 Selecionar()
-        {
-            var scollection = AbrirTelaSelecao();
-
-            return scollection;
-        }
+        public X509Certificate2 Selecionar() => AbrirTelaSelecao();
 
         /// <summary>
         /// Converte o arquivo .PFX do certificado em base64
@@ -477,5 +495,85 @@ namespace Unimake.Security.Platform
         public string GetNotBefore(X509Certificate2 certificado) => certificado.NotBefore.ToString("dd/MM/yyyy HH:mm:ss");
 
         #endregion Public Methods
+    }
+
+    /// <summary>
+    /// Trabalhar com certificado digital - Interop
+    /// </summary>
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Security.Platform.CertificadoDigitalInterop")]
+    [ComVisible(true)]
+    public class CertificadoDigitalInterop
+    {
+        private readonly CertificadoDigital Certificado = new CertificadoDigital();
+
+        private X509Certificate2 CertificadoSelecionado { get; set; }
+
+        /// <summary>
+        /// Trabalhar com certificado digital
+        /// </summary>
+        public CertificadoDigitalInterop() { }
+
+        /// <summary>
+        /// Abre a tela para selecionar o certificado digital
+        /// </summary>
+        public void AbrirTelaSelecao() => CertificadoSelecionado = Certificado.AbrirTelaSelecao();
+
+        /// <summary>
+        /// Converter o arquivo do certificado A1 (.PFX) para string Base64
+        /// </summary>
+        /// <param name="arquivo">Caminho do arquivo do certificado A1 (.PFX)</param>
+        /// <returns>Retorna o BASE64 do arquivo do certificado digital</returns>
+        public string ToBase64(string arquivo) => Certificado.ToBase64(arquivo);
+
+        /// <summary>
+        /// Carrega o certificado digital A1 partindo o arquivo .PFX
+        /// </summary>
+        /// <param name="caminho">Caminho do arquivo .PFX do certificado A1</param>
+        /// <param name="senha">Senha de instalação/uso do certificado</param>
+        public void CarregarCertificadoDigitalA1(string caminho, string senha) => CertificadoSelecionado = Certificado.CarregarCertificadoDigitalA1(caminho, senha);
+
+        /// <summary>
+        /// Converte a string Base64 no certificado
+        /// </summary>
+        /// <param name="base64">String base64 convertida pelo método <see cref="ToBase64(string)"/></param>
+        /// <param name="password">Senha do certificado</param>
+        public void FromBase64(string base64, string password) => CertificadoSelecionado = Certificado.FromBase64(base64, password);
+
+        /// <summary>
+        /// Verifica se o certificado digital selecionado está vencido
+        /// </summary>
+        /// <returns>true = vencido</returns>
+        public bool Vencido() => Certificado.Vencido(CertificadoSelecionado);
+
+        /// <summary>
+        /// Retorna o thumbprint do certificado digital selecionado
+        /// </summary>
+        /// <returns>Thumbprint do certificado digital selecionado</returns>
+        public string GetThumbprint() => CertificadoSelecionado.Thumbprint;
+
+        /// <summary>
+        /// Retorna o subject do certificado digital selecionado
+        /// </summary>
+        /// <returns>Subject do certificado digital selecionado</returns>
+        public string GetSubject() => CertificadoSelecionado.Subject;
+
+        /// <summary>
+        /// Retorna o SerialNumber do certificado digital selecionado
+        /// </summary>
+        /// <returns>SerialNumber do certificado digital selecionado</returns>
+        public string GetSerialNumber() => CertificadoSelecionado.SerialNumber;
+
+        /// <summary>
+        /// Retorna o Not After (Data de vencimento final do certificado digital) do certificado digital
+        /// </summary>
+        /// <returns>Retorna o Not After</returns>
+        public string GetNotAfter() => Certificado.GetNotAfter(CertificadoSelecionado);
+
+        /// <summary>
+        /// Retorna o Not Before (Data de vencimento inicial do certificado digital) do certificado digital
+        /// </summary>
+        /// <returns>Retorna o NotBefore</returns>
+        public string GetNotBefore() => Certificado.GetNotBefore(CertificadoSelecionado);
     }
 }
