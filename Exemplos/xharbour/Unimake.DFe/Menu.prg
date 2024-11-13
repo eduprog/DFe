@@ -66,6 +66,26 @@ Function Main()
    AAdd(aOpcoes, "Gerando XML de distribuicao Evento Canc NFe via consulta situacao")
    AAdd(aOpcoes, "Consulta MDFes nao encerrados")
    
+   AAdd(aOpcoes, "Obter a versao da DLL Unimake.DFe")
+   
+   Aadd(aOpcoes, "Extrair eventos retornados na consulta situacao da NFe/NFCe")
+   
+   Aadd(aOpcoes, "Verificar se a DLL esta instalada no PC")
+   
+   Aadd(aOpcoes, "eSocial - Consultar lote assincrono")   
+   Aadd(aOpcoes, "eSocial - Evento 2210 - Enviar lote")
+   Aadd(aOpcoes, "eSocial - Evento 2210 - Enviar lote - XML desserializado")
+   Aadd(aOpcoes, "eSocial - Evento 2221 - Enviar lote")
+   Aadd(aOpcoes, "eSocial - Evento 1010 - Enviar lote")
+   Aadd(aOpcoes, "eSocial - Evento 2220 - Enviar lote")
+   Aadd(aOpcoes, "eSocial - Evento 1200 - Enviar lote")   
+   Aadd(aOpcoes, "eSocial - Evento 2240 - Enviar lote")   
+   Aadd(aOpcoes, "eSocial - Evento 1210 - Enviar lote")   
+   Aadd(aOpcoes, "eSocial - Evento 2220 - Enviar lote - XML desserializado")
+   Aadd(aOpcoes, "eSocial - Evento 2200 - Enviar lote")   
+   Aadd(aOpcoes, "eSocial - Evento 2230 - Enviar lote")
+   Aadd(aOpcoes, "eSocial - Evento 2299 - Enviar lote")
+   
    Do While .T.
       Cls
 
@@ -228,6 +248,62 @@ Function Main()
 			  
          case nOpcao = 50
 		      ConsultaMDFeNaoEnc()
+			  
+         case nOpcao = 51
+		      oInfoInterop = CreateObject("Unimake.Business.DFe.Utility.InfoInterop")
+			  Cls
+			  
+			  ? oInfoInterop:VersaoDLL
+			  ?
+			  ?
+			  Wait
+			  
+			  Cls		
+			  
+         case nOpcao = 52			  
+		      ExtrairEventoPedSitNFe()
+			  
+         case nOpcao = 53
+		      VerificarDLLInstalada()
+			  
+	     case nOpcao = 54
+              eSocialConsultaLoteAssincrono()		 
+		
+         case nOpcao = 55
+		      EnviarEsocial2210()
+		
+	     case nOpcao = 56
+		      EnviarEsocial2210Desserializando()
+			  
+         case nOpcao = 57
+		      EnviarEsocial2221()			  
+			  
+         case nOpcao = 58
+		      EnviarEsocial1010()			  
+			  
+         case nOpcao = 59
+		      EnviarEsocial2220()			  
+			  
+         case nOpcao = 60
+		      EnviarEsocial1200()			  
+			  
+         case nOpcao = 61
+		      EnviarEsocial2240()			  
+			  
+         case nOpcao = 62
+		      EnviarEsocial1210()			  
+			  
+         case nOpcao = 63
+		      EnviarEsocial2220Desserializando()			  
+			  
+         case nOpcao = 64
+		      EnviarEsocial2200()		 
+			  
+         case nOpcao = 65
+		      EnviarEsocial2230()		 
+			  
+         case nOpcao = 66
+		      EnviarEsocial2299()		 
       endcase
    EndDo
 Return       

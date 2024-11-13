@@ -22,13 +22,16 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
     public class RecepcaoEvento : ServicoBase, IInteropService<EnvEvento>
     {
-        #region Private Properties
+        private EnvEvento _EnvEvento;
 
-        private EnvEvento EnvEvento => new EnvEvento().LerXML<EnvEvento>(ConteudoXML);
-
-        #endregion Private Properties
-
-        #region Private Methods
+        /// <summary>
+        /// Objeto do XML do Evento
+        /// </summary>
+        public EnvEvento EnvEvento
+        {
+            get => _EnvEvento ?? (_EnvEvento = new EnvEvento().LerXML<EnvEvento>(ConteudoXML));
+            protected set => _EnvEvento = value;
+        }
 
         private void ValidarXMLEvento(XmlDocument xml, string schemaArquivo, string targetNS)
         {
@@ -40,10 +43,6 @@ namespace Unimake.Business.DFe.Servicos.NFe
                 throw new ValidarXMLException(validar.ErrorMessage);
             }
         }
-
-        #endregion Private Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Definir o valor de algumas das propriedades do objeto "Configuracoes"
@@ -77,7 +76,15 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
             if (Configuracoes.SchemasEspecificos.Count > 0)
             {
-                var tpEvento = ((int)xml.Evento[0].InfEvento.TpEvento);
+                int tpEvento;
+                if (ConteudoXML.GetElementsByTagName("tpEvento").Count > 0)
+                {
+                    tpEvento = Convert.ToInt32(ConteudoXML.GetElementsByTagName("tpEvento")[0].InnerText);
+                }
+                else
+                {
+                    throw new Exception("Não foi possível localizar a tag obrigatória <tpEvento> no XML.");
+                }
 
                 schemaArquivo = Configuracoes.SchemasEspecificos[tpEvento.ToString()].SchemaArquivo;
                 schemaArquivoEspecifico = Configuracoes.SchemasEspecificos[tpEvento.ToString()].SchemaArquivoEspecifico;
@@ -124,12 +131,14 @@ namespace Unimake.Business.DFe.Servicos.NFe
             var tpEvento = xml.Evento[0].InfEvento.TpEvento;
 
             var msgException = "Conteúdo da tag <descEvento> deve ser igual a \"$\", pois foi este o conteudo informado na tag <tpEvento>.";
-            string descEvento;
+            var descEvento = string.Empty;
+            var descMensagem = string.Empty;
 
             switch (tpEvento)
             {
                 case TipoEventoNFe.ManifestacaoCienciaOperacao:
                     descEvento = "Ciencia da Operacao";
+                    descMensagem = "Ciência da Operação";
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -138,6 +147,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
                 case TipoEventoNFe.ManifestacaoConfirmacaoOperacao:
                     descEvento = "Confirmacao da Operacao";
+                    descMensagem = "Confirmação da Operação";
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -146,6 +156,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
                 case TipoEventoNFe.ManifestacaoDesconhecimentoOperacao:
                     descEvento = "Desconhecimento da Operacao";
+                    descMensagem = "Desconhecimento da Operação";
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -154,6 +165,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
                 case TipoEventoNFe.ManifestacaoOperacaoNaoRealizada:
                     descEvento = "Operacao nao Realizada";
+                    descMensagem = "Operação não Realizada";
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -162,6 +174,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
                 case TipoEventoNFe.ComprovanteEntregaNFe:
                     descEvento = "Comprovante de Entrega da NF-e";
+                    descMensagem = descEvento;
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -170,6 +183,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
                 case TipoEventoNFe.CancelamentoComprovanteEntregaNFe:
                     descEvento = "Cancelamento Comprovante de Entrega da NF-e";
+                    descMensagem = descEvento;
                     if (!xml.Evento[0].InfEvento.DetEvento.DescEvento.Equals(descEvento))
                     {
                         throw new Exception(msgException.Replace("$", descEvento));
@@ -177,17 +191,28 @@ namespace Unimake.Business.DFe.Servicos.NFe
                     goto case TipoEventoNFe.EPEC;
 
                 case TipoEventoNFe.EPEC:
-                    if (xml.Evento[0].InfEvento.COrgao != UFBrasil.AN)
+                    if (tpEvento == TipoEventoNFe.EPEC)
                     {
-                        throw new Exception("Conteúdo da tag <cOrgao> inválido. Para eventos de manifestação do destinatário o conteúdo da tag <cOrgao> deve igual a 91.");
+                        descMensagem = "EPEC de NFe";
+                    }
+
+                    if (tpEvento == TipoEventoNFe.EPEC && xml.Evento[0].InfEvento.ChNFe.Substring(20, 2) == "65" && ((DetEventoEPEC)xml.Evento[0].InfEvento.DetEvento).COrgaoAutor == UFBrasil.SP)
+                    {
+                        if (xml.Evento[0].InfEvento.COrgao != UFBrasil.SP)
+                        {
+                            throw new Exception("Conteúdo da tag <cOrgao> inválido. Para o evento de EPEC de NFCe o conteúdo da tag <cOrgao> deve igual a 35.");
+                        }
+                    }
+                    else
+                    {
+                        if (xml.Evento[0].InfEvento.COrgao != UFBrasil.AN)
+                        {
+                            throw new Exception("Conteúdo da tag <cOrgao> inválido. Para o evento de tipo " + descMensagem + " o conteúdo da tag <cOrgao> deve igual a 91.");
+                        }
                     }
                     break;
             }
         }
-
-        #endregion Protected Methods
-
-        #region Public Properties
 
         /// <summary>
         /// Propriedade contendo o XML do evento com o protocolo de autorização anexado
@@ -232,10 +257,6 @@ namespace Unimake.Business.DFe.Servicos.NFe
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
@@ -249,16 +270,52 @@ namespace Unimake.Business.DFe.Servicos.NFe
             }
 
             Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+
+            EnvEvento = EnvEvento.LerXML<EnvEvento>(ConteudoXML);
+        }
+
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RecepcaoEvento(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+
+            #region Limpar a assinatura do objeto para recriar e atualizar o ConteudoXML. Isso garante que a propriedade e o objeto tenham assinaturas iguais, evitando discrepâncias. Autor: Wandrey Data: 10/06/2024
+
+            //Remover a assinatura para forçar criar novamente
+            EnvEvento = EnvEvento.LerXML<EnvEvento>(ConteudoXML);
+            foreach (var evento in EnvEvento.Evento)
+            {
+                evento.Signature = null;
+            }
+
+            //Gerar o XML novamente com base no objeto
+            ConteudoXML = EnvEvento.GerarXML();
+
+            //Forçar assinar novamente
+            _ = ConteudoXMLAssinado;
+
+            //Atualizar o objeto novamente com o XML já assinado
+            EnvEvento = EnvEvento.LerXML<EnvEvento>(ConteudoXML);
+
+            #endregion
         }
 
         /// <summary>
         /// Construtor
         /// </summary>
         public RecepcaoEvento() : base() { }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
 #if INTEROP
 
@@ -392,7 +449,5 @@ namespace Unimake.Business.DFe.Servicos.NFe
                 ThrowHelper.Instance.Throw(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

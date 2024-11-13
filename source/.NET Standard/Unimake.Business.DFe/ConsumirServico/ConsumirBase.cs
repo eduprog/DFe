@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
+using Unimake.Business.DFe.Security;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
 using Unimake.Exceptions;
@@ -50,6 +52,63 @@ namespace Unimake.Business.DFe
 
             var retorna = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 
+            if (soap.TemCDATA)
+            {
+                soap.SoapString = soap.SoapString.Replace("{cCDATA}", "]]>").Replace("{oCDATA}", "<![CDATA[");
+            }
+
+            if (soap.PadraoNFSe == PadraoNFSe.TINUS)
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(xmlBody);
+                xmlBody = "";
+
+                foreach (XmlNode item in doc.GetElementsByTagName(doc.ChildNodes[0].Name)[0].ChildNodes)
+                {
+                    xmlBody += item.OuterXml.Replace(" xmlns=\"http://www.tinus.com.br\"", "");
+                }
+            }
+            else if (soap.PadraoNFSe == PadraoNFSe.PROPRIOBARUERISP)
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(xmlBody);
+                var xmlNode = doc.GetElementsByTagName("ArquivoRPSBase64");
+                if (xmlNode.Count > 0)
+                {
+                    var tagNode = xmlNode[0];
+                    tagNode.InnerText = tagNode.InnerText.Base64Encode();
+                    doc.GetElementsByTagName("ArquivoRPSBase64")[0].InnerText = tagNode.InnerText;
+                }
+                xmlBody = doc.OuterXml;
+            }
+            else if (soap.PadraoNFSe == PadraoNFSe.IIBRASIL)
+            {
+                soap.SoapString = soap.SoapString.Replace("{cCDATA}", "]]>").Replace("{oCDATA}", "<![CDATA[");
+
+                var doc = new XmlDocument();
+                doc.LoadXml(xmlBody);
+
+                if (!xmlBody.Contains("Integridade"))
+                {
+                    var integridade = IIBRASIL.GerarIntegridade(xmlBody, soap.Token);
+                    var noIntegridade = doc.CreateNode(XmlNodeType.Element, "Integridade", null);
+                    noIntegridade.InnerText = integridade;
+                    doc.FirstChild.FirstChild.AppendChild(noIntegridade);
+                    xmlBody = doc.OuterXml;
+                }
+            }
+
+            if (soap.Servico == Servico.EFDReinfConsultaReciboEvento)
+            {
+                var doc = new XmlDocument();
+                doc.LoadXml(xmlBody);
+
+                var tpEvento = doc.GetElementsByTagName("tipoEvento")[0].InnerText;
+
+                xmlBody = doc.GetElementsByTagName("ConsultaReciboEvento")[0].OuterXml;
+                xmlBody = xmlBody.Replace("ConsultaReciboEvento", "ConsultaReciboEvento" + tpEvento);
+            }
+
             if (TratarScapeEnvio)
             {
                 xmlBody = xmlBody.Replace("<", "&lt;").Replace(">", "&gt;");
@@ -62,6 +121,7 @@ namespace Unimake.Business.DFe
                 {
                     retorna += soap.SoapString.Replace("{xmlBodyScapeEnvio}", xmlBody);
                 }
+
             }
             else if (TratarScapeRetorno)
             {
@@ -69,38 +129,12 @@ namespace Unimake.Business.DFe
             }
             else
             {
-                if (soap.PadraoNFSe == PadraoNFSe.TINUS)
-                {
-                    var doc = new XmlDocument();
-                    doc.LoadXml(xmlBody);
-                    xmlBody = "";
-
-                    foreach (XmlNode item in doc.GetElementsByTagName(doc.ChildNodes[0].Name)[0].ChildNodes)
-                    {
-                        xmlBody += item.OuterXml.Replace(" xmlns=\"http://www.tinus.com.br\"", "");
-                    }
-                }
-
-                if (soap.PadraoNFSe == PadraoNFSe.PROPRIOBARUERISP)
-                {
-                    var doc = new XmlDocument();
-                    doc.LoadXml(xmlBody);
-                    XmlNodeList xmlNode = doc.GetElementsByTagName("ArquivoRPSBase64");
-                    if (xmlNode.Count > 0)
-                    {
-                        XmlNode tagNode = xmlNode[0];
-                        tagNode.InnerText = tagNode.InnerText.Base64Encode();
-                        doc.GetElementsByTagName("ArquivoRPSBase64")[0].InnerText = tagNode.InnerText;
-                    }
-                    xmlBody = doc.OuterXml;
-                }
-
                 retorna += soap.SoapString.Replace("{xmlBody}", xmlBody);
-
-
             }
+
             return retorna;
         }
+
 
         #endregion Private Methods
 
@@ -115,6 +149,16 @@ namespace Unimake.Business.DFe
         /// Conteudo retornado pelo WebService consumido (formato XmlDocument)
         /// </summary>
         public XmlDocument RetornoServicoXML { get; protected set; }
+
+        /// <summary>
+        /// Stream retornada pelo Webservice. Para consumo de serviços que retornam .pdf
+        /// </summary>
+        public Stream RetornoStream { get; set; }
+
+        /// <summary>
+        /// Propriedade para uso interno nos testes unitários. 
+        /// </summary>
+        public HttpStatusCode HttpStatusCode { get; protected set; }
 
         #endregion Public Properties
 
@@ -189,9 +233,11 @@ namespace Unimake.Business.DFe
             try
             {
                 responsePost = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode = HttpStatusCode.OK;
             }
             catch (WebException ex)
             {
+                HttpStatusCode = (HttpStatusCode)ex.Status;
                 webException = ex;
                 responsePost = ex.Response;
 
@@ -231,21 +277,30 @@ namespace Unimake.Business.DFe
             {
                 var tagRetorno = soap.TagRetorno;
 
-                if (soap.TipoAmbiente == TipoAmbiente.Homologacao && !string.IsNullOrWhiteSpace(soap.TagRetornoHomologacao))
-                {
-                    tagRetorno = soap.TagRetornoHomologacao;
-                }
-
                 if (retornoXml.GetElementsByTagName(tagRetorno)[0] == null)
                 {
-                    throw new Exception("Não foi possível localizar a tag <" + tagRetorno + "> no XML retornado pelo webservice.\r\n\r\n" +
-                            "Conteúdo retornado pelo servidor:\r\n\r\n" +
-                        retornoXml.InnerXml);
+                    if (retornoXml.GetElementsByTagName("soap:Body").Count >= 1 && retornoXml.GetElementsByTagName("soap:Body")[0].ChildNodes.Count >= 1)
+                    {
+                        tagRetorno = retornoXml.GetElementsByTagName("soap:Body")[0].ChildNodes[0].Name;
+                    }
+
+                    if (retornoXml.GetElementsByTagName(tagRetorno)[0] == null)
+                    {
+                        throw new Exception("Não foi possível localizar a tag <" + tagRetorno + "> no XML retornado pelo web-service.\r\n\r\n" +
+                            "Conteúdo retornado pelo servidor:\r\n\r\n" + retornoXml.InnerXml);
+                    }
                 }
 
                 if (TratarScapeRetorno)
                 {
-                    RetornoServicoString = retornoXml.GetElementsByTagName(tagRetorno)[0].ChildNodes[0].InnerText;
+                    if (soap.PadraoNFSe == PadraoNFSe.GIF && retornoXml.GetElementsByTagName(tagRetorno)[0].ChildNodes[0].OuterXml.Contains("SOAP-ENV:Fault"))
+                    {
+                        RetornoServicoString = retornoXml.GetElementsByTagName(tagRetorno)[0].ChildNodes[0].OuterXml;
+                    }
+                    else
+                    {
+                        RetornoServicoString = retornoXml.GetElementsByTagName(tagRetorno)[0].ChildNodes[0].InnerText;
+                    }
                 }
                 else
                 {
@@ -256,9 +311,9 @@ namespace Unimake.Business.DFe
             {
                 if (string.IsNullOrWhiteSpace(retornoXml.InnerText))
                 {
-                    throw new Exception("A propriedade InnerText do XML retornado pelo webservice está vazia.");
+                    throw new Exception("A propriedade InnerText do XML retornado pelo web-service está vazia.");
                 }
-                
+
                 RetornoServicoString = retornoXml.InnerText;
 
                 //Remover do XML retornado o conteúdo ﻿<?xml version="1.0" encoding="utf-8"?> ou gera falha na hora de transformar em XmlDocument
@@ -271,13 +326,14 @@ namespace Unimake.Business.DFe
                 RetornoServicoString = RetornoServicoString.Replace("\r\n", "");
             }
 
-            if (soap.PadraoNFSe == PadraoNFSe.FIORILLI || soap.PadraoNFSe == PadraoNFSe.SONNER || soap.PadraoNFSe == PadraoNFSe.SMARAPD)
+            if (soap.PadraoNFSe == PadraoNFSe.FIORILLI || soap.PadraoNFSe == PadraoNFSe.SONNER || soap.PadraoNFSe == PadraoNFSe.SMARAPD || soap.PadraoNFSe == PadraoNFSe.DSF)
             {
+                RetornoServicoString = RetornoServicoString.Replace("ns1:", string.Empty);
                 RetornoServicoString = RetornoServicoString.Replace("ns2:", string.Empty);
                 RetornoServicoString = RetornoServicoString.Replace("ns3:", string.Empty);
                 RetornoServicoString = RetornoServicoString.Replace("ns4:", string.Empty);
             }
-            else if(soap.PadraoNFSe == PadraoNFSe.SIMPLE)
+            else if (soap.PadraoNFSe == PadraoNFSe.SIMPLE)
             {
                 RetornoServicoString = RetornoServicoString.Replace("m:", string.Empty);
             }

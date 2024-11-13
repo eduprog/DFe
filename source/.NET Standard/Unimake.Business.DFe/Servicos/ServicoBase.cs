@@ -2,13 +2,13 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
+using System.IO;
+using System.Net;
 using System.Xml;
 using Unimake.Business.DFe.Security;
 using Unimake.Business.DFe.Utility;
-using Unimake.Business.DFe.Xml;
-using Unimake.Exceptions;
 using Unimake.Business.DFe.Validator;
-using Unimake.Business.Security;
+using Unimake.Business.DFe.Xml;
 
 namespace Unimake.Business.DFe.Servicos
 {
@@ -22,39 +22,32 @@ namespace Unimake.Business.DFe.Servicos
 #endif
     public abstract class ServicoBase
     {
-        #region Private Fields
-
-        private XmlDocument _conteudoXML;
-
-        #endregion Private Fields
-
-        #region Private Methods
+        private XmlDocument _ConteudoXML;
 
         /// <summary>
         /// Verifica se o XML está assinado, se não estiver assina. Só faz isso para XMLs que tem tag de assinatura, demais ele mantem como está, sem assinar.
         /// </summary>
         /// <param name="tagAssinatura">Tag de assinatura</param>
         /// <param name="tagAtributoID">Tag que detêm o atributo ID</param>
-        private void VerificarAssinarXML(string tagAssinatura, string tagAtributoID)
+        protected virtual void VerificarAssinarXML(string tagAssinatura, string tagAtributoID)
         {
-            if (!string.IsNullOrWhiteSpace(tagAssinatura))
+            if (Configuracoes.UsaCertificadoDigital)
             {
-                if (AssinaturaDigital.EstaAssinado(ConteudoXML, tagAssinatura))
+                if (!string.IsNullOrWhiteSpace(tagAssinatura) && Configuracoes.NaoAssina == null && Configuracoes.NaoAssina != Configuracoes.TipoAmbiente)
                 {
-                    AjustarXMLAposAssinado();
-                }
-                else
-                {
-                    AssinaturaDigital.Assinar(ConteudoXML, tagAssinatura, tagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id", true);
+                    if (AssinaturaDigital.EstaAssinado(ConteudoXML, tagAssinatura))
+                    {
+                        AjustarXMLAposAssinado();
+                    }
+                    else
+                    {
+                        AssinaturaDigital.Assinar(ConteudoXML, tagAssinatura, tagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "", true);
 
-                    AjustarXMLAposAssinado();
+                        AjustarXMLAposAssinado();
+                    }
                 }
             }
         }
-
-        #endregion Private Methods
-
-        #region Protected Properties
 
         /// <summary>
         /// Conteúdo do XML, pode ou não estar assinado. Esta propriedade é utilizada em tempo de processamento.
@@ -62,7 +55,7 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         protected XmlDocument ConteudoXML
         {
-            get => _conteudoXML;
+            get => _ConteudoXML;
             set
             {
                 if (ConteudoXMLOriginal == null)
@@ -71,22 +64,14 @@ namespace Unimake.Business.DFe.Servicos
                     ConteudoXMLOriginal.LoadXml(value?.OuterXml);
                 }
 
-                _conteudoXML = value;
+                _ConteudoXML = value;
             }
         }
-
-        #endregion Protected Properties
-
-        #region Protected Constructors
 
         /// <summary>
         /// Construtor
         /// </summary>
         protected ServicoBase() { }
-
-        #endregion Protected Constructors
-
-        #region Protected Methods
 
         /// <summary>
         /// Este método é uma possibilidade de fazer ajustes no XML depois de assinado, pois ele é executado assim que a assinatura é feita. Basta implementar ele nas heranças.
@@ -108,10 +93,6 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         protected abstract void XmlValidarConteudo();
 
-        #endregion Protected Methods
-
-        #region Protected Internal Methods
-
         /// <summary>
         /// Inicializa configurações, parâmetros e propriedades para execução do serviço.
         /// </summary>
@@ -131,17 +112,16 @@ namespace Unimake.Business.DFe.Servicos
             }
 
             //Esta linha tem que ficar fora do if acima, pois tem que carregar esta parte, independente, pois o que é carregado sempre é automático. Mudar isso, vai gerar falha no UNINFE, principalmente no envio dos eventos, onde eu defino as configurações manualmente. Wandrey 07/12/2020
-           Configuracoes.Load(GetType().Name);
+            Configuracoes.Load(GetType().Name);
 
             System.Diagnostics.Trace.WriteLine(ConteudoXML?.InnerXml, "Unimake.DFe");
 
             //Forçar criar a tag QrCode bem como assinatura para que o usuário possa acessar o conteúdo no objeto do XML antes de enviar
-                _ = ConteudoXMLAssinado;
-            }
-            
-        #endregion Protected Internal Methods
+            _ = ConteudoXMLAssinado;
 
-        #region Public Properties
+            XmlValidar();
+        }
+
 
         /// <summary>
         /// Configurações diversas para consumir os serviços
@@ -151,7 +131,7 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// Conteúdo do XML assinado.
         /// </summary>
-        public XmlDocument ConteudoXMLAssinado
+        public virtual XmlDocument ConteudoXMLAssinado
         {
             get
             {
@@ -180,6 +160,11 @@ namespace Unimake.Business.DFe.Servicos
 #endif
 
         /// <summary>
+        /// Propriedade para uso interno nos testes unitários. 
+        /// </summary>
+        public HttpStatusCode HttpStatusCode { get; private set; }
+
+        /// <summary>
         /// Conteúdo do XML original, para os que tem assinatura este está sem. Original conforme foi criado.
         /// </summary>
         public XmlDocument ConteudoXMLOriginal { get; private set; }
@@ -194,15 +179,12 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         public XmlDocument RetornoWSXML { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Constructors
+        /// <summary>
+        /// Stream retornada pelo Webservice. Para consumo de serviços que retornam .pdf
+        /// </summary>
+        public Stream RetornoStream { get; set; }
 
         static ServicoBase() => AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.AssemblyResolve;
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         /// <summary>
         /// Executar o serviço para consumir o web-service
@@ -217,7 +199,7 @@ namespace Unimake.Business.DFe.Servicos
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura))
+            if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && Configuracoes.NaoAssina != null && Configuracoes.NaoAssina != Configuracoes.TipoAmbiente)
             {
                 if (!AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
                 {
@@ -244,7 +226,10 @@ namespace Unimake.Business.DFe.Servicos
                     LoginConexao = Configuracoes.LoginConexao,
                     ResponseMediaType = Configuracoes.ResponseMediaType,
                     CodigoTom = Configuracoes.CodigoTom,
-                    UsaCertificadoDigital = Configuracoes.UsaCertificadoDigital
+                    Servico = Configuracoes.Servico,
+                    UsaCertificadoDigital = Configuracoes.UsaCertificadoDigital,
+                    Host = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.HostProducao : Configuracoes.HostHomologacao),
+                    ApiKey = Configuracoes.ApiKey,
                 };
 
                 var consumirAPI = new ConsumirAPI();
@@ -252,6 +237,8 @@ namespace Unimake.Business.DFe.Servicos
 
                 RetornoWSString = consumirAPI.RetornoServicoString;
                 RetornoWSXML = consumirAPI.RetornoServicoXML;
+                RetornoStream = consumirAPI.RetornoStream;  //Retorno específico para criação de .pdf para os casos em que a String corrompe o conteúdo. Mauricio 27/09/2023 #157859
+                HttpStatusCode = consumirAPI.HttpStatusCode;
             }
             else
             {
@@ -259,8 +246,7 @@ namespace Unimake.Business.DFe.Servicos
                 {
                     EnderecoWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebEnderecoProducao : Configuracoes.WebEnderecoHomologacao),
                     ActionWeb = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.WebActionProducao : Configuracoes.WebActionHomologacao),
-                    TagRetorno = Configuracoes.WebTagRetorno,
-                    TagRetornoHomologacao = Configuracoes.WebTagRetornoHomologacao,
+                    TagRetorno = (Configuracoes.TipoAmbiente == TipoAmbiente.Homologacao && !string.IsNullOrEmpty(Configuracoes.WebTagRetornoHomologacao)) ? Configuracoes.WebTagRetornoHomologacao : Configuracoes.WebTagRetorno,
                     EncodingRetorno = Configuracoes.WebEncodingRetorno,
                     GZIPCompress = Configuracoes.GZIPCompress,
                     VersaoSoap = Configuracoes.WebSoapVersion,
@@ -272,6 +258,11 @@ namespace Unimake.Business.DFe.Servicos
                     TipoAmbiente = Configuracoes.TipoAmbiente,
                     ConverteSenhaBase64 = Configuracoes.ConverteSenhaBase64,
                     MunicipioSenha = Configuracoes.ConverteSenhaBase64 ? Configuracoes.MunicipioSenha.Base64Encode() : Configuracoes.MunicipioSenha,
+                    MunicipioUsuario = Configuracoes.MunicipioUsuario,
+                    Token = Configuracoes.MunicipioToken,
+                    EncriptaTagAssinatura = Configuracoes.EncriptaTagAssinatura,
+                    Servico = Configuracoes.Servico,
+                    TemCDATA = Configuracoes.TemCDATA,
                     Proxy = (Configuracoes.HasProxy ? Proxy.DefinirServidor(Configuracoes.ProxyAutoDetect,
                                                                             Configuracoes.ProxyUser,
                                                                             Configuracoes.ProxyPassword) : null)
@@ -282,6 +273,7 @@ namespace Unimake.Business.DFe.Servicos
 
                 RetornoWSString = consumirWS.RetornoServicoString;
                 RetornoWSXML = consumirWS.RetornoServicoXML;
+                HttpStatusCode = consumirWS.HttpStatusCode;
             }
         }
 
@@ -295,7 +287,5 @@ namespace Unimake.Business.DFe.Servicos
         [ComVisible(false)]
 #endif
         public abstract void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML);
-
-        #endregion Public Methods
     }
 }

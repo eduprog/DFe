@@ -390,6 +390,102 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Solicitar Inutilizacao NFSe")]
         NFSeSolicitacaoInutilizacao = 63,
 
+        /// <summary>
+        /// 64 - Consulta Requerimento de Cancelamento da NFSe
+        /// </summary>
+        [Description("Consulta Requerimento de Cancelamento NFSe")]
+        NFSeConsultarRequerimentoCancelamento = 64,
+
+        /// <summary>
+        /// 65 - Consulta do Recibo Evento do EFDReinf
+        /// </summary>
+        [Description("Consulta Recibo Evento do EFDReinf")]
+        EFDReinfConsultaReciboEvento = 65,
+
+        /// <summary>
+        /// 66 - Consulta Lote Assincrono EFDReinf
+        /// </summary>
+        [Description("Consulta Lote Assíncrono EFDReinf")]
+        EFDReinfConsultaLoteAssincrono = 66,
+
+        /// <summary>
+        /// 67 - Recepção Lote Assincrono EFDReinf
+        /// </summary>
+        [Description("Recepcionar Lote Assincrono EFDReinf")]
+        EFDReinfRecepcionarLoteAssincrono = 67,
+
+        /// <summary>
+        /// 68 - ESocial Informacoes Do Empregador S-1000
+        /// </summary>
+        [Description("ESocial Informacoes Do Empregador S-1000")]
+        ESocialInformacoesDoEmpregador = 68,
+
+        /// <summary>
+        /// 69 - ESocial Enviar Lote Eventos
+        /// </summary>
+        [Description("ESocial Enviar Lote Eventos")]
+        ESocialEnviarLoteEventos = 69,
+
+        /// <summary>
+        /// Consulta dos eventos do eSocial
+        /// </summary>
+        [Description("ESocial Consulta Eventos")]
+        ESocialConsultaEvts = 70,
+
+        /// <summary>
+        /// Download dos eventos do eSocial
+        /// </summary>
+        [Description("ESocial download Eventos")]
+        ESocialDownloadEvts = 71,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("DARE Envio Unitário")]
+        DAREEnvio = 72,
+
+        /// <summary>
+        /// Serviço de consumo da API do receitas do DARE
+        /// </summary>
+        [Description("DARE Receita")]
+        DAREReceita = 73,
+
+        /// <summary>
+        /// 74 - Envio do XML de CTe Simplificado - Síncrono
+        /// </summary>
+        [Description("Autorização do CTe Simplificado")]
+        CTeAutorizacaoSimp = 74,
+
+        /// <summary>
+        /// 75 - Consulta status serviço NF3e (nota de energia)
+        /// </summary>
+        [Description("Consulta status do serviço da NF3e")]
+        NF3eStatusServico = 75,
+
+        /// <summary>
+        /// 76 - Consulta protocolo da NF3e (nota de energia)
+        /// </summary>
+        [Description("Consulta situação da NF3e")]
+        NF3eConsultaProtocolo = 76,
+
+        /// <summary>
+        /// 77 - Consulta recibo NF3e (nota de energia)
+        /// </summary>
+        [Description("Consulta recibo da NF3e")]
+        NF3eConsultaRecibo = 77,
+
+        /// <summary>
+        /// 78 - Envio de Eventos da NF3e
+        /// </summary>
+        [Description("Envio de eventos da NF3e")]
+        NF3eRecepcaoEvento = 78,
+
+        /// <summary>
+        /// 79 - Envio do XML de NF3e
+        /// </summary>d
+        [Description("Autorização síncrona de NF3e")]
+        NF3eAutorizacaoSinc = 79,
+
         #endregion
 
         #region Gerais
@@ -462,8 +558,19 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// 11 - EFDReinf - Escrituração Fiscal Digital de Retenções e Outras Informações Fiscais
         /// </summary>
-        EFDReinf = 11
-
+        EFDReinf = 11,
+        /// <summary>
+        /// 12 - eSocial - Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas
+        /// </summary>
+        ESocial = 12,
+        /// <summary>
+        /// 13 - DARE SP - Documento de Arrecadação de Receitas Estaduais
+        /// </summary>
+        DARE = 13,
+        /// <summary>
+        /// 14 - NF3e - Nota fiscal de energia eletrônica
+        /// </summary>
+        NF3e = 14,
     }
 
     #endregion       
@@ -620,7 +727,10 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         AN = 91,
 
-        //Existe um código 92, mas como não sei o que é e não encontrei nada na internet que identifique, não criei ainda este código no ENUM. Wandrey 30/01/2023
+        /// <summary>
+        /// 92 - SVRS - Serviço Virtal do Rio Grande do SUL
+        /// </summary>
+        SVRS = 92,
 
         /// <summary>
         /// 94 - SVCRS - Serviço Virtual de Contingência do Rio Grande do Sul
@@ -706,7 +816,13 @@ namespace Unimake.Business.DFe.Servicos
         /// CTeOS (Modelo: 67)
         /// </summary>
         [XmlEnum("67")]
-        CTeOS = 67
+        CTeOS = 67,
+
+        /// <summary>
+        /// NF3e (Modelo: 66)
+        /// </summary>
+        [XmlEnum("66")]
+        NF3e = 66,
     }
 
     #endregion
@@ -761,6 +877,24 @@ namespace Unimake.Business.DFe.Servicos
         EPEC = 110140,
 
         /// <summary>
+        /// 110150 - Ator Interessado na NFe
+        /// </summary>
+        [XmlEnum("110150")]
+        AtorInteressadoNFe = 110150,
+
+        /// <summary>
+        /// 110192 - Insucesso na Entrega da NF-e
+        /// </summary>
+        [XmlEnum("110192")]
+        InsucessoEntregaNFe = 110192,
+
+        /// <summary>
+        /// 110193 - Cancelamento do Evento de Insucesso na Entrega da NF-e
+        /// </summary>
+        [XmlEnum("110193")]
+        CancelamentoInsucessoEntregaNFe = 110193,
+
+        /// <summary>
         /// 111500 - Pedido de prorrogação do prazo de ICMS no caso de remessa para industrialização - 1o Prazo
         /// </summary>
         [XmlEnum("111500")]
@@ -783,6 +917,18 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("111503")]
         CancelamentoPedidoProrrogacaoPrazo2 = 111503,
+
+        /// <summary>
+        /// 110750 - Conciliação Financeira
+        /// </summary>
+        [XmlEnum("110750")]
+        ConciliacaoFinanceira = 110750,
+
+        /// <summary>
+        /// 110750 - Cancelamento Conciliação Financeira
+        /// </summary>
+        [XmlEnum("110751")]
+        CancelamentoConciliacaoFinanceira = 110751,
 
         /// <summary>
         /// 210200 - Manifestação do Destinatário - Confirmação da Operação
@@ -855,6 +1001,18 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("411503")]
         RespostaCancelamentoPedidoProrrogacaoPrazo2 = 411503,
+
+        /// <summary>
+        /// 510620 - Registro de Passagem Automático da NFe (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("510620")]
+        RegistroPassagemAutomatico = 510620,
+
+        /// <summary>
+        /// 510630 - Registro de Passagem Automático Originado no MDF-e (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("510630")]
+        RegistoPassagemAutomaticoOriginadoMDFe = 510630,
 
         /// <summary>
         /// 610130 - Comprovante de entrega do CTe
@@ -1041,6 +1199,18 @@ namespace Unimake.Business.DFe.Servicos
         CancelamentoInsucessoEntrega = 110191,
 
         /// <summary>
+        /// 510620 - Registro de Passagem Automático do CTe (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("510620")]
+        RegistroPassagemAutomatico = 510620,
+
+        /// <summary>
+        /// 510630 - Registro de Passagem Automático Originado no MDF-e  (Evento exclusivo do fisco)
+        /// </summary>
+        [XmlEnum("510630")]
+        RegistoPassagemAutomaticoOriginadoMDFe = 510630,
+
+        /// <summary>
         /// 610110 - Evento de prestação de serviço em desacordo CTe
         /// </summary>
         [XmlEnum("610110")]
@@ -1068,13 +1238,7 @@ namespace Unimake.Business.DFe.Servicos
         /// 310611 - MDFe cancelado (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("310611")]
-        MDFeCancelado = 310611,
-
-        /// <summary>
-        /// 510620 - Registro de Passagem Automático CTe (Evento exclusivo do fisco)
-        /// </summary>
-        [XmlEnum("510620")]
-        RegistroPassagemAutomatico = 510620
+        MDFeCancelado = 310611
     }
 
     #endregion
@@ -1409,7 +1573,7 @@ namespace Unimake.Business.DFe.Servicos
         /// 3 - NF-e de ajuste
         /// </summary>
         [XmlEnum("3")]
-        Auste = 3,
+        Ajuste = 3,
 
         /// <summary>
         /// 4 - Devolução de mercadoria
@@ -1890,6 +2054,12 @@ namespace Unimake.Business.DFe.Servicos
         SecexRFB = 3,
 
         /// <summary>
+        /// 4 - CONFAZ
+        /// </summary>
+        [XmlEnum("4")]
+        CONFAZ = 4,
+
+        /// <summary>
         /// 9 - Outros
         /// </summary>
         [XmlEnum("9")]
@@ -2239,103 +2409,121 @@ namespace Unimake.Business.DFe.Servicos
     public enum MeioPagamento
     {
         /// <summary>
-        /// 01=Dinheiro
+        /// 01 - Dinheiro
         /// </summary>
         [XmlEnum("01")]
         Dinheiro = 1,
 
         /// <summary>
-        /// 02=Cheque
+        /// 02 - Cheque
         /// </summary>
         [XmlEnum("02")]
         Cheque = 2,
 
         /// <summary>
-        /// 03=Cartão de Crédito
+        /// 03 - Cartão de Crédito
         /// </summary>
         [XmlEnum("03")]
         CartaoCredito = 3,
 
         /// <summary>
-        /// 04=Cartão de Débito
+        /// 04 - Cartão de Débito
         /// </summary>
         [XmlEnum("04")]
         CartaoDebito = 4,
 
         /// <summary>
-        /// 05=Crédito Loja
+        /// 05 - Crédito Loja (Private Label), Crediário Digital, Outros Crediários (Não usar para cartão de loja "bandeirado"
         /// </summary>
         [XmlEnum("05")]
         CreditoLoja = 5,
 
         /// <summary>
-        /// 10=Vale Alimentação
+        /// 10 - Vale Alimentação
         /// </summary>
         [XmlEnum("10")]
         ValeAlimentacao = 10,
 
         /// <summary>
-        /// 11=Vale Refeição
+        /// 11 - Vale Refeição
         /// </summary>
         [XmlEnum("11")]
         ValeRefeicao = 11,
 
         /// <summary>
-        /// 12=Vale Presente
+        /// 12 - Vale Presente
         /// </summary>
         [XmlEnum("12")]
         ValePresente = 12,
 
         /// <summary>
-        /// 13=Vale Combustível
+        /// 13 - Vale Combustível
         /// </summary>
         [XmlEnum("13")]
         ValeCombustivel = 13,
 
         /// <summary>
-        /// 14=Duplicata Mercantil (Não existe mais este numerador no padrão da SEFAZ, foi retirado na Nota Técnica 2016.002 - v 1.61. Mantemos no enum para manter compatilidade em casos de importação de XMLs antigos (B2B) que possuem este valor na tag tPag.)
+        /// 14 - Duplicata Mercantil (Não existe mais este numerador no padrão da SEFAZ, foi retirado na Nota Técnica 2016.002 - v 1.61. Mantemos no enum para manter compatilidade em casos de importação de XMLs antigos (B2B) que possuem este valor na tag tPag.)
         /// </summary>
         [XmlEnum("14")]
         DuplicataMercantil = 14,
 
         /// <summary>
-        /// 15=Boleto Bancário
+        /// 15 - Boleto Bancário
         /// </summary> 
         [XmlEnum("15")]
         BoletoBancario = 15,
 
         /// <summary>
-        /// 16=Depósito Bancário
+        /// 16 - Depósito Bancário
         /// </summary> 
         [XmlEnum("16")]
         DepositoBancario = 16,
 
         /// <summary>
-        /// 17=Pagamento Instantâneo (PIX)
+        /// 17 - Pagamento Instantâneo (PIX) - Dinâmico
         /// </summary> 
         [XmlEnum("17")]
         PagamentoInstantaneo = 17,
 
         /// <summary>
-        /// 18=Transferência bancária, Carteira Digital
+        /// 18 - Transferência bancária, Carteira Digital
         /// </summary> 
         [XmlEnum("18")]
         TransferenciaBancaria = 18,
 
         /// <summary>
-        /// 19=Programa de fidelidade, Cashback, Crédito Virtual
+        /// 19 - Programa de fidelidade, Cashback, Crédito Virtual
         /// </summary> 
         [XmlEnum("19")]
         ProgramaFidelidade = 19,
 
         /// <summary>
-        /// 90=Sem pagamento
+        /// 20 - Pagamento Instantâneo (PIX) - Estático
+        /// </summary>
+        [XmlEnum("20")]
+        PagamentoInstantaneoEstatico = 20,
+
+        /// <summary>
+        /// 21 - Crédito em loja decorrente de valor pago anteriormente, de devolução de mercadoria, etc.
+        /// </summary>
+        [XmlEnum("21")]
+        CreditoEmLoja = 21,
+
+        /// <summary>
+        /// 22 - Pagamento Eletrônico não Informado - falha de hardware do sistema emissor
+        /// </summary>
+        [XmlEnum("22")]
+        PagamentoEletronicoNaoInformado = 22,
+
+        /// <summary>
+        /// 90 - Sem pagamento
         /// </summary>
         [XmlEnum("90")]
         SemPagamento = 90,
 
         /// <summary>
-        /// 99=Outros
+        /// 99 - Outros - Quando o pagamento não estiver no rol desta tabela, o contribuinte deverá preencher o tipo de pagamento com "Outros" e informar, em campo específico da Nota Fiscal, a descrição adequada do meio de pagamento utilizado na operação ou prestação.
         /// </summary>
         [XmlEnum("99")]
         Outros = 99
@@ -3825,6 +4013,58 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion
 
+    #region TipoGuiaTransito
+
+    /// <summary>
+    /// Tipos de Guia de Transito
+    /// </summary>
+    public enum TipoGuiaTransito
+    {
+        /// <summary>
+        /// 1 - GTA - Guia de Trânsito Animal;
+        /// </summary>
+        [XmlEnum("1")]
+        GTA = 1,
+
+        /// <summary>
+        /// 2 - TTA - Termo de Trânsito Animal; 
+        /// </summary>
+        [XmlEnum("2")]
+        TTA = 2,
+
+        /// <summary>
+        /// 3 - DTA - Documento de Transferência Animal; 
+        /// </summary>
+        [XmlEnum("3")]
+        DTA = 3,
+
+        /// <summary>
+        /// 4 - ATV - Autorização de Trânsito Vegetal; 
+        /// </summary>
+        [XmlEnum("4")]
+        ATV = 4,
+
+        /// <summary>
+        /// 5 - PTV - Permissão de Trânsito Vegetal; 
+        /// </summary>
+        [XmlEnum("5")]
+        PTV = 5,
+
+        /// <summary>
+        /// 6 - GTV - Guia de Trânsito Vegetal; 
+        /// </summary>
+        [XmlEnum("6")]
+        GTV = 6,
+
+        /// <summary>
+        /// 7 - Guia Florestal (DOF, SisFlora - PA e MT ou SIAM - MG).
+        /// </summary>
+        [XmlEnum("7")]
+        GuiaFlorestal = 7
+    }
+
+    #endregion
+
     #region Tipo de CTe
 
     /// <summary>
@@ -3855,6 +4095,28 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("3")]
         Substituicao = 3
+    }
+
+    #endregion
+
+    #region Tipo de CTe Simplificado
+
+    /// <summary>
+    /// Tipos de CTe Simplificado
+    /// </summary>
+    public enum TipoCTeSimp
+    {
+        /// <summary>
+        /// 5 - CTe Simplificado
+        /// </summary>
+        [XmlEnum("5")]
+        CTeSimplificado = 5,
+
+        /// <summary>
+        /// 6 - Substituição CTe Simplificado
+        /// </summary>
+        [XmlEnum("6")]
+        SubstituicaoCTeSimplificado = 6
     }
 
     #endregion
@@ -4004,7 +4266,7 @@ namespace Unimake.Business.DFe.Servicos
         Destinatario = 3,
 
         /// <summary>
-        /// 4 - Outros
+        /// 4 - Outros / Terceiros
         /// </summary>
         [XmlEnum("4")]
         Outros = 4
@@ -4137,6 +4399,24 @@ namespace Unimake.Business.DFe.Servicos
     }
 
     #endregion
+
+    /// <summary>
+    /// Indica se a prestação é total ou parcial em relação as notas o documento anterior
+    /// </summary>
+    public enum TipoPrestacaoCTe
+    {
+        /// <summary>
+        /// 1 - Total
+        /// </summary>
+        [XmlEnum("1")]
+        Total = 1,
+
+        /// <summary>
+        /// 2 - Parcial
+        /// </summary>
+        [XmlEnum("2")]
+        Parcial = 2
+    }
 
     #region ModeloNF
 
@@ -4399,6 +4679,56 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("9")]
         OutrosOrgaos = 9
+    }
+
+    #endregion
+
+    #region Tipo do autor que gerou o evento do Ator Interessado na NFe
+
+    /// <summary>
+    /// Tipo do autor que gerou o evento do Ator Interessado na NFe
+    /// </summary>
+    public enum TipoAutorGeradorEvento
+    {
+        /// <summary>
+        /// Evento gerado pela Empresa Emitente
+        /// </summary>
+        [XmlEnum("1")]
+        EmpresaEmitente = 1,
+
+        /// <summary>
+        /// Evento gerado pela Empresa Destinatária
+        /// </summary>
+        [XmlEnum("2")]
+        EmpresaDestinaria = 2,
+
+        /// <summary>
+        /// Evento gerado pela Empresa Transportadora
+        /// </summary>
+        [XmlEnum("3")]
+        EmpresaTransportadora = 3
+    }
+
+    #endregion
+
+    #region Tipo de autorização do evento de ator interessado na NFe
+
+    /// <summary>
+    /// Tipo de autorização do evento de ator interessado na NFe
+    /// </summary>
+    public enum TipoAutorizacao
+    {
+        /// <summary>
+        /// 0 – Não permite
+        /// </summary>
+        [XmlEnum("0")]
+        NaoPermite = 0,
+
+        /// <summary>
+        /// 1 – Permite o transportador autorizado pelo emitente ou destinatário autorizar outros transportadores para ter acesso ao download da NF-e
+        /// </summary>
+        [XmlEnum("1")]
+        Permite = 1,
     }
 
     #endregion
@@ -6309,11 +6639,136 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [Description("PROPRIOBARUERISP")]
         PROPRIOBARUERISP = 41,
+
+        /// <summary>
+        /// THEMA
+        /// </summary>
+        [Description("THEMA")]
+        THEMA = 42,
+
+        /// <summary>
+        /// AGILI
+        /// </summary>
+        [Description("AGILI")]
+        AGILI = 43,
+
+        /// <summary>
+        /// WEBFISCO_TECNOLOGIA
+        /// </summary>
+        [Description("WEBFISCO")]
+        WEBFISCO = 44,
+
+        /// <summary>
+        /// IIBRASIL
+        /// </summary>
+        [Description("IIBRASIL")]
+        IIBRASIL = 45,
+
+        /// <summary>
+        /// ADM_SISTEMAS
+        /// </summary>
+        [Description("ADM_SISTEMAS")]
+        ADM_SISTEMAS = 46,
+
+        /// <summary>
+        /// SYSTEMPRO
+        /// </summary>
+        [Description("SYSTEMPRO")]
+        SYSTEMPRO = 47,
+
+        /// <summary>
+        /// FINTEL
+        /// </summary>
+        [Description("FINTEL")]
+        FINTEL = 48,
+
+        /// <summary>
+        /// CARIOCA
+        /// </summary>
+        [Description("CARIOCA")]
+        CARIOCA = 49,
+
+        /// <summary>
+        /// SALVADOR_BA
+        /// </summary>
+        [Description("SALVADOR_BA")]
+        SALVADOR_BA = 50,
+
+        /// <summary>
+        /// FISCO
+        /// </summary>
+        [Description("FISCO")]
+        FISCO = 51,
+
+        /// <summary>
+        /// ABACO
+        /// </summary>
+        [Description("ABACO")]
+        ABACO = 52,
+
+        /// <summary>
+        /// GISSONLINE (Antigo GINFES)
+        /// </summary>
+        [Description("GISSONLINE")]
+        GISSONLINE = 53,
+
+        /// <summary>
+        /// PUBLICA
+        /// </summary>
+        [Description("PUBLICA")]
+        PUBLICA = 54
     }
 
     #endregion
 
-    #region Tipos de Compoenentes da GTVe para CTeOS
+    #region Códigos dos Padrões de NFSe com link único
+
+    /// <summary>
+    /// Código para consumo dos padrões com o mesmo link de comunicação
+    /// O UniNFe enviará a configuração com os códigos IBGE do respectivo município, este ENUM foi criado para criar a conversão do código do município para o código do padrão aqui dentro da DLL.
+    /// </summary>
+    public enum CodigoPadraoNFSe
+    {
+        /// <summary>
+        /// PADRÃO GINFES
+        /// </summary>
+        [Description("GINFES")]
+        GINFES = 9999900,
+
+        /// <summary>
+        /// PADRÃO MEMORY
+        /// </summary>
+        [Description("MEMORY")]
+        MEMORY = 9999901,
+
+        /// <summary>
+        /// PADRÃO ABASE
+        /// </summary>
+        [Description("ABASE")]
+        ABASE = 9999902,
+
+        /// <summary>
+        /// PADRÃO BETHA
+        /// </summary>
+        [Description("BETHA Sistemas")]
+        BETHA = 9999903,
+
+        /// <summary>
+        /// PADRÃO WEBFISCO
+        /// </summary>
+        [Description("WEBFISCO")]
+        WEBFISCO = 9999904,
+
+        /// <summary>
+        /// PADRÃO EQUIPLANO
+        /// </summary>
+        [Description("EQUIPLANO")]
+        EQUIPLANO = 9999905,
+    }
+
+    #endregion
+
+    #region Tipos de Componentes da GTVe para CTeOS
 
     /// <summary>
     /// Tipos de componentes da GTVe para CTeOS
@@ -6486,6 +6941,12 @@ namespace Unimake.Business.DFe.Servicos
         [Description("XML de distribuição da NFe com protocolo de autorização anexado")]
         CTeDistribuicao = 19,
 
+        /// <summary>
+        /// XML individual do CTe simplificado
+        /// </summary>
+        [Description("XML individual do CTe simplificado")]
+        CTeSimp = 28,
+
         #endregion 
 
         #region MDFe
@@ -6538,7 +6999,41 @@ namespace Unimake.Business.DFe.Servicos
         [Description("XML de distribuição da NFe com protocolo de autorização anexado")]
         MDFeDistribuicao = 27,
 
-        #endregion 
+        #endregion
+
+        #region NF3e
+
+        /// <summary>
+        /// XML de consulta status do serviço da NF3e
+        /// </summary>
+        [Description("XML de consulta status do serviço da NF3e")]
+        NF3eStatusServico = 28,
+
+        /// <summary>
+        /// XML de consulta situação da NF3e
+        /// </summary>
+        [Description("XML de consulta situação da NF3e")]
+        NF3eConsultaSituacao = 29,
+
+        /// <summary>
+        /// XML de consulta do recibo da NF3e
+        /// </summary>
+        [Description("XML de consulta do recibo da NF3e")]
+        NF3eConsultaRecibo = 30,
+
+        /// <summary>
+        /// XML de envio de evento da NF3e
+        /// </summary>
+        [Description("XML de envio de evento da NF3e")]
+        NF3eEnvioEvento = 31,
+
+        /// <summary>
+        /// XML individual da NF3e
+        /// </summary>
+        [Description("XML individual da NF3e")]
+        NF3e = 32,
+
+        #endregion NF3e
 
         /// <summary>
         /// Não foi possível identificar o tipo do XML
@@ -6600,7 +7095,19 @@ namespace Unimake.Business.DFe.Servicos
         /// 12 = Autorização Específica
         /// </summary>
         [XmlEnum("12")]
-        AutorizacaoEspecifica = 12
+        AutorizacaoEspecifica = 12,
+
+        /// <summary>
+        /// 14 - Ajuste SINIEF
+        /// </summary>
+        [XmlEnum("14")]
+        AjusteSINIEF = 14,
+
+        /// <summary>
+        /// 15 - Convênio ICMS
+        /// </summary>
+        [XmlEnum("15")]
+        ConvenioICMS = 15
     }
 
     #endregion
@@ -6879,6 +7386,30 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("2")]
         CPF = 2,
+
+        /// <summary>
+        /// 3 - CAEPF (Cadastro de Atividade Econômica de Pessoa Física)
+        /// </summary>
+        [XmlEnum("3")]
+        CAEPF = 3,
+
+        /// <summary>
+        /// 4 - CNO (Cadastro Nacional de Obra)
+        /// </summary>
+        [XmlEnum("4")]
+        CNO = 4,
+
+        /// <summary>
+        /// 5 - CGC
+        /// </summary>
+        [XmlEnum("5")]
+        CGC = 5,
+
+        /// <summary>
+        /// 6 - CEI
+        /// </summary>
+        [XmlEnum("6")]
+        CEI = 6
     }
 
     #endregion
@@ -7134,6 +7665,7 @@ namespace Unimake.Business.DFe.Servicos
         [XmlEnum("99")]
         PessoaJuridica = 99,
     }
+
     #endregion
 
     #region Tipo da entidadade ligada
@@ -7297,5 +7829,7098 @@ namespace Unimake.Business.DFe.Servicos
         [XmlEnum("92")]
         SemSuspensao = 92,
     }
+
     #endregion
+
+    #region Indicativo Retificação
+
+    /// <summary>
+    /// Indicativo de retificação.
+    /// Valores válidos: 1, 2.
+    /// </summary>
+    public enum IndicativoRetificacao
+    {
+        /// <summary>
+        /// 1 - Arquivo original.
+        /// </summary>
+        [XmlEnum("1")]
+        ArquivoOriginal = 1,
+
+        /// <summary>
+        /// 2 - Arquivo de retificação.
+        /// </summary>
+        [XmlEnum("2")]
+        ArquivoRetificacao = 2
+    }
+
+    #endregion
+
+    #region Tipo de Inscricao do Estabelecimento
+
+    /// <summary>
+    /// Preencher com o código correspondente ao tipo de inscrição do estabelecimento contratante dos serviços:
+    /// 1 - CNPJ;
+    /// 2 - CPF; 
+    /// 3 - CAEPF.
+    /// 4 - CNO - Cadastro Nacional de Obras
+    /// </summary>
+    public enum TipoInscricaoEstabelecimento
+    {
+        /// <summary>
+        /// 1 - CNPJ.
+        /// </summary>
+        [XmlEnum("1")]
+        CNPJ = 1,
+
+        /// <summary>
+        /// 2 - CPF.
+        /// </summary>
+        [XmlEnum("2")]
+        CPF = 2,
+
+        /// <summary>
+        /// 3 - CAEPF.
+        /// </summary>
+        [XmlEnum("3")]
+        CAEPF = 3,
+
+        /// <summary>
+        /// 4 - Cadastro Nacional de Obras.
+        /// </summary>
+        [XmlEnum("4")]
+        CNO = 4
+    }
+
+    #endregion
+
+    #region Indicativo Obra
+
+    /// <summary>
+    /// Indicativo de prestação de serviços em obra de construção civil
+    /// </summary>
+    public enum IndicativoObra
+    {
+        /// <summary>
+        /// 0 - Não é obra de construção civil ou não está sujeita a matrícula de obra.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoSujeitaMatriculaDeObra = 0,
+
+        /// <summary>
+        /// 1 - É obra de construção civil, modalidade empreitada total.
+        /// </summary>
+        [XmlEnum("1")]
+        EmpreitadaTotal = 1,
+
+        /// <summary>
+        /// 2 - É obra de construção civil, modalidade empreitada parcial.
+        /// </summary>
+        [XmlEnum("2")]
+        EmpreitadaParcial = 2
+    }
+    #endregion
+
+    #region IndicativoCPRB
+    /// <summary>
+    /// Indicativo se o prestador é contribuinte da contribuição previdenciária sobre a receita bruta(CPRB), a qual reduz a alíquota de 11% para 3,5% na retenção de contribuição previdenciária
+    /// </summary>
+    public enum IndicativoCPRB
+    {
+        /// <summary>
+        /// 0 - Não é contribuinte da CPRB - retenção de 11%.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoContribuinte = 0,
+
+        /// <summary>
+        /// 1 - É contribuinte da CPRB - retenção de 3,5%.
+        /// </summary>
+        [XmlEnum("1")]
+        Contribuinte = 1,
+
+    }
+    #endregion
+
+    #region Tipo Repasse
+    /// <summary>
+    /// Tipo de repasse, conforme tabela:
+    /// 1-Patrocinio, 2-Licenciamento de marcas e símbolos, 3 - Publicidade, 4 - Propaganda, 5 - Transmissão de espetáculos. 
+    /// </summary>
+    public enum TipoRepasse
+    {
+        /// <summary>
+        /// 1 - Patrocinio.
+        /// </summary>
+        [XmlEnum("1")]
+        Patrocinio = 1,
+
+        /// <summary>
+        /// 2 - Licenciamento de marcas e símbolos.
+        /// </summary>
+        [XmlEnum("2")]
+        LicenciamentoMarcas = 2,
+
+        /// <summary>
+        /// 3 - Publicidade.
+        /// </summary>
+        [XmlEnum("3")]
+        Publicidade = 3,
+
+        /// <summary>
+        /// 4 - Propaganda.
+        /// </summary>
+        [XmlEnum("4")]
+        Propaganda = 4,
+
+        /// <summary>
+        /// 5 - Transmissão de espetáculos.
+        /// </summary>
+        [XmlEnum("5")]
+        TransmissaoDeEspetaculos = 5,
+
+    }
+    #endregion
+
+    #region Indicativo de Comercialização
+    /// <summary>
+    /// Indicativo de comercialização.
+    /// </summary>
+    public enum IndicativoComercializacao
+    {
+        /// <summary>
+        /// 1 - Comercialização da produção por produtor rural PJ/agroindústria, exceto para entidade executora do Programa de Aquisição de Alimentos - PAA
+        /// </summary>
+        [XmlEnum("1")]
+        ProdutorRuralPJ = 1,
+
+        /// <summary>
+        /// 7 - Comercialização da produção com isenção de contribuição previdenciária, de acordo com a Lei n° 13.606/2018
+        /// </summary>
+        [XmlEnum("7")]
+        IsencaoDeContribuicao = 7,
+
+        /// <summary>
+        /// 8 - Comercialização da produção para entidade executora do PAA
+        /// </summary>
+        [XmlEnum("8")]
+        ParaEntidadePAA = 8,
+
+        /// <summary>
+        /// 9 - Comercialização da produção para entidade executora do PAA
+        /// </summary>
+        [XmlEnum("9")]
+        MercadoExterno = 9,
+
+    }
+    #endregion
+
+    #region Tipo de Inscrição do Estabelecimento Adquirente da Produção
+    /// <summary>
+    /// Tipo de inscrição do estabelecimento adquirente da produção.
+    /// </summary>
+    public enum TipoInscricaoAdquirente
+    {
+        /// <summary>
+        /// 1 - CNPJ.
+        /// </summary>
+        [XmlEnum("1")]
+        CNPJ = 1,
+
+        /// <summary>
+        /// 3 - CAEPF.
+        /// </summary>
+        [XmlEnum("3")]
+        CAEPF = 3,
+    }
+    #endregion
+
+    #region Indicativo da aquisição
+    /// <summary>
+    /// Indicativo da aquisição.
+    /// </summary>
+    public enum IndAquis
+    {
+        /// <summary>
+        /// 1 - Aquisição de produção de produtor rural pessoa física ou segurado especial em geral;
+        /// </summary>
+        [XmlEnum("1")]
+        AquisicaoGeralPfSe = 1,
+
+        /// <summary>
+        /// 2 - Aquisição de produção de produtor rural pessoa física ou segurado especial em geral por entidade executora do Programa de Aquisição de Alimentos - PAA;
+        /// </summary>
+        [XmlEnum("2")]
+        AquisicaoPfSePaa = 2,
+
+        /// <summary>
+        /// 3 - Aquisição de produção de produtor rural pessoa jurídica por entidade executora do PAA;
+        /// </summary>
+        [XmlEnum("3")]
+        AquisicaoPjPaa = 3,
+
+        /// <summary>
+        /// 4 - Aquisição de produção de produtor rural pessoa física ou segurado especial em geral - Produção isenta (Lei 13.606/2018);
+        /// </summary>
+        [XmlEnum("4")]
+        AquisicaoIsentaPfSe = 4,
+
+        /// <summary>
+        /// 5 - Aquisição de produção de produtor rural pessoa física ou segurado especial em geral por entidade executora do PAA - Produção isenta (Lei 13.606/2018);
+        /// </summary>
+        [XmlEnum("5")]
+        AquisicaoIsentaPfSePaa = 5,
+
+        /// <summary>
+        /// 6 -  Aquisição de produção de produtor rural pessoa jurídica por entidade executora do PAA - Produção isenta (Lei 13.606/2018);
+        /// </summary>
+        [XmlEnum("6")]
+        AquisicaoIsentaPjPaa = 6,
+
+        /// <summary>
+        /// 7 -  Aquisição de produção de produtor rural pessoa física ou segurado especial para fins de exportação.
+        /// </summary>
+        [XmlEnum("7")]
+        AquisicaoExportacaoPfSe = 7,
+    }
+    #endregion
+
+    #region Tipo Ajuste
+    /// <summary>
+    /// Preencher com o código correspondente ao tipo de ajuste.
+    /// </summary>
+    public enum TipoAjusteReinf
+    {
+        /// <summary>
+        /// 0 - Ajuste de Redução.
+        /// </summary>
+        [XmlEnum("0")]
+        AjusteDeReducao = 0,
+
+        /// <summary>
+        /// 1 - Ajuste de Acréscimo.
+        /// </summary>
+        [XmlEnum("1")]
+        AjusteDeAcrescimo = 1,
+    }
+    #endregion
+
+    #region Codigo Ajuste
+    /// <summary>
+    /// Preencher com o código de ajuste.
+    /// </summary>
+    public enum CodigoAjuste
+    {
+        /// <summary>
+        /// 1 - Ajuste da CPRB: Adoção do regime de caixa.
+        /// </summary>
+        [XmlEnum("1")]
+        AjusteAdocaoCaixa = 1,
+
+        /// <summary>
+        /// 2 - Ajuste da CPRB: Diferimento de valores a recolher no período.
+        /// </summary>
+        [XmlEnum("2")]
+        AjusteDiferimento = 2,
+
+        /// <summary>
+        /// 3 - Adição de valores diferidos em período(s) anteriores(es).
+        /// </summary>
+        [XmlEnum("3")]
+        AdicaoValoresDiferidos = 3,
+
+        /// <summary>
+        /// 4 - Exportações diretas.
+        /// </summary>
+        [XmlEnum("4")]
+        ExportacaoDireta = 4,
+
+        /// <summary>
+        /// 5 - Transporte internacional de cargas.
+        /// </summary>
+        [XmlEnum("5")]
+        TransporteInternacional = 5,
+
+        /// <summary>
+        /// 6 - Vendas canceladas e os descontos incondicionais concedidos.
+        /// </summary>
+        [XmlEnum("6")]
+        VendaCanceladaDesconto = 6,
+
+        /// <summary>
+        /// 7 - IPI, se incluído na receita bruta.
+        /// </summary>
+        [XmlEnum("7")]
+        IpiIncluidoReceitaBruta = 7,
+
+        /// <summary>
+        /// 8 - ICMS, quando cobrado pelo vendedor dos bens ou prestador dos serviços na condição de substituto tributário.
+        /// </summary>
+        [XmlEnum("8")]
+        IcmsCobrancaSubstituto = 8,
+
+        /// <summary>
+        /// 9 - Receita bruta reconhecida pela construção, recuperação, reforma, ampliação ou melhoramento da infraestrutura, cuja contrapartida seja ativo intangível representativo de direito de exploração, no caso de contratos de concessão de serviços públicos.
+        /// </summary>
+        [XmlEnum("9")]
+        ReceitaBrutaInfraestrutura = 9,
+
+        /// <summary>
+        /// 10 - O valor do aporte de recursos realizado nos termos do art 6 §3 inciso III da Lei 11.079/2004.
+        /// </summary>
+        [XmlEnum("10")]
+        AporteRecursos = 10,
+
+        /// <summary>
+        /// 11 - Demais ajustes oriundos da legislação tributária, estorno ou outras situações.
+        /// </summary>
+        [XmlEnum("11")]
+        DemaisAjustes = 11,
+    }
+    #endregion
+
+    #region Tipo Competicao. Reinf
+    /// <summary>
+    /// Tipo de competição.
+    /// </summary>
+    public enum TipoCompeticao
+    {
+        /// <summary>
+        /// 1 - Oficial.
+        /// </summary>
+        [XmlEnum("1")]
+        Oficial = 1,
+
+        /// <summary>
+        /// 2 - Não oficial.
+        /// </summary>
+        [XmlEnum("2")]
+        NaoOficial = 2,
+    }
+    #endregion
+
+    #region Categoria do evento esportivo. Reinf
+    /// <summary>
+    /// Categoria do evento esportivo.
+    /// </summary>
+    public enum CategoriaEventoReinf
+    {
+        /// <summary>
+        /// 1 - Internacional.
+        /// </summary>
+        [XmlEnum("1")]
+        Internacional = 1,
+
+        /// <summary>
+        /// 2 - Interestadual.
+        /// </summary>
+        [XmlEnum("2")]
+        Interestadual = 2,
+
+        /// <summary>
+        /// 3 - Estadual.
+        /// </summary>
+        [XmlEnum("3")]
+        Estadual = 3,
+
+        /// <summary>
+        /// 4 - Local.
+        /// </summary>
+        [XmlEnum("4")]
+        Local = 4,
+    }
+    #endregion
+
+    #region Tipo de Ingresso.
+    /// <summary>
+    /// Tipo de Ingresso. 
+    /// </summary>
+    public enum TipoDeIngresso
+    {
+        /// <summary>
+        /// 1 - Arquibancada.
+        /// </summary>
+        [XmlEnum("1")]
+        Arquibancada = 1,
+
+        /// <summary>
+        /// 2 - Geral.
+        /// </summary>
+        [XmlEnum("2")]
+        Geral = 2,
+
+        /// <summary>
+        /// 3 - Cadeiras.
+        /// </summary>
+        [XmlEnum("3")]
+        Cadeiras = 3,
+
+        /// <summary>
+        /// 4 - Camarote.
+        /// </summary>
+        [XmlEnum("4")]
+        Camarote = 4,
+    }
+    #endregion
+
+    #region Tipo de Receita.
+    /// <summary>
+    /// Tipo de Receita. 
+    /// </summary>
+    public enum TipoReceita
+    {
+        /// <summary>
+        /// 1 - Transmissão.
+        /// </summary>
+        [XmlEnum("1")]
+        Transmissao = 1,
+
+        /// <summary>
+        /// 2 - Propaganda.
+        /// </summary>
+        [XmlEnum("2")]
+        Propaganda = 2,
+
+        /// <summary>
+        /// 3 - Publicidade.
+        /// </summary>
+        [XmlEnum("3")]
+        Publicidade = 3,
+
+        /// <summary>
+        /// 4 - Sorteio.
+        /// </summary>
+        [XmlEnum("4")]
+        Sorteio = 4,
+
+        /// <summary>
+        /// 5 - Outros.
+        /// </summary>
+        [XmlEnum("5")]
+        Outros = 5,
+    }
+    #endregion
+
+    #region Relacao De Dependencia
+
+    /// <summary>
+    /// Relação de dependência;
+    /// </summary>
+    public enum RelacaoDeDependencia
+    {
+        /// <summary>
+        /// 1 - Conjuge
+        /// </summary>
+        [XmlEnum("1")]
+        Conjuge = 1,
+
+        /// <summary>
+        /// 2 - Companheiro(a) com o(a) qual tenha filho ou viva há mais de 5 (cinco) anos ou possua declaração de união estável
+        /// </summary>
+        [XmlEnum("2")]
+        UniaoEstavel = 2,
+
+        /// <summary>
+        /// 3 - Filho(a) ou enteado(a)
+        /// </summary>
+        [XmlEnum("3")]
+        FilhoOuEnteado = 3,
+
+        /// <summary>
+        /// 6 - Irmão(ã), neto(a) ou bisneto(a) sem arrimo dos pais, do(a) qual detenha a guarda judicial
+        /// </summary>
+        [XmlEnum("6")]
+        IrmaoNetoBisneto = 6,
+
+        /// <summary>
+        /// 9 - Pais, avós e bisavós;
+        /// </summary>
+        [XmlEnum("9")]
+        PaisAvosBisavos = 9,
+
+        /// <summary>
+        /// 10 - Menor pobre do qual detenha a guarda judicial;
+        /// </summary>
+        [XmlEnum("10")]
+        MenorPobreJudicial = 10,
+
+        /// <summary>
+        /// 11 - A pessoa absolutamente incapaz, da qual seja tutor ou curador;
+        /// </summary>
+        [XmlEnum("11")]
+        PessoaAbsolutamenteIncapaz = 11,
+
+        /// <summary>
+        /// 12 - Ex-cônjuge;
+        /// </summary>
+        [XmlEnum("12")]
+        ExConjuge = 12,
+
+        /// <summary>
+        /// 99 - Agregado / Outros;
+        /// </summary>
+        [XmlEnum("99")]
+        AgregadoOutros = 99,
+    }
+
+    #endregion
+
+    #region Tipo Competicao. Reinf
+    /// <summary>
+    /// Tipo de competição.
+    /// </summary>
+    public enum IndicativoFundoDeInvestimento
+    {
+        /// <summary>
+        /// 1 - Fundo ou clube de investimento.
+        /// </summary>
+        [XmlEnum("1")]
+        FCI = 1,
+
+        /// <summary>
+        /// 2 - Sociedade em conta de participação.
+        /// </summary>
+        [XmlEnum("2")]
+        SCP = 2,
+    }
+    #endregion
+
+    #region Indicativo do tipo de dedução
+    /// <summary>
+    /// Indicativo do tipo de dedução.
+    /// </summary>
+    public enum IndicativoTipoDeducao
+    {
+        /// <summary>
+        /// 1 - Previdência oficial.
+        /// </summary>
+        [XmlEnum("1")]
+        PrevidenciaOficial = 1,
+
+        /// <summary>
+        /// 2 - Previdência privada.
+        /// </summary>
+        [XmlEnum("2")]
+        PrevidenciaPrivada = 2,
+
+        /// <summary>
+        /// 3 - Fundo de aposentadoria programada individual - Fapi.
+        /// </summary>
+        [XmlEnum("3")]
+        FundoAposentadoriaIndividual = 3,
+
+        /// <summary>
+        /// 4 - Fundação de previdência complementar do servidor público - Funpresp.
+        /// </summary>
+        [XmlEnum("4")]
+        FundacaoPrevidenciaComplementar = 4,
+
+        /// <summary>
+        /// 5 - Pensão alimentícia.
+        /// </summary>
+        [XmlEnum("5")]
+        PensaoAlimenticia = 5,
+
+        /// <summary>
+        /// 7 - Dependentes.
+        /// </summary>
+        [XmlEnum("7")]
+        Dependentes = 7,
+    }
+    #endregion
+
+    #region Tipo de Isenção
+    /// <summary>
+    /// Tipo de Isenção.
+    /// </summary>
+    public enum TipoIsencao
+    {
+        /// <summary>
+        /// 1 - Parcela isenta 65 anos.
+        /// </summary>
+        [XmlEnum("1")]
+        ParcelaIsenta = 1,
+
+        /// <summary>
+        /// 2 - Diária de viagem.
+        /// </summary>
+        [XmlEnum("2")]
+        DiariaViagem = 2,
+
+        /// <summary>
+        /// 3 - Indenização e rescisão de contrato, inclusive a título de PDV e acidentes de trabalho
+        /// </summary>
+        [XmlEnum("3")]
+        IndenizacaoRescisao = 3,
+
+        /// <summary>
+        /// 4 - Abono pecuniário
+        /// </summary>
+        [XmlEnum("4")]
+        AbonoPecuniario = 4,
+
+        /// <summary>
+        /// 5 - Valores pagos a titular ou sócio de microempresa ou empresa de pequeno porte, exceto pró-labore, alugueis e serviços prestados
+        /// </summary>
+        [XmlEnum("5")]
+        TitularOuSocioMicroempresa = 5,
+
+        /// <summary>
+        /// 7 - Complementação de aposentadoria, correspondente às contribuições efetuadas no período de 01/01/1989 a 31/12/1995.
+        /// </summary>
+        [XmlEnum("7")]
+        ComplementacaoAposentadoria = 7,
+
+        /// <summary>
+        /// 8 - Ajuda de custo
+        /// </summary>
+        [XmlEnum("8")]
+        AjudaDeCusto = 8,
+
+        /// <summary>
+        /// 9 - Rendimentos pagos sem retenção do IR na fonte - Lei 10.833/2003;
+        /// </summary>
+        [XmlEnum("9")]
+        RendimentoSemRetencao = 9,
+
+        /// <summary>
+        /// 99 - Outros (especificar).
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99,
+    }
+    #endregion
+
+    #region Indicativo da origem dos recursos
+    /// <summary>
+    /// Indicativo da origem dos recursos.
+    /// </summary>
+    public enum IndicativoOrigemRecursos
+    {
+        /// <summary>
+        /// 1 - Recursos do próprio declarante.
+        /// </summary>
+        [XmlEnum("1")]
+        ProprioDeclarante = 1,
+
+        /// <summary>
+        /// 2 - Recursos de terceiros - Declarante é a instituição financeira responsável pelo repasse dos valores.
+        /// </summary>
+        [XmlEnum("2")]
+        Terceiros = 2,
+    }
+    #endregion
+
+    #region Indicativo do Número de Identificação Fiscal - NIF
+    /// <summary>
+    /// Indicativo do Número de Identificação Fiscal - NIF.
+    /// </summary>
+    public enum IndicativoNIF
+    {
+        /// <summary>
+        /// 1 - Beneficiário com NIF
+        /// </summary>
+        [XmlEnum("1")]
+        BeneficiarioComNIF = 1,
+
+        /// <summary>
+        /// 2 - Beneficiário dispensado do NIF
+        /// </summary>
+        [XmlEnum("2")]
+        DispensadoDoNIF = 2,
+
+        /// <summary>
+        /// 3 - País não exige NIF
+        /// </summary>
+        [XmlEnum("3")]
+        PaisNaoExigeNIF = 3,
+    }
+    #endregion
+
+    #region Informações sobre isenção e imunidade
+    /// <summary>
+    /// Informações sobre isenção e imunidade.
+    /// </summary>
+    public enum IsencaoEImunidade
+    {
+        /// <summary>
+        /// 2 - Instituição de educação e de assistência social sem fins lucrativos, a que se refere o art. 12 da Lei nº 9.532, de 10 de dezembro de 1997;
+        /// </summary>
+        [XmlEnum("2")]
+        InstituicaoDeEducacao = 2,
+
+        /// <summary>
+        /// 3 - Instituição de caráter filantrópico, recreativo, cultural, científico e às associações civis, a que se refere o art. 15 da Lei nº 9.532, de 1997. 
+        /// Informação a ser prestada exclusivamente por órgãos da Administração Pública Federal Direta, autarquias e fundações da Administração Pública Federal, empresas públicas, sociedades de economia mista, ou demais entidades em que a que União detenha maioria do capital social sujeito a voto, recebe recursos do Tesouro Nacional e está obrigada a registrar a execução orçamentária no Siafi
+        /// </summary>
+        [XmlEnum("3")]
+        InstituicaoFilantropica = 3,
+    }
+    #endregion
+
+    #region Relação da fonte pagadora com o beneficiário
+    /// <summary>
+    /// Relação da fonte pagadora com o beneficiário.
+    /// </summary>
+    public enum RelacaoFontePagadora
+    {
+        /// <summary>
+        /// 500 - A fonte pagadora é matriz da beneficiária no exterior.
+        /// </summary>
+        [XmlEnum("500")]
+        MatrizNoExterior = 500,
+
+        /// <summary>
+        /// 510 - A fonte pagadora é filial, sucursal ou agência de beneficiária no exterior.
+        /// </summary>
+        [XmlEnum("510")]
+        FilialNoExterior = 510,
+
+        /// <summary>
+        /// 520 - A fonte pagadora é controlada ou coligada da beneficiária no exterior, na forma dos §§ 1º e 2º do art. 243 da Lei nº 6.404, de 15 de dezembro de 19
+        /// </summary>
+        [XmlEnum("520")]
+        ControladaOuColigada = 520,
+
+        /// <summary>
+        /// 530 - A fonte pagadora é controladora ou coligada da beneficiária no exterior, na forma dos §§ 1º e 2º do art. 243 da Lei nº 6.404, de 197
+        /// </summary>
+        [XmlEnum("530")]
+        ControladoraOuColigada = 530,
+
+        /// <summary>
+        /// 540 - A fonte pagadora e a beneficiária no exterior estão sob controle societário ou administrativo comum ou quando pelo menos 10% do capital de cada uma, pertencer a uma mesma pessoa física ou jurídica
+        /// </summary>
+        [XmlEnum("540")]
+        ControleSocietario = 540,
+
+        /// <summary>
+        /// 550 - A fonte pagadora e a beneficiária no exterior têm participação societária no capital de uma terceira pessoa jurídica, cuja soma as caracterize como controladoras ou coligadas na forma dos §§ 1º e 2º do art. 243 da Lei nº 6.404, de 1976.
+        /// </summary>
+        [XmlEnum("550")]
+        ParticipacaoSocietaria = 550,
+
+        /// <summary>
+        /// 560 - A fonte pagadora ou a beneficiária no exterior mantenha contrato de exclusividade como agente, como distribuidor ou como concessionário nas operações com bens, serviços e direitos.
+        /// </summary>
+        [XmlEnum("560")]
+        ContratoDeExclusividade = 560,
+
+        /// <summary>
+        /// 570 - A fonte pagadora e a beneficiária mantêm acordo de atuação conjunta
+        /// </summary>
+        [XmlEnum("570")]
+        AcordoAtuacaoConjunta = 570,
+
+        /// <summary>
+        /// 900 - Não há relação entre a fonte pagadora e a beneficiária no exterior
+        /// </summary>
+        [XmlEnum("900")]
+        SemRelacao = 900,
+    }
+    #endregion
+
+    #region Forma de tributação sobre rendimentos de beneficiários domiciliados no exterior
+    /// <summary>
+    /// Forma de tributação sobre rendimentos de beneficiários domiciliados no exterior
+    /// </summary>
+    public enum FormaDeTributacao
+    {
+        /// <summary>
+        /// 10 - Retenção do IRRF – alíquota padrã
+        /// </summary>
+        [XmlEnum("10")]
+        AliquotaPadrao = 10,
+
+        /// <summary>
+        /// 11 - Retenção do IRRF – alíquota da tabela progressiva
+        /// </summary>
+        [XmlEnum("11")]
+        AliquotaProgressiva = 11,
+
+        /// <summary>
+        /// 12 - Retenção do IRRF – alíquota diferenciada (países com tributação favorecida)
+        /// </summary>
+        [XmlEnum("12")]
+        AliquotaDiferenciada = 12,
+
+        /// <summary>
+        /// 13 - Retenção do IRRF – alíquota limitada conforme cláusula em convênio
+        /// </summary>
+        [XmlEnum("13")]
+        AliquotaLimitada = 13,
+
+        /// <summary>
+        /// 30 - Retenção do IRRF – outras hipóteses
+        /// </summary>
+        [XmlEnum("30")]
+        RetencaoOutrasHipoteses = 30,
+
+        /// <summary>
+        /// 40 - Não retenção do IRRF – isenção estabelecida em convênio
+        /// </summary>
+        [XmlEnum("40")]
+        IsencaoConvenio = 40,
+
+        /// <summary>
+        /// 41 - Não retenção do IRRF – isenção prevista em lei interna
+        /// </summary>
+        [XmlEnum("41")]
+        IsencaoLeiInterna = 41,
+
+        /// <summary>
+        /// 42 - Não retenção do IRRF – alíquota zero prevista em lei interna
+        /// </summary>
+        [XmlEnum("42")]
+        AliquotaZeroLeiInterna = 42,
+
+        /// <summary>
+        /// 43 - Não retenção do IRRF – pagamento antecipado do imposto
+        /// </summary>
+        [XmlEnum("43")]
+        PagamentoAntecipado = 43,
+
+        /// <summary>
+        /// 44 - Não retenção do IRRF – medida judicial
+        /// </summary>
+        [XmlEnum("44")]
+        MedidaJudicial = 44,
+
+        /// <summary>
+        /// 50 - Não retenção do IRRF – outras hipóteses
+        /// </summary>
+        [XmlEnum("50")]
+        NaoRetencaoOutrasHipoteses = 50,
+    }
+    #endregion
+
+    #region FechamentoRetencao
+
+    /// <summary>
+    /// Indicativo de fechamento ou reabertura de movimento relativo aos eventos de retenções na fonte(IR, CSLL, Pis/Pasep e Cofins)
+    /// </summary>
+    public enum FechamentoRetencao
+    {
+        /// <summary>
+        /// 0 - Fechamento (fecha o movimento, caso esteja aberto)
+        /// </summary>
+        [XmlEnum("0")]
+        Fechamento = 0,
+
+        /// <summary>
+        /// 1 - Reabertura (reabre o movimento, caso esteja fechado).
+        /// </summary>
+        [XmlEnum("1")]
+        Reabertura = 1,
+    }
+    #endregion
+
+    #region Eventos da EFD-Reinf
+
+    /// <summary>
+    /// Eventos da EFD-Reinf
+    /// </summary>
+    public enum EventosEFDReinf
+    {
+        /// <summary>
+        /// R-1000 - Informações do contribuinte
+        /// </summary>
+        [XmlEnum("R-1000")]
+        R1000 = 1000,
+
+        /// <summary>
+        /// R-1050 - Tabela de entidades ligadas
+        /// </summary>
+        [XmlEnum("R-1050")]
+        R1050 = 1050,
+
+        /// <summary>
+        /// R-1070 - Tabela de processos administrativos/judiciais
+        /// </summary>
+        [XmlEnum("R-1070")]
+        R1070 = 1070,
+
+        /// <summary>
+        /// R-2010 - Retenção de contribuição previdenciária - serviços tomados
+        /// </summary>
+        [XmlEnum("R-2010")]
+        R2010 = 2010,
+
+        /// <summary>
+        /// R-2020 - Retenção de contribuição previdenciária - serviços prestados
+        /// </summary>
+        [XmlEnum("R-2020")]
+        R2020 = 2020,
+
+        /// <summary>
+        /// R-2030 - Recursos recebidos por associação desportiva
+        /// </summary>
+        [XmlEnum("R-2030")]
+        R2030 = 2030,
+
+        /// <summary>
+        /// R-2040 - Recursos repassados para associação desportiva
+        /// </summary>
+        [XmlEnum("R-2040")]
+        R2040 = 2040,
+
+        /// <summary>
+        /// R-2050 - Comercialização de produção
+        /// </summary>
+        [XmlEnum("R-2050")]
+        R2050 = 2050,
+
+        /// <summary>
+        /// R-2055 - Aquisição de produção rural
+        /// </summary>
+        [XmlEnum("R-2055")]
+        R2055 = 2055,
+
+        /// <summary>
+        /// R-2060 - Contribuição previdenciária sobre a receita bruta - CPRB
+        /// </summary>
+        [XmlEnum("R-2060")]
+        R2060 = 2060,
+
+        /// <summary>
+        /// R-2098 - Reabertura dos eventos da série R-2000
+        /// </summary>
+        [XmlEnum("R-2098")]
+        R2098 = 2098,
+
+        /// <summary>
+        /// R-2099 - Fechamento dos eventos da série R-2000
+        /// </summary>
+        [XmlEnum("R-2099")]
+        R2099 = 2099,
+
+        /// <summary>
+        /// R-3010 - Receita de espetáculos desportivos
+        /// </summary>
+        [XmlEnum("R-3010")]
+        R3010 = 3010,
+
+        /// <summary>
+        /// R-4010 - Pagamentos/créditos a beneficiário pessoa física
+        /// </summary>
+        [XmlEnum("R-4010")]
+        R4010 = 4010,
+
+        /// <summary>
+        /// R-4020 - Pagamentos/créditos a beneficiário pessoa jurídica
+        /// </summary>
+        [XmlEnum("R-4020")]
+        R4020 = 4020,
+
+        /// <summary>
+        /// R-4040 - Pagamentos/créditos a beneficiários não identificados
+        /// </summary>
+        [XmlEnum("R-4040")]
+        R4040 = 4040,
+
+        /// <summary>
+        /// R-4080 - Retenção no recebimento
+        /// </summary>
+        [XmlEnum("R-4080")]
+        R4080 = 4080,
+
+        /// <summary>
+        /// R-4099 - Fechamento/reabertura dos eventos da série R-4000
+        /// </summary>
+        [XmlEnum("R-4099")]
+        R4099 = 4099,
+
+        /// <summary>
+        /// R-9000 - Exclusão de eventos
+        /// </summary>
+        [XmlEnum("R-9000")]
+        R9000 = 9000,
+
+        /// <summary>
+        /// R-9001 - Bases e tributos - contribuição previdenciária
+        /// </summary>
+        [XmlEnum("R-9001")]
+        R9001 = 9001,
+
+        /// <summary>
+        /// R-9005 - Bases e tributos - retenções na fonte
+        /// </summary>
+        [XmlEnum("R-9005")]
+        R9005 = 9005,
+
+        /// <summary>
+        /// R-9011 - Consolidação de bases e tributos - contribuição previdenciária
+        /// </summary>
+        [XmlEnum("R-9011")]
+        R9011 = 9011,
+
+        /// <summary>
+        /// R-9015 - Consolidação das retenções na fonte
+        /// </summary>
+        [XmlEnum("R-9015")]
+        R9015 = 9015,
+    }
+    #endregion
+
+    #region Código do Retorno
+
+    /// <summary>
+    /// Código do Retorno
+    /// </summary>
+    public enum CodigoDoRetorno
+    {
+        /// <summary>
+        /// 0 - Sucesso
+        /// </summary>
+        [XmlEnum("0")]
+        Sucesso = 0,
+
+        /// <summary>
+        /// 1 - Erro
+        /// </summary>
+        [XmlEnum("1")]
+        Erro = 1,
+
+        /// <summary>
+        /// 2 - Em Processamento
+        /// </summary>
+        [XmlEnum("2")]
+        EmProcessamento = 2,
+    }
+    #endregion
+
+    #region Tipo da ocorrência
+
+    /// <summary>
+    /// Tipo da ocorrência
+    /// </summary>
+    public enum TipoDaOcorrencia
+    {
+        /// <summary>
+        /// 1 - Erro
+        /// </summary>
+        [XmlEnum("1")]
+        Erro = 1,
+
+        /// <summary>
+        /// 2 - Aviso
+        /// </summary>
+        [XmlEnum("2")]
+        Aviso = 2,
+
+        /// <summary>
+        /// 3 - Informação
+        /// </summary>
+        [XmlEnum("3")]
+        Informacao = 3,
+    }
+    #endregion
+
+    #region Indicativo de existência de valores de bases ou de tributos.
+
+    /// <summary>
+    /// Indicativo de existência de valores de bases ou de tributos.
+    /// </summary>
+    public enum IndicativoExistenciaTributos
+    {
+        /// <summary>
+        /// 1 - Há informações de bases e/ou de tributos.
+        /// </summary>
+        [XmlEnum("1")]
+        Tributo = 1,
+
+        /// <summary>
+        /// 2 - Há movimento, porém não há informações de bases ou de tributos.
+        /// </summary>
+        [XmlEnum("2")]
+        SemInformacoes = 2,
+
+        /// <summary>
+        /// 3 - Não há movimento na competência.
+        /// </summary>
+        [XmlEnum("3")]
+        SemMovimento = 3,
+    }
+    #endregion
+
+    #region Situação do evento Reinf.
+
+    /// <summary>
+    /// Situação do evento Reinf.
+    /// </summary>
+    public enum ReinfSituacaoEvento
+    {
+        /// <summary>
+        /// 1 - Ativo.
+        /// </summary>
+        [XmlEnum("1")]
+        Ativo = 1,
+
+        /// <summary>
+        /// 2 - Retificado.
+        /// </summary>
+        [XmlEnum("2")]
+        Retificado = 2,
+
+        /// <summary>
+        /// 3 - Excluído.
+        /// </summary>
+        [XmlEnum("3")]
+        Excluído = 3,
+
+        /// <summary>
+        /// 3 - Em Processamento.
+        /// </summary>
+        [XmlEnum("4")]
+        EmProcessamento = 4,
+
+        /// <summary>
+        /// 5 - Recusado.
+        /// </summary>
+        [XmlEnum("5")]
+        Recusado = 5,
+    }
+    #endregion
+
+    #region Reinf Aplicacao Recepcao.
+
+    /// <summary>
+    /// Indicativo de existência de valores de bases ou de tributos.
+    /// </summary>
+    public enum ReinfAplicacaoRecepcao
+    {
+        /// <summary>
+        /// 1 - Webservice.
+        /// </summary>
+        [XmlEnum("1")]
+        Webservice = 1,
+
+        /// <summary>
+        /// 2 - Portal Web.
+        /// </summary>
+        [XmlEnum("2")]
+        PortalWeb = 2,
+
+    }
+    #endregion
+
+    #region Indicativo da finalidade do evento Reinf
+
+    /// <summary>
+    /// Indicativo da finalidade do evento que deu origem ao presente arquivo de retorno ao contribuinte:
+    /// </summary>
+    public enum IndicativoFinalidadeEvento
+    {
+        /// <summary>
+        /// 0 - Fechamento
+        /// </summary>
+        [XmlEnum("0")]
+        Fechamento = 0,
+
+        /// <summary>
+        /// 1 - Reabertura.
+        /// </summary>
+        [XmlEnum("1")]
+        Reabertura = 1,
+    }
+
+    #endregion Indicativo da finalidade do evento Reinf
+
+    #region Marcas de equipamentos SAT
+
+    /// <summary>
+    /// Marcas dos equipamentos de SAT
+    /// </summary>
+    public enum MarcaEquipamentoSAT
+    {
+        /// <summary>
+        /// Tanca
+        /// </summary>
+        TANCA,
+
+        /// <summary>
+        /// Daruma
+        /// </summary>
+        DARUMA,
+
+        /// <summary>
+        /// Bematech
+        /// </summary>
+        BEMATECH,
+
+        /// <summary>
+        /// Dimep
+        /// </summary>
+        DIMEP,
+
+        /// <summary>
+        /// ELGIN Linker I
+        /// </summary>
+        ELGIN,
+
+        /// <summary>
+        /// Elgin Linker II
+        /// </summary>
+        ELGIN_II,
+
+        /// <summary>
+        /// Elgin SMART
+        /// </summary>
+        ELGIN_SMART,
+
+        /// <summary>
+        /// Emulador de SP
+        /// </summary>
+        EMULADOR,
+
+        /// <summary>
+        /// Nitere
+        /// </summary>
+        NITERE,
+
+        /// <summary>
+        /// SWEDA
+        /// </summary>
+        SWEDA,
+
+        /// <summary>
+        /// EPSON
+        /// </summary>
+        EPSON,
+
+        /// <summary>
+        /// KRYPTUS
+        /// </summary>
+        KRYPTUS,
+
+        /// <summary>
+        /// CONTROL ID
+        /// </summary>
+        CONTROL_ID,
+
+        /// <summary>
+        /// JETWAY
+        /// </summary>
+        JETWAY,
+
+        /// <summary>
+        /// GERTEC
+        /// </summary>
+        GERTEC
+    }
+
+    #endregion
+
+    #region ESocial
+
+    #region Indicativo indCoop
+
+    /// <summary>
+    /// Valores válidos: 0 - Não é cooperativa 1 - Cooperativa de trabalho 2 - Cooperativa de produção 3 - Outras cooperativas
+    /// </summary>
+    public enum IndCoop
+    {
+        /// <summary>
+        /// 0 - Não é cooperativa.
+        /// </summary>
+        [XmlEnum("0")]
+        NaoCooperativa = 0,
+        /// <summary>
+        /// 1 - Cooperativa de trabalho.
+        /// </summary>
+        [XmlEnum("1")]
+        CoopDeTrabalho = 1,
+        /// <summary>
+        /// 2 - Cooperativa de produção.
+        /// </summary>
+        [XmlEnum("2")]
+        CoopDeProducao = 2,
+        /// <summary>
+        /// 3 - Outras cooperativas
+        /// </summary>
+        [XmlEnum("3")]
+        OutrasCoop = 3,
+
+    }
+    #endregion Indicativo indCoop
+
+    #region Indicativo indConstr
+
+    /// <summary>
+    /// Valores válidos:
+    /// 0 - Não é construtora; 
+    /// 1 - Empresa construtora;
+    /// Validação: O preenchimento do campo é exclusivo e obrigatória para PJ.
+    /// </summary>
+    public enum IndConstr
+    {
+        /// <summary>
+        /// 0 - Não é construtora; 
+        /// </summary>
+        [XmlEnum("0")]
+        NaoConstrutora = 0,
+        /// <summary>
+        /// 1 - Empresa construtora;
+        /// </summary>
+        [XmlEnum("1")]
+        EmpresaConstrutora = 1,
+
+    }
+    #endregion Indicativo indConstr
+
+    #region Indicativo indDesFolha
+
+    /// <summary>
+    /// Valores válidos:
+    /// 0 - Não aplicável;
+    /// 1 - Empresa enquadrada nos critérios da legislação vigente;
+    /// 2 - Município enquadrado nos critérios da legislação vigente;
+    /// 
+    /// Validação: Pode ser igual a [1] apenas se classTrib = [02, 03, 99]. Pode ser igual a [2] apenas para as naturezas jurídicas iguais a [103-1, 106-6, 124-4, 133-3].
+    /// Nos demais casos, deve ser igual a [0].
+    /// </summary>
+    public enum IndDesFolha
+    {
+        /// <summary>
+        /// 0 - Não aplicável;
+        /// </summary>
+        [XmlEnum("0")]
+        NaoAplicavel = 0,
+        /// <summary>
+        /// 1 - Empresa enquadrada nos critérios da legislação vigente;
+        /// </summary>
+        [XmlEnum("1")]
+        EmpresaEnquadrada = 1,
+        /// <summary>
+        /// 2 - Município enquadrado nos critérios da legislação vigente;
+        /// </summary>
+        [XmlEnum("2")]
+        MunicipioEnquadrado = 2,
+
+    }
+
+    #endregion Indicativo indDesFolha
+
+    #region Indicativo da opção pelo produtor rural
+
+    /// <summary>
+    /// Indicativo da opção pelo produtor rural pela forma de tributação da contribuição previdenciária, nos termos do art. 25, § 13, da Lei 8.212/1991 e do art. 25, § 7°, da Lei 8.870/1994. 
+    /// O não preenchimento deste campo por parte do produtor rural implica opção pela comercialização da sua produção.
+    /// 
+    /// Não preencher se classTrib for diferente de [07, 21].
+    /// </summary>
+    public enum IndicativoOpcaoProdutorRural
+    {
+        /// <summary>
+        /// Sobre a comercialização da sua produção
+        /// </summary>
+        [XmlEnum("1")]
+        ComercializacaoProducao = 1,
+
+        /// <summary>
+        /// Sobre a folha de pagamento
+        /// </summary>
+        [XmlEnum("2")]
+        FolhaPagamento = 2,
+    }
+
+    #endregion Indicativo da opção pelo produtor rural
+
+    #region Indicativo indDesFolha
+
+    /// <summary>
+    /// Valores válidos:
+    /// 0 - Não optou pelo registro eletrônico de empregados (ou opção não aplicável);
+    /// 1 - Optou pelo registro eletrônico de empregados;
+    /// </summary>
+    public enum IndOptRegEletron
+    {
+        /// <summary>
+        /// 0 - Não optou pelo registro eletrônico de empregados (ou opção não aplicável);
+        /// </summary>
+        [XmlEnum("0")]
+        NaoOptou = 0,
+        /// <summary>
+        /// 1 - Optou pelo registro eletrônico de empregados;
+        /// </summary>
+        [XmlEnum("1")]
+        SimOptou = 1,
+
+    }
+    #endregion Indicativo indDesFolha
+
+    #region Indicativo infoOrgInternacional
+
+    /// <summary>
+    /// eSocial - tag infoOrgInternacional - Utilizada para informar a participação da empresa em uma organização internacional.
+    /// NaoOptante = 0 - Não optante.
+    /// SimOptante = 1 - Optante.
+    /// </summary>
+    public enum InfoOrgInternacional
+    {
+        /// <summary>
+        /// 0 - Não participa em uma organização internacional.
+        /// </summary>
+        [XmlEnum("0")]
+        Nao = 0,
+        /// <summary>
+        /// 1 - A empresa participa em uma organização internacional.
+        /// </summary>
+        [XmlEnum("1")]
+        Sim = 1,
+
+    }
+    #endregion Indicativo infoOrgInternacional
+
+    #region Indicativo indDesFolha
+
+    /// <summary>
+    /// Indicativo da existência de acordo internacional para isenção de multa.
+    /// Valores válidos:
+    /// 0 - Sem acordo
+    /// 1 - Com acordo
+    /// </summary>
+    public enum IndAcordoIsenMulta
+    {
+        /// <summary>
+        /// 0 - Sem acordo
+        /// </summary>
+        [XmlEnum("0")]
+        SemAcordo = 0,
+        /// <summary>
+        /// 1 - Com acordo
+        /// </summary>
+        [XmlEnum("1")]
+        ComAcordo = 1,
+
+    }
+    #endregion Indicativo indDesFolha
+
+    #region Processo de emissão do evento eSocial 
+
+    /// <summary>
+    /// Processo de emissão do evento eSocial.
+    /// </summary>
+    public enum ProcEmiESocial
+    {
+        /// <summary>
+        /// 1 - Aplicativo do empregador.
+        /// </summary>
+        [XmlEnum("1")]
+        AppDoEmpregador = 1,
+
+        /// <summary>
+        /// 2 - Aplicativo governamental - Simplificado Pessoa Física.
+        /// </summary>
+        [XmlEnum("2")]
+        AppGovernamentalPF = 2,
+
+        /// <summary>
+        /// 3 - Aplicativo governamental - Web Geral.
+        /// </summary>
+        [XmlEnum("3")]
+        AppGovernamentalWebGeral = 3,
+
+        /// <summary>
+        /// 4 - Aplicativo governamental - Simplificado Pessoa Jurídica.
+        /// </summary>
+        [XmlEnum("4")]
+        AppGovernamentalPJ = 4,
+
+        /// <summary>
+        /// 9 - Aplicativo governamental - Integração com a Junta Comercial.
+        /// </summary>
+        [XmlEnum("9")]
+        AppGovernamentalJuntaComercial = 9,
+
+        /// <summary>
+        /// 22 - Aplicativo governamental para dispositivos móveis - Empregador Doméstico.
+        /// </summary>
+        [XmlEnum("22")]
+        AppGovernamentalEmpregadorDomestico = 22,
+
+    }
+
+    #endregion Processo de emissão do evento eSocial 
+
+    #region Tipo Processo eSocial
+
+    /// <summary>
+    /// eSocial - Tipo Processo eSocial.
+    /// </summary>
+    public enum TipoProcessoESocial
+    {
+        /// <summary>
+        /// 1 - Administrativo
+        /// </summary>
+        [XmlEnum("1")]
+        Administrativo = 1,
+
+        /// <summary>
+        /// 2 - Judicial
+        /// </summary>
+        [XmlEnum("2")]
+        Judicial = 2,
+
+        /// <summary>
+        /// 4 - Processo FAP de exercício anterior a 2019
+        /// </summary>
+        [XmlEnum("4")]
+        FAP = 4,
+    }
+    #endregion Tipo Processo eSocial
+
+    #region Tipo de CAEPF.
+
+    /// <summary>
+    /// eSocial - Tipo de CAEPF.
+    /// Validação: Deve ser compatível com o cadastro da RFB.
+    /// </summary>
+    public enum TipoCaepf
+    {
+        /// <summary>
+        /// 1 - Contribuinte individual
+        /// </summary>
+        [XmlEnum("1")]
+        ContribuinteIndividual = 1,
+
+        /// <summary>
+        /// 2 - Produtor rural
+        /// </summary>
+        [XmlEnum("2")]
+        ProdutorRural = 2,
+
+        /// <summary>
+        /// 4 - Segurado especial
+        /// </summary>
+        [XmlEnum("3")]
+        SeguradoEspecial = 3,
+    }
+    #endregion Tipo de CAEPF.
+
+    #region Indicativo de substituição da contribuição patronal de obra de construção civil.
+
+    /// <summary>
+    /// Indicativo de substituição da contribuição patronal de obra de construção civil.
+    /// </summary>
+    public enum IndicativoSubstituicaoPatronal
+    {
+        /// <summary>
+        /// 1 - Contribuição patronal substituída
+        /// </summary>
+        [XmlEnum("1")]
+        ContribuicaoNaoSubstituida = 1,
+
+        /// <summary>
+        /// 2 - Contribuição patronal não substituída
+        /// </summary>
+        [XmlEnum("2")]
+        ContribuicaoSubstituida = 2,
+    }
+    #endregion Indicativo de substituição da contribuição patronal de obra de construção civil.
+
+    #region Tipo de Lotação Tributária
+
+    /// <summary>
+    /// Tipos de Lotação Tributária
+    /// </summary>
+    public enum TpLotacao
+    {
+        /// <summary>
+        /// Classificação da atividade econômica exercida pela Pessoa
+        ///Jurídica para fins de atribuição de código FPAS, inclusive obras de construção civil própria, exceto:
+        ///a) empreitada parcial ou sub-empreitada de obra de construção civil (utilizar opção 02);
+        ///b) prestação de serviços em instalações de terceiros (utilizar opções 03 a 09);
+        ///c) Embarcação inscrita no Registro Especial Brasileiro - REB (utilizar opção 10);
+        ///Preenchimento do Campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("01")]
+        PJ_FPAS = 01,
+
+        /// <summary>
+        /// Obra de construção civil - Empreitada parcial ou subempreitada;
+        /// Preenchimento do Campo (nrInsc) = CNO da obra - A informação do CNPJ/CPF
+        ///do contratante é prestada no grupo {infoEmprParcial}
+        /// </summary>
+        [XmlEnum("02")]
+        ObraConstrCivil = 02,
+
+        /// <summary>
+        /// Pessoa Física tomadora de serviços prestados mediante cessão de mão de obra, exceto contratante de cooperativa;
+        /// Preenchimento do Campo (nrInsc) = CPF do contratante
+        /// </summary>
+        [XmlEnum("03")]
+        PF_TomadoraServicoPrestado = 03,
+
+        /// <summary>
+        /// Pessoa Jurídica tomadora de serviços prestados mediante cessão de mão de obra, exceto contratante de cooperativa, nos
+        /// termos da Lei 8.212/1991;                               
+        /// Preenchimento do campo (nrInsc) = CNPJ do estabelecimento contratante.
+        /// </summary>
+        [XmlEnum("04")]
+        PJ_TomadoraServicoPrestadoMaoDeObra = 04,
+
+        /// <summary>
+        /// Pessoa Jurídica tomadora de serviços prestados por cooperados por intermédio de cooperativa de trabalho, exceto aqueles
+        /// prestados a entidade beneficente/isenta
+        /// Preenchimento do campo (nrInsc) = CNPJ do estabelecimento contratante.
+        /// </summary>
+        [XmlEnum("05")]
+        PJ_TomadoraServicoPrestadoCoop = 05,
+
+        /// <summary>
+        /// Entidade beneficente/isenta tomadora de serviços prestados por cooperados por intermédio de cooperativa de trabalho
+        /// Preenchimento do campo (nrInsc) = CNPJ do estabelecimento contratante.
+        /// </summary>
+        [XmlEnum("06")]
+        PJ_EntidadeBeneficenteTomadoraServicoPrestado = 06,
+
+        /// <summary>
+        /// Pessoa Física tomadora de serviços prestados por cooperados por intermédio de cooperativa de trabalho;
+        /// Preenchimento do campo (nrInsc) = CPF do contratante.
+        /// </summary>
+        [XmlEnum("07")]
+        PF_TomadoraServicoPrestadoCoop = 07,
+
+        /// <summary>
+        /// Operador portuário tomador de serviços de trabalhadores avulsos;
+        /// Preenchimento do campo (nrInsc) = CNPJ do operador portuário.
+        /// </summary>
+        [XmlEnum("08")]
+        PJ_OperadorPortuarioTomadorServicoPrestado = 08,
+
+        /// <summary>
+        /// Contratante de trabalhadores avulsos não portuários por intermédio de sindicato
+        /// Preenchimento do campo (nrInsc) = CNPJ ou CPF do contratante.
+        /// </summary>
+        [XmlEnum("09")]
+        ContratanteAvulsos = 09,
+
+        /// <summary>
+        /// Embarcação inscrita no Registro Especial Brasileiro - REB
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("10")]
+        EmbarcacaoREB = 10,
+
+        /// <summary>
+        /// Classificação da atividade econômica ou obra própria de construção civil da Pessoa Física
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("21")]
+        PF_ObraPropriaConstrCivil = 21,
+
+        /// <summary>
+        /// Empregador doméstico
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("24")]
+        EmpregadorDomestico = 24,
+
+        /// <summary>
+        /// Atividades desenvolvidas no exterior por trabalhador vinculado ao Regime Geral de Previdência Social (expatriados)
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("90")]
+        AtvExteriorExpatriados = 90,
+
+        /// <summary>
+        /// Atividades desenvolvidas por trabalhador estrangeiro vinculado a Regime de Previdência Social no exterior
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("91")]
+        AtvEstrangeirosRegimePrevidenciaSocialExterior = 91,
+
+        /// <summary>
+        /// Bolsista contribuinte individual sem contribuição patronal.
+        /// Preenchimento do campo (nrInsc) = Não preencher
+        /// </summary>
+        [XmlEnum("92")]
+        BolsistaIndividual = 92
+
+    }
+
+    #endregion Tipo de Lotação Tributária
+
+    #region Tipo de Inscrição tpInsc
+
+    /// <summary>
+    /// Preencher com o código correspondente ao tipo de inscrição
+    /// </summary>
+    public enum TpInsc
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("1")]
+        CNPJ = 1,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("2")]
+        CPF = 2,
+
+        /// <summary>
+        /// Cadastro de Atividade Econômica de Pessoa Física
+        /// </summary>
+        [XmlEnum("3")]
+        CAEPF = 3,
+
+        /// <summary>
+        /// Cadastro Nacional de Obra
+        /// </summary>
+        [XmlEnum("4")]
+        CNO = 4,
+
+        /// <summary>
+        /// Cadastro Geral de Contribuintes
+        /// </summary>
+        [XmlEnum("5")]
+        CGC = 5,
+
+        /// <summary>
+        /// Cadastro Específico do INSS
+        /// </summary>
+        [XmlEnum("6")]
+        CEI = 6
+    }
+
+    #endregion Tipo de Inscrição tpInsc
+
+    #region eSocial - Tipo de rubrica.
+
+    /// <summary>
+    /// Tipo de rubrica.
+    /// </summary>
+    public enum TipoRubrica
+    {
+        /// <summary>
+        /// 1 - Vencimento, provento ou pensão
+        /// </summary>
+        [XmlEnum("1")]
+        VencimentoProventoOuPensao = 1,
+
+        /// <summary>
+        /// 2 - Desconto
+        /// </summary>
+        [XmlEnum("2")]
+        Desconto = 2,
+
+        /// <summary>
+        /// 3 - Informativa
+        /// </summary>
+        [XmlEnum("3")]
+        Informativa = 3,
+
+        /// <summary>
+        /// 4 - Informativa dedutora
+        /// </summary>
+        [XmlEnum("4")]
+        InformativaDedutora = 4
+    }
+    #endregion
+
+    #region eSocial - Código de incidência tributária da rubrica para a Previdência Social.
+
+    /// <summary>
+    /// Código de incidência tributária da rubrica para a Previdência Social.
+    /// Validação: Para utilização de código [91, 92, 93, 94, 95, 96, 97, 98], é necessária a existência de grupo com informações relativas ao processo.
+    /// </summary>
+    public enum CodigoIncidenciaTributaria
+    {
+        /// <summary>
+        /// 00 - Não é base de cálculo
+        /// </summary>
+        [XmlEnum("00")]
+        NaoBaseDeCalculo = 00,
+
+        /// <summary>
+        /// 01 - Não é base de cálculo em função de acordos internacionais de previdência social
+        /// </summary>
+        [XmlEnum("01")]
+        NaoBaseDeCalculoAcordosInternacionais = 01,
+
+        ///Base de cálculo das contribuições sociais - Salário de contribuição:
+
+        /// <summary>
+        /// 11 - Mensal
+        /// </summary>
+        [XmlEnum("11")]
+        Mensal = 11,
+
+        /// <summary>
+        /// 12 - 13º salário
+        /// </summary>
+        [XmlEnum("12")]
+        DecimoTerceiroSalario = 12,
+
+        /// <summary>
+        /// 13 - Exclusiva do empregador - Mensal
+        /// </summary>
+        [XmlEnum("13")]
+        ExclusivaEmpregadorMensal = 13,
+
+        /// <summary>
+        /// 14 - Exclusiva do empregador - 13° salário
+        /// </summary>
+        [XmlEnum("14")]
+        ExclusivaEmpregadorDecimoTerceiro = 14,
+
+        /// <summary>
+        /// 15 - Exclusiva do segurado - Mensal
+        /// </summary>
+        [XmlEnum("15")]
+        ExclusivaSeguradoMensal = 15,
+
+        /// <summary>
+        /// 16 - Exclusiva do segurado - 13° salário
+        /// </summary>
+        [XmlEnum("16")]
+        ExclusivaSeguradoDecimoTerceiro = 16,
+
+        /// <summary>
+        /// 21 - Salário-maternidade mensal, pago pelo empregador
+        /// </summary>
+        [XmlEnum("21")]
+        MaternidadePagoEmpregador = 21,
+
+        /// <summary>
+        /// 22 - Salário-maternidade 13º salário, pago pelo empregador
+        /// </summary>
+        [XmlEnum("22")]
+        MaternidadeDecimoTerceiroEmpregador = 22,
+
+        /// <summary>
+        /// 25 - Salário-maternidade mensal, pago pelo INSS
+        /// </summary>
+        [XmlEnum("25")]
+        MaternidadePagoInss = 25,
+
+        /// <summary>
+        /// 26 - Salário-maternidade 13° salário, pago pelo INSS
+        /// </summary>
+        [XmlEnum("26")]
+        MaternidadeDecimoTerceiroInss = 26,
+
+        /// <summary>
+        /// 31 - Contribuição descontada do segurado sobre salário de contribuição: Mensal
+        /// </summary>
+        [XmlEnum("31")]
+        DescontadoMensal = 31,
+
+        /// <summary>
+        /// 32 - Contribuição descontada do segurado sobre salário de contribuição: 13º salário
+        /// </summary>
+        [XmlEnum("32")]
+        DescontadoDecimoTerceiro = 32,
+
+        /// <summary>
+        /// 34 - Contribuição descontada do segurado sobre salário de contribuição: SEST
+        /// </summary>
+        [XmlEnum("34")]
+        SEST = 34,
+
+        /// <summary>
+        /// 35 - Contribuição descontada do segurado sobre salário de contribuição: SENAT
+        /// </summary>
+        [XmlEnum("35")]
+        SENAT = 35,
+
+        /// <summary>
+        /// 51 - Salário-família
+        /// </summary>
+        [XmlEnum("51")]
+        SalarioFamilia = 51,
+
+        /// <summary>
+        /// 91 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Mensal
+        /// </summary>
+        [XmlEnum("91")]
+        SuspensaoJudicialMensal = 91,
+
+        /// <summary>
+        /// 92 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: 13º salário
+        /// </summary>
+        [XmlEnum("92")]
+        SuspensaoJudicialDecimoTerceiro = 92,
+
+        /// <summary>
+        /// 93 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Salário-maternidade
+        /// </summary>
+        [XmlEnum("93")]
+        SuspensaoSalarioMaternidade = 93,
+
+        /// <summary>
+        /// 94 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Salário-maternidade 13º salário
+        /// </summary>
+        [XmlEnum("94")]
+        SuspensaoSalarioMaternidadeDecimoTerceiro = 94,
+
+        /// <summary>
+        /// 95 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Exclusiva do empregador - Mensal
+        /// </summary>
+        [XmlEnum("95")]
+        SuspensaoExclusivaEmpregadorMensal = 95,
+
+        /// <summary>
+        /// 96 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Exclusiva do empregador - 13º salário
+        /// </summary>
+        [XmlEnum("96")]
+        SuspensaoExclusivaEmpregadorDecimoTerceiro = 96,
+
+        /// <summary>
+        /// 97 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Exclusiva do empregador - Salário-maternidade
+        /// </summary>
+        [XmlEnum("97")]
+        SuspensaoExclusivaEmpregadorMaternidade = 97,
+
+        /// <summary>
+        /// 98 - Suspensão de incidência sobre salário de contribuição em decorrência de decisão judicial: Exclusiva do empregador - Salário-maternidade 13º salário
+        /// </summary>
+        [XmlEnum("98")]
+        SuspensaoExclusivaEmpregadorMaternidadeDecimoTerceiro = 98
+    }
+    #endregion
+
+    #region codIncFGTS - Código de incidência da rubrica para o Fundo de Garantia do Tempo de Serviço - FGTS. eSocial
+    /// <summary>
+    /// Código de incidência da rubrica para o Fundo de Garantia do Tempo de Serviço - FGTS.
+    /// Validação: Para utilização de código [91, 92, 93], é necessária a existência de grupo com informações relativas ao processo.
+    /// </summary>
+    public enum CodIncFGTS
+    {
+        /// <summary>
+        /// 00 - Não é base de cálculo do FGTS
+        /// </summary>
+        [XmlEnum("00")]
+        NaoBaseCalculoFGTS = 00,
+
+        /// <summary>
+        /// 11 - Base de cálculo do FGTS mensal
+        /// </summary>
+        [XmlEnum("11")]
+        BaseDeCalculoFGTSMensal = 11,
+
+        /// <summary>
+        /// 12 - Base de cálculo do FGTS 13° salário
+        /// </summary>
+        [XmlEnum("12")]
+        BaseDeCalculoFGTSDecimoTerceiro = 12,
+
+        /// <summary>
+        /// 21 - Base de cálculo do FGTS aviso prévio indenizado
+        /// </summary>
+        [XmlEnum("21")]
+        BaseDeCalculoFGTSAvisoPrevioIndenizado = 21,
+
+        /// <summary>
+        /// 31 - Desconto eConsignado
+        /// </summary>
+        [XmlEnum("31 ")]
+        DescontoeConsignado = 31,
+
+        /// <summary>
+        /// 91 - Incidência suspensa em decorrência de decisão judicial - FGTS mensal
+        /// </summary>
+        [XmlEnum("91")]
+        SuspensaoFGTSMensal = 91,
+
+        /// <summary>
+        /// 92 - Incidência suspensa em decorrência de decisão judicial - FGTS 13º salário
+        /// </summary>
+        [XmlEnum("92")]
+        SuspensaoFGTSDecimoTerceiro = 92,
+
+        /// <summary>
+        /// 93 - Incidência suspensa em decorrência de decisão judicial - FGTS aviso prévio indenizado
+        /// </summary>
+        [XmlEnum("93")]
+        SuspensaoFGTSAvisoPrevioIndenizado = 93,
+    }
+    #endregion
+
+    #region eSocial - Código de incidência da rubrica para as contribuições do Regime Próprio de Previdência Social - RPPS ou do Sistema de Proteção Social dos Militares das Forças Armadas - SPSMFA.
+
+    /// <summary>
+    /// Código de incidência da rubrica para as contribuições do Regime Próprio de Previdência Social - RPPS ou do Sistema de Proteção Social dos Militares das Forças Armadas - SPSMFA.
+    /// </summary>
+    public enum CodigoIncidenciaDaRubrica
+    {
+        /// <summary>
+        /// 00 - Não é base de cálculo de contribuições devidas
+        /// </summary>
+        [XmlEnum("00")]
+        NaoBaseContribuicoesDevidas = 00,
+
+        /// <summary>
+        /// 11 - Base de cálculo de contribuições devidas
+        /// </summary>
+        [XmlEnum("11")]
+        BaseCalculoContribuicoesDevidas = 11,
+
+        /// <summary>
+        /// 12 - Base de cálculo de contribuições devidas - 13º salário
+        /// </summary>
+        [XmlEnum("12")]
+        BaseCalculoDecimoTerceiro = 12,
+
+        /// <summary>
+        /// 31 - Contribuição descontada do segurado ou beneficiário
+        /// </summary>
+        [XmlEnum("31")]
+        ContribuicaoDescontadaSeguradoBeneficiario = 31,
+
+        /// <summary>
+        /// 32 - Contribuição descontada do segurado ou beneficiário - 13º salário
+        /// </summary>
+        [XmlEnum("32")]
+        ContribuicaoDescontadaSeguradoBeneficiarioDecimoTerceiro = 32,
+
+        /// <summary>
+        /// 91 - Suspensão de incidência em decorrência de decisão judicial
+        /// </summary>
+        [XmlEnum("91")]
+        SuspensaoDecisaoJudicial = 91,
+
+        /// <summary>
+        /// 92 - Suspensão de incidência em decorrência de decisão judicial - 13º salário
+        /// </summary>
+        [XmlEnum("92")]
+        SuspensaoDecisaoJudicialDecimoTerceiro = 92
+    }
+    #endregion
+
+    #region eSocial - Extensão da decisão/sentença.
+
+    /// <summary>
+    /// Extensão da decisão/sentença.
+    /// </summary>
+    public enum ExtensaoDecisao
+    {
+        /// <summary>
+        /// 1 - Contribuição previdenciária patronal
+        /// </summary>
+        [XmlEnum("1")]
+        ContribuicaoPrevidenciariaPatronal = 1,
+
+        /// <summary>
+        /// 2 - Contribuição previdenciária patronal + descontada dos segurados
+        /// </summary>
+        [XmlEnum("2")]
+        ContribuicaoPatronalDescontadaDosSegurados = 2,
+
+    }
+    #endregion
+
+    #region Indicativo da autoria da ação judicial.
+
+    /// <summary>
+    /// eSocial - Indicativo da autoria da ação judicial..
+    /// </summary>
+    public enum IndicativoAutoriaAcaoJudicial
+    {
+        /// <summary>
+        /// 1 - Próprio contribuinte
+        /// </summary>
+        [XmlEnum("1")]
+        ProprioContribuinte = 1,
+
+        /// <summary>
+        /// 2 - Outra entidade, empresa ou empregado
+        /// </summary>
+        [XmlEnum("2")]
+        OutraEntidade = 2,
+
+    }
+    #endregion Tipo Processo eSocial
+
+    #region Indicativo da matéria do processo eSocial.
+
+    /// <summary>
+    /// eSocial - Indicativo da matéria do processo social.
+    /// </summary>
+    public enum IndicativoMateriaProcesso
+    {
+        /// <summary>
+        /// 1 - Exclusivamente tributária ou tributária e FGTS
+        /// </summary>
+        [XmlEnum("1")]
+        TributariaOuTributariaFGTS = 1,
+
+        /// <summary>
+        /// 7 - Exclusivamente FGTS e/ou Contribuição Social Rescisória (Lei Complementar 110/2001)
+        /// </summary>
+        [XmlEnum("7")]
+        FGTSOuContribuicaoSocial = 7,
+
+    }
+    #endregion Indicativo da matéria do processo eSocial.
+
+    #region IndApuracao
+
+    /// <summary>
+    /// Indicativo de período de apuração.
+    /// Valores válidos:
+    ///1 - Mensal; 
+    ///2 - Anual(13° salário);
+    /// </summary>
+    public enum IndApuracao
+    {
+        /// <summary>
+        /// Mensal
+        /// </summary>
+        [XmlEnum("1")]
+        Mensal = 1,
+        /// <summary>
+        /// Anual (13° salário)
+        /// </summary>
+        [XmlEnum("2")]
+        Anual = 2
+    }
+
+    #endregion
+
+    #region IndMV
+
+    /// <summary>
+    /// Indicador de desconto da contribuição previdenciária do trabalhador.
+    /// Valores válidos:
+    /// [1] - O declarante aplica a(s) alíquota(s) de desconto do
+    /// segurado sobre a remuneração por ele informada(o
+    /// percentual da(s) alíquota(s) será(ão) obtido(s)
+    /// considerando a remuneração total do trabalhador);                                                                                                                                        
+    /// [2] - O declarante aplica a(s) alíquota(s) de desconto do
+    /// segurado sobre a diferença entre o limite máximo do
+    /// salário de contribuição e a remuneração de outra(s)
+    /// empresa(s) para as quais o trabalhador informou que
+    /// houve o desconto;
+    /// [3] - O declarante não realiza desconto do segurado, uma
+    /// vez que houve desconto sobre o limite máximo de salário
+    /// de contribuição em outra(s) empresa(s);
+    /// </summary>
+    public enum IndMV
+    {
+        /// <summary>
+        /// [1] - O declarante aplica a(s) alíquota(s) de desconto do
+        /// segurado sobre a remuneração por ele informada(o
+        /// percentual da(s) alíquota(s) será(ão) obtido(s)
+        /// considerando a remuneração total do trabalhador);
+        /// </summary>
+        [XmlEnum("1")]
+        DescontoSobreRemuneracao = 1,
+
+        /// <summary>
+        /// [2] - O declarante aplica a(s) alíquota(s) de desconto do
+        /// segurado sobre a diferença entre o limite máximo do
+        /// salário de contribuição e a remuneração de outra(s)
+        /// empresa(s) para as quais o trabalhador informou que
+        /// houve o desconto;
+        /// </summary>
+        [XmlEnum("2")]
+        DescontoSobreDiferenca = 2,
+
+        /// <summary>
+        /// [3] - O declarante não realiza desconto do segurado, uma
+        /// vez que houve desconto sobre o limite máximo de salário
+        /// de contribuição em outra(s) empresa(s);
+        /// </summary>
+        [XmlEnum("3")]
+        SemDesconto = 3,
+    }
+
+    #endregion IndMV
+
+    #region Tipo Tributação - TpTrib
+
+    /// <summary>
+    /// Abrangência da decisão.
+    /// Valores válidos:
+    /// 1 - IRRF
+    /// 2 - Contribuições sociais do trabalhador
+    /// </summary>
+    public enum TpTrib
+    {
+        /// <summary>
+        /// 1 - IRRF
+        /// </summary>
+        [XmlEnum("1")]
+        IRRF = 1,
+
+        /// <summary>
+        /// 2 - Contribuições sociais do trabalhador
+        /// </summary>
+        [XmlEnum("2")]
+        ContribuicoesSociaisDoTrabalhador = 2,
+
+    }
+    #endregion Tipo Tributação - TpTrib
+
+    #region Codigo Categoria - CodCateg
+
+    /// <summary>
+    /// Codigo Categoria - Categorias de Trabalhadores
+    /// </summary>
+    public enum CodCateg
+    {
+        #region Empregado e Trabalhador Temporário
+
+        /// <summary>
+        /// Geral, inclusive o empregado público da administração direta ou indireta contratado pela CLT
+        /// </summary>
+        [XmlEnum("101")]
+        EmpregadoGeral = 101,
+
+        /// <summary>
+        /// Trabalhador rural por pequeno prazo da Lei 11.718/2008
+        /// </summary>
+        [XmlEnum("102")]
+        EmpregadoTrabalhadorRural = 102,
+
+        /// <summary>
+        ///  Empregado - Aprendiz
+        /// </summary>
+        [XmlEnum("103")]
+        EmpregadoAprendiz = 103,
+
+        /// <summary>
+        ///  Empregado - Doméstico 
+        /// </summary>
+        [XmlEnum("104")]
+        EmpregadoDomestico = 104,
+
+        /// <summary>
+        ///  Contrato a termo firmado nos termos da Lei 9.601/1998
+        /// </summary>
+        [XmlEnum("105")]
+        EmpregadoContratoTermo = 105,
+
+        /// <summary>
+        /// Trabalhador temporário - Contrato nos termos da Lei 6.019/1974
+        /// </summary>
+        [XmlEnum("106")]
+        TrabalhadorTemporario = 106,
+
+        /// <summary>
+        /// Empregado - Contrato de trabalho Verde e Amarelo - sem
+        /// acordo para antecipação mensal da multa rescisória do FGTS
+        /// </summary>
+        [XmlEnum("107")]
+        EmpregadoContratoVerdeAmareloSemAcordo = 107,
+
+        /// <summary>
+        /// Empregado - Contrato de trabalho Verde e Amarelo - com
+        /// acordo para antecipação mensal da multa rescisória do FGTS
+        /// </summary>
+        [XmlEnum("108")]
+        EmpregadoContratoVerdeAmareloComAcordo = 108,
+
+        /// <summary>
+        /// Empregado - Contrato de trabalho intermitente
+        /// </summary>
+        [XmlEnum("111")]
+        EmpregadoContratoIntermitente = 111,
+
+        #endregion Empregado e Trabalhador Temporário
+
+        #region Avulso
+
+        /// <summary>
+        /// Trabalhador avulso portuário 
+        /// </summary>
+        [XmlEnum("201")]
+        TrabalhadorAvulsoPortuario = 201,
+
+        /// <summary>
+        /// Trabalhador avulso não portuário 
+        /// </summary>
+        [XmlEnum("202")]
+        TrabalhadorAvulsoNaoPortuario = 202,
+
+        #endregion Avulso
+
+        #region Agente Público
+
+        /// <summary>
+        /// Servidor público titular de cargo efetivo, magistrado,
+        /// ministro de Tribunal de Contas, conselheiro de Tribunal de
+        /// Contas e membro do Ministério Público
+        /// </summary>
+        [XmlEnum("301")]
+        ServidorPublicoEfetivo = 301,
+
+        /// <summary>
+        /// Servidor público ocupante de cargo exclusivo em comissão
+        /// </summary>
+        [XmlEnum("302")]
+        ServidorPublicoCargoExclusivoComissao = 302,
+
+        /// <summary>
+        /// Exercente de mandato eletivo 
+        /// </summary>
+        [XmlEnum("303")]
+        ExercenteDeMandatoEletivo = 303,
+
+        /// <summary>
+        /// Servidor público exercente de mandato eletivo, inclusive com exercício de cargo em comissão
+        /// </summary>
+        [XmlEnum("304")]
+        ExercenteDeMandatoEletivoComComissao = 304,
+
+        /// <summary>
+        /// Servidor público indicado para conselho ou órgão
+        /// deliberativo, na condição de representante do governo,
+        /// órgão ou entidade da administração pública
+        /// </summary>
+        [XmlEnum("305")]
+        ServidorPublicoConselhoOuOrgaoDeliberativo = 305,
+
+        /// <summary>
+        /// Servidor público contratado por tempo determinado, sujeito a regime administrativo especial definido em lei própria
+        /// </summary>
+        [XmlEnum("306")]
+        ServidorPublicoContratado = 306,
+
+        /// <summary>
+        /// Militar dos Estados e Distrito Federal
+        /// </summary>
+        [XmlEnum("307")]
+        MilitarDosEstadosEDistritoFederal = 307,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("308")]
+        Conscrito = 308,
+
+        /// <summary>
+        /// Agente público - Outros
+        /// </summary>
+        [XmlEnum("309")]
+        AgentePublico = 309,
+
+        /// <summary>
+        /// Servidor público eventual 
+        /// </summary>
+        [XmlEnum("310")]
+        ServidorPublicoEventual = 310,
+
+        /// <summary>
+        /// Ministros, juízes, procuradores, promotores ou oficiais de justiça à disposição da Justiça Eleitoral
+        /// </summary>
+        [XmlEnum("311")]
+        MinistroJuizProcuradPromotorOficialJusticaJE = 311,
+
+        /// <summary>
+        /// Auxiliar Local
+        /// </summary>
+        [XmlEnum("312")]
+        AuxiliarLocal = 312,
+
+        /// <summary>
+        /// Servidor público exercente de atividade de instrutoria,
+        /// capacitação, treinamento, curso ou concurso, ou convocado
+        /// para pareceres técnicos ou depoimentos
+        /// </summary>
+        [XmlEnum("313")]
+        ServidorPublicoInstrutor = 313,
+
+        /// <summary>
+        /// Militar das Forças Armadas
+        /// </summary>
+        [XmlEnum("314")]
+        MilitarForcasArmadas = 314,
+
+        #endregion Agente Público
+
+        #region Cessão
+
+        /// <summary>
+        /// Dirigente sindical - Informação prestada pelo sindicato 
+        /// </summary>
+        [XmlEnum("401")]
+        DirigenteSindical = 401,
+
+        /// <summary>
+        /// Trabalhador cedido/exercício em outro órgão/juiz auxiliar - Informação prestada pelo cessionário/destino
+        /// </summary>
+        [XmlEnum("410")]
+        TrabalhadorCedido = 410,
+
+        #endregion Cessão
+
+        #region Segurado Especial
+
+        /// <summary>
+        /// Dirigente sindical - Segurado especial 
+        /// </summary>
+        [XmlEnum("501")]
+        DirigenteSindicalEspecial = 501,
+
+        #endregion Segurado Especial
+
+        #region Contribuinte Individual
+
+        /// <summary>
+        /// Contribuinte individual - Autônomo em geral, exceto se enquadrado em 
+        /// uma das demais categorias de contribuinte individual
+        /// </summary>
+        [XmlEnum("701")]
+        ContribuinteIndividualAutonomo = 701,
+
+        /// <summary>
+        /// Contribuinte individual - Transportador autônomo de passageiros
+        /// </summary>
+        [XmlEnum("711")]
+        ContribuinteIndividualTranspAutonomoPassageiros = 711,
+
+        /// <summary>
+        /// Contribuinte individual - Transportador autônomo de carga
+        /// </summary>
+        [XmlEnum("712")]
+        ContribuinteIndividualTranspAutonomoCarga = 712,
+
+        /// <summary>
+        /// Contribuinte individual - Diretor não empregado, com FGTS 
+        /// </summary>
+        [XmlEnum("721")]
+        ContribuinteIndividualDiretorComFGTS = 721,
+
+        /// <summary>
+        /// Contribuinte individual - Diretor não empregado, sem FGTS 
+        /// </summary>
+        [XmlEnum("722")]
+        ContribuinteIndividualDiretorSemFGTS = 722,
+
+        /// <summary>
+        /// Contribuinte individual - Empresário, sócio e membro de conselho de administração ou fiscal
+        /// </summary>
+        [XmlEnum("723")]
+        ContribuinteIndividualEmpSocioAdmFiscal = 723,
+
+        /// <summary>
+        /// Contribuinte individual - Cooperado que presta serviços por intermédio de cooperativa de trabalho
+        /// </summary>
+        [XmlEnum("731")]
+        ContribuinteIndividualCooperadoPorCoopTrabalho = 731,
+
+        /// <summary>
+        /// Contribuinte individual - Transportador cooperado que presta serviços por intermédio de cooperativa de trabalho
+        /// </summary>
+        [XmlEnum("734")]
+        ContribuinteIndividualTranspCooperadoPorCoopTrabalho = 734,
+
+        /// <summary>
+        /// Contribuinte individual - Cooperado filiado a cooperativa de produção
+        /// </summary>
+        [XmlEnum("738")]
+        ContribuinteIndividualCooperadoPorCooperativaProducao = 738,
+
+        /// <summary>
+        ///  Contribuinte individual - Microempreendedor individual 
+        /// </summary>
+        [XmlEnum("741")]
+        ContribuinteIndividualMEI = 741,
+
+        /// <summary>
+        /// Contribuinte individual - Magistrado classista temporário da Justiça do Trabalho 
+        /// ou da Justiça Eleitoral que seja aposentado de qualquer regime previdenciário
+        /// </summary>
+        [XmlEnum("751")]
+        ContribuinteIndividualMagistradoTempJusTrabJusEleitAposentado = 751,
+
+        /// <summary>
+        /// Contribuinte individual - Associado eleito para direção de cooperativa, 
+        /// associação ou entidade de classe de qualquer natureza ou finalidade, bem como o síndico ou
+        /// administrador eleito para exercer atividade de direção condominial, desde que recebam remuneração
+        /// </summary>
+        [XmlEnum("761")]
+        ContribuinteIndividualAssocEleitoDiretorSindicoRemunerado = 761,
+
+        /// <summary>
+        /// Contribuinte individual - Membro de conselho tutelar, nos termos da Lei 8.069/1990
+        /// </summary>
+        [XmlEnum("771")]
+        ContribuinteIndividualMembroDeConselhoTutelar = 771,
+
+        /// <summary>
+        /// Ministro de confissão religiosa ou membro de vida consagrada, de congregação ou de ordem religiosa
+        /// </summary>
+        [XmlEnum("781")]
+        MinistroConfissaoReligiosaMembroVidaSagradaCongregacaoOuOrdem = 781,
+
+        #endregion Contribuinte Individual
+
+        #region Bolsista
+
+        /// <summary>
+        /// Estagiario
+        /// </summary>
+        [XmlEnum("901")]
+        Estagiario = 901,
+
+        /// <summary>
+        /// Bolsista - Médico residente, residente em área profissional de saúde ou médico em curso de formação
+        /// </summary>
+        [XmlEnum("902")]
+        MedicoResidenteOuCursoDeFormacao = 902,
+
+        /// <summary>
+        /// Bolsista
+        /// </summary>
+        [XmlEnum("903")]
+        Bolsista = 903,
+
+        /// <summary>
+        /// Participante de curso de formação, como etapa de concurso público, sem vínculo de emprego/estatutário
+        /// </summary>
+        [XmlEnum("904")]
+        ParticipanteCursoDeFormacao = 904,
+
+        /// <summary>
+        /// Beneficiário do Programa Nacional de Prestação de Serviço Civil Voluntário
+        /// </summary>
+        [XmlEnum("906")]
+        BeneficiarioProgNacPrestacaoServicoCivilVoluntario = 906,
+        #endregion Bolsista
+    }
+    #endregion Codigo Categoria - CodCateg
+
+    #region IndSimples
+
+    /// <summary>
+    /// Indicador de contribuição substituída.
+    /// </summary>
+    public enum IndSimples
+    {
+        /// <summary>
+        /// 1 - Contribuição substituída integralmente
+        /// </summary>
+        [XmlEnum("1")]
+        ContribuicaoSubstituidaIntegralmente = 1,
+
+        /// <summary>
+        /// Contribuição não substituída
+        /// </summary>
+        [XmlEnum("2")]
+        ContribuicaoNaoSubstituida = 2,
+
+        /// <summary>
+        /// Contribuição não substituída concomitante com contribuição substituída
+        /// </summary>
+        [XmlEnum("3")]
+        ContribuicaoNaoSubstituidaConcomitanteComContribSubst = 3,
+    }
+    #endregion IndSimples
+
+    #region NatAtividade
+    /// <summary>
+    /// Natureza da atividade. 
+    /// Valores válidos: 1 - Trabalho urbano 2 - Trabalho rural 
+    /// </summary>
+    public enum NatAtividade
+    {
+        /// <summary>
+        /// 1 - Trabalho urbano
+        /// </summary>
+        [XmlEnum("1")]
+        TrabalhoUrbano = 1,
+        /// <summary>
+        /// 2 - Trabalho rural
+        /// </summary>
+        [XmlEnum("2")]
+        TrabalhoRural = 2,
+    }
+    #endregion NatAtividade
+
+    #region  IndApurIR
+
+    /// <summary>
+    ///  Indicativo de tipo de apuração de IR.
+    /// 0 - Normal (apuração sob a folha de pagamento declarada no eSocial)
+    /// 1 - Situação especial de apuração de IR
+    /// </summary>
+    public enum IndApurIR
+    {
+        /// <summary>
+        /// 0 - Normal (apuração sob a folha de pagamento declarada no eSocial)
+        /// </summary>
+        [XmlEnum("0")]
+        Normal = 0,
+
+        /// <summary>
+        /// 1 - Situação especial de apuração de IR
+        /// </summary>
+        [XmlEnum("1")]
+        SituacaoEspecial = 1,
+
+    }
+
+    #endregion IndApurIR
+
+    #region IndComerc
+
+    /// <summary>
+    /// Indicativo de comercialização.
+    /// Valores válidos:
+    /// 2 - Comercialização da produção efetuada diretamente no
+    /// varejo a consumidor final ou a outro produtor rural pessoa
+    /// física por produtor rural pessoa física, inclusive por
+    /// segurado especial, ou por pessoa física não produtor rural
+    /// 3 - Comercialização da produção por prod.rural PF/seg.
+    /// especial - Vendas a PJ(exceto entidade inscrita no
+    /// Programa de Aquisição de Alimentos - PAA) ou a
+    /// intermediário PF
+    /// 7 - Comercialização da produção isenta de acordo com a
+    /// Lei 13.606/2018 efetuada diretamente no varejo a
+    /// consumidor final ou a outro produtor rural pessoa física
+    /// por produtor rural pessoa física, inclusive por segurado
+    /// especial, ou por pessoa física não produtor rural
+    /// 8 - Comercialização da produção da pessoa física/segurado especial para entidade inscrita no PAA
+    /// 9 - Comercialização da produção no mercado externo
+    /// </summary>
+    public enum IndComerc
+    {
+        /// <summary>
+        /// 2 - Comercialização da produção efetuada diretamente no
+        /// varejo a consumidor final ou a outro produtor rural pessoa
+        /// física por produtor rural pessoa física, inclusive por
+        /// segurado especial, ou por pessoa física não produtor rural
+        /// </summary>
+        [XmlEnum("2")]
+        ComercVarejoPF = 2,
+
+        /// <summary>
+        /// 3 - Comercialização da produção por prod.rural PF/seg.
+        /// especial - Vendas a PJ(exceto entidade inscrita no
+        /// Programa de Aquisição de Alimentos - PAA) ou a
+        /// intermediário PF
+        /// </summary>
+        [XmlEnum("3")]
+        ComercParaCNPJ = 3,
+
+        /// <summary>
+        /// 7 - Comercialização da produção isenta de acordo com a
+        /// Lei 13.606/2018 efetuada diretamente no varejo a
+        /// consumidor final ou a outro produtor rural pessoa física
+        /// por produtor rural pessoa física, inclusive por segurado
+        /// especial, ou por pessoa física não produtor rural
+        /// </summary>
+        [XmlEnum("7")]
+        ComercVarejoIsenta = 7,
+
+        /// <summary>
+        /// 8 - Comercialização da produção da pessoa física/segurado especial para entidade inscrita no PAA
+        /// </summary>
+        [XmlEnum("8")]
+        ComercEntidadeInscritaPAA = 8,
+
+        /// <summary>
+        /// 9 - Comercialização da produção no mercado externo
+        /// </summary>
+        [XmlEnum("9")]
+        ComercExterior = 9
+    }
+    #endregion IndComerc
+
+    #region Tipo Pagamento eSocial
+
+    /// <summary>
+    /// Informar o evento de origem do pagamento.
+    /// </summary>
+    public enum TipoPagamentoESocial
+    {
+        /// <summary>
+        /// 1 - Pagamento de remuneração, conforme apurado em ideDmDev do S-1200
+        /// </summary>
+        [XmlEnum("1")]
+        PagamentoRemuneracaoS1200 = 1,
+
+        /// <summary>
+        /// 2 - Pagamento de verbas rescisórias conforme apurado em ideDmDev do S-2299
+        /// </summary>
+        [XmlEnum("2")]
+        PagamentoVerbasRecisoriasS2299 = 2,
+
+        /// <summary>
+        /// 3 - Pagamento de verbas rescisórias conforme apurado em ideDmDev do S-2399
+        /// </summary>
+        [XmlEnum("3")]
+        PagamentoVerbasRecisorias2399 = 3,
+
+        /// <summary>
+        /// 4 - Pagamento de remuneração conforme apurado em ideDmDev do S-1202
+        /// </summary>
+        [XmlEnum("4")]
+        PagamentoRemuneracaoS1202 = 4,
+
+        /// <summary>
+        /// 5 - Pagamento de benefícios previdenciários, conforme apurado em ideDmDev do S-1207
+        /// </summary>
+        [XmlEnum("5")]
+        PagamentoBeneficiosS1207 = 5
+    }
+
+    #endregion Tipo Pagamento eSocial
+
+    #region Formas de Tributação para Rendimentos de Beneficiários no Exterior - eSocial
+
+    /// <summary>
+    /// Tabela 30 - Formas de Tributação para Rendimentos de Beneficiários no Exterior. eSocial
+    /// </summary>
+    public enum FrmTribut
+    {
+        /// <summary>
+        /// 10 - Retenção do IRRF - Alíquota padrão
+        /// </summary>
+        [XmlEnum("10")]
+        RetencaoAliquotaPadrao = 10,
+
+        /// <summary>
+        /// 11 - Retenção do IRRF - Alíquota da tabela progressiva
+        /// </summary>
+        [XmlEnum("11")]
+        RetencaoAliquotaTabelaProgressiva = 11,
+
+        /// <summary>
+        /// 12 - Retenção do IRRF - Alíquota diferenciada (países com tributação favorecida)
+        /// </summary>
+        [XmlEnum("12")]
+        RetencaoAliquotaDiferenciada = 12,
+
+        /// <summary>
+        /// 13 - Retenção do IRRF - Alíquota limitada conforme cláusula em convênio
+        /// </summary>
+        [XmlEnum("13")]
+        RetencaoAliquotaLimitada = 13,
+
+        /// <summary>
+        /// 30 - Retenção do IRRF - Outras hipóteses
+        /// </summary>
+        [XmlEnum("30")]
+        RetencaoOutrasHipoteses = 30,
+
+        /// <summary>
+        /// 40 - Não retenção do IRRF - Isenção estabelecida em convênio
+        /// </summary>
+        [XmlEnum("40")]
+        NaoRetencaoIsencaoConvenio = 40,
+
+        /// <summary>
+        /// 41 - Não retenção do IRRF - Isenção prevista em lei interna
+        /// </summary>
+        [XmlEnum("41")]
+        NaoRetencaoIsencaoLeiInterna = 41,
+
+        /// <summary>
+        /// 42 - Não retenção do IRRF - Alíquota zero prevista em lei interna
+        /// </summary>
+        [XmlEnum("42")]
+        NaoRetencaoAliquotaLeiInterna = 42,
+
+        /// <summary>
+        /// 43 - Não retenção do IRRF - Pagamento antecipado do imposto
+        /// </summary>
+        [XmlEnum("43")]
+        NaoRetencaoPagamentoAntecipadoDoImposto = 43,
+
+        /// <summary>
+        /// 44 - Não retenção do IRRF - Medida judicial
+        /// </summary>
+        [XmlEnum("44")]
+        NaoRetencaoMedidaJudicial = 44,
+
+        /// <summary>
+        /// 50 - Não retenção do IRRF - Outras hipóteses
+        /// </summary>
+        [XmlEnum("50")]
+        NaoRetencaoOutrasHiposteses = 50
+    }
+
+    #endregion 
+
+    #region Tipos de Dependente - eSocial
+
+    /// <summary>
+    /// Tabela 07 - Tipos de Dependente
+    /// </summary>
+    public enum TiposDeDependente
+    {
+        /// <summary>
+        /// 01 - Cônjuge
+        /// </summary>
+        [XmlEnum("01")]
+        Conjuge = 01,
+
+        /// <summary>
+        /// 02 - Companheiro(a) com o(a) qual tenha filho ou viva há mais de 5 (cinco) anos ou possua declaração de união estável
+        /// </summary>
+        [XmlEnum("02")]
+        FilhoOuUniaoEstavel = 02,
+
+        /// <summary>
+        /// 03 - Filho(a) ou enteado(a) 
+        /// </summary>
+        [XmlEnum("03")]
+        FilhoOuEnteado = 03,
+
+        /// <summary>
+        /// 04 - Filho(a) ou enteado(a), universitário(a) ou cursando escola técnica de 2º grau
+        /// </summary>
+        [XmlEnum("04")]
+        FilhoOuEnteadoEstudante = 04,
+
+        /// <summary>
+        /// 06 - Irmão(ã), neto(a) ou bisneto(a) sem arrimo dos pais, do(a) qual detenha a guarda judicial
+        /// </summary>
+        [XmlEnum("06")]
+        IrmaoNetoOuBisneto = 06,
+
+        /// <summary>
+        /// 07 - Irmão(ã), neto(a) ou bisneto(a) sem arrimo dos pais, universitário(a) ou cursando escola técnica de 2° grau, do(a) qual detenha a guarda judicial
+        /// </summary>
+        [XmlEnum("07")]
+        IrmaoNetoOuBisnetoEstudante = 07,
+
+        /// <summary>
+        /// 09 - Pais, avós e bisavós
+        /// </summary>
+        [XmlEnum("09")]
+        PaisAvosBisavos = 09,
+
+        /// <summary>
+        /// 10 - Menor pobre do qual detenha a guarda judicial
+        /// </summary>
+        [XmlEnum("10")]
+        MenorPobreGuardaJudicial = 10,
+
+        /// <summary>
+        /// 11 - A pessoa absolutamente incapaz, da qual seja tutor ou curador
+        /// </summary>
+        [XmlEnum("11")]
+        PessoaAbsolutamenteIncapaz = 11,
+
+        /// <summary>
+        /// 12 - Ex-cônjuge
+        /// </summary>
+        [XmlEnum("12")]
+        ExConjuge = 12,
+
+        /// <summary>
+        /// 99 - Agregado/Outros
+        /// </summary>
+        [XmlEnum("99")]
+        AgregadoOuOutros = 99,
+    }
+
+    #endregion
+
+    #region Tipo de rendimento.
+    /// <summary>
+    /// Tipo de rendimento.
+    /// </summary>
+    public enum TipoDeRendimento
+    {
+        /// <summary>
+        /// 11 - Remuneração mensal
+        /// </summary>
+        [XmlEnum("11")]
+        RemuneracaoMensal = 11,
+
+        /// <summary>
+        /// 12 - 13º salário
+        /// </summary>
+        [XmlEnum("12")]
+        DecimoTerceiroSalario = 12,
+
+        /// <summary>
+        /// 13 - Férias
+        /// </summary>
+        [XmlEnum("13")]
+        Ferias = 13,
+
+        /// <summary>
+        /// 14 - PLR
+        /// </summary>
+        [XmlEnum("14")]
+        PLR = 14,
+
+        /// <summary>
+        /// 18 - RRA
+        /// </summary>
+        [XmlEnum("18")]
+        RRA = 18,
+
+        /// <summary>
+        /// 79 - Rendimento isento ou não tributável
+        /// </summary>
+        [XmlEnum("79")]
+        RendimentoIsentoOuNaoTributavel = 79
+    }
+    #endregion
+
+    #region Tipo de previdência complementar - eSocial.
+    /// <summary>
+    /// Tipo de previdência complementar.
+    /// </summary>
+    public enum TipoDePrevidenciaComplementar
+    {
+        /// <summary>
+        /// 1 - Privada: codIncIRRF em S-1010 = [46, 47, 48]
+        /// </summary>
+        [XmlEnum("1")]
+        Privada = 1,
+
+        /// <summary>
+        /// 2 - FAPI: codIncIRRF em S-1010 = [61, 62, 66]
+        /// </summary>
+        [XmlEnum("2")]
+        FAPI = 2,
+
+        /// <summary>
+        /// 3 - Funpresp: codIncIRRF em S-1010 = [63, 64, 65]
+        /// </summary>
+        [XmlEnum("3")]
+        Funpresp = 3,
+
+    }
+    #endregion
+
+    #region Indicativo da origem do reembolso - eSocial.
+
+    /// <summary>
+    /// Indicativo da origem do reembolso.
+    /// </summary>
+    public enum IndicativoOrigemReembolso
+    {
+        /// <summary>
+        /// 1 - Reembolso efetuado pelo empregador no âmbito do plano de saúde (a operadora reembolsa o empregador)
+        /// </summary>
+        [XmlEnum("1")]
+        AmbitoDoPlanoDeSaude = 1,
+        /// <summary>
+        /// 2 - Reembolso efetuado pelo empregador como benefício do próprio empregador
+        /// </summary>
+        [XmlEnum("2")]
+        BeneficioDoProprioEmpregador = 2,
+
+    }
+    #endregion
+
+    #region IndGuia
+
+    /// <summary>
+    /// Indicativo do tipo de guia.
+    /// </summary>
+    public enum IndGuia
+    {
+        /// <summary>
+        /// 1 - Documento de Arrecadação do eSocial - DAE
+        /// </summary>
+        [XmlEnum("1")]
+        DocumentoArrecadacaoESocial = 1,
+    }
+    #endregion IndGuia
+
+    #region PercTranf
+
+    /// <summary>
+    /// Informe o percentual de contribuição social devida em
+    /// caso de transformação em sociedade de fins lucrativos - Lei 11.096/2005.
+    /// Valores válidos:
+    /// [1] - 0,2000
+    /// [2] - 0,4000
+    /// [3] - 0,6000
+    /// [4] - 0,8000
+    /// [5] - 1,0000
+    /// </summary>
+    public enum PercTranf
+    {
+        /// <summary>
+        /// [1] - 0,2000
+        /// </summary>
+        UM = 1,
+        /// <summary>
+        /// [2] - 0,4000
+        /// </summary>
+        DOIS = 2,
+        /// <summary>
+        /// [3] - 0,6000
+        /// </summary>
+        TRES = 3,
+        /// <summary>
+        /// [4] - 0,8000
+        /// </summary>
+        QUATRO = 4,
+        /// <summary>
+        /// [5] - 1,0000
+        /// </summary>
+        CINCO = 5,
+    }
+    #endregion PercTranf
+
+    #region undSalFixo - Unidade de pagamento da parte fixa da remuneração. - eSocial.
+
+    /// <summary>
+    /// Unidade de pagamento da parte fixa da remuneração.
+    /// </summary>
+    public enum UndSalFixo
+    {
+        /// <summary>
+        /// 1 - Por hora
+        /// </summary>
+        [XmlEnum("1")]
+        PorHora = 1,
+
+        /// <summary>
+        /// 2 - Por dia
+        /// </summary>
+        [XmlEnum("2")]
+        PorDia = 2,
+
+        /// <summary>
+        /// 3 - Por semana
+        /// </summary>
+        [XmlEnum("3")]
+        PorSemana = 3,
+
+        /// <summary>
+        /// 4 - Por quinzena
+        /// </summary>
+        [XmlEnum("4")]
+        PorQuinzena = 4,
+
+        /// <summary>
+        /// 5 - Por mês
+        /// </summary>
+        [XmlEnum("5")]
+        PorMes = 5,
+
+        /// <summary>
+        /// 6 - Por tarefa
+        /// </summary>
+        [XmlEnum("6")]
+        PorTarefa = 6,
+
+        /// <summary>
+        /// 7 - Não aplicável - Salário exclusivamente variável
+        /// </summary>
+        [XmlEnum("7")]
+        NaoAplicavel = 7
+    }
+    #endregion
+
+    #region Tipo de contrato de trabalho. [tpContr] - eSocial.
+
+    /// <summary>
+    /// Tipo de contrato de trabalho. [tpContr]
+    /// </summary>
+    public enum TipoDeContratoDeTrabalho
+    {
+        /// <summary>
+        /// 1 - Prazo indeterminado
+        /// </summary>
+        [XmlEnum("1")]
+        PrazoIndeterminado = 1,
+
+        /// <summary>
+        /// 2 - Prazo determinado, definido em dias
+        /// </summary>
+        [XmlEnum("2")]
+        PrazoDeterminadoEmDias = 2,
+
+        /// <summary>
+        /// 3 - Prazo determinado, vinculado à ocorrência de um fato
+        /// </summary>
+        [XmlEnum("3")]
+        PrazoDeterminadoOcorrencia = 3
+    }
+    #endregion
+
+    #region Sexo do trabalhador, tag [sexo] eSocial.
+
+    /// <summary>
+    /// Sexo do trabalhador, tag [sexo] eSocial
+    /// </summary>
+    public enum TipoSexo
+    {
+        /// <summary>
+        /// Masculino
+        /// </summary>
+        [XmlEnum("M")]
+        Masculino = 1,
+
+        /// <summary>
+        /// Feminino
+        /// </summary>
+        [XmlEnum("F")]
+        Feminino = 2,
+    }
+    #endregion
+
+    #region Etnia e raça do trabalhador, conforme sua autoclassificação(art. 39, § 8º, da Lei 12.288/2010). - eSocial
+    /// <summary>
+    /// Etnia e raça do trabalhador, conforme sua autoclassificação(art. 39, § 8º, da Lei 12.288/2010).
+    /// </summary>
+    public enum RacaCor
+    {
+        /// <summary>
+        /// 1 - Branca
+        /// </summary>
+        [XmlEnum("1")]
+        Branca = 1,
+
+        /// <summary>
+        /// 2 - Preta
+        /// </summary>
+        [XmlEnum("2")]
+        Preta = 2,
+
+        /// <summary>
+        /// 3 - Parda
+        /// </summary>
+        [XmlEnum("3")]
+        Parda = 3,
+
+        /// <summary>
+        /// 4 - Amarela
+        /// </summary>
+        [XmlEnum("4")]
+        Amarela = 4,
+
+        /// <summary>
+        /// 5 - Indígena
+        /// </summary>
+        [XmlEnum("5")]
+        Indigena = 5,
+
+        /// <summary>
+        /// 6 - Não informado
+        /// </summary>
+        [XmlEnum("6")]
+        NaoInformado = 6
+    }
+    #endregion
+
+    #region Estado civil do trabalhador.
+
+    /// <summary>
+    /// Estado civil do trabalhador.
+    /// </summary>
+    public enum EstadoCivil
+    {
+        /// <summary>
+        /// 1 - Solteiro
+        /// </summary>
+        [XmlEnum("1")]
+        Solteiro = 1,
+
+        /// <summary>
+        /// 2 - Casado
+        /// </summary>
+        [XmlEnum("2")]
+        Casado = 2,
+
+        /// <summary>
+        /// 3 - Divorciado
+        /// </summary>
+        [XmlEnum("3")]
+        Divorciado = 3,
+
+        /// <summary>
+        /// 4 - Separado
+        /// </summary>
+        [XmlEnum("4")]
+        Separado = 4,
+
+        /// <summary>
+        /// 5 - Viúvo
+        /// </summary>
+        [XmlEnum("5")]
+        Viuvo = 5
+    }
+    #endregion
+
+    #region Grau de instrução do trabalhador. - eSocial
+
+    /// <summary>
+    /// Grau de instrução do trabalhador.
+    /// </summary>
+    public enum GrauDeInstrucao
+    {
+        /// <summary>
+        /// 01 - Analfabeto, inclusive o que, embora tenha recebido instrução, não se alfabetizou
+        /// </summary>
+        [XmlEnum("01")]
+        Analfabeto = 01,
+
+        /// <summary>
+        /// 2 - Até o 5º ano incompleto do ensino fundamental (antiga 4ª série) ou que se tenha alfabetizado sem ter frequentado escola regular
+        /// </summary>
+        [XmlEnum("02")]
+        QuintoAnoIncompleto = 02,
+
+        /// <summary>
+        /// 03 - 5º ano completo do ensino fundamental
+        /// </summary>
+        [XmlEnum("03")]
+        QuintoAnoCompleto = 03,
+
+        /// <summary>
+        /// 04 - Do 6º ao 9º ano do ensino fundamental incompleto (antiga 5ª a 8ª série)
+        /// </summary>
+        [XmlEnum("04")]
+        FundamentalIncompleto = 04,
+
+        /// <summary>
+        /// 05 - Ensino fundamental completo
+        /// </summary>
+        [XmlEnum("05")]
+        FundamentalCompleto = 05,
+
+        /// <summary>
+        /// 06 - Ensino médio incompleto
+        /// </summary>
+        [XmlEnum("06")]
+        EnsinoMedioIncompleto = 06,
+
+        /// <summary>
+        /// 07 - Ensino médio completo
+        /// </summary>
+        [XmlEnum("07")]
+        EnsinoMedioCompleto = 07,
+
+        /// <summary>
+        /// 08 - Educação superior incompleta
+        /// </summary>
+        [XmlEnum("08")]
+        EducacaoSuperiorIncompleta = 08,
+
+        /// <summary>
+        /// 09 - Educação superior completa
+        /// </summary>
+        [XmlEnum("09")]
+        EducacaoSuperiorCompleta = 09,
+
+        /// <summary>
+        /// 10 - Pós-graduação completa
+        /// </summary>
+        [XmlEnum("10")]
+        PosGraduacaoCompleta = 10,
+
+        /// <summary>
+        /// 11 - Mestrado completo
+        /// </summary>
+        [XmlEnum("11")]
+        MestradoCompleto = 11,
+
+        /// <summary>
+        /// 12 - Doutorado completo
+        /// </summary>
+        [XmlEnum("12")]
+        DoutoradoCompleto = 12
+    }
+    #endregion
+
+    #region Tempo de residência do trabalhador imigrante. - eSocial
+
+    /// <summary>
+    /// Tempo de residência do trabalhador imigrante.
+    /// </summary>
+    public enum TempoDeResidencia
+    {
+        /// <summary>
+        /// 1 - Prazo indeterminado
+        /// </summary>
+        [XmlEnum("1")]
+        PrazoIndeterminado = 1,
+
+        /// <summary>
+        /// 2 - Prazo determinado
+        /// </summary>
+        [XmlEnum("2")]
+        PrazoDeterminado = 2
+    }
+    #endregion
+
+    #region Condição de ingresso do trabalhador imigrante - eSocial
+
+    /// <summary>
+    /// Condição de ingresso do trabalhador imigrante
+    /// </summary>
+    public enum CondicaoIngressoTrabalhador
+    {
+        /// <summary>
+        /// 1 - Refugiado
+        /// </summary>
+        [XmlEnum("1")]
+        Refugiado = 1,
+
+        /// <summary>
+        /// 2 - Solicitante de refúgio
+        /// </summary>
+        [XmlEnum("2")]
+        SolicitanteDeRefugio = 2,
+
+        /// <summary>
+        /// 3 - Permanência no Brasil em razão de reunião familiar
+        /// </summary>
+        [XmlEnum("3")]
+        PermanenciaNoBrasilReuniaoFamiliar = 3,
+
+        /// <summary>
+        /// 4 - Beneficiado pelo acordo entre países do Mercosul
+        /// </summary>
+        [XmlEnum("4")]
+        BeneficiadoAcordoPaisesMercosul = 4,
+
+        /// <summary>
+        /// 5 - Dependente de agente diplomático e/ou consular de países que mantêm acordo de reciprocidade para o exercício de atividade remunerada no Brasil
+        /// </summary>
+        [XmlEnum("5")]
+        DependenteDeAgenteDiplomatico = 5,
+
+        /// <summary>
+        /// 6 - Beneficiado pelo Tratado de Amizade, Cooperação e Consulta entre a República Federativa do Brasil e a República Portuguesa
+        /// </summary>
+        [XmlEnum("6")]
+        BeneficiadoTratadoDeAmizade = 6,
+
+        /// <summary>
+        /// 7 - Outra condição
+        /// </summary>
+        [XmlEnum("7")]
+        OutraCondicao = 7,
+    }
+    #endregion
+
+    #region Tipo de acidente de trabalho. - eSocial.
+
+    /// <summary>
+    /// Tipo de acidente de trabalho.
+    /// </summary>
+    public enum TipoAcidenteTrabalho
+    {
+        /// <summary>
+        /// 1 - Típico
+        /// </summary>
+        [XmlEnum("1")]
+        Tipico = 1,
+
+        /// <summary>
+        /// 2 - Doença
+        /// </summary>
+        [XmlEnum("2")]
+        Doenca = 2,
+
+        /// <summary>
+        /// 3 - Trajeto
+        /// </summary>
+        [XmlEnum("3")]
+        Trajeto = 3
+    }
+    #endregion
+
+    #region Tipo de CAT. - eSocial.
+
+    /// <summary>
+    /// Tipo de CAT.
+    /// </summary>
+    public enum TipoDeCAT
+    {
+        /// <summary>
+        /// 1 - Inicial
+        /// </summary>
+        [XmlEnum("1")]
+        Inicial = 1,
+
+        /// <summary>
+        /// 2 - Reabertura
+        /// </summary>
+        [XmlEnum("2")]
+        Reabertura = 2,
+
+        /// <summary>
+        /// 3 - Comunicação de óbito
+        /// </summary>
+        [XmlEnum("3")]
+        ComunicacaoDeObito = 3
+    }
+    #endregion
+
+    #region Iniciativa da CAT. - eSocial.
+
+    /// <summary>
+    /// Iniciativa da CAT.
+    /// </summary>
+    public enum IniciativaDaCAT
+    {
+        /// <summary>
+        /// 1 - Empregador
+        /// </summary>
+        [XmlEnum("1")]
+        Empregador = 1,
+
+        /// <summary>
+        /// 2 - Ordem judicial
+        /// </summary>
+        [XmlEnum("2")]
+        OrdemJudicial = 2,
+
+        /// <summary>
+        /// 3 - Determinação de órgão fiscalizador
+        /// </summary>
+        [XmlEnum("3")]
+        DeterminacaoOrgaoFiscalizador = 3
+    }
+    #endregion
+
+    #region Tipo de local do acidente. - eSocial.
+
+    /// <summary>
+    /// Tipo de local do acident.
+    /// </summary>
+    public enum TipoLocalAcidente
+    {
+        /// <summary>
+        /// 1 - Estabelecimento do empregador no Brasil
+        /// </summary>
+        [XmlEnum("1")]
+        EstabelecimentoBrasil = 1,
+
+        /// <summary>
+        /// 2 - - Estabelecimento do empregador no exterior
+        /// </summary>
+        [XmlEnum("2")]
+        EstabelecimentoExterior = 2,
+
+        /// <summary>
+        /// 3 - Estabelecimento de terceiros onde o empregador presta serviços
+        /// </summary>
+        [XmlEnum("3")]
+        EstabelecimentoDeTerceiros = 3,
+
+        /// <summary>
+        /// 4 - Via pública
+        /// </summary>
+        [XmlEnum("4")]
+        ViaPublica = 4,
+
+        /// <summary>
+        /// 5 - Área rural
+        /// </summary>
+        [XmlEnum("5")]
+        AreaRural = 5,
+
+        /// <summary>
+        /// 6 - Embarcação
+        /// </summary>
+        [XmlEnum("6")]
+        Embarcacao = 6,
+
+        /// <summary>
+        /// 9 - Outros
+        /// </summary>
+        [XmlEnum("9")]
+        Outros = 9
+    }
+    #endregion
+
+    #region Lateralidade. - eSocial
+
+    /// <summary>
+    /// Lateralidade da(s) parte(s) atingida(s). Nos casos de órgãos bilaterais, ou seja, que se situam dos lados do corpo, assinalar o lado(direito ou esquerdo).
+    /// Ex.: Caso o órgão atingido seja perna, apontar qual foi a atingida(perna direita, perna esquerda ou ambas).
+    /// Se o órgão atingido é único(como, por exemplo, a cabeça), assinalar este campo como não aplicável.
+    /// </summary>
+    public enum Lateralidade
+    {
+        /// <summary>
+        /// 0 - Não aplicável
+        /// </summary>
+        [XmlEnum("0")]
+        NaoAplicavel = 0,
+
+        /// <summary>
+        /// 1 - Esquerda
+        /// </summary>
+        [XmlEnum("1")]
+        Esquerda = 1,
+
+        /// <summary>
+        /// 2 - Direita
+        /// </summary>
+        [XmlEnum("2")]
+        Direita = 2,
+
+        /// <summary>
+        /// 3 - Ambas
+        /// </summary>
+        [XmlEnum("3")]
+        Ambas = 3
+    }
+    #endregion
+
+    #region Médico/Dentista que emitiu o atestado. - eSocial
+
+    /// <summary>
+    /// Médico/Dentista que emitiu o atestado.
+    /// </summary>
+    public enum OrgaoDeClasseMedica
+    {
+        /// <summary>
+        /// 1 - Conselho Regional de Medicina - CRM
+        /// </summary>
+        [XmlEnum("1")]
+        CRM = 1,
+
+        /// <summary>
+        /// 2 - Conselho Regional de Odontologia - CRO
+        /// </summary>
+        [XmlEnum("2")]
+        CRO = 2,
+
+        /// <summary>
+        /// 3 - Registro do Ministério da Saúde - RMS
+        /// </summary>
+        [XmlEnum("3")]
+        RMS = 3
+    }
+    #endregion
+
+    #region Tipo de acidente de trânsito. - eSocial
+
+    /// <summary>
+    /// Tipo de acidente de trânsito.
+    /// </summary>
+    public enum TipoAcidenteTransito
+    {
+        /// <summary>
+        /// 1 - Atropelamento
+        /// </summary>
+        [XmlEnum("1")]
+        Atropelamento = 1,
+
+        /// <summary>
+        /// 2 - Colisão
+        /// </summary>
+        [XmlEnum("2")]
+        Colisao = 2,
+
+        /// <summary>
+        /// 3 - Outros
+        /// </summary>
+        [XmlEnum("3")]
+        Outros = 3
+    }
+    #endregion
+
+    #region InfOnus. - eSocial
+
+    /// <summary>
+    /// Ônus da cessão/requisição
+    /// </summary>
+    public enum InfOnus
+    {
+        /// <summary>
+        /// 1 - Ônus do cedente
+        /// </summary>
+        [XmlEnum("1")]
+        OnusDoCedente = 1,
+
+        /// <summary>
+        /// 2 - Ônus do cessionário
+        /// </summary>
+        [XmlEnum("2")]
+        OnusDoCessionario = 2,
+
+        /// <summary>
+        /// 3 - Ônus do cedente e cessionário
+        /// </summary>
+        [XmlEnum("3")]
+        OnusDoCedenteCessionario = 3
+    }
+    #endregion
+
+    #region infOnusRemun. - eSocial
+
+    /// <summary>
+    /// Ônus da remuneração
+    /// </summary>
+    public enum OnusDaRemuneracao
+    {
+        /// <summary>
+        /// 1 - Apenas do empregador
+        /// </summary>
+        [XmlEnum("1")]
+        ApenasEmpregador = 1,
+
+        /// <summary>
+        /// 2 - Apenas do sindicato
+        /// </summary>
+        [XmlEnum("2")]
+        ApenasSindicato = 2,
+
+        /// <summary>
+        /// 3 - - Parte do empregador, sendo a diferença e/ou complementação salarial paga pelo sindicato
+        /// </summary>
+        [XmlEnum("3")]
+        EmpregadorComplementacaoDoSindicato = 3
+    }
+    #endregion
+
+    #region Origem da retificação. - eSocial.
+
+    /// <summary>
+    /// Origem da retificação.
+    /// </summary>
+    public enum OrigemDaRetificacao
+    {
+        /// <summary>
+        /// 1 - Por iniciativa do empregador
+        /// </summary>
+        [XmlEnum("1")]
+        IniciativaDoEmpregador = 1,
+
+        /// <summary>
+        /// 2 - Revisão administrativa
+        /// </summary>
+        [XmlEnum("2")]
+        RevisaoAdministrativa = 2,
+
+        /// <summary>
+        /// 3 - Determinação judicial
+        /// </summary>
+        [XmlEnum("3")]
+        DeterminacaoJudicial = 3
+    }
+    #endregion
+
+    #region Tipo de regime trabalhista. - eSocial.
+
+    /// <summary>
+    /// Tipo de regime trabalhista.
+    /// </summary>
+    public enum TipoRegimeTrabalhista
+    {
+        /// <summary>
+        /// 1 - CLT - Consolidação das Leis de Trabalho e legislações trabalhistas específicas
+        /// </summary>
+        [XmlEnum("1")]
+        CLT = 1,
+
+        /// <summary>
+        /// 2 - Estatutário/legislações específicas (servidor temporário, militar, agente político, etc.)
+        /// </summary>
+        [XmlEnum("2")]
+        EstatutarioOuLegislacoesEspecificas = 2
+    }
+    #endregion
+
+    #region Tipo de regime previdenciário. - eSocial.
+
+    /// <summary>
+    /// Tipo de regime previdenciário (ou Sistema de Proteção Social dos Militares das Forças Armadas).
+    /// </summary>
+    public enum TipoRegimePrevidenciario
+    {
+        /// <summary>
+        /// 1 - Regime Geral de Previdência Social - RGPS
+        /// </summary>
+        [XmlEnum("1")]
+        RGPS = 1,
+
+        /// <summary>
+        /// 2 - Regime Próprio de Previdência Social - RPPS
+        /// </summary>
+        [XmlEnum("2")]
+        RPPS = 2,
+
+        /// <summary>
+        /// 3 - Regime de Previdência Social no exterior
+        /// </summary>
+        [XmlEnum("3")]
+        PrevidenciaSocialExterior = 3,
+
+        /// <summary>
+        /// 4 - Sistema de Proteção Social dos Militares das Forças Armadas - SPSMFA
+        /// </summary>
+        [XmlEnum("4")]
+        ProtecaoSocialDosMilitares = 4
+    }
+    #endregion
+
+    #region Tipo de admissão do trabalhador. - eSocial.
+
+    /// <summary>
+    /// Tipo de admissão do trabalhador.
+    /// </summary>
+    public enum TipoAdmissaoTrabalhador
+    {
+        /// <summary>
+        /// 1 - Admissão
+        /// </summary>
+        [XmlEnum("1")]
+        Admissao = 1,
+
+        /// <summary>
+        /// 2 - Transferência de empresa do mesmo grupo econômico ou transferência entre órgãos do mesmo Ente Federativo
+        /// </summary>
+        [XmlEnum("2")]
+        TransferenciaMesmoEnteFederativo = 2,
+
+        /// <summary>
+        /// 3 - Transferência de empresa consorciada ou de consórcio
+        /// </summary>
+        [XmlEnum("3")]
+        TransferenciaEmpresaConsorciada = 3,
+
+        /// <summary>
+        /// 4 - Transferência por motivo de sucessão, incorporação, cisão ou fusão
+        /// </summary>
+        [XmlEnum("4")]
+        TransferenciaSucessao = 4,
+
+        /// <summary>
+        /// 5 - Transferência do empregado doméstico para outro representante da mesma unidade familiar
+        /// </summary>
+        [XmlEnum("5")]
+        TransferenciaEmpregadoDomestico = 5,
+
+        /// <summary>
+        /// 6 - Mudança de CPF
+        /// </summary>
+        [XmlEnum("6")]
+        MudancaDeCPF = 6,
+
+        /// <summary>
+        /// 7 - Transferência quando a empresa sucedida é considerada inapta por inexistência de fato
+        /// </summary>
+        [XmlEnum("7")]
+        TransferenciaEmpresaInapta = 7
+    }
+    #endregion
+
+    #region Indicativo de admissão. - eSocial
+
+    /// <summary>
+    /// Indicativo de admissão.
+    /// </summary>
+    public enum IndicativoDeAdmissao
+    {
+        /// <summary>
+        /// 1 - Normal
+        /// </summary>
+        [XmlEnum("1")]
+        Normal = 1,
+
+        /// <summary>
+        /// 2 - Decorrente de ação fiscal
+        /// </summary>
+        [XmlEnum("2")]
+        AcaoFiscal = 2,
+
+        /// <summary>
+        /// 3 - Decorrente de decisão judicial
+        /// </summary>
+        [XmlEnum("3")]
+        DecisaoJudicial = 3
+    }
+    #endregion
+
+    #region Regime de jornada do empregado. - eSocial
+
+    /// <summary>
+    /// Indicativo de admissão.
+    /// </summary>
+    public enum RegimeJornadaEmpregado
+    {
+        /// <summary>
+        /// 1 - Submetido a horário de trabalho (Capítulo II do Título II da CLT)
+        /// </summary>
+        [XmlEnum("1")]
+        SubmetidoHorarioDeTrabalho = 1,
+
+        /// <summary>
+        /// 2 - Atividade externa especificada no inciso I do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("2")]
+        AtividadeExternaEspecificada = 2,
+
+        /// <summary>
+        /// 3 - Função especificada no inciso II do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("3")]
+        FuncaoEspecificada = 3,
+
+        /// <summary>
+        /// 4 - Teletrabalho, previsto no inciso III do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("4")]
+        Teletrabalho = 4
+    }
+    #endregion
+
+    #region hipLeg. - eSocial
+    /// <summary>
+    /// Hipótese legal para contratação de trabalhador temporário.
+    /// </summary>
+    public enum ContratacaoTrabalhadorTemporario
+    {
+        /// <summary>
+        /// 1 - Necessidade de substituição transitória de pessoal
+        /// </summary>
+        [XmlEnum("1")]
+        SubstituicaoTransitoriaDePessoal = 1,
+
+        /// <summary>
+        /// 2 - Demanda complementar de serviços
+        /// </summary>
+        [XmlEnum("2")]
+        DemandaComplementar = 2
+    }
+    #endregion
+
+
+    #region TpRegPrev
+    /// <summary>
+    /// Tipo de regime previdenciário (ou Sistema de Proteção
+    /// Social dos Militares das Forças Armadas).
+    /// Valores válidos:
+    /// 1 - Regime Geral de Previdência Social - RGPS
+    /// 2 - Regime Próprio de Previdência Social - RPPS
+    /// 3 - Regime de Previdência Social no exterior
+    /// 4 - Sistema de Proteção Social dos Militares das Forças Armadas - SPSMFA
+    /// Validação: Se codCateg = [104], deve ser preenchido com
+    /// [1]. Se codCateg = [101, 102, 103, 105, 106, 107, 108, 111],
+    /// não pode ser preenchido com[2, 4].
+    /// </summary>
+    public enum TpRegPrev
+    {
+        /// <summary>
+        /// 1 - Regime Geral de Previdência Social - RGPS
+        /// </summary>
+        [XmlEnum("1")]
+        RegimeGeral = 1,
+        /// <summary>
+        /// 2 - Regime Próprio de Previdência Social - RPPS
+        /// </summary>
+        [XmlEnum("2")]
+        RegimeProprio = 2,
+        /// <summary>
+        /// 3 - Regime de Previdência Social no exterior
+        /// </summary>
+        [XmlEnum("3")]
+        RegimeExterior = 3,
+        /// <summary>
+        /// 4 - Sistema de Proteção Social dos Militares das Forças Armadas - SPSMFA
+        /// </summary>
+        [XmlEnum("4")]
+        SPSMFA = 4
+    }
+    #endregion TpRegPrev
+
+    #region TpRegJor
+    /// <summary>
+    /// Regime de jornada do empregado.
+    /// Valores válidos:
+    /// 1 - Submetido a horário de trabalho(Capítulo II do Título II da CLT)
+    /// 2 - Atividade externa especificada no inciso I do art. 62 da CLT
+    /// 3 - Função especificada no inciso II do art. 62 da CLT
+    /// 4 - Teletrabalho, previsto no inciso III do art. 62 da CLT
+    /// </summary>
+    public enum TpRegJor
+    {
+        /// <summary>
+        /// 1 - Submetido a horário de trabalho(Capítulo II do Título II da CLT)
+        /// </summary>
+        [XmlEnum("1")]
+        SubmetidoAHorario = 1,
+        /// <summary>
+        /// 2 - Atividade externa especificada no inciso I do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("2")]
+        AtividadeExterna = 2,
+        /// <summary>
+        /// 3 - Função especificada no inciso II do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("3")]
+        FuncaoEspecificada = 3,
+        /// <summary>
+        /// 4 - Teletrabalho, previsto no inciso III do art. 62 da CLT
+        /// </summary>
+        [XmlEnum("4")]
+        Teletrabalho = 4,
+    }
+    #endregion TpRegJor
+
+    #region IndAprend
+    /// <summary>
+    /// Indicativo de modalidade de contratação de aprendiz.
+    /// Valores válidos:
+    /// 1 - Contratação direta: contratação do aprendiz efetivada
+    /// pelo estabelecimento cumpridor da cota de aprendizagem
+    /// 2 - Contratação indireta: contratação do aprendiz
+    /// efetivada por entidades sem fins lucrativos ou por
+    /// entidades de prática desportiva a serviço do
+    /// estabelecimento cumpridor da cota
+    /// </summary>
+    public enum IndAprend
+    {
+        /// <summary>
+        /// 1 - Contratação direta: contratação do aprendiz efetivada
+        /// pelo estabelecimento cumpridor da cota de aprendizagem
+        /// </summary>
+        [XmlEnum("1")]
+        ContratacaoDireta = 1,
+        /// <summary>
+        /// 2 - Contratação indireta: contratação do aprendiz
+        /// efetivada por entidades sem fins lucrativos ou por
+        /// entidades de prática desportiva a serviço do
+        /// estabelecimento cumpridor da cota
+        /// </summary>
+        [XmlEnum("2")]
+        ContratacaoIndireta = 2,
+    }
+    #endregion IndAprend
+
+    #region TpPlanRP
+    /// <summary>
+    /// Tipo de plano de segregação da massa.
+    /// Valores válidos:
+    /// 0 - Sem segregação da massa
+    /// 1 - Fundo em capitalização
+    /// 2 - Fundo em repartição
+    /// 3 - Mantido pelo Tesouro
+    /// </summary>
+    public enum TpPlanRP
+    {
+        /// <summary>
+        /// 0 - Sem segregação da massa
+        /// </summary>
+        [XmlEnum("0")]
+        SemSegregacao = 0,
+        /// <summary>
+        /// 1 - Fundo em capitalização
+        /// </summary>
+        [XmlEnum("1")]
+        FundoCapitalizacao = 1,
+        /// <summary>
+        /// 2 - Fundo em repartição
+        /// </summary>
+        [XmlEnum("2")]
+        FundoReparticao = 2,
+        /// <summary>
+        /// 3 - Mantido pelo Tesouro
+        /// </summary>
+        [XmlEnum("3")]
+        MantidoPeloTesouro = 3,
+    }
+    #endregion TpPlanRP
+
+    #region TpJornada
+
+    /// <summary>
+    /// Tipo de jornada.
+    /// Valores válidos:
+    /// 2 - Jornada 12 x 36 (12 horas de trabalho seguidas de 36
+    /// horas ininterruptas de descanso)
+    /// 3 - Jornada com horário diário fixo e folga variável
+    /// 4 - Jornada com horário diário fixo e folga fixa(no
+    /// domingo)
+    /// 5 - Jornada com horário diário fixo e folga fixa(exceto no
+    /// domingo)
+    /// 6 - Jornada com horário diário fixo e folga fixa(em outro
+    /// dia da semana), com folga adicional periódica no
+    /// domingo
+    /// 7 - Turno ininterrupto de revezamento
+    /// 9 - Demais tipos de jornada
+    /// </summary>
+    public enum TpJornada
+    {
+        /// <summary>
+        /// 2 - Jornada 12 x 36 (12 horas de trabalho seguidas de 36
+        /// horas ininterruptas de descanso)
+        /// </summary>
+        [XmlEnum("2")]
+        Jornada1236 = 2,
+        /// <summary>
+        /// 3 - Jornada com horário diário fixo e folga variável
+        /// </summary>
+        [XmlEnum("3")]
+        JornadaHorarioFixoFolgaVariavel = 3,
+        /// <summary>
+        /// 4 - Jornada com horário diário fixo e folga fixa(no
+        /// domingo)
+        /// </summary>
+        [XmlEnum("4")]
+        JornadaHorarioFixoFolgaFixaDomingo = 4,
+        /// <summary>
+        /// 5 - Jornada com horário diário fixo e folga fixa(exceto no
+        /// domingo)
+        /// </summary>
+        [XmlEnum("5")]
+        JornadaHorarioFixoFolgaFixaExcetoDomingo = 5,
+        /// <summary>
+        /// 6 - Jornada com horário diário fixo e folga fixa(em outro
+        /// dia da semana), com folga adicional periódica no
+        /// domingo
+        /// </summary>
+        [XmlEnum("6")]
+        JornadaHorarioFixoFolgaFixaDomingoPeriodico = 6,
+        /// <summary>
+        /// 7 - Turno ininterrupto de revezamento
+        /// </summary>
+        [XmlEnum("7")]
+        TurnoIninterruptoRevezamento = 7,
+        /// <summary>
+        /// 9 - Demais tipos de jornada
+        /// </summary>
+        [XmlEnum("9")]
+        DemaisTipos = 9,
+    }
+    #endregion TpJornada
+
+    #region TmpParc
+
+    /// <summary>
+    /// código relativo ao tipo de contrato em
+    /// tempo parcial.
+    /// Valores válidos:
+    /// 0 - Não é contrato em tempo parcial
+    /// 1 - Limitado a 25 horas semanais
+    /// 2 - Limitado a 30 horas semanais
+    /// 3 - Limitado a 26 horas semanais
+    /// </summary>
+    public enum TmpParc
+    {
+        /// <summary>
+        /// 0 - Não é contrato em tempo parcial
+        /// </summary>
+        [XmlEnum("0")]
+        NaoParcial = 0,
+        /// <summary>
+        /// 1 - Limitado a 25 horas semanais
+        /// </summary>
+        [XmlEnum("1")]
+        Limitado25horas = 1,
+        /// <summary>
+        /// 2 - Limitado a 30 horas semanais
+        /// </summary>
+        [XmlEnum("2")]
+        Limitado30horas = 2,
+        /// <summary>
+        /// 3 - Limitado a 26 horas semanais
+        /// </summary>
+        [XmlEnum("3")]
+        Limitado26horas = 3,
+    }
+    #endregion TmpParc
+
+    #region CodTreiCap
+    /// <summary>
+    /// Treinamentos, capacitações, exercícios simulados,
+    /// autorizações ou outras anotações que devam ser anotadas
+    /// no registro de empregados e/ou na CTPS, por
+    /// determinação de Norma Regulamentadora - NR.
+    /// </summary>
+    public enum CodTreiCap
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3701")]
+        TreinamentoAntesDoPrimeiroEmbarque = 3701,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3702")]
+        TreinamentoAntesDoPrimeiroEmbarqueReciclagem = 3702,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3703")]
+        TreinamentoEventual = 3703,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3704")]
+        TreinamentoBasico = 3704,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3705")]
+        TreinamentoBasicoReciclagem = 3705,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3706")]
+        TreinamentoAvancado = 3706,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3707")]
+        TreinamentoAvancadoReciclagem = 3707,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3708")]
+        TreinamentoEspecificoEmpregadoBrigadaDeIncendio = 3708,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3709")]
+        TreinamentoEspecificoRiscosRadiologicos = 3709,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3710")]
+        TreinamentoEspecificoEquipeDeEmergencias = 3710,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3711")]
+        TreinamentoSinaleiro = 3711,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3712")]
+        TreinamentoOperadorGuindasteReciclagem = 3712,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3713")]
+        TreinamentoManipuladorDeAlimentos = 3713,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3714")]
+        TreinamentoInstalacoesEletricasAltaTensao = 3714,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3715")]
+        TreinamentoMovimentacaoCargasTransportePessoas = 3715,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3716")]
+        TreinamentoOperadorGuindaste = 3716,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3717")]
+        TreinamentoOcupacionalmenteExpostosARadiacao = 3717,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3718")]
+        TreinamentoAcendimentoChamaPiloto = 3818,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("1006")]
+        AutorizacaoInstalacoesEletricas = 1006,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("1207")]
+        OperacaoRealizacaoIntervencaoEmMaquinas = 1207,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3719")]
+        OperadorEquipamentoGuindar = 3719,
+
+    }
+    #endregion CodTreiCap
+
+    #region indAprend. - eSocial
+
+    /// <summary>
+    /// Indicativo de modalidade de contratação de aprendiz.
+    /// </summary>
+    public enum IndicativoContratacaoAprendiz
+    {
+        /// <summary>
+        /// 1 - Contratação direta: contratação do aprendiz efetivada pelo estabelecimento cumpridor da cota de aprendizagem
+        /// </summary>
+        [XmlEnum("1")]
+        ContratacaoDireta = 1,
+
+        /// <summary>
+        /// 2 - Contratação indireta: contratação do aprendiz efetivada por entidades sem fins lucrativos ou por entidades de prática desportiva a serviço do estabelecimento cumpridor da cota
+        /// </summary>
+        [XmlEnum("2")]
+        ContratacaoIndireta = 2,
+    }
+
+    #endregion
+
+    #region tpProv. - eSocial
+
+    /// <summary>
+    /// Preencher com o tipo de provimento.
+    /// </summary>
+    public enum TipoProvimento
+    {
+        /// <summary>
+        /// 1 - Nomeação em cargo efetivo
+        /// </summary>
+        [XmlEnum("1")]
+        NomeacaoCargoEfetivo = 1,
+
+        /// <summary>
+        /// 2 - Nomeação exclusivamente em cargo em comissão
+        /// </summary>
+        [XmlEnum("2")]
+        NomeacaoExclusivamenteEmCargoEmComissao = 2,
+
+        /// <summary>
+        /// 3 - Incorporação ou matrícula (militar)
+        /// </summary>
+        [XmlEnum("3")]
+        IncorporacaoOuMatriculaMilitar = 3,
+
+        /// <summary>
+        /// 5 - Redistribuição ou Reforma Administrativa
+        /// </summary>
+        [XmlEnum("5")]
+        RedistribuicaoOuReformaAdministrativa = 5,
+
+        /// <summary>
+        /// 6 - Diplomação
+        /// </summary>
+        [XmlEnum("6")]
+        Diplomacao = 6,
+
+        /// <summary>
+        /// 7 - Contratação por tempo determinado
+        /// </summary>
+        [XmlEnum("7")]
+        ContratacaoTempoDeterminado = 7,
+
+        /// <summary>
+        /// 8 - Remoção (em caso de alteração do órgão declarante)
+        /// </summary>
+        [XmlEnum("8")]
+        Remocao = 8,
+
+        /// <summary>
+        /// 9 - Designação
+        /// </summary>
+        [XmlEnum("9")]
+        Designacao = 9,
+
+        /// <summary>
+        /// 10 - Mudança de CPF
+        /// </summary>
+        [XmlEnum("10")]
+        MudancaDeCPF = 10,
+
+        /// <summary>
+        /// 11 - Estabilizados - Art. 19 do ADCT
+        /// </summary>
+        [XmlEnum("11")]
+        Estabilizados = 11,
+
+        /// <summary>
+        /// 99 - Outros não relacionados acima
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99
+    }
+
+    #endregion
+
+    #region tpPlanRP. - eSocial
+
+    /// <summary>
+    /// Tipo de plano de segregação da massa.
+    /// </summary>
+    public enum PlanoSegregacaoDaMassa
+    {
+        /// <summary>
+        /// 0 - Sem segregação da massa
+        /// </summary>
+        [XmlEnum("0")]
+        SemSegregacao = 0,
+
+        /// <summary>
+        /// 1 - Fundo em capitalização
+        /// </summary>
+        [XmlEnum("1")]
+        FundoEmCapitalizacao = 1,
+
+        /// <summary>
+        /// 2 - Fundo em repartição
+        /// </summary>
+        [XmlEnum("2")]
+        FundoEmReparticao = 2,
+
+        /// <summary>
+        /// 3 - Mantido pelo Tesouro
+        /// </summary>
+        [XmlEnum("3")]
+        MantidoPeloTesouro = 3
+    }
+
+    #endregion
+
+    #region tpExameOcup - eSocial.
+
+    /// <summary>
+    /// Abrangência da decisão.
+    /// </summary>
+    public enum TpExameOcup
+    {
+        /// <summary>
+        /// 0 - Exame médico admissional
+        /// </summary>
+        [XmlEnum("0")]
+        ExameAdmissional = 0,
+
+        /// <summary>
+        /// 1 - Exame médico periódico, conforme Norma Regulamentadora 07 - NR-07 e/ou planejamento do Programa de Controle Médico de Saúde Ocupacional - PCMSO
+        /// </summary>
+        [XmlEnum("1")]
+        PCMSO = 1,
+
+        /// <summary>
+        /// 2 - Exame médico de retorno ao trabalho
+        /// </summary>
+        [XmlEnum("2")]
+        ExameDeRetornoAoTrabalho = 2,
+
+        /// <summary>
+        /// 3 - Exame médico de mudança de função ou de mudança de risco ocupacional
+        /// </summary>
+        [XmlEnum("3")]
+        ExameMudancaDeFuncao = 3,
+
+        /// <summary>
+        /// 4 - Exame médico de monitoração pontual, não enquadrado nos demais casos
+        /// </summary>
+        [XmlEnum("4")]
+        ExameMonitoracaoPontual = 4,
+
+        /// <summary>
+        /// 9 - Exame médico demissional
+        /// </summary>
+        [XmlEnum("9")]
+        ExameDemissional = 9
+
+    }
+    #endregion
+
+    #region ResAso. - eSocial
+
+    /// <summary>
+    /// Resultado do ASO.
+    /// </summary>
+    public enum ResAso
+    {
+        /// <summary>
+        /// 1 - Apto
+        /// </summary>
+        [XmlEnum("1")]
+        Apto = 1,
+
+        /// <summary>
+        /// 2 - Inapto
+        /// </summary>
+        [XmlEnum("2")]
+        Inapto = 2
+    }
+
+    #endregion
+
+    #region ordExame. - eSocial
+
+    /// <summary>
+    /// Ordem do exame.
+    /// </summary>
+    public enum OrdExame
+    {
+        /// <summary>
+        /// 1 - Inicial
+        /// </summary>
+        [XmlEnum("1")]
+        Inicial = 1,
+
+        /// <summary>
+        /// 2 - Sequencial
+        /// </summary>
+        [XmlEnum("2")]
+        Sequencial = 2
+    }
+
+    #endregion
+
+    #region indResult. - eSocial
+
+    /// <summary>
+    /// Indicação dos resultados.
+    /// </summary>
+    public enum IndResult
+    {
+        /// <summary>
+        /// 1 - Normal
+        /// </summary>
+        [XmlEnum("1")]
+        Normal = 1,
+
+        /// <summary>
+        /// 2 - Alterado
+        /// </summary>
+        [XmlEnum("2")]
+        Alterado = 2,
+
+        /// <summary>
+        /// 3 - Estável
+        /// </summary>
+        [XmlEnum("3")]
+        EstAvel = 3,
+
+        /// <summary>
+        /// 4 - Agravamento
+        /// </summary>
+        [XmlEnum("4")]
+        Agravamento = 4
+    }
+
+    #endregion
+
+    #region localAmb. - eSocial
+
+    /// <summary>
+    /// Informar o tipo de estabelecimento do ambiente de trabalho.
+    /// </summary>
+    public enum LocalAmb
+    {
+        /// <summary>
+        /// 1 - Estabelecimento do próprio empregador
+        /// </summary>
+        [XmlEnum("1")]
+        EstabelecimentoProprioEmpregador = 1,
+
+        /// <summary>
+        /// 2 - Estabelecimento de terceiros
+        /// </summary>
+        [XmlEnum("2")]
+        EstabelecimentoDeTerceiros = 2
+    }
+
+    #endregion
+
+    #region tpAval. - eSocial
+
+    /// <summary>
+    /// Tipo de avaliação do agente nocivo. 
+    /// </summary>
+    public enum TpAval
+    {
+        /// <summary>
+        /// 1 - Critério quantitativo 
+        /// </summary>
+        [XmlEnum("1")]
+        CriterioQuantitativo = 1,
+
+        /// <summary>
+        /// 2 - Critério qualitativo 
+        /// </summary>
+        [XmlEnum("2")]
+        CriterioQualitativo = 2
+    }
+
+    #endregion
+
+    #region unMed. - eSocial
+
+    /// <summary>
+    /// Dose ou unidade de medida da intensidade ou concentração do agente. 
+    /// </summary>
+    public enum UnMed
+    {
+        /// <summary>
+        /// 1 - dose diária de ruído 
+        /// </summary>
+        [XmlEnum("1")]
+        DoseDiariaDeRuido = 1,
+
+        /// <summary>
+        /// 2 - decibel linear (dB (linear)) 
+        /// </summary>
+        [XmlEnum("2")]
+        DecibelLinear = 2,
+
+        /// <summary>
+        /// 3 - decibel (C) (dB(C)) 
+        /// </summary>
+        [XmlEnum("3")]
+        DecibelC = 3,
+
+        /// <summary>
+        /// 4 - decibel (A) (dB(A)) 
+        /// </summary>
+        [XmlEnum("4")]
+        DecibelA = 4,
+
+        /// <summary>
+        /// 5 - metro por segundo ao quadrado (m/s²)
+        /// </summary>
+        [XmlEnum("5")]
+        MetroPorSegundoAoQuadrado = 5,
+
+        /// <summary>
+        /// 6 - metro por segundo elevado a 1,75 (m/s1,75)
+        /// </summary>
+        [XmlEnum("6")]
+        MetroPorSegundoElevado175 = 6,
+
+        /// <summary>
+        /// 7 - parte de vapor ou gás por milhão de partes de ar contaminado (ppm)
+        /// </summary>
+        [XmlEnum("7")]
+        Ppm = 7,
+
+        /// <summary>
+        /// 8 - miligrama por metro cúbico de ar (mg/m3)
+        /// </summary>
+        [XmlEnum("8")]
+        MiligramaPorMetroCubicoDeAr = 8,
+
+        /// <summary>
+        /// 9 - fibra por centímetro cúbico (f/cm3) 
+        /// </summary>
+        [XmlEnum("9")]
+        FibraPorCentrimetroCubico = 9,
+
+        /// <summary>
+        /// 10 - grau Celsius (ºC) 
+        /// </summary>
+        [XmlEnum("10")]
+        GrauCelsius = 10,
+
+        /// <summary>
+        /// 11 - metro por segundo (m/s) 
+        /// </summary>
+        [XmlEnum("11")]
+        MetroPorSegundo = 11,
+
+        /// <summary>
+        /// 12 - porcentual
+        /// </summary>
+        [XmlEnum("12")]
+        Porcentual = 12,
+
+        /// <summary>
+        /// 13 - lux (lx)  
+        /// </summary>
+        [XmlEnum("13")]
+        Lux = 13,
+
+        /// <summary>
+        /// 14 - unidade formadora de colônias por metro cúbico (ufc/m3)
+        /// </summary>
+        [XmlEnum("14")]
+        UFCM3 = 14,
+
+        /// <summary>
+        /// 15 - dose diária 
+        /// </summary>
+        [XmlEnum("15")]
+        DoseDiaria = 15,
+
+        /// <summary>
+        /// 16 - dose mensal
+        /// </summary>
+        [XmlEnum("16")]
+        DoseMensal = 16,
+
+        /// <summary>
+        /// 17 - dose trimestral
+        /// </summary>
+        [XmlEnum("17")]
+        DoseTrimestral = 17,
+
+        /// <summary>
+        /// 18 - dose anual
+        /// </summary>
+        [XmlEnum("18")]
+        DoseAnual = 18,
+
+        /// <summary>
+        /// 19 - watt por metro quadrado (W/m2)
+        /// </summary>
+        [XmlEnum("19")]
+        WattPorMetroQuadrado = 19,
+
+        /// <summary>
+        /// 20 - ampère por metro (A/m) 
+        /// </summary>
+        [XmlEnum("20")]
+        AmperePorMetro = 20,
+
+        /// <summary>
+        /// 21 - militesla (mT) 
+        /// </summary>
+        [XmlEnum("21")]
+        Militesla = 21,
+
+        /// <summary>
+        /// 22 - microtesla (μT) 
+        /// </summary>
+        [XmlEnum("22")]
+        MicroTesla = 22,
+
+        /// <summary>
+        /// 23 - miliampère (mA) 
+        /// </summary>
+        [XmlEnum("23")]
+        Miliampere = 23,
+
+        /// <summary>
+        /// 24 - quilovolt por metro (kV/m)  
+        /// </summary>
+        [XmlEnum("24")]
+        QuilovoltPorMetro = 24,
+
+        /// <summary>
+        /// 25 - volt por metro (V/m) 
+        /// </summary>
+        [XmlEnum("25")]
+        VoltPorMetro = 25,
+
+        /// <summary>
+        /// 26 - joule por metro quadrado (J/m2) 
+        /// </summary>
+        [XmlEnum("26")]
+        JoulePorMetroQuadrado = 26,
+
+        /// <summary>
+        /// 27 - milijoule por centímetro quadrado (mJ/cm2) 
+        /// </summary>
+        [XmlEnum("27")]
+        MilijoulePorCentimetroQuadrado = 27,
+
+        /// <summary>
+        /// 28 - milisievert (mSv) 
+        /// </summary>
+        [XmlEnum("28")]
+        Milisievert = 28,
+
+        /// <summary>
+        /// 29 - milhão de partículas por decímetro cúbico (mppdc)
+        /// </summary>
+        [XmlEnum("29")]
+        Mppdc = 29,
+
+        /// <summary>
+        /// 30 - umidade relativa do ar (UR (%))
+        /// </summary>
+        [XmlEnum("30")]
+        UmidadeRelativaDoAr = 30
+    }
+
+    #endregion
+
+    #region utilizEPC - eSocial
+
+    /// <summary>
+    /// O empregador implementa medidas de proteção coletiva (EPC) para eliminar ou reduzir a exposição dos trabalhadores ao agente nocivo?
+    /// </summary>
+    public enum UtilizEPC
+    {
+        /// <summary>
+        /// 0 - Não se aplica
+        /// </summary>
+        [XmlEnum("0")]
+        NaoSeAplica = 0,
+
+        /// <summary>
+        /// 1 - Não implementa
+        /// </summary>
+        [XmlEnum("1")]
+        NaoImplementa = 1,
+
+        /// <summary>
+        /// 2 - Implementa
+        /// </summary>
+        [XmlEnum("2")]
+        Implementa = 2
+    }
+
+    #endregion
+
+    #region utilizEPI - eSocial
+
+    /// <summary>
+    /// Utilização de EPI.
+    /// </summary>
+    public enum UtilizEPI
+    {
+        /// <summary>
+        /// 0 - Não se aplica
+        /// </summary>
+        [XmlEnum("0")]
+        NaoSeAplica = 0,
+
+        /// <summary>
+        /// 1 - Não utilizado
+        /// </summary>
+        [XmlEnum("1")]
+        NaoUtilizado = 1,
+
+        /// <summary>
+        /// 2 - Utilizado
+        /// </summary>
+        [XmlEnum("2")]
+        Utilizado = 2
+    }
+
+    #endregion
+
+    #region ideOC - eSocial
+
+    /// <summary>
+    /// Órgão de classe ao qual o responsável pelos registros ambientais está vinculado.
+    /// </summary>
+    public enum IdeOc
+    {
+        /// <summary>
+        /// 1 - Conselho Regional de Medicina - CRM
+        /// </summary>
+        [XmlEnum("1")]
+        CRM = 1,
+
+        /// <summary>
+        /// 4 - Conselho Regional de Engenharia e Agronomia - CREA
+        /// </summary>
+        [XmlEnum("4")]
+        CREA = 4,
+
+        /// <summary>
+        /// 9 - Outros
+        /// </summary>
+        [XmlEnum("9")]
+        Outros = 9
+    }
+
+    #endregion
+
+    #region tpReint - eSocial
+
+    /// <summary>
+    /// Tipo de reintegração/outro provimento.
+    /// </summary>
+    public enum TpReint
+    {
+        /// <summary>
+        /// 1 - Reintegração por decisão judicial
+        /// </summary>
+        [XmlEnum("1")]
+        DecisaoJudicial = 1,
+
+        /// <summary>
+        /// 2 - Reintegração por anistia legal
+        /// </summary>
+        [XmlEnum("2")]
+        AnistiaLegal = 2,
+
+        /// <summary>
+        /// 3 - Reversão de servidor público
+        /// </summary>
+        [XmlEnum("3")]
+        ReversaoDeServidorPublico = 3,
+
+        /// <summary>
+        /// 4 - Recondução de servidor público
+        /// </summary>
+        [XmlEnum("4")]
+        ReconducaoDeServidorPublico = 4,
+
+        /// <summary>
+        /// 5 - Reinclusão de militar
+        /// </summary>
+        [XmlEnum("5")]
+        ReinclusaoDeMilitar = 5,
+
+        /// <summary>
+        /// 6 - Revisão de reforma de militar
+        /// </summary>
+        [XmlEnum("6")]
+        RevisaoDeReformaDeMilitar = 6,
+
+        /// <summary>
+        /// 9 - Outros
+        /// </summary>
+        [XmlEnum("9")]
+        Outros = 9
+    }
+
+    #endregion
+
+    #region pensAlim - eSocial
+
+    /// <summary>
+    /// Indicativo de pensão alimentícia para fins de retenção de FGTS.
+    /// </summary>
+    public enum PensAlim
+    {
+        /// <summary>
+        /// 0 - Não existe pensão alimentícia
+        /// </summary>
+        [XmlEnum("0")]
+        NaoExistePensaoAlimenticia = 0,
+
+        /// <summary>
+        /// 1 - Percentual de pensão alimentícia
+        /// </summary>
+        [XmlEnum("1")]
+        PercentualDePensaoAlimenticia = 1,
+
+        /// <summary>
+        /// 2 - Valor de pensão alimentícia
+        /// </summary>
+        [XmlEnum("2")]
+        ValorDePensaoAlimenticia = 2,
+
+        /// <summary>
+        /// 3 - Percentual e valor de pensão alimentícia
+        /// </summary>
+        [XmlEnum("3")]
+        PercentualValorDePensaoAlimenticia = 3
+    }
+
+    #endregion
+
+    #region indRemun - eSocial
+
+    /// <summary>
+    /// Indicativo de situação de remuneração após o desligamento.
+    /// </summary>
+    public enum IndRemun
+    {
+        /// <summary>
+        /// 1 - Quarentena
+        /// </summary>
+        [XmlEnum("1")]
+        Quarentena = 1,
+
+        /// <summary>
+        /// 2 - Desligamento reconhecido judicialmente com data anterior a competências com remunerações já informadas no eSocial
+        /// </summary>
+        [XmlEnum("2")]
+        Desligamento = 2,
+
+        /// <summary>
+        /// 3 - Aposentadoria de servidor com data anterior a competências com remunerações já informadas no eSocial
+        /// </summary>
+        [XmlEnum("3")]
+        Aposentadoria = 3
+    }
+
+    #endregion
+
+    #region natEstagio - eSocial
+
+    /// <summary>
+    /// Natureza do estágio ou da prestação de serviço civil voluntário.
+    /// </summary>
+    public enum NatEstagio
+    {
+        /// <summary>
+        /// Obrigatorio (O OU 0) 
+        /// </summary>
+        [XmlEnum("O")]
+        Obrigatorio = 0,
+
+        /// <summary>
+        /// Não obrigatório (N OU 1)
+        /// </summary>
+        [XmlEnum("N")]
+        NaoObrigatorio = 1
+    }
+
+    #endregion
+
+    #region nivEstagio - eSocial
+
+    /// <summary>
+    /// Informar o nível do estágio ou da prestação de serviço civil voluntário.
+    /// </summary>
+    public enum NivEstagio
+    {
+        /// <summary>
+        /// 1 - Fundamental
+        /// </summary>
+        [XmlEnum("1")]
+        Fundamental = 1,
+
+        /// <summary>
+        /// 2 - Médio
+        /// </summary>
+        [XmlEnum("2")]
+        Medio = 2,
+
+        /// <summary>
+        /// 3 - Formação profissional
+        /// </summary>
+        [XmlEnum("3")]
+        FormacaoProfissional = 3,
+
+        /// <summary>
+        /// 4 - Superior
+        /// </summary>
+        [XmlEnum("4")]
+        Superior = 4,
+
+        /// <summary>
+        /// 8 - Especial
+        /// </summary>
+        [XmlEnum("8")]
+        Especial = 8,
+
+        /// <summary>
+        /// 9 - Mãe social (Lei 7.644/1987)
+        /// </summary>
+        [XmlEnum("9")]
+        MaeSocial = 9
+    }
+
+    #endregion
+
+    #region indSitBenef - eSocial
+
+    /// <summary>
+    /// Indicar a situação do benefício no órgão declarante.
+    /// </summary>
+    public enum IndSitBenef
+    {
+        /// <summary>
+        /// 1 - Benefício concedido pelo próprio órgão declarante
+        /// </summary>
+        [XmlEnum("1")]
+        ConcedidoPeloOrgaoDeclarante = 1,
+
+        /// <summary>
+        /// 2 - Benefício transferido de outro órgão
+        /// </summary>
+        [XmlEnum("2")]
+        TransferidoDeOutroOrgao = 2,
+
+        /// <summary>
+        /// 3 - Mudança de CPF do beneficiário
+        /// </summary>
+        [XmlEnum("3")]
+        MudancaDeCPF = 3
+    }
+
+    #endregion
+
+    #region tpPenMorte - eSocial
+
+    /// <summary>
+    /// Informações relativas à pensão por morte.
+    /// </summary>
+    public enum TpPenMorte
+    {
+        /// <summary>
+        /// 1 - Vitalícia
+        /// </summary>
+        [XmlEnum("1")]
+        Vitalicia = 1,
+
+        /// <summary>
+        /// 2 - Temporária
+        /// </summary>
+        [XmlEnum("2")]
+        Temporaria = 2
+    }
+
+    #endregion
+
+    #region mtvSuspensao - eSocial
+
+    /// <summary>
+    /// Motivo da suspensão do benefício.
+    /// </summary>
+    public enum MtvSuspensao
+    {
+        /// <summary>
+        /// 01 - Suspensão por não recadastramento
+        /// </summary>
+        [XmlEnum("01")]
+        SuspensaoPorNaoRecadastramento = 01,
+
+        /// <summary>
+        /// 99 - Outros motivos de suspensão
+        /// </summary>
+        [XmlEnum("99")]
+        OutrosMotivos = 99
+    }
+
+    #endregion
+
+    #region origem - eSocial
+
+    /// <summary>
+    /// Informar a origem do processo/demanda.
+    /// </summary>
+    public enum Origem
+    {
+        /// <summary>
+        /// 1 - Processo judicial
+        /// </summary>
+        [XmlEnum("1")]
+        ProcessoJudicial = 1,
+
+        /// <summary>
+        /// 2 - Demanda submetida à CCP ou ao NINTER
+        /// </summary>
+        [XmlEnum("2")]
+        DemandaSubmetida = 2
+    }
+
+    #endregion
+
+    #region tpCCP - eSocial
+
+    /// <summary>
+    /// Indicar o âmbito de celebração do acordo.
+    /// </summary>
+    public enum TpCCP
+    {
+        /// <summary>
+        /// 1 - CCP no âmbito de empresa
+        /// </summary>
+        [XmlEnum("1")]
+        CCPAmbitoEmpresa = 1,
+
+        /// <summary>
+        /// 2 - CCP no âmbito de sindicato
+        /// </summary>
+        [XmlEnum("2")]
+        CCPAmbitoSindicato = 2,
+
+        /// <summary>
+        /// 3 - NINTER
+        /// </summary>
+        [XmlEnum("3")]
+        NINTER = 3
+    }
+
+    #endregion
+
+    #region tpContr - eSocial
+
+    /// <summary>
+    /// Tipo de contrato a que se refere o processo judicial ou a demanda submetida à CCP ou ao NINTER.
+    /// </summary>
+    public enum TpContr
+    {
+        /// <summary>
+        /// 1 - Trabalhador com vínculo formalizado, sem alteração nas datas de admissão e de desligamento
+        /// </summary>
+        [XmlEnum("1")]
+        TrabalhadorComVinculoFormalizadoSemAlteracao = 1,
+
+        /// <summary>
+        /// 2 - Trabalhador com vínculo formalizado, com alteração na data de admissão
+        /// </summary>
+        [XmlEnum("2")]
+        TrabalhadorComVinculoFormalizadoAlteracaoDataAdmissao = 2,
+
+        /// <summary>
+        /// 3 - Trabalhador com vínculo formalizado, com inclusão ou alteração de data de desligamento
+        /// </summary>
+        [XmlEnum("3")]
+        TrabalhadorComVinculoFormalizadoAlteracaoDataDesligamento = 3,
+
+        /// <summary>
+        /// 4 - Trabalhador com vínculo formalizado, com alteração na data de admissão e inclusão ou alteração de data de desligamento
+        /// </summary>
+        [XmlEnum("4")]
+        TrabalhadorComVinculoFormalizadoAlteracaoAdmissaoEDesligamento = 4,
+
+        /// <summary>
+        /// 5 - Empregado com reconhecimento de vínculo
+        /// </summary>
+        [XmlEnum("5")]
+        EmpregadoComReconhecimentoDeVinculo = 5,
+
+        /// <summary>
+        /// 6 - Trabalhador sem vínculo de emprego/estatutário (TSVE), sem reconhecimento de vínculo empregatício
+        /// </summary>
+        [XmlEnum("6")]
+        TrabalhadorSemVinculoEmpregoEstatutario = 6,
+
+        /// <summary>
+        /// 7 - Trabalhador com vínculo de emprego formalizado em período anterior ao eSocial
+        /// </summary>
+        [XmlEnum("7")]
+        TrabalhadorComVinculoEmpregoFormalizadoPreESocial = 7,
+
+        /// <summary>
+        /// 8 - Responsabilidade indireta
+        /// </summary>
+        [XmlEnum("8")]
+        ResponsabilidadeIndireta = 8,
+
+        /// <summary>
+        /// 9 - Trabalhador cujos contratos foram unificados (unicidade contratual)
+        /// </summary>
+        [XmlEnum("9")]
+        TrabalhadorComContratosUnificados = 9
+    }
+
+    #endregion
+
+    #region mtvDesligTSV - eSocial
+
+    /// <summary>
+    /// Motivo do término do diretor não empregado, com FGTS.
+    /// </summary>
+    public enum MtvDesligTSV
+    {
+        /// <summary>
+        /// 01 - Exoneração do diretor não empregado sem justa causa, por deliberação da assembleia, dos sócios cotistas ou da autoridade competente
+        /// </summary>
+        [XmlEnum("01")]
+        ExoneracaoDiretorNaoEmpregadoSemJustaCausa = 01,
+
+        /// <summary>
+        /// 02 - Término de mandato do diretor não empregado que não tenha sido reconduzido ao cargo
+        /// </summary>
+        [XmlEnum("02")]
+        TerminoMandatoDiretorNaoEmpregado = 02,
+
+        /// <summary>
+        /// 03 - Exoneração a pedido de diretor não empregado
+        /// </summary>
+        [XmlEnum("03")]
+        ExoneracaoPedidoDiretorNaoEmpregado = 03,
+
+        /// <summary>
+        /// 04 - Exoneração do diretor não empregado por culpa recíproca ou força maior
+        /// </summary>
+        [XmlEnum("04")]
+        ExoneracaoDiretorNaoEmpregadoCulpaReciproca = 04,
+
+        /// <summary>
+        /// 05 - Morte do diretor não empregado
+        /// </summary>
+        [XmlEnum("05")]
+        MorteDiretorNaoEmpregado = 05,
+
+        /// <summary>
+        /// 06 - Exoneração do diretor não empregado por falência, encerramento ou supressão de parte da empresa
+        /// </summary>
+        [XmlEnum("06")]
+        ExoneracaoDiretorNaoEmpregadoFalencia = 06,
+
+        /// <summary>
+        /// 99 - Outros
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99
+    }
+
+    #endregion
+
+    #region indReperc - eSocial
+
+    /// <summary>
+    /// Indicativo de repercussão do processo trabalhista ou de demanda submetida à CCP ou ao NINTER.
+    /// </summary>
+    public enum IndReperc
+    {
+        /// <summary>
+        /// 1 - Decisão com repercussão tributária e/ou FGTS
+        /// </summary>
+        [XmlEnum("1")]
+        DecisaoComRepercussaoTributariaFgts = 1,
+
+        /// <summary>
+        /// 2 - Decisão sem repercussão tributária ou FGTS
+        /// </summary>
+        [XmlEnum("2")]
+        DecisaoSemRepercussaoTributariaFgts = 2,
+
+        /// <summary>
+        /// 3 - Decisão com repercussão exclusiva para declaração de rendimentos para fins de Imposto de Renda
+        /// </summary>
+        [XmlEnum("3")]
+        DecisaoRepercussaoDeclaracaoRendimentosIR = 3
+    }
+
+    #endregion
+
+    #region MtvTermino
+    /// <summary>
+    /// Motivo da cessação do benefício.
+    /// </summary>
+    public enum MtvTermino
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("01")]
+        Obito = 01,
+        /// <summary>
+        /// Reversão
+        /// </summary>
+        [XmlEnum("02")]
+        Reversao = 02,
+        /// <summary>
+        /// Por decisão judicial
+        /// </summary>
+        [XmlEnum("03")]
+        DecisaoJudicial = 03,
+        /// <summary>
+        /// Cassação
+        /// </summary>
+        [XmlEnum("04")]
+        Cassacao = 04,
+        /// <summary>
+        /// Término do prazo do benefício
+        /// </summary>
+        [XmlEnum("05")]
+        TerminoPrazoDoBeneficio = 05,
+        /// <summary>
+        /// Extinção de quota
+        /// </summary>
+        [XmlEnum("06")]
+        ExtincaoDeQuota = 06,
+        /// <summary>
+        /// Não homologado pelo Tribunal de Contas
+        /// </summary>
+        [XmlEnum("07")]
+        NaoHomologadoPeloTribunalDeContas = 07,
+        /// <summary>
+        /// Renúncia expressa
+        /// </summary>
+        [XmlEnum("08")]
+        RenunciaExpressa = 08,
+        /// <summary>
+        /// Transferência de órgão administrador
+        /// </summary>
+        [XmlEnum("09")]
+        TransfDeOrgaoAdministrador = 09,
+        /// <summary>
+        /// Mudança de CPF do beneficiário
+        /// </summary>
+        [XmlEnum("10")]
+        MudancaDeCPF = 10,
+        /// <summary>
+        /// Não recadastramento
+        /// </summary>
+        [XmlEnum("11")]
+        NaoRecadastramento = 11,
+        /// <summary>
+        /// Revisão de reforma de militar
+        /// </summary>
+        [XmlEnum("12")]
+        RevisaoDeReformaDeMilitar = 12,
+
+    }
+    #endregion MtvTermino
+
+    #region tpCR - eSocial
+    /// <summary>
+    /// Código de Receita - CR relativo ao Imposto de Renda Retido na Fonte sobre rendimentos do trabalho.
+    /// </summary>
+    public enum TpCR
+    {
+        /// <summary>
+        /// 056107 - IRRF mensal, 13° salário e férias sobre trabalho assalariado no país ou ausente no exterior a serviço do país, exceto se contratado por empregador doméstico ou por segurado especial sujeito a recolhimento unificado
+        /// </summary>
+        [XmlEnum("056107")]
+        IrrfMensalDecimoTerceiroFeriasAssalariado = 056107,
+
+        /// <summary>
+        /// 056108 - IRRF mensal e férias - Empregado doméstico
+        /// </summary>
+        [XmlEnum("056108")]
+        IrrfMensalFeriasEmpregadoDomestico = 056108,
+
+        /// <summary>
+        /// 056109 - IRRF 13° salário na rescisão de contrato de trabalho - Empregado doméstico
+        /// </summary>
+        [XmlEnum("056109")]
+        IrrfDecimoTerceiroRescisaoEmpregadoDomestico = 056109,
+
+        /// <summary>
+        /// 056110 - IRRF - Empregado doméstico 13º salário
+        /// </summary>
+        [XmlEnum("056110")]
+        IrrfDecimoTerceiroEmpregadoDomestico = 056110,
+
+        /// <summary>
+        /// 056111 - IRRF - Empregado/Trabalhador rural - Segurado especial
+        /// </summary>
+        [XmlEnum("056111")]
+        IrrfEmpregadoTrabalhadorRuralSeguradoEspecial = 056111,
+
+        /// <summary>
+        /// 056112 - IRRF - Empregado/Trabalhador rural - Segurado especial 13° salário
+        /// </summary>
+        [XmlEnum("056112")]
+        IrrfDecimoTerceiroEmpregadoTrabalhadorRuralSeguradoEspecial = 056112,
+
+        /// <summary>
+        /// 056113 - IRRF - Empregado/Trabalhador rural - Segurado especial 13° salário rescisório
+        /// </summary>
+        [XmlEnum("056113")]
+        IrrfDecimoTerceiroRescisorioEmpregadoTrabalhadorRuralSeguradoEspecial = 056113,
+
+        /// <summary>
+        /// 058806 - IRRF sobre rendimento do trabalho sem vínculo empregatício
+        /// </summary>
+        [XmlEnum("058806")]
+        IrrfRendimentoTrabalhoSemVinculoEmpregaticio = 058806,
+
+        /// <summary>
+        /// 061001 - IRRF sobre rendimentos relativos a prestação de serviços de transporte rodoviário internacional de carga, pagos a transportador autônomo PF residente no Paraguai
+        /// </summary>
+        [XmlEnum("061001")]
+        IrrfServicoTransporteRodoviarioInternacionalPFParaguai = 061001,
+
+        /// <summary>
+        /// 353301 - Proventos de aposentadoria, reserva, reforma ou pensão pagos por previdência pública
+        /// </summary>
+        [XmlEnum("353301")]
+        ProventosAposentadoriaPrevidenciaPublica = 353301,
+
+        /// <summary>
+        /// 356201 - IRRF sobre participação dos trabalhadores em lucros ou resultados - PLR
+        /// </summary>
+        [XmlEnum("356201")]
+        IrrfParticipacaoLucrosResultadosPlr = 356201,
+
+        /// <summary>
+        /// 188901 - Rendimentos Recebidos Acumuladamente - RRA
+        /// </summary>
+        [XmlEnum("188901")]
+        RendimentosRecebidosAcumuladamenteRra = 188901,
+
+        /// <summary>
+        /// 047301 - IRRF - Residentes no exterior, para fins fiscais
+        /// </summary>
+        [XmlEnum("047301")]
+        IrrfResidentesExteriorFinsFiscais = 047301
+
+    }
+    #endregion
+
+
+    #region indSubstPatr - eSocial
+
+    /// <summary>
+    /// Indicativo de substituição da contribuição previdenciária patronal.
+    /// </summary>
+    public enum IndSubstPatr
+    {
+        /// <summary>
+        /// 1 -  Integralmente substituída
+        /// </summary>
+        [XmlEnum("1")]
+        IntegralmenteSubstituida = 1,
+
+        /// <summary>
+        /// 2 - Parcialmente substituída
+        /// </summary>
+        [XmlEnum("2")]
+        ParcialmenteSubstituida = 2,
+    }
+
+    #endregion
+
+    #region indIncid - eSocial
+
+    /// <summary>
+    /// Preencher com o código correspondente ao tipo de incidência para fins de apuração da contribuição previdenciária.
+    /// </summary>
+    public enum IndIncid
+    {
+        /// <summary>
+        /// 1 - Normal
+        /// </summary>
+        [XmlEnum("1")]
+        Normal = 1,
+
+        /// <summary>
+        /// 2 - Atividade concomitante
+        /// </summary>
+        [XmlEnum("2")]
+        AtividadeConcomitante = 2,
+
+        /// <summary>
+        /// 9 - Substituída ou isenta
+        /// </summary>
+        [XmlEnum("9")]
+        SubstituidaOuIsenta = 9
+    }
+
+    #endregion
+
+    #region tpValor. - eSocial.
+
+    /// <summary>
+    /// Tipo de valor que influi na apuração do FGTS.
+    /// </summary>
+    public enum TpValor
+    {
+        /// <summary>
+        /// 11 - FGTS mensal
+        /// </summary>
+        [XmlEnum("11")]
+        FgtsMensal = 11,
+
+        /// <summary>
+        /// 12 - FGTS 13° salário
+        /// </summary>
+        [XmlEnum("12")]
+        FgtsDecimoTerceiroSalario = 12,
+
+        /// <summary>
+        /// 13 - FGTS (período anterior) mensal
+        /// </summary>
+        [XmlEnum("13")]
+        FgtsPeriodoAnteriorMensal = 13,
+
+        /// <summary>
+        /// 14 - FGTS (período anterior) 13º salário
+        /// </summary>
+        [XmlEnum("14")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalario = 14,
+
+        /// <summary>
+        /// 15 - FGTS mensal - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("15")]
+        FgtsMensalAprendizContratoVerdeAmarelo = 15,
+
+        /// <summary>
+        /// 16 - FGTS 13° salário - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("16")]
+        FgtsDecimoTerceiroSalarioAprendizContratoVerdeAmarelo = 16,
+
+        /// <summary>
+        /// 17 - FGTS (período anterior) mensal - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("17")]
+        FgtsPeriodoAnteriorMensalAprendizContratoVerdeAmarelo = 17,
+
+        /// <summary>
+        /// 18 - FGTS (período anterior) 13º salário - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("18")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalarioAprendizContratoVerdeAmarelo = 18,
+
+        /// <summary>
+        /// 21 - FGTS mês da rescisão
+        /// </summary>
+        [XmlEnum("21")]
+        FgtsMesRescisao = 21,
+
+        /// <summary>
+        /// 22 - FGTS 13° salário rescisório
+        /// </summary>
+        [XmlEnum("22")]
+        FgtsDecimoTerceiroSalarioRescisorio = 22,
+
+        /// <summary>
+        /// 23 - FGTS aviso prévio indenizado
+        /// </summary>
+        [XmlEnum("23")]
+        FgtsAvisoPrevioIndenizado = 23,
+
+        /// <summary>
+        /// 24 - FGTS (período anterior) mês da rescisão
+        /// </summary>
+        [XmlEnum("24")]
+        FgtsPeriodoAnteriorMesRescisao = 24,
+
+        /// <summary>
+        /// 25 - FGTS (período anterior) 13º salário rescisório
+        /// </summary>
+        [XmlEnum("25")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalarioRescisorio = 25,
+
+        /// <summary>
+        /// 26 - FGTS (período anterior) aviso prévio indenizado
+        /// </summary>
+        [XmlEnum("26")]
+        FgtsPeriodoAnteriorAvisoPrevioIndenizado = 26,
+
+        /// <summary>
+        /// 27 - FGTS mês da rescisão - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("27")]
+        FgtsMesRescisaoAprendizContratoVerdeAmarelo = 27,
+
+        /// <summary>
+        /// 28 - FGTS 13° salário rescisório - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("28")]
+        FgtsDecimoTerceiroSalarioRescisorioAprendizContratoVerdeAmarelo = 28,
+
+        /// <summary>
+        /// 29 - FGTS aviso prévio indenizado - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("29")]
+        FgtsAvisoPrevioIndenizadoAprendizContratoVerdeAmarelo = 29,
+
+        /// <summary>
+        /// 30 - FGTS (período anterior) mês da rescisão - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("30")]
+        FgtsPeriodoAnteriorMesRescisaoAprendizContratoVerdeAmarelo = 30,
+
+        /// <summary>
+        /// 31 - FGTS (período anterior) 13° salário rescisório - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("31")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalarioRescisorioAprendizContratoVerdeAmarelo = 31,
+
+        /// <summary>
+        /// 32 - FGTS (período anterior) aviso prévio indenizado - Aprendiz/Contrato Verde e Amarelo
+        /// </summary>
+        [XmlEnum("32")]
+        FgtsPeriodoAnteriorAvisoPrevioIndenizadoAprendizContratoVerdeAmarelo = 32,
+
+        /// <summary>
+        /// 41 - FGTS mensal - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("41")]
+        FgtsMensalIndenizacaoCompensatoriaEmpregadoDomestico = 41,
+
+        /// <summary>
+        /// 42 - FGTS 13° salário - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("42")]
+        FgtsDecimoTerceiroSalarioIndenizacaoCompensatoriaEmpregadoDomestico = 42,
+
+        /// <summary>
+        /// 43 - FGTS (período anterior) mensal - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("43")]
+        FgtsPeriodoAnteriorMensalIndenizacaoCompensatoriaEmpregadoDomestico = 43,
+
+        /// <summary>
+        /// 44 - FGTS (período anterior) 13º salário - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("44")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalarioIndenizacaoCompensatoriaEmpregadoDomestico = 44,
+
+        /// <summary>
+        /// 45 - FGTS mês da rescisão - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("45")]
+        FgtsMesRescisaoIndenizacaoCompensatoriaEmpregadoDomestico = 45,
+
+        /// <summary>
+        /// 46 - FGTS 13° salário rescisório - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("46")]
+        FgtsDecimoTerceiroSalarioRescisorioIndenizacaoCompensatoriaEmpregadoDomestico = 46,
+
+        /// <summary>
+        /// 47 - FGTS aviso prévio indenizado - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("47")]
+        FgtsAvisoPrevioIndenizadoIndenizacaoCompensatoriaEmpregadoDomestico = 47,
+
+        /// <summary>
+        /// 48 - FGTS (período anterior) mês da rescisão - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("48")]
+        FgtsPeriodoAnteriorMesRescisaoIndenizacaoCompensatoriaEmpregadoDomestico = 48,
+
+        /// <summary>
+        /// 49 - FGTS (período anterior) 13º salário rescisório - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("49")]
+        FgtsPeriodoAnteriorDecimoTerceiroSalarioRescisorioIndenizacaoCompensatoriaEmpregadoDomestico = 49,
+
+        /// <summary>
+        /// 50 - FGTS (período anterior) aviso prévio indenizado - Indenização compensatória do empregado doméstico
+        /// </summary>
+        [XmlEnum("50")]
+        FgtsPeriodoAnteriorAvisoPrevioIndenizadoIndenizacaoCompensatoriaEmpregadoDomestico = 50
+    }
+    #endregion
+
+    #region indExistInfo - eSocial
+
+    /// <summary>
+    /// Indicativo de existência de valores de bases ou de tributos.
+    /// </summary>
+    public enum IndExistInfo
+    {
+        /// <summary>
+        /// 1 - Há informações de IRRF
+        /// </summary>
+        [XmlEnum("1")]
+        HaInformacoesIrrf = 1,
+
+        /// <summary>
+        /// 2 - Há movimento, porém não há informações de IRRF
+        /// </summary>
+        [XmlEnum("2")]
+        HaMovimentoSemInformacoesIrrf = 2,
+
+        /// <summary>
+        /// 3 - Não há movimento no período informado em perApur
+        /// </summary>
+        [XmlEnum("3")]
+        NaoHaMovimentoPeriodoInformadoPerApur = 3
+    }
+
+    #endregion
+
+    #region MtvDeslig
+
+    /// <summary>
+    /// Motivo do término do diretor não empregado, com FGTS.
+    /// </summary>
+    public enum MtvDeslig
+    {
+        /// <summary>
+        /// Rescisão com justa causa, por iniciativa do empregador 
+        /// </summary>
+        [XmlEnum("01")]
+        JustaCausaIniEmp = 01,
+        /// <summary>
+        /// Rescisão sem justa causa, por iniciativa do empregador
+        /// </summary>
+        [XmlEnum("02")]
+        SemJustaCausaIniEmp = 02,
+        /// <summary>
+        /// Rescisão antecipada do contrato a termo por iniciativa do empregador
+        /// </summary>
+        [XmlEnum("03")]
+        AntecipadaTermoIniEmp = 03,
+        /// <summary>
+        /// Rescisão antecipada do contrato a termo por iniciativa do empregado
+        /// </summary>
+        [XmlEnum("04")]
+        AntecipadaTermoIniEmpregado = 04,
+        /// <summary>
+        /// Rescisão por culpa recíproca
+        /// </summary>
+        [XmlEnum("05")]
+        CulpaReciproca = 05,
+        /// <summary>
+        /// Rescisão por término do contrato a termo
+        /// </summary>
+        [XmlEnum("06")]
+        TerminoDoContrato = 06,
+        /// <summary>
+        /// Rescisão do contrato de trabalho por iniciativa do empregado
+        /// </summary>
+        [XmlEnum("07")]
+        AntecipadaIniEmpregado = 07,
+        /// <summary>
+        /// Rescisão do contrato de trabalho por interesse do(a)
+        /// empregado(a), nas hipóteses previstas nos arts. 394 e 483, §1º, da CLT
+        /// </summary>
+        [XmlEnum("08")]
+        RecisaoPorInteresseDoEmpregado = 08,
+        /// <summary>
+        /// Rescisão por opção do empregado em virtude de falecimento
+        /// do empregador individual ou empregador doméstico
+        /// </summary>
+        [XmlEnum("09")]
+        RescisaoPorOpcaoDoEmpregadoPorFalecimentoDoEmpregadorIndividual = 09,
+        /// <summary>
+        /// Rescisão por falecimento do empregado 
+        /// </summary>
+        [XmlEnum("10")]
+        RescisaoPorFalecimentoDoEmpregado = 10,
+        /// <summary>
+        /// Transferência de empregado para empresa do mesmo grupo
+        /// empresarial que tenha assumido os encargos trabalhistas, sem
+        /// que tenha havido rescisão do contrato de trabalho
+        /// </summary>
+        [XmlEnum("11")]
+        TransfParaEmpresaMesmoGrupo = 11,
+        /// <summary>
+        /// Transferência de empregado da empresa consorciada para o
+        /// consórcio que tenha assumido os encargos trabalhistas, e
+        /// vice-versa, sem que tenha havido rescisão do contrato de trabalho
+        /// </summary>
+        [XmlEnum("12")]
+        TransfParaEmpresaConsorciadaAssumindoEncargos = 12,
+
+        /// <summary>
+        /// Transferência de empregado de empresa ou consórcio, para
+        /// outra empresa ou consórcio que tenha assumido os encargos
+        /// trabalhistas por motivo de sucessão (fusão, cisão ou
+        /// incorporação), sem que tenha havido rescisão do contrato de trabalho
+        /// </summary>
+        [XmlEnum("13")]
+        TransfParaEmpresaConsorciadaAssumindoEncargosSucessao = 13,
+        /// <summary>
+        /// Declaração de nulidade do contrato de trabalho por
+        /// infringência ao inciso II do art. 37 da Constituição Federal,
+        /// quando mantido o direito ao salário
+        /// </summary>
+        [XmlEnum("16")]
+        DeclaracaoNulidadePorInfringencia = 16,
+        /// <summary>
+        /// Rescisão indireta do contrato de trabalho
+        /// </summary>
+        [XmlEnum("17")]
+        RescisaoIndireta = 17,
+        /// <summary>
+        /// Reforma militar 
+        /// </summary>
+        [XmlEnum("21")]
+        ReformaMilitar = 21,
+        /// <summary>
+        /// Reserva militar 
+        /// </summary>
+        [XmlEnum("12")]
+        ReservaMilitar = 22,
+        /// <summary>
+        /// Exoneração
+        /// </summary>
+        [XmlEnum("23")]
+        Exoneracao = 23,
+        /// <summary>
+        /// Demissão 
+        /// </summary>
+        [XmlEnum("24")]
+        Demissao = 24,
+        /// <summary>
+        /// Vacância de cargo efetivo
+        /// </summary>
+        [XmlEnum("25")]
+        VacanciaDeCargoEfetivo = 25,
+
+        /// <summary>
+        /// Rescisão do contrato de trabalho por paralisação temporária
+        /// ou definitiva da empresa, estabelecimento ou parte das
+        /// atividades motivada por atos de autoridade municipal, estadual ou federal
+        /// </summary>
+        [XmlEnum("26")]
+        ParalisacaoDaEmpresaPorAtosDeAutoridade = 26,
+        /// <summary>
+        /// Rescisão por motivo de força maior 
+        /// </summary>
+        [XmlEnum("27")]
+        RescisaoPorMotivoDeForcaMaior = 27,
+        /// <summary>
+        /// Redistribuição ou Reforma Administrativa 
+        /// </summary>
+        [XmlEnum("29")]
+        RedistribuicaoOuReformaAdministrativa = 29,
+        /// <summary>
+        /// Mudança de regime trabalhista 
+        /// </summary>
+        [XmlEnum("30")]
+        MudancaDeRegimeTrabalhista = 30,
+        /// <summary>
+        /// Reversão de reintegração 
+        /// </summary>
+        [XmlEnum("31")]
+        ReversaoDeReintegracao = 31,
+        /// <summary>
+        /// Extravio de militar
+        /// </summary>
+        [XmlEnum("32")]
+        ExtravioDeMilitar = 32,
+        /// <summary>
+        /// Rescisão por acordo entre as partes (art. 484-A da CLT)
+        /// </summary>
+        [XmlEnum("33")]
+        AcordoEntreAsPartes = 33,
+        /// <summary>
+        /// Transferência de titularidade do empregado doméstico para
+        /// outro representante da mesma unidade familiar
+        /// </summary>
+        [XmlEnum("34")]
+        TransfDeTitularidadeEmpregadoDomestico = 34,
+        /// <summary>
+        /// Mudança de CPF
+        /// </summary>
+        [XmlEnum("36")]
+        MudancaCPF = 36,
+        /// <summary>
+        /// Remoção, em caso de alteração do órgão declarante
+        /// </summary>
+        [XmlEnum("37")]
+        RemocaoPorAlteracaoOrgaoDeclarante = 37,
+        /// <summary>
+        /// Aposentadoria, exceto por invalidez
+        /// </summary>
+        [XmlEnum("38")]
+        AposentadoriaExcetoInvalidez = 38,
+        /// <summary>
+        /// Aposentadoria de servidor estatutário, por invalidez
+        /// </summary>
+        [XmlEnum("39")]
+        AposentadoriaPorInvalidez = 39,
+        /// <summary>
+        /// Término de exercício de mandato
+        /// </summary>
+        [XmlEnum("40")]
+        TerminoMandato = 40,
+        /// <summary>
+        /// Rescisão do contrato de aprendizagem por desempenho
+        /// insuficiente ou inadaptação do aprendiz
+        /// </summary>
+        [XmlEnum("41")]
+        ContratoAprendizagemPorDesempenhoOuInadaptacao = 41,
+        /// <summary>
+        /// Rescisão do contrato de aprendizagem por ausência
+        /// injustificada do aprendiz à escola que implique perda do ano letivo
+        /// </summary>
+        [XmlEnum("42")]
+        ContratoAprendizagemPorAusenciaInjustificada = 42,
+
+        /// <summary>
+        /// Transferência de empregado de empresa considerada inapta
+        /// por inexistência de fato
+        /// </summary>
+        [XmlEnum("43")]
+        TransfEmpregadoEmpresaInapta = 43,
+        /// <summary>
+        /// Agrupamento contratual 
+        /// </summary>
+        [XmlEnum("44")]
+        AgrupamentoContratual = 44,
+        /// <summary>
+        /// Exclusão de militar das Forças Armadas do serviço ativo, com efeitos financeiros
+        /// </summary>
+        [XmlEnum("45")]
+        ExclusaoMilitarComEfeitosEfinanceiros = 45,
+        /// <summary>
+        /// Exclusão de militar das Forças Armadas do serviço ativo, sem efeitos financeiros
+        /// </summary>
+        [XmlEnum("46")]
+        ExclusaoMilitarSemEfeitosEfinanceiros = 46,
+        /// <summary>
+        /// Rescisão do contrato de trabalho por encerramento da
+        /// empresa, de seus estabelecimentos ou supressão de parte de suas atividades
+        /// </summary>
+        [XmlEnum("47")]
+        EncerramentoDaEmpresaOuSupressaoDeSuasAtividades = 47,
+        /// <summary>
+        /// Falecimento do empregador individual sem continuação da atividade
+        /// </summary>
+        [XmlEnum("48")]
+        FalecimentoDoEmpregadorIndividualSemContinuacao = 48,
+        /// <summary>
+        /// Falecimento do empregador doméstico sem continuação da atividade
+        /// </summary>
+        [XmlEnum("49")]
+        FalecimentoDoEmpregadorDomesticoSemContinuacao = 49
+    }
+    #endregion MtvDeslig
+
+    #endregion ESocial
+
+    #region NF3e
+
+    #region FinNF3e
+
+    /// <summary>
+    /// Finalidade de emissão da NF-3e
+    /// </summary>
+    public enum FinalidadeNF3e
+    {
+        /// <summary>
+        /// 1 - NF-3e normal
+        /// </summary>
+        [XmlEnum("1")]
+        Normal = 1,
+
+        /// <summary>
+        /// 2 - NF-3e substituição
+        /// </summary>
+        [XmlEnum("2")]
+        Substituicao = 2,
+
+        /// <summary>
+        /// 3 - NF-3e normal com ajuste
+        /// </summary>
+        [XmlEnum("3")]
+        NormalComAjuste = 3,
+    }
+
+    #endregion FinNF3e
+
+    #region TpEmis
+
+    /// <summary>
+    /// Forma de emissão do Documento Fiscal
+    /// </summary>
+    public enum TipoEmissaoNF3e
+    {
+        /// <summary>
+        /// 1 - Normal.
+        /// </summary>
+        [XmlEnum("1")]
+        Normal = 1,
+
+        /// <summary>
+        /// 2 - ContingenciaOffLine.
+        /// </summary>
+        [XmlEnum("2")]
+        ContingenciaOffLine = 2,
+    }
+
+    #endregion TpEmisNF3e
+
+    #region TipoAcessante
+    /// <summary>
+    /// Tipo de Acessante
+    /// </summary>
+    public enum TipoAcessante
+    {
+        /// <summary>
+        /// 0 - Gerador.
+        /// </summary>
+        [XmlEnum("0")]
+        Gerador = 0,
+
+        /// <summary>
+        /// 1 - Cativo.
+        /// </summary>
+        [XmlEnum("1")]
+        Cativo = 1,
+
+        /// <summary>
+        /// 2 - Livre.
+        /// </summary>
+        [XmlEnum("2")]
+        Livre = 2,
+
+        /// <summary>
+        /// 3 - Parcialmente Livre.
+        /// </summary>
+        [XmlEnum("3")]
+        ParcialmenteLivre = 3,
+
+        /// <summary>
+        /// 4 - Consumidor Especial.
+        /// </summary>
+        [XmlEnum("4")]
+        ConsumidorEspecial = 4,
+
+        /// <summary>
+        /// 5 - Parcialmente Especial.
+        /// </summary>
+        [XmlEnum("5")]
+        ParcialmenteEspecial = 5,
+
+        /// <summary>
+        /// 6 - Comunhão.
+        /// </summary>
+        [XmlEnum("6")]
+        Comunhão = 6,
+
+        /// <summary>
+        /// 7 - Suprimento.
+        /// </summary>
+        [XmlEnum("7")]
+        Suprimento = 7,
+
+        /// <summary>
+        /// 8 - Distribuidora.
+        /// </summary>
+        [XmlEnum("8")]
+        Distribuidora = 8,
+    }
+    #endregion TipoAcessante
+
+    #region TipoClasseConsumidora
+    /// <summary>
+    /// Classe de Consumo da Unidade Consumidora
+    /// </summary>
+    public enum TipoClasseConsumidora
+    {
+        /// <summary>
+        /// 1 - Comercial.
+        /// </summary>
+        [XmlEnum("01")]
+        Comercial = 01,
+
+        /// <summary>
+        /// 2 - ConsumoPropio.
+        /// </summary>
+        [XmlEnum("02")]
+        ConsumoPropio = 02,
+
+        /// <summary>
+        /// 3 - IluminacaoPublica.
+        /// </summary>
+        [XmlEnum("03")]
+        IluminacaoPublica = 03,
+
+        /// <summary>
+        /// 4 - Industrial.
+        /// </summary>
+        [XmlEnum("04")]
+        Industrial = 04,
+
+        /// <summary>
+        /// 5 - PoderPublico.
+        /// </summary>
+        [XmlEnum("05")]
+        PoderPublico = 05,
+
+        /// <summary>
+        /// 6 - Residencial.
+        /// </summary>
+        [XmlEnum("06")]
+        Residencial = 06,
+
+        /// <summary>
+        /// 7 - Rural.
+        /// </summary>
+        [XmlEnum("07")]
+        Rural = 07,
+
+        /// <summary>
+        /// 8 - ServicoPublico.
+        /// </summary>
+        [XmlEnum("08")]
+        ServicoPublico = 08,
+    }
+    #endregion TipoClasseConsumidora
+
+    #region TipoSubClasseConsumidora
+
+    /// <summary>
+    /// Subclasse de Consumo da Unidade Consumidora
+    /// </summary>
+    public enum TipoSubClasseConsumidora
+    {
+        /// <summary>
+        /// 1 - Residencial.
+        /// </summary>
+        [XmlEnum("01")]
+        Residencial = 01,
+
+        /// <summary>
+        /// 2 - Residencial baixa renda.
+        /// </summary>
+        [XmlEnum("02")]
+        ResidencialBaixaRenda = 02,
+
+        /// <summary>
+        /// 3 - Residencial baixa renda indigena.
+        /// </summary>
+        [XmlEnum("03")]
+        ResidencialBaixaRendaIndigena = 03,
+
+        /// <summary>
+        /// 4 - Residencial baixa renda quilombola.
+        /// </summary>
+        [XmlEnum("04")]
+        ResidencialBaixaRendaQuilombola = 04,
+
+        /// <summary>
+        /// 5 - Residencial baixa renda beneficio de prestacao continuada da assistencia social.
+        /// </summary>
+        [XmlEnum("05")]
+        ResidencialBaixaRendaComAssistenciaSocial = 05,
+
+        /// <summary>
+        /// 6 - Residencial baixa renda multifamiliar.
+        /// </summary>
+        [XmlEnum("06")]
+        ResidencialBaixaRendaMultifamiliar = 06,
+
+        /// <summary>
+        /// 7 - comercial.
+        /// </summary>
+        [XmlEnum("07")]
+        comercial = 07,
+
+        /// <summary>
+        /// 8 - Servico De TransporteExceto TracaoEletrica.
+        /// </summary>
+        [XmlEnum("08")]
+        ServicoDeTransporteExcetoTracaoEletrica = 08,
+
+        /// <summary>
+        /// 9 - Servico de comunicação e telecomunicação.
+        /// </summary>
+        [XmlEnum("09")]
+        ServicoDeComunicacaoETelecomunicacao = 09,
+
+        /// <summary>
+        /// 10 - Associacoes e entidades filantropicas.
+        /// </summary>
+        [XmlEnum("10")]
+        AssociacaoOuEntidadeFilantropica = 10,
+
+        /// <summary>
+        /// 11 - TemplosReligiosos.
+        /// </summary>
+        [XmlEnum("11")]
+        TemplosReligiosos = 11,
+
+        /// <summary>
+        /// 12 - CondominioAreaComum.
+        /// </summary>
+        [XmlEnum("12")]
+        CondominioAreaComum = 12,
+
+        /// <summary>
+        /// 13 - Iluminacao em rodovias solicitadas por quem detenha concessao ou autorizacao para administracao em rodovias.
+        /// </summary>
+        [XmlEnum("13")]
+        IluminacaoEmRodovias = 13,
+
+        /// <summary>
+        /// 14 - Semafaros, radares cameras de monitoramento do transito.
+        /// </summary>
+        [XmlEnum("14")]
+        SemafarosRadaresCamerasMonitoramentoTransito = 14,
+
+        /// <summary>
+        /// 15 - Outros Servicos E Outras Atividades Da Classe Comercial.
+        /// </summary>
+        [XmlEnum("15")]
+        OutrosServicosEOutrasAtividadesDaClasseComercial = 15,
+
+        /// <summary>
+        /// 16 - AgroRural.
+        /// </summary>
+        [XmlEnum("16")]
+        AgroRural = 16,
+
+        /// <summary>
+        /// 17 - AgroUrbana.
+        /// </summary>
+        [XmlEnum("17")]
+        AgroUrbana = 17,
+
+        /// <summary>
+        /// 18 - ResidencialRural.
+        /// </summary>
+        [XmlEnum("18")]
+        ResidencialRural = 18,
+
+        /// <summary>
+        /// 19 - CooperativaDeEletrificacaoRural.
+        /// </summary>
+        [XmlEnum("19")]
+        CooperativaDeEletrificacaoRural = 19,
+
+        /// <summary>
+        /// 20 - Agroindustrial.
+        /// </summary>
+        [XmlEnum("20")]
+        Agroindustrial = 20,
+
+        /// <summary>
+        /// 21 - ServicoPublicoDeIrrigacaoRural.
+        /// </summary>
+        [XmlEnum("21")]
+        ServicoPublicoDeIrrigacaoRural = 21,
+
+        /// <summary>
+        /// 22 - EscolaAgrotecnica.
+        /// </summary>
+        [XmlEnum("22")]
+        EscolaAgrotecnica = 22,
+
+        /// <summary>
+        /// 23 - Aquicultura.
+        /// </summary>
+        [XmlEnum("23")]
+        Aquicultura = 23,
+
+        /// <summary>
+        /// 24 - PoderPublicoFederal.
+        /// </summary>
+        [XmlEnum("24")]
+        PoderPublicoFederal = 24,
+
+        /// <summary>
+        /// 25 - PoderPublicoEstadualOuDistrital.
+        /// </summary>
+        [XmlEnum("25")]
+        PoderPublicoEstadualOuDistrital = 25,
+
+        /// <summary>
+        /// 26 - PoderPublicoMunicipal.
+        /// </summary>
+        [XmlEnum("26")]
+        PoderPublicoMunicipal = 26,
+
+        /// <summary>
+        /// 27 - TracaoEletrica.
+        /// </summary>
+        [XmlEnum("27")]
+        TracaoEletrica = 27,
+
+        /// <summary>
+        /// 28 - AguaEsgotoOuSaneamento.
+        /// </summary>
+        [XmlEnum("28")]
+        AguaEsgotoOuSaneamento = 28,
+
+        /// <summary>
+        /// 99 - Outros.
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99,
+
+    }
+
+    #endregion TipoSubClasseConsumidora
+
+    #region TipoLigacao 
+
+    /// <summary>
+    /// Tipo de ligação
+    /// </summary>
+    public enum TipoLigacao
+    {
+        /// <summary>
+        /// 1 - Monofasico.
+        /// </summary>
+        [XmlEnum("1")]
+        Monofasico = 1,
+
+        /// <summary>
+        /// 2 - Bifasico.
+        /// </summary>
+        [XmlEnum("2")]
+        Bifasico = 2,
+
+        /// <summary>
+        /// 3 - Trifasico.
+        /// </summary>
+        [XmlEnum("3")]
+        Trifasico = 3,
+    }
+
+    #endregion TipoLigacao 
+
+    #region GrupoSubGrupoTensao
+
+    /// <summary>
+    /// Grupo e Subgrupo de Tensão
+    /// </summary>
+    public enum GrupoSubGrupoTensao
+    {
+        /// <summary>
+        /// 1 - A1 Alta Tensao 230kV+.
+        /// </summary>
+        [XmlEnum("01")]
+        A1AltaTensao230kVMais = 01,
+
+        /// <summary>
+        /// 2 - A2 Alta Tensao 88 a 138kV.
+        /// </summary>
+        [XmlEnum("02")]
+        A2AltaTensao88a138kV = 02,
+
+        /// <summary>
+        /// 3 - A3 Alta Tensao 69kV.
+        /// </summary>
+        [XmlEnum("03")]
+        A3AltaTensao69kV = 03,
+
+        /// <summary>
+        /// 4 - A3a Alta Tensao30 a 44kV.
+        /// </summary>
+        [XmlEnum("04")]
+        A3aAltaTensao30a44kV = 04,
+
+        /// <summary>
+        /// 5 - A4 Alta Tensao 2,3 a 25kV.
+        /// </summary>
+        [XmlEnum("05")]
+        A4AltaTensao2a25kV = 05,
+
+        /// <summary>
+        /// 6 - AS Alta Tensao Subterraneo.
+        /// </summary>
+        [XmlEnum("06")]
+        ASAltaTensaoSubterraneo = 06,
+
+        /// <summary>
+        /// 7 - B1 Residencial.
+        /// </summary>
+        [XmlEnum("07")]
+        B1Residencial = 07,
+
+        /// <summary>
+        /// 8 - b1 Residencial Baixa Renda.
+        /// </summary>
+        [XmlEnum("08")]
+        b1ResidencialBaixaRenda = 08,
+
+        /// <summary>
+        /// 9 - B2 Rural.
+        /// </summary>
+        [XmlEnum("09")]
+        B2Rural = 09,
+
+        /// <summary>
+        /// 10 - B2 Cooperativa De Eletrificacao Rural.
+        /// </summary>
+        [XmlEnum("10")]
+        B2CooperativaDeEletrificacaoRural = 010,
+
+        /// <summary>
+        /// 11 - B2 Servico Publico Irrigacao.
+        /// </summary>
+        [XmlEnum("11")]
+        B2ServicoPublicoIrrigacao = 011,
+
+        /// <summary>
+        /// 12 - B3 Demais Classes.
+        /// </summary>
+        [XmlEnum("12")]
+        B3DemaisClasses = 012,
+
+        /// <summary>
+        /// 13 - B4a Iluminacao Publica Rede Distribuicao.
+        /// </summary>
+        [XmlEnum("13")]
+        B4aIluminacaoPublicaRedeDistribuicao = 013,
+
+        /// <summary>
+        /// 14 - B4b Iluminacao Publica Bulbo De Lampada.
+        /// </summary>
+        [XmlEnum("14")]
+        B4bIluminacaoPublicaBulboDeLampada = 014,
+
+    }
+
+    #endregion GrupoSubGrupoTensao
+
+    #region ModalidadeTarifaria
+
+    /// <summary>
+    /// Modalidade Tarifária
+    /// </summary>
+    public enum ModalidadeTarifaria
+    {
+        /// <summary>
+        /// 1 - ConvencionalMonomia.
+        /// </summary>
+        [XmlEnum("01")]
+        ConvencionalMonomia = 01,
+
+        /// <summary>
+        /// 2 - ConvencionalBinomia.
+        /// </summary>
+        [XmlEnum("02")]
+        ConvencionalBinomia = 02,
+
+        /// <summary>
+        /// 3 - HorariaAzul.
+        /// </summary>
+        [XmlEnum("03")]
+        HorariaAzul = 03,
+
+        /// <summary>
+        /// 4 - HorariaAzulAPAE.
+        /// </summary>
+        [XmlEnum("04")]
+        HorariaAzulAPAE = 04,
+
+        /// <summary>
+        /// 5 - HorariaVerde.
+        /// </summary>
+        [XmlEnum("05")]
+        HorariaVerde = 05,
+
+        /// <summary>
+        /// 6 - HorariaVerdeAPAE.
+        /// </summary>
+        [XmlEnum("06")]
+        HorariaVerdeAPAE = 06,
+
+        /// <summary>
+        /// 7 - HorariaBranca.
+        /// </summary>
+        [XmlEnum("07")]
+        HorariaBranca = 07,
+
+        /// <summary>
+        /// 8 - PrePagamento.
+        /// </summary>
+        [XmlEnum("08")]
+        PrePagamento = 08,
+
+        /// <summary>
+        /// 9 - Geracao.
+        /// </summary>
+        [XmlEnum("09")]
+        Geracao = 09,
+
+        /// <summary>
+        /// 10 - Distribuicao.
+        /// </summary>
+        [XmlEnum("10")]
+        Distribuicao = 10,
+    }
+
+    #endregion ModalidadeTarifaria
+
+    #region MotivoSubstituicao
+
+    /// <summary>
+    /// Motivo da substituição
+    /// </summary>
+    public enum MotivoSubstituicao
+    {
+        /// <summary>
+        /// 1 - Erro De Leitura.
+        /// </summary>
+        [XmlEnum("01")]
+        ErroDeLeitura = 01,
+
+        /// <summary>
+        /// 2 - Erro De Preco Ou Tarifa.
+        /// </summary>
+        [XmlEnum("02")]
+        ErroDePrecoOuTarifa = 02,
+
+        /// <summary>
+        /// 3 - Decisao Judicial.
+        /// </summary>
+        [XmlEnum("03")]
+        DecisaoJudicial = 03,
+
+        /// <summary>
+        /// 4 - Erro Cadastral.
+        /// </summary>
+        [XmlEnum("04")]
+        ErroCadastral = 04,
+
+        /// <summary>
+        /// 5 - Erro De Tributacao.
+        /// </summary>
+        [XmlEnum("05")]
+        ErroDeTributacao = 05,
+    }
+
+    #endregion MotivoSubstituicao
+
+    #region TipoGrandezaContratada
+
+    /// <summary>
+    /// Tipo de grandeza contratada
+    /// </summary>
+    public enum TipoGrandezaContratada
+    {
+        /// <summary>
+        /// 1 - Demanda.
+        /// </summary>
+        [XmlEnum("1")]
+        Demanda = 1,
+
+        /// <summary>
+        /// 2 - MontanteDeUsoDoSistemaDeDistribuicao.
+        /// </summary>
+        [XmlEnum("2")]
+        MontanteDeUsoDoSistemaDeDistribuicao = 2,
+
+        /// <summary>
+        /// 3 - ReservaDeCapacidade.
+        /// </summary>
+        [XmlEnum("3")]
+        ReservaDeCapacidade = 3,
+
+        /// <summary>
+        /// 4 - EnergiaContratada.
+        /// </summary>
+        [XmlEnum("4")]
+        EnergiaContratada = 4,
+    }
+
+    #endregion TipoGrandezaContratada
+
+    #region TipoPostoTarifario
+
+    /// <summary>
+    /// Tipo de Posto Tarifário Contratado
+    /// </summary>
+    public enum TipoPostoTarifario
+    {
+        /// <summary>
+        /// 0 - Unico.
+        /// </summary>
+        [XmlEnum("0")]
+        Unico = 0,
+
+        /// <summary>
+        /// 1 - Ponta.
+        /// </summary>
+        [XmlEnum("1")]
+        Ponta = 1,
+
+        /// <summary>
+        /// 2 - ForaPonta.
+        /// </summary>
+        [XmlEnum("2")]
+        ForaPonta = 2,
+
+        /// <summary>
+        /// 3 - Intermediario 
+        /// </summary>
+        [XmlEnum("3")]
+        Intermediario = 3,
+
+        /// <summary>
+        /// 4 - Ponta Reservado
+        /// </summary>
+        [XmlEnum("4")]
+        PontaReservado = 4,
+
+        /// <summary>
+        /// 5 - Fora ponta Reservado
+        /// </summary>
+        [XmlEnum("5")]
+        ForaPontaReservado = 5,
+
+        /// <summary>
+        /// 6 - Intermediario Reservado
+        /// </summary>
+        [XmlEnum("6")]
+        IntermediarioReservado = 6,
+
+        /// <summary>
+        /// 6 - Reservado
+        /// </summary>
+        [XmlEnum("7")]
+        Reservado = 7,
+    }
+
+    #endregion TipoPostoTarifario
+
+    #region TipoPartarticipacaoCompensacao
+
+    /// <summary>
+    /// Tipo de participação no sistema de compensação de energia elétrica
+    /// </summary>
+    public enum TipoParticipacaoCompensacao
+    {
+        /// <summary>
+        /// 1 - Mini ou microgeração (somente uma UC);
+        /// </summary>
+        [XmlEnum("1")]
+        MiniOuMicroSomenteUmaUC = 1,
+
+        /// <summary>
+        /// 2 - Múltiplas unidades consumidoras (condomínio em área definida);
+        /// </summary>
+        [XmlEnum("2")]
+        CondominioMultiplasUC = 2,
+
+        /// <summary>
+        /// 3 - Autoconsumo remoto;
+        /// </summary>
+        [XmlEnum("3")]
+        AutoconsumoRemoto = 3,
+
+        /// <summary>
+        /// 4 - Geração compartilhada (consórcio ou cooperativa);
+        /// </summary>
+        [XmlEnum("4")]
+        GeracaoCompartilhada = 4,
+
+        /// <summary>
+        /// 5 - Mista (utilizar quando enquadrado em mais de um tipo de participação)
+        /// </summary>
+        [XmlEnum("5")]
+        Mista = 5,
+
+    }
+
+    #endregion TipoPartarticipacaoCompensacao
+
+    #region TipoFonteEnergia
+
+    /// <summary>
+    /// Tipo da fonte de energia
+    /// </summary>
+    public enum TipoFonteEnergia
+    {
+        /// <summary>
+        /// 1 - Hidraulica.
+        /// </summary>
+        [XmlEnum("1")]
+        Hidraulica = 1,
+
+        /// <summary>
+        /// 2 - Solar.
+        /// </summary>
+        [XmlEnum("2")]
+        Solar = 2,
+
+        /// <summary>
+        /// 3 - Eolica.
+        /// </summary>
+        [XmlEnum("3")]
+        Eolica = 3,
+
+        /// <summary>
+        /// 4 - Termica.
+        /// </summary>
+        [XmlEnum("4")]
+        Termica = 4,
+
+        /// <summary>
+        /// 5 - Hibrida.
+        /// </summary>
+        [XmlEnum("5")]
+        Hibrida = 5,
+    }
+
+    #endregion TipoFonteEnergia
+
+    #region TipoAjuste
+
+    /// <summary>
+    /// Tipo de ajuste a ser aplicado ao item
+    /// </summary>
+    public enum TipoAjuste
+    {
+        /// <summary>
+        /// 1 - Item a ser substituído (deve informar detItemAnt)
+        /// </summary>
+        [XmlEnum("1")]
+        ItemASerSubstituido = 1,
+
+        /// <summary>
+        /// 2 - Item de substituição (nova imagem do item anterior)
+        /// </summary>
+        [XmlEnum("2")]
+        ItemDeSubstituicao = 2,
+
+        /// <summary>
+        /// 3 - Item a ser eliminado (deve informar detItemAnt)
+        /// </summary>
+        [XmlEnum("3")]
+        ItemASerEliminado = 3,
+
+        /// <summary>
+        /// Item a ser incluído referente a NF-3e anterior
+        /// </summary>
+        [XmlEnum("4")]
+        ItemASerIncluidoReferenteANF3eAnterior = 4,
+    }
+
+    #endregion TipoAjuste
+
+    #region MotivoAjuste
+
+    /// <summary>
+    /// Motivo do Ajuste
+    /// </summary>
+    public enum MotivoAjuste
+    {
+        /// <summary>
+        /// 1 – Erro de Leitura
+        /// </summary>
+        [XmlEnum("1")]
+        ErroDeLeitura = 1,
+
+        /// <summary>
+        ///  2 – Erro de Preço ou Erro de Tarifa
+        /// </summary>
+        [XmlEnum("2")]
+        ErroDePrecoOuTarifa = 2,
+
+        /// <summary>
+        /// 3 – Decisão Judicial
+        /// </summary>
+        [XmlEnum("3")]
+        DecisaoJudicial = 3,
+
+        /// <summary>
+        /// 4 – Erro Cadastral
+        /// </summary>
+        [XmlEnum("4")]
+        ErroCadastral = 4,
+
+        /// <summary>
+        /// 5 - Erro de Tributação
+        /// </summary>
+        [XmlEnum("5")]
+        ErroDeTributacao = 5,
+    }
+
+    #endregion MotivoAjuste
+
+    #region TipoAto
+
+    /// <summary>
+    /// Tipo de Ato da ANEEL
+    /// 1 - REH (Resolução homologatória); 2 - Despacho; 3 - REN (Resolução Normativa)
+    /// </summary>
+    public enum TipoAto
+    {
+        /// <summary>
+        /// 1 - REH (Resolução homologatória)
+        /// </summary>
+        [XmlEnum("1")]
+        REH = 1,
+
+        /// <summary>
+        ///  2 - Despacho
+        /// </summary>
+        [XmlEnum("2")]
+        Despacho = 2,
+
+        /// <summary>
+        /// 3 - REN (Resolução Normativa)
+        /// </summary>
+        [XmlEnum("3")]
+        REN = 3,
+    }
+    #endregion TipoAto
+
+    #region TipoTarifa
+    /// <summary>
+    /// Tarifa de aplicação
+    /// </summary>
+    public enum TipoTarifa
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("1")]
+        TE = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("2")]
+        TUSD = 2,
+    }
+    #endregion TipoTarifa
+
+    #region UMed
+    /// <summary>
+    /// Unidade de Medida
+    /// </summary>
+    public enum UMed
+    {
+        /// <summary>
+        /// 1 = kW (Aplica-se somente a TUSD)
+        /// </summary>
+        [XmlEnum("1")]
+        KW = 1,
+
+        /// <summary>
+        /// 2 = kWh (Aplica-se tanto a TUSD quanto TE)
+        /// </summary>
+        [XmlEnum("2")]
+        KWh = 2,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("3")]
+        KVAr = 3,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("4")]
+        KVArh = 4,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("5")]
+        UN = 5,
+    }
+
+    #endregion UMed
+
+    #region MotivoTarifaDiferente
+    /// <summary>
+    /// Motivo da diferença de tarifa aplicada com a homologada
+    /// </summary>
+    public enum MotivoTarifaDiferente
+    {
+        /// <summary>
+        /// 01 - Decisão judicial 
+        /// </summary>
+        [XmlEnum("01")]
+        DecisaoJudicial = 01,
+        /// <summary>
+        /// 02 - Decisão da distribuidora (tarifa homologada equivale a preço teto)
+        /// </summary>
+        [XmlEnum("02")]
+        DecisaoDistribuidora = 02,
+        /// <summary>
+        ///  03 - Desconto Tarifário
+        /// </summary>
+        [XmlEnum("03")]
+        DescontoTarifario = 03,
+        /// <summary>
+        ///  04 - Reajuste tarifário
+        /// </summary>
+        [XmlEnum("04")]
+        ReajusteTarifario = 04,
+    }
+    #endregion MotivoTarifaDiferente
+
+    #region TipoBandeira
+    /// <summary>
+    /// Tipo da bandeira tarifária
+    /// </summary>
+    public enum TipoBandeira
+    {
+        /// <summary>
+        /// 1 - Verde.
+        /// </summary>
+        [XmlEnum("1")]
+        Verde = 1,
+
+        /// <summary>
+        /// 2 - Amarela.
+        /// </summary>
+        [XmlEnum("2")]
+        Amarela = 2,
+
+        /// <summary>
+        /// 3 - Vermelha Patamar 1.
+        /// </summary>
+        [XmlEnum("3")]
+        VermelhaPatamar1 = 3,
+
+        /// <summary>
+        /// 4 - Vermelha Patamar 2.
+        /// </summary>
+        [XmlEnum("4")]
+        VermelhaPatamar2 = 4,
+
+        /// <summary>
+        /// 5 - Escassez Hidrica.
+        /// </summary>
+        [XmlEnum("5")]
+        EscassezHidrica = 5,
+    }
+
+    #endregion TipoBandeira
+
+    #region IndOrigemQtd
+
+    /// <summary>
+    /// Indicador da origem da quantidade faturada
+    /// </summary>
+    public enum IndOrigemQtd
+    {
+        /// <summary>
+        /// 1 - Media.
+        /// </summary>
+        [XmlEnum("1")]
+        Media = 1,
+
+        /// <summary>
+        /// 2 - Medido.
+        /// </summary>
+        [XmlEnum("2")]
+        Medido = 2,
+
+        /// <summary>
+        /// 3 - Contratada.
+        /// </summary>
+        [XmlEnum("3")]
+        Contratada = 3,
+
+        /// <summary>
+        /// 4 - Calculada.
+        /// </summary>
+        [XmlEnum("4")]
+        Calculada = 4,
+
+        /// <summary>
+        /// 5 - Custo De Disponibilidade.
+        /// </summary>
+        [XmlEnum("5")]
+        CustoDeDisponibilidade = 5,
+
+        /// <summary>
+        /// 6 - Sem Quantidade.
+        /// </summary>
+        [XmlEnum("6")]
+        SemQuantidade = 6,
+    }
+
+    #endregion IndOrigemQtd
+
+    #region TipoGrMedida 
+
+    /// <summary>
+    /// Tipo de grandeza medida
+    /// </summary>
+    public enum TipoGrMedida
+    {
+        /// <summary>
+        /// 01 - Demanda.
+        /// </summary>
+        [XmlEnum("01")]
+        Demanda = 01,
+
+        /// <summary>
+        /// 02 - Demanda Reativa.
+        /// </summary>
+        [XmlEnum("02")]
+        DemandaReativa = 02,
+
+        /// <summary>
+        /// 03 - Energia Ativa.
+        /// </summary>
+        [XmlEnum("03")]
+        EnergiaAtiva = 03,
+
+        /// <summary>
+        /// 04 - Energia Ativa Injetada.
+        /// </summary>
+        [XmlEnum("04")]
+        EnergiaAtivaInjetada = 04,
+
+        /// <summary>
+        /// 05 - Energia Reativa.
+        /// </summary>
+        [XmlEnum("05")]
+        EnergiaReativa = 05,
+    }
+
+    #endregion TipoGrMedida
+
+    #region TipoMotivoNaoLeitura
+
+    /// <summary>
+    /// Tipo Motivo da não leitura
+    /// </summary>
+    public enum TipoMotivoNaoLeitura
+    {
+        /// <summary>
+        /// 1 - Consumidor.
+        /// </summary>
+        [XmlEnum("1")]
+        Consumidor = 1,
+
+        /// <summary>
+        /// 2 - Distribuidora.
+        /// </summary>
+        [XmlEnum("2")]
+        Distribuidora = 2,
+
+        /// <summary>
+        /// 3 - Independente Do Consumidor ou Distribuidora.
+        /// </summary>
+        [XmlEnum("3")]
+        IndependenteDoConsumidorEDistribuidora = 3,
+    }
+
+    #endregion TipoMotivoNaoLeitura
+
+    #region CST - classificação Tributária do PIS
+
+    /// <summary>
+    /// classificação Tributária do PIS
+    /// </summary>
+    public enum CST
+    {
+        /// <summary>
+        /// 01 – Tributável com alíquota básica
+        /// </summary>
+        [XmlEnum("01")]
+        AliquotaBasica = 01,
+
+        /// <summary>
+        /// 02 – Tributável com alíquota diferenciada
+        /// </summary>
+        [XmlEnum("02")]
+        AliquotaDiferenciada = 02,
+
+        /// <summary>
+        /// 06 – Tributável com alíquota erro
+        /// </summary>
+        [XmlEnum("06")]
+        AliquotaComErro = 06,
+
+        /// <summary>
+        /// 07 – Operação isenta de contribuição
+        /// </summary>
+        [XmlEnum("07")]
+        OperacaoIsenta = 07,
+
+        /// <summary>
+        /// 08 – Operação sem incidência da contribuição
+        /// </summary>
+        [XmlEnum("08")]
+        OperacaoSemIncidencia = 08,
+
+        /// <summary>
+        /// 09 – Operação com suspensão da contribuição  
+        /// </summary>
+        [XmlEnum("09")]
+        OperacaoComSuspensao = 09,
+
+        /// <summary>
+        /// 49 – Outras operações de saída
+        /// </summary>
+        [XmlEnum("49")]
+        OutrasOperacoesDeSaida = 49,
+    }
+    #endregion CST - classificação Tributária do PIS
+
+    #region TpProc
+
+    /// <summary>
+    /// Tipo de Processo
+    /// </summary>
+    public enum TipoProcessoNF3e
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("0")]
+        SEFAZ = 0,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("1")]
+        JusticaFederal = 1,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlEnum("2")]
+        JusticaEstadual = 2
+    }
+    #endregion TpProc
+
+    #region TipoLancamento
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum TipoLancamento
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        D = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        C = 1,
+    }
+
+    #endregion TipoLancamento
+    #endregion NF3e
 }

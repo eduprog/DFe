@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Security;
 using System.Xml;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.NFSe;
@@ -24,7 +26,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void CancelarNfse(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void CancelarNfse(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "CancelarNfseEnvio-ped-cannfse.xml";
 
@@ -60,7 +62,10 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var cancelarNfse = new CancelarNfse(conteudoXML, configuracao);
-            cancelarNfse.Executar();
+
+            // Precisei passar o executar aqui para dentro, por causa do padrão ADM_SISTEMAS.
+            // O padrão necessita de autenticação de login e senha, porém a resposta do padrão vem quebrada, gerando erro nos testes como estava antigamente.
+            Assert.Multiple(() => TestUtility.AnalisaResultado(cancelarNfse));
         }
     }
 }

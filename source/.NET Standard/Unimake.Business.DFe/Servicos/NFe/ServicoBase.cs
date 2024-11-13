@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System;
 using System.IO;
 using System.Text;
-using Unimake.Business.DFe.Security;
 using Unimake.Exceptions;
 
 namespace Unimake.Business.DFe.Servicos.NFe
@@ -19,16 +18,10 @@ namespace Unimake.Business.DFe.Servicos.NFe
 #endif
     public abstract class ServicoBase : Servicos.ServicoBase
     {
-        #region Protected Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
         protected ServicoBase() : base() { }
-
-        #endregion Protected Constructors
-
-        #region Protected Methods
 
         /// <summary>
         /// Definir configurações
@@ -56,30 +49,13 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// </summary>
         protected override void XmlValidarConteudo() { }
 
-        #endregion Protected Methods
-
-        #region Public Methods
-
         /// <summary>
         /// Executar o serviço
         /// </summary>       
 #if INTEROP
         [ComVisible(false)]
 #endif
-        public override void Executar()
-        {
-            if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) &&
-               !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
-            {
-                AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
-            }
-
-            AjustarXMLAposAssinado();
-
-            XmlValidar();
-
-            base.Executar();
-        }
+        public override void Executar() => base.Executar();
 
         /// <summary>
         /// Gravar o XML de distribuição em uma pasta no HD
@@ -140,7 +116,5 @@ namespace Unimake.Business.DFe.Servicos.NFe
             stream.Write(byteData, 0, byteData.Length);
             stream.Close();
         }
-
-        #endregion Public Methods
     }
 }

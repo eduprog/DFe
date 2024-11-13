@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using Unimake.Business.DFe.Servicos;
-using Unimake.Security.Platform;
+using Unimake.Business.Security;
+using Unimake.Exceptions;
 
 namespace Unimake.DFe.Test
 {
@@ -37,7 +38,7 @@ namespace Unimake.DFe.Test
                 return CertificadoDigitalField;
             }
 
-            private set => throw new Exception("Não é possível atribuir um certificado digital! Somente resgate o valor da propriedade que o certificado é definido automaticamente.");
+            private set => ThrowHelper.Instance.Throw(new Exception("Não é possível atribuir um certificado digital! Somente resgate o valor da propriedade que o certificado é definido automaticamente."));
         }
 
         public static string CNPJEmpresaCertificado { get; set; } = "06117473000150";

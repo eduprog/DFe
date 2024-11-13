@@ -28,7 +28,7 @@ namespace Unimake.Business.DFe.Xml.CTeOS
         public CTeOS CTeOS { get; set; }
 
         [XmlElement("protCTe")]
-        public Xml.CTe.ProtCTe ProtCTe { get; set; }
+        public CTe.ProtCTe ProtCTe { get; set; }
 
         [XmlAttribute("ipTransmissor")]
         public string IpTransmissor { get; set; }
@@ -100,5 +100,13 @@ namespace Unimake.Business.DFe.Xml.CTeOS
             doc.LoadXml(System.IO.File.ReadAllText(filename, Encoding.UTF8));
             return XMLUtility.Deserializar<CteOSProc>(doc);
         }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeDhConexaoField() => DhConexao > DateTime.MinValue;
+        public bool ShouldSerializeIpTransmissor() => !string.IsNullOrEmpty(IpTransmissor);
+        public bool ShouldSerializeNPortaCon() => NPortaCon > 0;
+
+        #endregion
     }
 }

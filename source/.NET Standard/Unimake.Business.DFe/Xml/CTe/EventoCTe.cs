@@ -114,10 +114,10 @@ namespace Unimake.Business.DFe.Xml.CTe
             base.WriteXml(writer);
 
             writer.WriteRaw($@"
-            <evPrestDesacordo>
+            <evCancPrestDesacordo>
             <descEvento>{DescEvento}</descEvento>
             <nProtEvPrestDes>{NProtEvPrestDes}</nProtEvPrestDes>
-            </evPrestDesacordo>");
+            </evCancPrestDesacordo>");
         }
     }
 
@@ -274,24 +274,6 @@ namespace Unimake.Business.DFe.Xml.CTe
     {
         private EvEPECCTe _evEPECCTe;
 
-        internal override void SetValue(PropertyInfo pi)
-        {
-            if (pi.Name == nameof(InfEntrega))
-            {
-                XmlReader.Read();
-
-                Toma4 = new EvEPECCTeToma4();
-                Toma4.UF = XmlReader.GetValue<UFBrasil>(nameof(Toma4.UF));
-                Toma4.CNPJ = XmlReader.GetValue<string>(nameof(Toma4.CNPJ));
-                Toma4.CPF = XmlReader.GetValue<string>(nameof(Toma4.CPF));
-                Toma4.IE = XmlReader.GetValue<string>(nameof(Toma4.IE));
-
-                return;
-            }
-
-            base.SetValue(pi);
-        }
-
         [XmlElement(ElementName = "evEPECCTe", Order = 0)]
         public EvEPECCTe EvEPECCTe
         {
@@ -415,7 +397,6 @@ namespace Unimake.Business.DFe.Xml.CTe
         }
 #endif
 
-
         [XmlIgnore]
         public string DhEmiField
         {
@@ -432,7 +413,7 @@ namespace Unimake.Business.DFe.Xml.CTe
                 <xJust>{XJust}</xJust>
                 <vICMS>{VICMSField}</vICMS>";
 
-            if (VICMS > 0)
+            if (VICMSST > 0)
             {
                 writeRaw += $@"<vICMSST>{VICMSSTField}</vICMSST>";
             }
@@ -442,7 +423,7 @@ namespace Unimake.Business.DFe.Xml.CTe
 
             writeRaw += $@"<toma4>
                 <toma>{(int)Toma4.Toma}</toma>
-                <UF>{Toma4.UF}</UF>";
+                <UF>{Toma4.UF.ToString()}</UF>";
 
             if (!string.IsNullOrWhiteSpace(Toma4.CNPJ))
             {
@@ -461,14 +442,126 @@ namespace Unimake.Business.DFe.Xml.CTe
 
             writeRaw += $@"</toma4>
                 <modal>{((int)Modal).ToString().PadLeft(2, '0')}</modal>
-                <UFIni>{UFIni}</UFIni>
-                <UFFim>{UFFim}</UFFim>
+                <UFIni>{UFIni.ToString()}</UFIni>
+                <UFFim>{UFFim.ToString()}</UFFim>
                 <tpCTe>{(int)TpCTe}</tpCTe>
                 <dhEmi>{DhEmiField}</dhEmi>";
 
             writeRaw += $@"</evEPECCTe>";
 
             writer.WriteRaw(writeRaw);
+        }
+
+
+        internal override void ProcessReader()
+        {
+            if (XmlReader == null)
+            {
+                return;
+            }
+
+            var xml = new XmlDocument();
+            xml.Load(XmlReader);
+
+            if (xml.GetElementsByTagName("detEvento")[0].Attributes.GetNamedItem("versaoEvento") != null)
+            {
+                VersaoEvento = xml.GetElementsByTagName("detEvento")[0].Attributes.GetNamedItem("versaoEvento").Value;
+            }
+
+            if (xml.GetElementsByTagName("evEPECCTe").Count > 0)
+            {
+                var evEPECCTe = (XmlElement)xml.GetElementsByTagName("evEPECCTe")[0];
+
+                if (evEPECCTe.GetElementsByTagName("descEvento").Count > 0)
+                {
+                    DescEvento = evEPECCTe.GetElementsByTagName("descEvento")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("xJust").Count > 0)
+                {
+                    XJust = evEPECCTe.GetElementsByTagName("xJust")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("vICMS").Count > 0)
+                {
+                    VICMSField = evEPECCTe.GetElementsByTagName("vICMS")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("vICMSST").Count > 0)
+                {
+                    VICMSSTField = evEPECCTe.GetElementsByTagName("vICMSST")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("vTPrest").Count > 0)
+                {
+                    VTPrestField = evEPECCTe.GetElementsByTagName("vTPrest")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("vCarga").Count > 0)
+                {
+                    VCargaField = evEPECCTe.GetElementsByTagName("vCarga")[0].InnerText;
+                }
+
+                if (evEPECCTe.GetElementsByTagName("toma4").Count > 0)
+                {
+                    Toma4 = new EvEPECCTeToma4();
+
+                    var toma4 = (XmlElement)evEPECCTe.GetElementsByTagName("toma4")[0];
+
+                    if (toma4.GetElementsByTagName("toma").Count > 0)
+                    {
+                        if (toma4.GetElementsByTagName("toma").Count > 0)
+                        {
+                            Toma4.Toma = (TomadorServicoCTe)Convert.ToInt32(toma4.GetElementsByTagName("toma")[0].InnerText);
+                        }
+
+                        if (toma4.GetElementsByTagName("UF").Count > 0)
+                        {
+                            Toma4.UF = (UFBrasil)Enum.Parse(typeof(UFBrasil), toma4.GetElementsByTagName("UF")[0].InnerText);
+                        }
+
+                        if (toma4.GetElementsByTagName("CNPJ").Count > 0)
+                        {
+                            Toma4.CNPJ = toma4.GetElementsByTagName("CNPJ")[0].InnerText;
+                        }
+
+                        if (toma4.GetElementsByTagName("CPF").Count > 0)
+                        {
+                            Toma4.CPF = toma4.GetElementsByTagName("CPF")[0].InnerText;
+                        }
+
+                        if (toma4.GetElementsByTagName("IE").Count > 0)
+                        {
+                            Toma4.IE = toma4.GetElementsByTagName("IE")[0].InnerText;
+                        }
+                    }
+                }
+
+                if (evEPECCTe.GetElementsByTagName("modal").Count > 0)
+                {
+                    Modal = (ModalidadeTransporteCTe)Convert.ToInt32(evEPECCTe.GetElementsByTagName("modal")[0].InnerText);
+                }
+
+                if (evEPECCTe.GetElementsByTagName("UFIni").Count > 0)
+                {
+                    UFIni = (UFBrasil)Enum.Parse(typeof(UFBrasil), evEPECCTe.GetElementsByTagName("UFIni")[0].InnerText);
+                }
+
+                if (evEPECCTe.GetElementsByTagName("UFFim").Count > 0)
+                {
+                    UFFim = (UFBrasil)Enum.Parse(typeof(UFBrasil), evEPECCTe.GetElementsByTagName("UFFim")[0].InnerText);
+                }
+
+                if (evEPECCTe.GetElementsByTagName("tpCTe").Count > 0)
+                {
+                    TpCTe = (TipoCTe)Convert.ToInt32(evEPECCTe.GetElementsByTagName("tpCTe")[0].InnerText);
+                }
+
+                if (evEPECCTe.GetElementsByTagName("dhEmi").Count > 0)
+                {
+                    DhEmiField = evEPECCTe.GetElementsByTagName("dhEmi")[0].InnerText;
+                }
+            }
         }
     }
 
@@ -594,7 +687,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("toma", Order = 0)]
         public TomadorServicoCTe Toma
         {
-            get => TomadorServicoCTe.Outros;
+            get => TomaField;
             set => TomaField = value;
         }
 
@@ -917,8 +1010,24 @@ namespace Unimake.Business.DFe.Xml.CTe
 #endif
         }
 
+        private string HashEntregaField;
+
         [XmlElement("hashEntrega", Order = 7)]
-        public string HashEntrega { get; set; }
+        public string HashEntrega
+        {
+            get => HashEntregaField;
+            set
+            {
+                if (Converter.IsSHA1Base64(value))
+                {
+                    HashEntregaField = value;
+                }
+                else
+                {
+                    HashEntregaField = Converter.CalculateSHA1Hash(value);
+                }
+            }
+        }
 
         [XmlElement("infEntrega", Order = 9)]
         public List<InfEntrega> InfEntrega { get; set; } = new List<InfEntrega>();
@@ -1416,9 +1525,12 @@ namespace Unimake.Business.DFe.Xml.CTe
                         _detEvento = new DetEventoCancelamentoInsucessoEntrega();
                         break;
 
-
                     case TipoEventoCTe.RegistroPassagemAutomatico:
                         _detEvento = new DetEventoRegistroPassagemAutomatico();
+                        break;
+
+                    case TipoEventoCTe.RegistoPassagemAutomaticoOriginadoMDFe:
+                        _detEvento = new DetEventoRegistroPassagemAutomaticoMDFe();
                         break;
 
                     default:
@@ -1436,7 +1548,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlAttribute(DataType = "ID", AttributeName = "Id")]
         public string Id
         {
-            get => "ID" + ((int)TpEvento).ToString() + ChCTe + NSeqEvento.ToString((Convert.ToDecimal(DetEvento.VersaoEvento) >= 400 ? "000" : "00"));
+            get => "ID" + ((int)TpEvento).ToString() + ChCTe + NSeqEvento.ToString((DetEvento.VersaoEvento == "3.00" ? "00" : "000"));
             set => _ = value;
         }
 
@@ -1664,10 +1776,7 @@ namespace Unimake.Business.DFe.Xml.CTe
     {
         private EvCancIECTe _eventoCancIECTe;
 
-        internal override void SetValue(PropertyInfo pi)
-        {
-            base.SetValue(pi);
-        }
+        internal override void SetValue(PropertyInfo pi) => base.SetValue(pi);
 
         [XmlIgnore]
         public override string DescEvento
@@ -1759,8 +1868,24 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("longitude")]
         public string Longitude { get; set; }
 
+        private string HashTentativaEntregaField;
+
         [XmlElement("hashTentativaEntrega")]
-        public string HashTentativaEntrega { get; set; }
+        public string HashTentativaEntrega
+        {
+            get => HashTentativaEntregaField;
+            set
+            {
+                if (Converter.IsSHA1Base64(value))
+                {
+                    HashTentativaEntregaField = value;
+                }
+                else
+                {
+                    HashTentativaEntregaField = Converter.CalculateSHA1Hash(value);
+                }
+            }
+        }
 
         [XmlIgnore]
 #if INTEROP
@@ -2419,4 +2544,84 @@ namespace Unimake.Business.DFe.Xml.CTe
     }
 
     #endregion
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoRegistroPassagemAutomaticoMDFe")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoRegistroPassagemAutomaticoMDFe : EventoDetalhe
+    {
+        private EvCTeRegPassagemAutoMDFe _evCTeRegPassagemAutoMDFe;
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EvCTeRegPassagemAutoMDFe.DescEvento;
+            set => EvCTeRegPassagemAutoMDFe.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public string ChMDFe
+        {
+            get => EvCTeRegPassagemAutoMDFe.ChMDFe;
+            set => EvCTeRegPassagemAutoMDFe.ChMDFe = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeRegPassagemAutoMDFe EvCTeRegPassagemAutoMDFe
+        {
+            get => _evCTeRegPassagemAutoMDFe ?? (_evCTeRegPassagemAutoMDFe = new EvCTeRegPassagemAutoMDFe());
+            set => _evCTeRegPassagemAutoMDFe = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evCTeRegPassagemAutoMDFe>
+                <descEvento>{DescEvento}</descEvento>
+                <chMDFe>{ChMDFe}</chMDFe>";
+
+            writeRaw += "</evCTeRegPassagemAutoMDFe>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeRegPassagemAutoMDFe")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evCTeRegPassagemAutoMDFe")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvCTeRegPassagemAutoMDFe : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento")]
+        public string DescEvento { get; set; } = "Registro de Passagem Automatico Originado no MDFe";
+
+        [XmlElement("chMDFe")]
+        public string ChMDFe { get; set; }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na desserialização
+        /// </summary>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
+    }
 }

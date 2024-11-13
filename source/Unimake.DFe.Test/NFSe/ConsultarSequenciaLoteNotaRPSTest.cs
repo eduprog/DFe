@@ -24,7 +24,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void ConsultarSequenciaLoteNotaRPS(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void ConsultarSequenciaLoteNotaRPS(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "ConsultaSequenciaLoteNotaRPS-ped-seqlotenotarps.xml";
             var arqXML = "..\\..\\..\\NFSe\\Resources\\" + padraoNFSe.ToString() + "\\" + versaoSchema + "\\" + nomeXMLEnvio;
@@ -46,7 +46,7 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var consultarSequenciaLoteNotaRPS = new ConsultarSequenciaLoteNotaRPS(conteudoXML, configuracao);
-            consultarSequenciaLoteNotaRPS.Executar();
+            Assert.Multiple(() => TestUtility.AnalisaResultado(consultarSequenciaLoteNotaRPS));
         }
     }
 }

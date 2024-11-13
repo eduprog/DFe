@@ -81,31 +81,70 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// </summary>
         protected override void DefinirConfiguracao()
         {
-            if (EnviNFe == null)
-            {
-                Configuracoes.Definida = false;
-                return;
-            }
-
-            var xml = EnviNFe;
-
             if (!Configuracoes.Definida)
             {
                 Configuracoes.Servico = Servico.NFeAutorizacao;
-                Configuracoes.CodigoUF = (int)xml.NFe[0].InfNFe[0].Ide.CUF;
-                Configuracoes.TipoAmbiente = xml.NFe[0].InfNFe[0].Ide.TpAmb;
-                Configuracoes.Modelo = xml.NFe[0].InfNFe[0].Ide.Mod;
-                Configuracoes.TipoEmissao = xml.NFe[0].InfNFe[0].Ide.TpEmis;
-                Configuracoes.SchemaVersao = xml.Versao;
+
+                if (ConteudoXML.GetElementsByTagName("enviNFe").Count > 0)
+                {
+                    var tagEnviNFe = (XmlElement)ConteudoXML.GetElementsByTagName("enviNFe")[0];
+                    if (tagEnviNFe.GetElementsByTagName("infNFe").Count > 0)
+                    {
+                        var tagInfNFe = (XmlElement)tagEnviNFe.GetElementsByTagName("infNFe")[0];
+
+                        if (tagInfNFe.GetAttribute("versao").Length > 0)
+                        {
+                            Configuracoes.SchemaVersao = tagInfNFe.GetAttribute("versao");
+                        }
+                        else
+                        {
+                            throw new Exception("O atributo obrigatório \"versao\" da tag <infNFe>, do grupo de tag <enviNFe><NFe>, não foi localizado no XML.");
+                        }
+
+                        if (tagInfNFe.GetElementsByTagName("ide").Count > 0)
+                        {
+                            var tagIde = (XmlElement)tagInfNFe.GetElementsByTagName("ide")[0];
+
+                            if (tagIde.GetElementsByTagName("cUF").Count <= 0)
+                            {
+                                throw new Exception("A tag obrigatória <cUF>, do grupo de tag <enviNFe><NFe><infNFe><ide>, não foi localizada no XML.");
+                            }
+                            else if (tagIde.GetElementsByTagName("mod").Count <= 0)
+                            {
+                                throw new Exception("A tag obrigatória <mod>, do grupo de tag <enviNFe><NFe><infNFe><ide>, não foi localizada no XML.");
+                            }
+                            else if (tagIde.GetElementsByTagName("tpEmis").Count <= 0)
+                            {
+                                throw new Exception("A tag obrigatória <tpEmis>, do grupo de tag <enviNFe><NFe><infNFe><ide>, não foi localizada no XML.");
+                            }
+                            else if (tagIde.GetElementsByTagName("tpAmb").Count <= 0)
+                            {
+                                throw new Exception("A tag obrigatória <tpAmb>, do grupo de tag <enviNFe><NFe><infNFe><ide>, não foi localizada no XML.");
+                            }
+
+                            Configuracoes.CodigoUF = Convert.ToInt32(tagIde.GetElementsByTagName("cUF")[0].InnerText);
+                            Configuracoes.Modelo = (ModeloDFe)Convert.ToInt32(tagIde.GetElementsByTagName("mod")[0].InnerText);
+                            Configuracoes.TipoEmissao = (TipoEmissao)Convert.ToInt32(tagIde.GetElementsByTagName("tpEmis")[0].InnerText);
+                            Configuracoes.TipoAmbiente = (TipoAmbiente)Convert.ToInt32(tagIde.GetElementsByTagName("tpAmb")[0].InnerText);
+                        }
+                        else
+                        {
+                            throw new Exception("A tag obrigatória <ide>, do grupo de tag <enviNFe><infNFe>, não foi localizada no XML.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("A tag obrigatória <infNFe>, do grupo de tag <enviNFe>, não foi localizada no XML.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("A tag obrigatória <enviNFe> não foi localizada no XML.");
+                }
 
                 base.DefinirConfiguracao();
             }
         }
-
-        /// <summary>
-        /// Efetuar ajustes diversos no XML após o mesmo ter sido assinado.
-        /// </summary>
-        protected override void AjustarXMLAposAssinado() => EnviNFe = new EnviNFe().LerXML<EnviNFe>(ConteudoXML);
 
         #endregion Protected Methods
 
@@ -350,6 +389,46 @@ namespace Unimake.Business.DFe.Servicos.NFe
             }
 
             Inicializar(enviNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(enviNFe)), configuracao);
+            EnviNFe = EnviNFe.LerXML<EnviNFe>(ConteudoXML); //Atualizar o objeto com o conteúdo do XML
+        }
+
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Autorizacao(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+
+            #region Limpar a assinatura e QRCode do objeto para recriar e atualizar o ConteudoXML. Isso garante que a propriedade e o objeto tenham assinaturas iguais, evitando discrepâncias. Autor: Wandrey Data: 10/06/2024
+
+            //Remover a assinatura e QRCode para forçar criar novamente
+            EnviNFe = EnviNFe.LerXML<EnviNFe>(ConteudoXML);
+            foreach (var nfe in EnviNFe.NFe)
+            {
+                nfe.Signature = null;
+                nfe.InfNFeSupl = null;
+            }
+
+            //Gerar o XML novamente com base no objeto
+            ConteudoXML = EnviNFe.GerarXML();
+
+            //Forçar assinar e criar QRCode novamente
+            _ = ConteudoXMLAssinado;
+
+            //Atualizar o objeto novamente com o XML já assinado e com QRCode
+            EnviNFe = EnviNFe.LerXML<EnviNFe>(ConteudoXML);
+
+            #endregion
         }
 
         #endregion Public Constructors

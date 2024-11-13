@@ -60,7 +60,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         /// Verifica se é ou não para gerar a tag cUF
         /// </summary>
         /// <returns>Retorna true se for para gerar a tag</returns>
-        public bool ShouldSerializeCUFField() => Convert.ToDecimal(Versao) >= 400;
+        public bool ShouldSerializeCUFField() => Versao != "3.00";
 
         #endregion
 
@@ -72,7 +72,11 @@ namespace Unimake.Business.DFe.Xml.CTe
         {
             XmlDocument xml = null;
 
-            if (Convert.ToDecimal(Versao) >= 400)
+            if (Versao == "3.00")
+            {
+                xml = XMLUtility.Serializar(this, NameSpaces);
+            }
+            else
             {
                 // criar uma instância de XmlRootAttribute com o novo nome do elemento
                 var newRootAttribute = new XmlRootAttribute("consStatServCTe")
@@ -82,10 +86,6 @@ namespace Unimake.Business.DFe.Xml.CTe
                 };
 
                 xml = XMLUtility.Serializar(this, newRootAttribute, NameSpaces);
-            }
-            else
-            {
-                xml = XMLUtility.Serializar(this, NameSpaces);
             }
 
             return xml;

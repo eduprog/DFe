@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
+using System.Xml;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.NFe;
@@ -88,6 +89,25 @@ namespace Unimake.Business.DFe.Servicos.NFe
             Inicializar(consStatServ?.GerarXML() ?? throw new ArgumentNullException(nameof(consStatServ)), configuracao);
         }
 
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public StatusServico(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+        }
+
+
         #endregion Public Constructors
 
         #region Public Methods
@@ -100,7 +120,7 @@ namespace Unimake.Business.DFe.Servicos.NFe
         /// <param name="consStatServ">Objeto contendo o XML a ser enviado</param>
         /// <param name="configuracao">Configurações a serem utilizadas na conexão e envio do XML para o web-service</param>
         [ComVisible(true)]
-        public void Executar(ConsStatServ consStatServ, Configuracao configuracao)
+        public void Executar([MarshalAs(UnmanagedType.IUnknown)] ConsStatServ consStatServ, [MarshalAs(UnmanagedType.IUnknown)] Configuracao configuracao)
         {
             try
             {

@@ -24,7 +24,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void ConsultarLoteRps(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void ConsultarLoteRps(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "ConsultarLoteRpsEnvio-ped-loterps.xml";
 
@@ -60,7 +60,7 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var consultarLoteRps = new ConsultarLoteRps(conteudoXML, configuracao);
-            consultarLoteRps.Executar();
+            Assert.Multiple(() => TestUtility.AnalisaResultado(consultarLoteRps));
         }
     }
 }

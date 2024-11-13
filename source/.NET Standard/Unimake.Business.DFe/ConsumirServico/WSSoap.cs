@@ -22,15 +22,47 @@ namespace Unimake.Business.DFe
         private int _TimeOutWebServiceConnect;
         private PadraoNFSe _PadraoNFSe;
         private bool _UsaCertificadoDigital;
-        private string _TagRetornoHomologacao;
         private TipoAmbiente _TipoAmbiente;
         private bool _ConverteSenhaBase64;
         private string _MunicipioSenha;
+        private string _MunicipioUsuario;
+        private bool _EncriptaTagAssinatura;
+        private string _Token;
+        private Servico _Servico;
+        private bool _TemCDATA;
 
         #endregion Private Fields
 
         #region Public Properties
 
+
+        /// <summary>
+        /// Propriedade criada para tratar municípios com mais de um CDATA no SOAP.
+        /// </summary>
+        public bool TemCDATA
+        {
+            get => _TemCDATA;
+            set => _TemCDATA = value;
+        }
+
+
+        /// <summary>
+        /// Encriptação de assinatura usada no padrão DSF 1.0
+        /// </summary>
+        public bool EncriptaTagAssinatura
+        {
+            get => _EncriptaTagAssinatura;
+            set => _EncriptaTagAssinatura = value;
+        }
+
+        /// <summary>
+        /// Municipio Senha
+        /// </summary>
+        public string Token
+        {
+            get => _Token;
+            set => _Token = value;
+        }
 
         /// <summary>
         /// Utiliza ou não a conversão Base64
@@ -39,6 +71,15 @@ namespace Unimake.Business.DFe
         {
             get => _MunicipioSenha;
             set => _MunicipioSenha = value;
+        }
+
+        /// <summary>
+        /// Municipio Usuario
+        /// </summary>
+        public string MunicipioUsuario
+        {
+            get => _MunicipioUsuario;
+            set => _MunicipioUsuario = value;
         }
 
         /// <summary>
@@ -114,15 +155,6 @@ namespace Unimake.Business.DFe
         }
 
         /// <summary>
-        /// Nome da tag de retorno de conteúdo que é devolvido pelo WebService
-        /// </summary>
-        public string TagRetornoHomologacao
-        {
-            get => _TagRetornoHomologacao;
-            set => _TagRetornoHomologacao = value;
-        }
-
-        /// <summary>
         /// Tipo ambiente
         /// </summary>
         public TipoAmbiente TipoAmbiente
@@ -174,6 +206,15 @@ namespace Unimake.Business.DFe
         {
             get => _TimeOutWebServiceConnect <= 0 ? (_TimeOutWebServiceConnect = 60000) : _TimeOutWebServiceConnect;
             set => _TimeOutWebServiceConnect = value;
+        }
+
+        /// <summary>
+        /// Serviço que está sendo executado
+        /// </summary>
+        public Servico Servico
+        {
+            get => _Servico;
+            set => _Servico = value;
         }
 
         #endregion Public Properties

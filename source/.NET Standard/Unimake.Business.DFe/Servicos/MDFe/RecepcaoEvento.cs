@@ -20,12 +20,16 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 #endif
     public class RecepcaoEvento : ServicoBase
     {
-        #region Private Fields
-        private EventoMDFe EventoMDFe => new EventoMDFe().LerXML<EventoMDFe>(ConteudoXML);
+        private EventoMDFe _eventoMDFe;
 
-        #endregion Private Fields
-
-        #region Private Methods
+        /// <summary>
+        /// Objeto do XML do Evento de MDFe
+        /// </summary>
+        public EventoMDFe EventoMDFe
+        {
+            get => _eventoMDFe ?? (_eventoMDFe = new EventoMDFe().LerXML<EventoMDFe>(ConteudoXML));
+            protected set => _eventoMDFe = value;
+        }
 
         private void ValidarXMLEvento(XmlDocument xml, string schemaArquivo, string targetNS)
         {
@@ -37,10 +41,6 @@ namespace Unimake.Business.DFe.Servicos.MDFe
                 throw new ValidarXMLException(validar.ErrorMessage);
             }
         }
-
-        #endregion Private Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Definir o valor de algumas das propriedades do objeto "Configuracoes"
@@ -72,7 +72,15 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 
             if (Configuracoes.SchemasEspecificos.Count > 0)
             {
-                var tpEvento = ((int)xml.InfEvento.TpEvento);
+                int tpEvento;
+                if (ConteudoXML.GetElementsByTagName("tpEvento").Count > 0)
+                {
+                    tpEvento = Convert.ToInt32(ConteudoXML.GetElementsByTagName("tpEvento")[0].InnerText);
+                }
+                else
+                {
+                    throw new Exception("Não foi possível localizar a tag obrigatória <tpEvento> no XML.");
+                }
 
                 schemaArquivo = Configuracoes.SchemasEspecificos[tpEvento.ToString()].SchemaArquivo;
                 schemaArquivoEspecifico = Configuracoes.SchemasEspecificos[tpEvento.ToString()].SchemaArquivoEspecifico;
@@ -106,10 +114,6 @@ namespace Unimake.Business.DFe.Servicos.MDFe
 
             #endregion Validar a parte específica de cada evento
         }
-
-        #endregion Protected Methods
-
-        #region Public Properties
 
         /// <summary>
         /// Propriedade contendo o XML do evento com o protocolo de autorização anexado
@@ -145,10 +149,6 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
@@ -162,6 +162,8 @@ namespace Unimake.Business.DFe.Servicos.MDFe
             }
 
             Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+
+            EventoMDFe = EventoMDFe.LerXML<EventoMDFe>(ConteudoXML);
         }
 
         /// <summary>
@@ -169,9 +171,40 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         /// </summary>
         public RecepcaoEvento() : base() { }
 
-        #endregion Public Constructors
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RecepcaoEvento(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-        #region Public Methods
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+
+            #region Limpar a assinatura do objeto para recriar e atualizar o ConteudoXML. Isso garante que a propriedade e o objeto tenham assinaturas iguais, evitando discrepâncias. Autor: Wandrey Data: 10/06/2024
+
+            //Remover a assinatura para forçar criar novamente
+            EventoMDFe = EventoMDFe.LerXML<EventoMDFe>(ConteudoXML);
+            EventoMDFe.Signature = null;
+
+            //Gerar o XML novamente com base no objeto
+            ConteudoXML = EventoMDFe.GerarXML();
+
+            //Forçar assinar novamente
+            _ = ConteudoXMLAssinado;
+
+            //Atualizar o objeto novamente com o XML já assinado
+            EventoMDFe = EventoMDFe.LerXML<EventoMDFe>(ConteudoXML);
+
+            #endregion
+        }
 
         /// <summary>
         /// Executar o serviço
@@ -271,7 +304,5 @@ namespace Unimake.Business.DFe.Servicos.MDFe
                 ThrowHelper.Instance.Throw(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

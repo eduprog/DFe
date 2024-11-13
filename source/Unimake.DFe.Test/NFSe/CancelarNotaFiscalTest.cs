@@ -24,7 +24,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void CancelarNotaFiscal(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void CancelarNotaFiscal(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "cancelarNotaFiscal-ped-cannfse.xml";
 
@@ -58,7 +58,7 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var cancelarNotaFiscal = new CancelarNotaFiscal(conteudoXML, configuracao);
-            cancelarNotaFiscal.Executar();
+            Assert.Multiple(() => TestUtility.AnalisaResultado(cancelarNotaFiscal));
         }
     }
 }

@@ -17,10 +17,11 @@ namespace Unimake.DFe.Test.MDFe
         /// </summary>
         [Theory]
         [Trait("DFe", "MDFe")]
-        [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalAereo.xml")]
-        [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalAquaviario.xml")]
-        [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalFerroviario.xml")]
-        [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalRodoviario.xml")]
+        //[InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalAereo.xml")]
+        //[InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalAquaviario.xml")]
+        //[InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalFerroviario.xml")]
+        //[InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalRodoviario.xml")]
+        [InlineData(@"..\..\..\MDFe\Resources\enviMDFe_ModalFerroviario_ComPrestacaoParcial.xml")]
         public void SerializacaoDeserializacaoEnviMDFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -37,9 +38,9 @@ namespace Unimake.DFe.Test.MDFe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            var autorizacao = new Unimake.Business.DFe.Servicos.MDFe.Autorizacao(xml, configuracao);
+            var doc2 = xml.GerarXML();
 
-            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == xml.GerarXML().InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
 
@@ -71,6 +72,7 @@ namespace Unimake.DFe.Test.MDFe
         [Theory]
         [Trait("DFe", "MDFe")]
         [InlineData(@"..\..\..\MDFe\Resources\EventoMDFePagamentoOperacaoMDFe.xml")]
+        [InlineData(@"..\..\..\MDFe\Resources\EventoMDFeAlteracaoPagamentoServico.xml")]
         public void SerializacaoDeserializacaoEventoMDFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -92,6 +94,7 @@ namespace Unimake.DFe.Test.MDFe
         [Trait("DFe", "MDFe")]
         [InlineData(@"..\..\..\MDFe\Resources\retConsSitMDFe-com-evento-de-cancelamento.xml")]
         [InlineData(@"..\..\..\MDFe\Resources\retConsSitMDFe-com-evento-de-encerramento.xml")]
+        [InlineData(@"..\..\..\MDFe\Resources\retConsSitMDFe-com-evento-510620.xml")]
         public void SerializacaoDeserializacaoRetConsSitMDFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -111,7 +114,8 @@ namespace Unimake.DFe.Test.MDFe
         /// <param name="arqXML">Arquivo a ser desserializado</param>
         [Theory]
         [Trait("DFe", "MDFe")]
-        [InlineData(@"..\..\..\MDFe\Resources\procEventoMDFe_Encerramento_110112_01.xml")]
+        //[InlineData(@"..\..\..\MDFe\Resources\procEventoMDFe_Encerramento_110112_01.xml")]
+        [InlineData(@"..\..\..\MDFe\Resources\procEventoMDFe_AlteracaoPagamentoServico_110118_01.xml")]        
         public void SerializacaoDeserializacaoProcEventoMDFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");

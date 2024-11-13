@@ -9,7 +9,7 @@ LIBFOLDERS =
 LMT = .F.
 LNOAUTOFWH = .F.
 LPRG_CLASSICDEBUG = .F.
-LPRG_DEBUG = .F.
+LPRG_DEBUG = .T.
 LUSEDLL = .F.
 MAPFILE = 
 MYC_FLAGS = 
@@ -277,6 +277,81 @@ MYDEFINES =
 MYPRG_FLAGS = 
 
 [ConsultaMDFeNaoEnc.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[ExtrairEventoPedSitNFe.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[VerificarDLLInstalada.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[eSocialConsultaLoteAssincrono.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2210Desserializando.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2210.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2221.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial1010.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2220.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial1200.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2240.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial1210.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2220Desserializando.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2200.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2230.prg]
+MYC_FLAGS = 
+MYDEFINES = 
+MYPRG_FLAGS = 
+
+[EnviarEsocial2299.prg]
 MYC_FLAGS = 
 MYDEFINES = 
 MYPRG_FLAGS = 

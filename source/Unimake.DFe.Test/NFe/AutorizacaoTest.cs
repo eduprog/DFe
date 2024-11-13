@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.NFe;
+using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.NFe;
 using Xunit;
 
@@ -12,8 +14,6 @@ namespace Unimake.DFe.Test.NFe
     /// </summary>
     public class AutorizacaoTest
     {
-        #region Public Methods
-
         /// <summary>
         /// Enviar uma NFe no modo síncrono somente para saber se a conexão com o webservice está ocorrendo corretamente e se quem está respondendo é o webservice correto.
         /// Efetua o envio por estado + ambiente para garantir que todos estão funcionando.
@@ -299,6 +299,29 @@ namespace Unimake.DFe.Test.NFe
                     }
             };
 
+            var idCSRT = "01";
+            var CSRT = "G8063VRTNDMO886SFNK5LDUDEI24XJ22YIPO";
+            var hashCSRT = Converter.CalculateSHA1Hash("G8063VRTNDMO886SFNK5LDUDEI24XJ22YIPO41180678393592000146558900000006041028190697");
+
+            switch (ufBrasil)
+            {
+                case UFBrasil.PR:
+                    xml.NFe[0].InfNFe[0].InfRespTec.IdCSRT = idCSRT;
+                    xml.NFe[0].InfNFe[0].InfRespTec.HashCSRT = hashCSRT;
+                    break;
+
+                case UFBrasil.SP:
+                    xml.NFe[0].InfNFe[0].InfRespTec.IdCSRT = idCSRT;
+                    xml.NFe[0].InfNFe[0].InfRespTec.CSRT = CSRT;
+                    break;
+
+                case UFBrasil.RS:
+                    xml.NFe[0].InfNFe[0].InfRespTec.IdCSRT = idCSRT;
+                    xml.NFe[0].InfNFe[0].InfRespTec.HashCSRT = "G8063VRTNDMO886SFNK5LDUDEI24XJ22YIPO41180678393592000146558900000006041028190697";
+                    break;
+            }
+
+
             var configuracao = new Configuracao
             {
                 TipoDFe = TipoDFe.NFe,
@@ -307,6 +330,39 @@ namespace Unimake.DFe.Test.NFe
             };
 
             var autorizacao = new Autorizacao(xml, configuracao);
+
+            XmlElement elementInfRespTec = null;
+
+            #region Testar o hashCSRT
+            switch (ufBrasil)
+            {
+                case UFBrasil.PR:
+                    elementInfRespTec = (XmlElement)autorizacao.ConteudoXMLAssinado.GetElementsByTagName("infRespTec")[0];
+                    Assert.True(elementInfRespTec.GetElementsByTagName("idCSRT")[0].InnerText == idCSRT, "idCSRT informado está diferente do valor gerado no XML.");
+                    Assert.True(elementInfRespTec.GetElementsByTagName("hashCSRT")[0].InnerText == Converter.CalculateSHA1Hash("G8063VRTNDMO886SFNK5LDUDEI24XJ22YIPO41180678393592000146558900000006041028190697"), "hasCSRT informado está diferente do valor gerado no XML.");
+                    break;
+
+                case UFBrasil.SP:
+                    elementInfRespTec = (XmlElement)autorizacao.ConteudoXMLAssinado.GetElementsByTagName("infRespTec")[0];
+                    Assert.True(elementInfRespTec.GetElementsByTagName("idCSRT")[0].InnerText == idCSRT, "idCSRT informado está diferente do valor gerado no XML.");
+                    Assert.True(elementInfRespTec.GetElementsByTagName("hashCSRT")[0].InnerText == Converter.CalculateSHA1Hash(CSRT + xml.NFe[0].InfNFe[0].Chave), "hasCSRT informado está diferente do valor gerado no XML.");
+                    break;
+
+                case UFBrasil.RS:
+                    elementInfRespTec = (XmlElement)autorizacao.ConteudoXMLAssinado.GetElementsByTagName("infRespTec")[0];
+                    Assert.True(elementInfRespTec.GetElementsByTagName("idCSRT")[0].InnerText == idCSRT, "idCSRT informado está diferente do valor gerado no XML.");
+                    Assert.True(elementInfRespTec.GetElementsByTagName("hashCSRT")[0].InnerText == Converter.CalculateSHA1Hash("G8063VRTNDMO886SFNK5LDUDEI24XJ22YIPO41180678393592000146558900000006041028190697"), "hasCSRT informado está diferente do valor gerado no XML.");
+                    break;
+
+                default:
+                    elementInfRespTec = (XmlElement)autorizacao.ConteudoXMLAssinado.GetElementsByTagName("infRespTec")[0];
+                    Assert.True(elementInfRespTec.GetElementsByTagName("idCSRT").Count <= 0, "Não pode existir tag <idCSRT> no XML");
+                    Assert.True(elementInfRespTec.GetElementsByTagName("hashCSRT").Count <= 0, "Não pode existir tag <hashCSRT> no XML");
+                    break;
+            }
+
+            #endregion
+
             autorizacao.Executar();
 
             Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
@@ -390,6 +446,39 @@ namespace Unimake.DFe.Test.NFe
                 return;
             }
 
+            var xml = MontaXMLEnviNFe(ufBrasil, tipoAmbiente);
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFe,
+                TipoEmissao = TipoEmissao.Normal,
+                CertificadoDigital = PropConfig.CertificadoDigital
+            };
+
+            var autorizacao = new Autorizacao(xml, configuracao);
+            autorizacao.Executar();
+
+            Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
+            Assert.True(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
+            if (autorizacao.Result.CUF != UFBrasil.EX) //Maranhão, não sei o pq, está retornando de forma errada a UF, retorna como EX e não MA, bem estranho. Falha no WS deles.
+            {
+                Assert.True(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
+            }
+            Assert.True(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
+            if (autorizacao.Result.CStat.Equals(104))
+            {
+                Assert.True(autorizacao.Result.CStat.Equals(104), "Lote não foi processado");
+                Assert.True(autorizacao.Result.ProtNFe.InfProt != null, "Não teve retorno do processamento no envio síncrono");
+                Assert.True(autorizacao.Result.ProtNFe.InfProt.ChNFe.Equals(xml.NFe[0].InfNFe[0].Chave), "Não teve retorno do processamento no envio síncrono");
+            }
+        }
+
+        /// <summary>
+        /// Auxiliar para montar o XML EnviNFe
+        /// </summary>
+        /// <returns></returns>
+        private EnviNFe MontaXMLEnviNFe(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente)
+        {
             var xml = new EnviNFe
             {
                 Versao = "4.00",
@@ -630,6 +719,22 @@ namespace Unimake.DFe.Test.NFe
                     }
             };
 
+            return xml;
+        }
+
+        /// <summary>
+        /// Enviar uma NFe no modo síncrono somente para saber se a conexão com o webservice está ocorrendo corretamente e se quem está respondendo é o webservice correto.
+        /// Efetua o envio por estado + ambiente para garantir que todos estão funcionando.
+        /// </summary>
+        /// <param name="ufBrasil">UF para onde deve ser enviado a NFe</param>
+        /// <param name="tipoAmbiente">Ambiente para onde deve ser enviado a NFe</param>
+        [Theory]
+        [Trait("DFe", "NFe")]
+        [InlineData(UFBrasil.PR, TipoAmbiente.Producao)]
+        public void EnviarNFeSincronoString(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente)
+        {
+            var xml = MontaXMLEnviNFe(ufBrasil, tipoAmbiente);
+
             var configuracao = new Configuracao
             {
                 TipoDFe = TipoDFe.NFe,
@@ -637,16 +742,14 @@ namespace Unimake.DFe.Test.NFe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            var autorizacao = new Autorizacao(xml, configuracao);
+            var autorizacao = new Autorizacao(xml.GerarXML().OuterXml, configuracao);
             autorizacao.Executar();
 
             Assert.True(configuracao.CodigoUF.Equals((int)ufBrasil), "UF definida nas configurações diferente de " + ufBrasil.ToString());
             Assert.True(configuracao.TipoAmbiente.Equals(tipoAmbiente), "Tipo de ambiente definido nas configurações diferente de " + tipoAmbiente.ToString());
-            if (autorizacao.Result.CUF != UFBrasil.EX) //Maranhão, não sei o pq, está retornando de forma errada a UF, retorna como EX e não MA, bem estranho. Falha no WS deles.
-            {
-                Assert.True(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
-            }
+            Assert.True(autorizacao.Result.CUF.Equals(ufBrasil), "Webservice retornou uma UF e está diferente de " + ufBrasil.ToString());
             Assert.True(autorizacao.Result.TpAmb.Equals(tipoAmbiente), "Webservice retornou um Tipo de ambiente diferente " + tipoAmbiente.ToString());
+
             if (autorizacao.Result.CStat.Equals(104))
             {
                 Assert.True(autorizacao.Result.CStat.Equals(104), "Lote não foi processado");
@@ -654,7 +757,5 @@ namespace Unimake.DFe.Test.NFe
                 Assert.True(autorizacao.Result.ProtNFe.InfProt.ChNFe.Equals(xml.NFe[0].InfNFe[0].Chave), "Não teve retorno do processamento no envio síncrono");
             }
         }
-
-        #endregion Public Methods
     }
 }

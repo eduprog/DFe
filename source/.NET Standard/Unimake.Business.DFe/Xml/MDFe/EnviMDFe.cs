@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
-using System.Text;
 
 namespace Unimake.Business.DFe.Xml.MDFe
 {
@@ -158,18 +158,20 @@ namespace Unimake.Business.DFe.Xml.MDFe
         {
             get
             {
-                ChaveField = ((int)Ide.CUF).ToString() +
-                    Ide.DhEmi.ToString("yyMM") +
-                    (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')) +
-                    ((int)Ide.Mod).ToString().PadLeft(2, '0') +
-                    Ide.Serie.ToString().PadLeft(3, '0') +
-                    Ide.NMDF.ToString().PadLeft(9, '0') +
-                    ((int)Ide.TpEmis).ToString() +
-                    Ide.CMDF.PadLeft(8, '0');
-
-                Ide.CDV = Utility.XMLUtility.CalcularDVChave(ChaveField);
-
-                ChaveField += Ide.CDV.ToString();
+                var conteudoChaveDFe = new XMLUtility.ConteudoChaveDFe
+                {
+                    UFEmissor = (UFBrasil)(int)Ide.CUF,
+                    AnoEmissao = Ide.DhEmi.ToString("yy"),
+                    MesEmissao = Ide.DhEmi.ToString("MM"),
+                    CNPJCPFEmissor = (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')),
+                    Modelo = (ModeloDFe)(int)Ide.Mod,
+                    Serie = Ide.Serie,
+                    NumeroDoctoFiscal = Ide.NMDF,
+                    TipoEmissao = (TipoEmissao)(int)Ide.TpEmis,
+                    CodigoNumerico = Ide.CMDF
+                };
+                ChaveField = XMLUtility.MontarChaveMDFe(ref conteudoChaveDFe);
+                Ide.CDV = conteudoChaveDFe.DigitoVerificador;
 
                 return ChaveField;
             }
@@ -1124,6 +1126,12 @@ namespace Unimake.Business.DFe.Xml.MDFe
         [XmlElement("idEstrangeiro")]
         public string IdEstrangeiro { get; set; }
 
+        /// <summary>
+        /// Grupo de informações do contrato entre transportador e contratante
+        /// </summary>
+        [XmlElement("infContrato")]
+        public InfContrato InfContrato { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
@@ -1137,6 +1145,41 @@ namespace Unimake.Business.DFe.Xml.MDFe
         #endregion
     }
 
+    /// <summary>
+    /// Grupo de informações do contrato entre transportador e contratante
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.MDFe.InfContrato")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(Namespace = "http://www.portalfiscal.inf.br/mdfe")]
+    public class InfContrato
+    {
+        /// <summary>
+        /// Número do contrato do transportador com o contratante quando este existir para prestações continuadas
+        /// </summary>
+        [XmlElement("NroContrato")]
+        public string NroContrato { get; set; }
+
+        /// <summary>
+        /// Valor Global do Contrato
+        /// </summary>
+        [XmlIgnore]
+        public double VContratoGlobal { get; set; }
+
+        /// <summary>
+        /// Valor Global do Contrato (Utilize a propriedade VContratoGlobal para setar ou recuperar o conteúdo
+        /// </summary>
+        [XmlElement("vContratoGlobal")]
+        public string VContratoGlobalField
+        {
+            get => VContratoGlobal.ToString("F2", CultureInfo.InvariantCulture);
+            set => VContratoGlobal = Utility.Converter.ToDouble(value);
+        }
+    }
+
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.MDFe.InfPag")]
@@ -1147,6 +1190,7 @@ namespace Unimake.Business.DFe.Xml.MDFe
     public class InfPag : InfContratante
     {
         private int IndAltoDesempField;
+        private int IndAntecipaAdiantField;
 
         [XmlElement("Comp")]
         public List<Comp> Comp { get; set; }
@@ -1189,17 +1233,53 @@ namespace Unimake.Business.DFe.Xml.MDFe
             set => VAdiant = Utility.Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Indicador para declarar concordância em antecipar o adiantamento (Informar a tag somente se for autorizado antecipar o adiantamento)
+        /// </summary>
+        [XmlElement("indAntecipaAdiant")]
+        public int IndAntecipaAdiant
+        {
+            get => IndAntecipaAdiantField;
+            set
+            {
+                if (value != 1)
+                {
+                    throw new Exception("Conteúdo da TAG <indAntecipaAdiant> inválido! Valores aceitos: 1 ou não informe a TAG.");
+                }
+
+                IndAntecipaAdiantField = value;
+            }
+        }
+
         [XmlElement("infPrazo")]
         public List<InfPrazo> InfPrazo { get; set; }
+
+        /// <summary> 
+        /// Tipo de Permissão em relação a antecipação das parcelas
+        /// </summary>
+        [XmlElement("tpAntecip")]
+#if INTEROP
+        public TipoPermissaoAtencipacaoParcela TpAntecip { get; set; } = (TipoPermissaoAtencipacaoParcela)(-1);
+#else
+        public TipoPermissaoAtencipacaoParcela? TpAntecip { get; set; }
+#endif
 
         [XmlElement("infBanc")]
         public InfBanc InfBanc { get; set; }
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeIndAltoDesemp() => IndAltoDesemp == 1;
+        public bool ShouldSerializeIndAntecipaAdiant() => IndAntecipaAdiant == 1;
 
         public bool ShouldSerializeVAdiantField() => VAdiant > 0;
+
+        public bool ShouldSerializeIndAltoDesemp() => IndAltoDesemp == 1;
+
+#if INTEROP
+        public bool ShouldSerializeTpAntecip() => TpAntecip != (TipoPermissaoAtencipacaoParcela)(-1);
+#else
+        public bool ShouldSerializeTpAntecip() => TpAntecip  != null;
+#endif
 
         #endregion
 
@@ -1465,9 +1545,14 @@ namespace Unimake.Business.DFe.Xml.MDFe
         public bool ShouldSerializeRENAVAM() => !string.IsNullOrWhiteSpace(RENAVAM);
         public bool ShouldSerializeCapM3() => CapM3 > 0;
         public bool ShouldSerializeCapKG() => CapKG > 0;
-        public bool ShouldSerializeUF() => UF != null && UF != UFBrasil.NaoDefinido;
 
-        #endregion
+#if INTEROP
+        public bool ShouldSerializeUF() => UF != UFBrasil.NaoDefinido;
+#else
+        public bool ShouldSerializeUF() => UF != null;
+#endif
+
+        #endregion ShouldSerialize
     }
 
 #if INTEROP
@@ -2347,10 +2432,23 @@ namespace Unimake.Business.DFe.Xml.MDFe
         [XmlElement("infEntregaParcial")]
         public InfEntregaParcial InfEntregaParcial { get; set; }
 
+        /// <summary>
+        /// Prestação é parcial? Sim ou Não (1 ou 0)
+        /// </summary>
+        [XmlElement("indPrestacaoParcial")]
+        public SimNao IndPrestacaoParcial { get; set; } = SimNao.Nao;
+
+        /// <summary>
+        /// Grupo de informações das NFe entregues na prestação parcial do CTe (Este grupo sempre é informado quando indPrestacaoParcial for igual a Sim (1))
+        /// </summary>
+        [XmlElement("infNFePresParcial")]
+        public List<InfNFePresParcial> InfNFePresParcial { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializeSegCodBarra() => !string.IsNullOrWhiteSpace(SegCodBarra);
         public bool ShouldSerializeIndReentrega() => IndReentrega == SimNao.Sim;
+        public bool ShouldSerializeIndPrestacaoParcial() => IndPrestacaoParcial == SimNao.Sim;
 
         #endregion
 
@@ -2423,6 +2521,40 @@ namespace Unimake.Business.DFe.Xml.MDFe
         /// Retorna a quantidade de elementos existentes na lista Peri
         /// </summary>
         public int GetPeriCount => (Peri != null ? Peri.Count : 0);
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="elemento">Elemento</param>
+        public void AddInfNFePresParcial(Peri elemento)
+        {
+            if (InfNFePresParcial == null)
+            {
+                InfNFePresParcial = new List<InfNFePresParcial>();
+            }
+
+            Peri.Add(elemento);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista InfNFePresParcial (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da InfNFePresParcial</returns>
+        public InfNFePresParcial GetInfNFePresParcial(int index)
+        {
+            if ((InfNFePresParcial?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return InfNFePresParcial[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista InfNFePresParcial
+        /// </summary>
+        public int GetInfNFePresParcialCount => (InfNFePresParcial != null ? InfNFePresParcial.Count : 0);
 
 #endif
     }
@@ -3266,5 +3398,24 @@ namespace Unimake.Business.DFe.Xml.MDFe
     {
         [XmlElement("qrCodMDFe")]
         public string QrCodMDFe { get; set; }
+    }
+
+    /// <summary> 
+    /// Grupo de informações das NFe entregues na prestação parcial do CTe(Este grupo sempre é informado quando indPrestacaoParcial estiver informado)
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.MDFe.InfNFePresParcial")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(Namespace = "http://www.portalfiscal.inf.br/mdfe")]
+    public class InfNFePresParcial
+    {
+        /// <summary>
+        /// Chave de acesso da NFe entregue na prestação parcial do CTe relacionado
+        /// </summary>
+        [XmlElement("chNFe")]
+        public string ChNFe { get; set; }
     }
 }

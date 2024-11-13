@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using Unimake.Business.DFe.Utility;
+using Unimake.Business.DFe.Xml.CTe;
 
 namespace Unimake.Business.DFe.Servicos
 {
@@ -247,6 +248,11 @@ namespace Unimake.Business.DFe.Servicos
                                 SchemaArquivo = XMLUtility.TagRead(elementPropriedades, "SchemaArquivo").Replace("{0}", SchemaVersao);
                             }
 
+                            if (XMLUtility.TagExist(elementPropriedades, "SchemaVersaoEvento"))
+                            {
+                                SchemaVersaoEvento = XMLUtility.TagRead(elementPropriedades, "SchemaVersaoEvento").Replace("{0}", SchemaVersaoEvento);
+                            }
+
                             if (XMLUtility.TagExist(elementPropriedades, "TagAssinatura"))
                             {
                                 TagAssinatura = XMLUtility.TagRead(elementPropriedades, "TagAssinatura");
@@ -336,6 +342,21 @@ namespace Unimake.Business.DFe.Servicos
                                 ConverteSenhaBase64 = XMLUtility.TagRead(elementPropriedades, "ConverteSenhaBase64").ToLower() == "true" ? true : false;
                             }
 
+                            if (XMLUtility.TagExist(elementPropriedades, "NaoAssina"))
+                            {
+                                NaoAssina = XMLUtility.TagRead(elementPropriedades, "NaoAssina").ToLower() == "homologação" ? TipoAmbiente.Homologacao : TipoAmbiente.Producao;
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "EncriptaTagAssinatura"))
+                            {
+                                EncriptaTagAssinatura = XMLUtility.TagRead(elementPropriedades, "EncriptaTagAssinatura").ToLower() == "true" ? true : false;
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "TemCDATA"))
+                            {
+                                TemCDATA = XMLUtility.TagRead(elementPropriedades, "TemCDATA").ToLower() == "true" ? true : false;
+                            }
+
                             //Verificar se existem schemas específicos de validação
                             if (XMLUtility.TagExist(elementPropriedades, "SchemasEspecificos"))
                             {
@@ -357,6 +378,34 @@ namespace Unimake.Business.DFe.Servicos
                                             Id = idSchemaEspecifico,
                                             SchemaArquivo = elementTipo.GetElementsByTagName("SchemaArquivo")[0].InnerText.Replace("{0}", SchemaVersao),
                                             SchemaArquivoEspecifico = elementTipo.GetElementsByTagName("SchemaArquivoEspecifico")[0].InnerText.Replace("{0}", SchemaVersao)
+                                        };
+                                    }
+                                }
+                            }
+
+                            //Verificar se existem schemas específicos de validação para o evento do REINF ou eSocial
+                            if (XMLUtility.TagExist(elementPropriedades, "TiposEventosEspecificos"))
+                            {
+                                var listTiposEventosEspecificos = elementPropriedades.GetElementsByTagName("TiposEventosEspecificos");
+
+                                foreach (var nodeTiposEventosEspecificos in listTiposEventosEspecificos)
+                                {
+                                    var elemenTiposEventosEspecificos = (XmlElement)nodeTiposEventosEspecificos;
+
+                                    var listTipo = elemenTiposEventosEspecificos.GetElementsByTagName("Tipo");
+
+                                    foreach (var nodeTipo in listTipo)
+                                    {
+                                        var elementTipo = (XmlElement)nodeTipo;
+                                        var eventoEspecifico = elementTipo.GetElementsByTagName("Evento")[0].InnerText;
+
+                                        TiposEventosEspecificos[eventoEspecifico] = new TiposEventosEspecificos
+                                        {
+                                            Evento = eventoEspecifico,
+                                            SchemaArquivoEvento = elementTipo.GetElementsByTagName("SchemaArquivoEvento")[0].InnerText.Replace("{0}", SchemaVersaoEvento),
+                                            TagAssinatura = elementTipo.GetElementsByTagName("TagAssinatura")[0].InnerText,
+                                            TagAtributoID = elementTipo.GetElementsByTagName("TagAtributoID")[0].InnerText,
+                                            TargetNS = elementTipo.GetElementsByTagName("TargetNS")[0].InnerText.Replace("{0}", SchemaVersaoEvento)
                                         };
                                     }
                                 }
@@ -461,6 +510,17 @@ namespace Unimake.Business.DFe.Servicos
                     if (File.Exists(arqConfig))
                     {
                         doc.Load(arqConfig);
+
+                        if (doc.GetElementsByTagName("VersaoConfiguracao").Count > 0)
+                        {
+                            VersaoConfiguracao = doc.GetElementsByTagName("VersaoConfiguracao")[0].InnerText;
+                        }
+
+                        //Versão da DLL é maior que a versão do arquivo de configuração, então o que tem na DLL é mais atual do que o arquivo que está gravado na pasta, vou ignorar.
+                        if (Convert.ToDecimal(Info.VersaoDLL) >= Convert.ToDecimal(VersaoConfiguracao))
+                        {
+                            goto default;
+                        }
                     }
                     else
                     {
@@ -617,9 +677,29 @@ namespace Unimake.Business.DFe.Servicos
                 WebSoapString = WebSoapStringProducao;
             }
 
+            //Antiga implementação para uso do padrão AGILI (Rondonópolis) que acabou não sendo necessária no momento da implementação do município. Ticket ID #159383. Mauricio 05/12/2023
+            //if (!string.IsNullOrEmpty(ClientSecret) && !string.IsNullOrEmpty(ClientID))
+            //{
+            //    var proxy = Proxy.DefinirServidor(ProxyAutoDetect, ProxyUser, ProxyPassword);
+            //    var token =  Token.GerarToken(proxy, MunicipioUsuario, MunicipioSenha, ClientID, ClientSecret);
+            //    MunicipioToken = token.AccessToken;
+            //}
+
             WebSoapString = WebSoapString.Replace("{ActionWeb}", (TipoAmbiente == TipoAmbiente.Homologacao ? WebActionHomologacao : WebActionProducao));
             WebSoapString = WebSoapString.Replace("{cUF}", CodigoUF.ToString());
             WebSoapString = WebSoapString.Replace("{versaoDados}", SchemaVersao);
+
+            if (Servico == Servico.EFDReinfConsultaReciboEvento && !string.IsNullOrWhiteSpace(TipoEventoEFDReinf))
+            {
+                WebActionHomologacao = WebActionHomologacao.Replace("{TipoEventoEFDReinf}", TipoEventoEFDReinf);
+                WebActionProducao = WebActionProducao.Replace("{TipoEventoEFDReinf}", TipoEventoEFDReinf);
+                WebTagRetorno = WebTagRetorno.Replace("{TipoEventoEFDReinf}", TipoEventoEFDReinf);
+            }
+            else if(Servico == Servico.EFDReinfConsultaLoteAssincrono)
+            {
+                RequestURIProducao = RequestURIProducao.Replace("{numeroProtocolo}", NumeroProtocolo);
+                RequestURIHomologacao = RequestURIHomologacao.Replace("{numeroProtocolo}", NumeroProtocolo);
+            }
         }
 
         /// <summary>
@@ -722,6 +802,24 @@ namespace Unimake.Business.DFe.Servicos
                             MetodoAPI = XMLUtility.TagRead(elementVersao, "MetodoAPI");
                         }
 
+                        if (XMLUtility.TagExist(elementVersao, "SchemaVersaoEvento"))
+                        {
+                            SchemaVersaoEvento = XMLUtility.TagRead(elementVersao, "SchemaVersaoEvento");
+                        }
+
+                        if (XMLUtility.TagExist(elementVersao, "HostHomologacao"))
+                        {
+                            HostHomologacao = XMLUtility.TagRead(elementVersao, "HostHomologacao");
+                        }
+
+                        if (XMLUtility.TagExist(elementVersao, "HostProducao"))
+                        {
+                            HostProducao = XMLUtility.TagRead(elementVersao, "HostProducao");
+                        }
+
+                        //Vou limpar a versão da configuração, caso alguém informe algo no arquivo padrão, tem que zerar, pois só pode existir valor na configuração específica de cada UF ou Município
+                        VersaoConfiguracao = "";
+
                         break;
                     }
                 }
@@ -741,6 +839,11 @@ namespace Unimake.Business.DFe.Servicos
         /// Schemas específicos de um mesmo serviço (Tipos de Evento, Modal CTe ou Modal MDFe)
         /// </summary>
         public Dictionary<string, SchemaEspecifico> SchemasEspecificos = new Dictionary<string, SchemaEspecifico>();
+
+        /// <summary>
+        /// Tipos de eventos específicos do REINF e eSocial
+        /// </summary>
+        public Dictionary<string, TiposEventosEspecificos> TiposEventosEspecificos = new Dictionary<string, TiposEventosEspecificos>();
 
         #endregion Public Fields
 
@@ -826,6 +929,21 @@ namespace Unimake.Business.DFe.Servicos
         /// Tem servidor de proxy?
         /// </summary>
         public bool HasProxy { get; set; } = false;
+
+        /// <summary>
+        /// Host - Header API
+        /// </summary>
+        public string HostHomologacao { get; set; }
+
+        /// <summary>
+        /// Host - Header API
+        /// </summary>
+        public string HostProducao { get; set; }
+
+        /// <summary>
+        /// ApiKey - Header API
+        /// </summary>
+        public string ApiKey { get; set; }
 
         /// <summary>
         /// Modelo do documento fiscal que é para consultar o status do serviço
@@ -1003,6 +1121,21 @@ namespace Unimake.Business.DFe.Servicos
         public string ChaveAcesso { get; set; }
 
         /// <summary>
+        /// Propriedade criada para atender o padrão FIORILLI, Monte Alto - SP; O município não precisa de assinatura em produção mas precisa em homologação.
+        /// </summary>
+        public TipoAmbiente? NaoAssina;
+
+        /// <summary>
+        /// Propriedade criada para atender o padrão DSF Versão 1.0.
+        /// </summary>
+        public bool EncriptaTagAssinatura { get; set; }
+
+        /// <summary>
+        /// Propriedade criada para tratar municípios com mais de um CDATA no SOAP.
+        /// </summary>
+        public bool TemCDATA { get; set; }
+
+        /// <summary>
         /// O serviço consome API? true ou false
         /// </summary>
         public bool IsAPI
@@ -1163,6 +1296,31 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         public string MunicipioSenha { get; set; }
 
+        /// <summary>
+        /// ClientID para gerar token (no momento, apenas Padrão AGILI)
+        /// </summary>
+        public string ClientID { get; set; }
+
+        /// <summary>
+        /// ClientSecret para gerar token (no momento, apenas Padrão AGILI) 
+        /// </summary>
+        public string ClientSecret { get; set; }
+
+        /// <summary>
+        /// Tipo do Evento do EFDReinf
+        /// </summary>
+        public string TipoEventoEFDReinf { get; set; }
+
+        /// <summary>
+        /// Número do protocolo retornado no envio do lote do REINF
+        /// </summary>
+        public string NumeroProtocolo {  get; set; }
+
+        /// <summary>
+        /// Versão do schema do XML do evento
+        /// </summary>
+        public string SchemaVersaoEvento { get; set; }
+
         private int _TimeOutWebServiceConnect;
 
         /// <summary>
@@ -1203,6 +1361,24 @@ namespace Unimake.Business.DFe.Servicos
 
             set => _PastaDLL = value;
         }
+
+        /// <summary>
+        /// Versão da configuração definido no XML de configurações da UF ou Município
+        /// Esta versão só vai existir se a configuração foi alterada e o ERP deseja usar ela na pasta sem precisar atualizar a DLL.
+        /// A DLL vai verificar se a versão da configuração que está na pasta é maior que a versão da DLL, se for, vai priorizar o que está na pasta, caso contrário vai pegar a configuração embutida na DLL, pois é mais atual.
+        /// Tag que deve ser informada no arquivo de configuração: Exemplo:
+        /// 
+        /// AC.XML
+        /// 
+        /// &lt;?xml version="1.0" encoding="utf-8"?&gt;
+        /// &lt;Configuracoes&gt;
+        ///     &lt;VersaoConfiguracao&gt;202312061103&lt;/VersaoConfiguracao&gt;
+        ///     &lt;Heranca&gt;SVRS.xml&lt;/Heranca&gt;
+        /// &lt;/Configuracoes&gt;
+        /// 
+        /// Formato deve ser conforme acima: ano com 4 dígitos + mês com 2 dígitos (zeros a esquerda) + dia com 2 dígitos (zeros a esquerda) + horas com 2 dígitos (zeros a esquerda) + minutos com 2 dígitos (zeros a esquerda)
+        /// </summary>
+        public string VersaoConfiguracao { get; set; }
 
         #endregion Public Properties
 
@@ -1290,6 +1466,41 @@ namespace Unimake.Business.DFe.Servicos
         /// Arquivo de schema da parte específica do XML
         /// </summary>
         public string SchemaArquivoEspecifico { get; set; }
+
+        #endregion Public Properties
+    }
+
+    /// <summary>
+    /// Arquivos de eventos específicos.
+    /// </summary>
+    public class TiposEventosEspecificos
+    {
+        #region Public Properties
+
+        /// <summary>
+        /// Evento específico que vai ser validado para o REINF ou eSocial
+        /// </summary>
+        public string Evento { get; set; }
+
+        /// <summary>
+        /// Arquivo de schema específico do evento
+        /// </summary>
+        public string SchemaArquivoEvento { get; set; }
+
+        /// <summary>
+        /// Nome da tag de Assinatura do evento
+        /// </summary>
+        public string TagAssinatura { get; set; }
+
+        /// <summary>
+        /// Nome da tag que tem o atributo de identificador único a ser utilizado no Reference.URI da assinatura
+        /// </summary>
+        public string TagAtributoID { get; set; }
+
+        /// <summary>
+        /// Namespace do XML para validação de schema
+        /// </summary>
+        public string TargetNS { get; set; }
 
         #endregion Public Properties
     }

@@ -20,12 +20,16 @@ namespace Unimake.Business.DFe.Servicos.CTe
 #endif
     public class RecepcaoEvento : ServicoBase
     {
-        #region Private Fields
-        private EventoCTe EventoCTe => new EventoCTe().LerXML<EventoCTe>(ConteudoXML);
+        private EventoCTe _eventoCTe;
 
-        #endregion Private Fields
-
-        #region Private Methods
+        /// <summary>
+        /// Objeto do XML do Evento de CTe
+        /// </summary>
+        public EventoCTe EventoCTe
+        {
+            get => _eventoCTe ?? (_eventoCTe = new EventoCTe().LerXML<EventoCTe>(ConteudoXML));
+            protected set => _eventoCTe = value;
+        }
 
         private void ValidarXMLEvento(XmlDocument xml, string schemaArquivo, string targetNS)
         {
@@ -37,10 +41,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
                 throw new ValidarXMLException(validar.ErrorMessage);
             }
         }
-
-        #endregion Private Methods
-
-        #region Protected Methods
 
         /// <summary>
         /// Definir o valor de algumas das propriedades do objeto "Configuracoes"
@@ -72,7 +72,15 @@ namespace Unimake.Business.DFe.Servicos.CTe
 
             if (Configuracoes.SchemasEspecificos.Count > 0)
             {
-                var tpEvento = ((int)xml.InfEvento.TpEvento);
+                int tpEvento;
+                if (ConteudoXML.GetElementsByTagName("tpEvento").Count > 0)
+                {
+                    tpEvento = Convert.ToInt32(ConteudoXML.GetElementsByTagName("tpEvento")[0].InnerText);
+                }
+                else
+                {
+                    throw new Exception("Não foi possível localizar a tag obrigatória <tpEvento> no XML.");
+                }
 
                 try
                 {
@@ -108,10 +116,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
             #endregion Validar a parte específica de cada evento
         }
 
-        #endregion Protected Methods
-
-        #region Public Properties
-
         /// <summary>
         /// Propriedade contendo o XML do evento com o protocolo de autorização anexado
         /// </summary>
@@ -146,10 +150,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
@@ -163,6 +163,7 @@ namespace Unimake.Business.DFe.Servicos.CTe
             }
 
             Inicializar(envEvento?.GerarXML() ?? throw new ArgumentNullException(nameof(envEvento)), configuracao);
+            EventoCTe = EventoCTe.LerXML<EventoCTe>(ConteudoXML);
         }
 
         /// <summary>
@@ -170,9 +171,40 @@ namespace Unimake.Business.DFe.Servicos.CTe
         /// </summary>
         public RecepcaoEvento() : base() { }
 
-        #endregion Public Constructors
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RecepcaoEvento(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-        #region Public Methods
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+
+            #region Limpar a assinatura do objeto para recriar e atualizar o ConteudoXML. Isso garante que a propriedade e o objeto tenham assinaturas iguais, evitando discrepâncias. Autor: Wandrey Data: 10/06/2024
+
+            //Remover a assinatura para forçar criar novamente
+            EventoCTe = EventoCTe.LerXML<EventoCTe>(ConteudoXML);
+            EventoCTe.Signature = null;
+
+            //Gerar o XML novamente com base no objeto
+            ConteudoXML = EventoCTe.GerarXML();
+
+            //Forçar assinar novamente
+            _ = ConteudoXMLAssinado;
+
+            //Atualizar o objeto novamente com o XML já assinado
+            EventoCTe = EventoCTe.LerXML<EventoCTe>(ConteudoXML);
+
+            #endregion
+        }
 
         /// <summary>
         /// Executar o serviço
@@ -272,7 +304,5 @@ namespace Unimake.Business.DFe.Servicos.CTe
                 ThrowHelper.Instance.Throw(ex);
             }
         }
-
-        #endregion Public Methods
     }
 }

@@ -128,7 +128,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         }
 
         /// <summary>
-        /// Deserializar o XML CTe no objeto CTe
+        /// Desserializar o XML CTe no objeto CTe
         /// </summary>
         /// <param name="xml">string do XML CTe</param>
         /// <returns>Objeto da CTe</returns>
@@ -212,18 +212,20 @@ namespace Unimake.Business.DFe.Xml.CTe
         {
             get
             {
-                ChaveField = ((int)Ide.CUF).ToString() +
-                    Ide.DhEmi.ToString("yyMM") +
-                    (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')) +
-                    ((int)Ide.Mod).ToString().PadLeft(2, '0') +
-                    Ide.Serie.ToString().PadLeft(3, '0') +
-                    Ide.NCT.ToString().PadLeft(9, '0') +
-                    ((int)Ide.TpEmis).ToString() +
-                    Ide.CCT.PadLeft(8, '0');
-
-                Ide.CDV = Utility.XMLUtility.CalcularDVChave(ChaveField);
-
-                ChaveField += Ide.CDV.ToString();
+                var conteudoChaveDFe = new XMLUtility.ConteudoChaveDFe
+                {
+                    UFEmissor = (UFBrasil)(int)Ide.CUF,
+                    AnoEmissao = Ide.DhEmi.ToString("yy"),
+                    MesEmissao = Ide.DhEmi.ToString("MM"),
+                    CNPJCPFEmissor = (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')),
+                    Modelo = (ModeloDFe)(int)Ide.Mod,
+                    Serie = Ide.Serie,
+                    NumeroDoctoFiscal = Ide.NCT,
+                    TipoEmissao = (TipoEmissao)(int)Ide.TpEmis,
+                    CodigoNumerico = Ide.CCT
+                };
+                ChaveField = XMLUtility.MontarChaveCTe(ref conteudoChaveDFe);
+                Ide.CDV = conteudoChaveDFe.DigitoVerificador;
 
                 return ChaveField;
             }
@@ -1819,10 +1821,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -1878,10 +1877,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -1899,7 +1895,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string PRedBCField
         {
             get => PRedBC.ToString("F2", CultureInfo.InvariantCulture);
-            set => PRedBC = Utility.Converter.ToDouble(value);
+            set => PRedBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
@@ -1909,7 +1905,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string VBCField
         {
             get => VBC.ToString("F2", CultureInfo.InvariantCulture);
-            set => VBC = Utility.Converter.ToDouble(value);
+            set => VBC = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
@@ -1919,7 +1915,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string PICMSField
         {
             get => PICMS.ToString("F2", CultureInfo.InvariantCulture);
-            set => PICMS = Utility.Converter.ToDouble(value);
+            set => PICMS = Converter.ToDouble(value);
         }
 
         [XmlIgnore]
@@ -1929,8 +1925,28 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string VICMSField
         {
             get => VICMS.ToString("F2", CultureInfo.InvariantCulture);
-            set => VICMS = Utility.Converter.ToDouble(value);
+            set => VICMS = Converter.ToDouble(value);
         }
+
+        [XmlIgnore]
+        public double VICMSDeson { get; set; }
+
+        [XmlElement("vICMSDeson")]
+        public string VICMSDesonField
+        {
+            get => VICMSDeson.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSDeson = Converter.ToDouble(value);
+        }
+
+        [XmlElement("cBenef")]
+        public string CBenef { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeCBenef => VICMSDeson > 0;
+
+        #endregion
     }
 
 #if INTEROP
@@ -1947,10 +1963,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -1960,6 +1973,26 @@ namespace Unimake.Business.DFe.Xml.CTe
                 }
             }
         }
+
+        [XmlIgnore]
+        public double VICMSDeson { get; set; }
+
+        [XmlElement("vICMSDeson")]
+        public string VICMSDesonField
+        {
+            get => VICMSDeson.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSDeson = Converter.ToDouble(value);
+        }
+
+        [XmlElement("cBenef")]
+        public string CBenef { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeCBenef => VICMSDeson > 0;
+
+        #endregion
     }
 
 #if INTEROP
@@ -1976,10 +2009,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -2030,9 +2060,24 @@ namespace Unimake.Business.DFe.Xml.CTe
             set => VCred = Utility.Converter.ToDouble(value);
         }
 
+        [XmlIgnore]
+        public double VICMSDeson { get; set; }
+
+        [XmlElement("vICMSDeson")]
+        public string VICMSDesonField
+        {
+            get => VICMSDeson.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSDeson = Converter.ToDouble(value);
+        }
+
+        [XmlElement("cBenef")]
+        public string CBenef { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializeVCredField() => VCred > 0;
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeCBenef => VICMSDeson > 0;
 
         #endregion
     }
@@ -2051,10 +2096,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -2115,11 +2157,25 @@ namespace Unimake.Business.DFe.Xml.CTe
             set => VCred = Utility.Converter.ToDouble(value);
         }
 
+        [XmlIgnore]
+        public double VICMSDeson { get; set; }
+
+        [XmlElement("vICMSDeson")]
+        public string VICMSDesonField
+        {
+            get => VICMSDeson.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSDeson = Converter.ToDouble(value);
+        }
+
+        [XmlElement("cBenef")]
+        public string CBenef { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializePRedBCField() => PRedBC > 0;
-
         public bool ShouldSerializeVCredField() => VCred > 0;
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeCBenef => VICMSDeson > 0;
 
         #endregion
     }
@@ -2138,10 +2194,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -2192,9 +2245,24 @@ namespace Unimake.Business.DFe.Xml.CTe
             set => VICMSOutraUF = Utility.Converter.ToDouble(value);
         }
 
+        [XmlIgnore]
+        public double VICMSDeson { get; set; }
+
+        [XmlElement("vICMSDeson")]
+        public string VICMSDesonField
+        {
+            get => VICMSDeson.ToString("F2", CultureInfo.InvariantCulture);
+            set => VICMSDeson = Converter.ToDouble(value);
+        }
+
+        [XmlElement("cBenef")]
+        public string CBenef { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializePRedBCOutraUFField() => PRedBCOutraUF > 0;
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeCBenef => VICMSDeson > 0;
 
         #endregion
     }
@@ -2213,10 +2281,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         [XmlElement("CST")]
         public string CST
         {
-            get
-            {
-                return CSTField;
-            }
+            get => CSTField;
             set
             {
                 CSTField = "";
@@ -2470,7 +2535,7 @@ namespace Unimake.Business.DFe.Xml.CTe
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVCargaField() => VCarga > 0;
+        public bool ShouldSerializeVCargaField() => VCarga >= 0;
         public bool ShouldSerializeXOutCat() => !string.IsNullOrWhiteSpace(XOutCat);
         public bool ShouldSerializeVCargaAverbField() => VCargaAverb > 0;
 
@@ -4151,9 +4216,14 @@ namespace Unimake.Business.DFe.Xml.CTe
         #region ShouldSerialize
 
         public bool ShouldSerializeNViag() => !string.IsNullOrWhiteSpace(NViag);
-        public bool ShouldSerializeTpNav() => TpNav != null && TpNav != TipoNavegacao.NaoDefinido;
 
-        #endregion
+#if INTEROP
+        public bool ShouldSerializeTpNav() => TpNav != TipoNavegacao.NaoDefinido;
+#else
+        public bool ShouldSerializeTpNav() => TpNav != null;
+#endif
+
+        #endregion ShouldSerialize
     }
 
 #if INTEROP
@@ -4756,7 +4826,7 @@ namespace Unimake.Business.DFe.Xml.CTe
         /// Propriedade só existe até a versão 3.00 do schema do CTe
         /// </summary>
         [XmlElement("refCteAnu")]
-        public string RefCteAnu { get; set; } 
+        public string RefCteAnu { get; set; }
 
         [XmlElement("tomaICMS")]
         public TomaICMS TomaICMS { get; set; }

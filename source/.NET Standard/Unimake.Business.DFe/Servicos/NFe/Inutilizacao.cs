@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 #endif
 using System;
+using System.Xml;
 using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.NFe;
@@ -21,7 +22,16 @@ namespace Unimake.Business.DFe.Servicos.NFe
     {
         #region Private Properties
 
-        private InutNFe InutNFe => new InutNFe().LerXML<InutNFe>(ConteudoXML);
+        private InutNFe _InutNFe;
+
+        /// <summary>
+        /// Objeto do XML da Inutilização
+        /// </summary>
+        public InutNFe InutNFe
+        {
+            get => _InutNFe ?? (_InutNFe = new InutNFe().LerXML<InutNFe>(ConteudoXML));
+            protected set => _InutNFe = value;
+        }
 
         #endregion Private Properties
 
@@ -120,7 +130,44 @@ namespace Unimake.Business.DFe.Servicos.NFe
 
             Inicializar(inutNFe?.GerarXML() ?? throw new ArgumentNullException(nameof(inutNFe)), configuracao);
 
+            InutNFe = InutNFe.LerXML<InutNFe>(ConteudoXML);
         }
+
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public Inutilizacao(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+
+            #region Limpar a assinatura do objeto para recriar e atualizar o ConteudoXML. Isso garante que a propriedade e o objeto tenham assinaturas iguais, evitando discrepâncias. Autor: Wandrey Data: 10/06/2024
+
+            //Remover a assinatura para forçar criar novamente
+            InutNFe = InutNFe.LerXML<InutNFe>(ConteudoXML);
+            InutNFe.Signature = null;
+
+            //Gerar o XML novamente com base no objeto
+            ConteudoXML = InutNFe.GerarXML();
+
+            //Forçar assinar novamente
+            _ = ConteudoXMLAssinado;
+
+            //Atualizar o objeto novamente com o XML já assinado
+            InutNFe = InutNFe.LerXML<InutNFe>(ConteudoXML);
+
+            #endregion
+        }
+
         /// <summary>
         /// Construtor
         /// </summary>

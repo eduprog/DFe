@@ -56,6 +56,52 @@ namespace Unimake.Business.DFe.Xml.NFe
                 case "111501":
                     PreparaItemPedido(document);
                     break;
+
+                case "110750":
+                    PreparaDetPag(document);
+                    break;
+            }
+        }
+
+        public void PreparaDetPag(XmlDocument xmlDoc)
+        {
+            var detPags = xmlDoc.GetElementsByTagName("detPag");
+
+            foreach (var evento in Evento)
+            {
+                if (evento.InfEvento.DetEvento is DetEventoConciliacaoFinanceira detEvento)
+                {
+                    detEvento.DetPag = new List<DetPagECONF>();
+
+                    foreach (var nodeDetPag in detPags)
+                    {
+                        var elementDetPag = (XmlElement)nodeDetPag;
+
+                        detEvento.DetPag.Add(new DetPagECONF
+                        {
+#if INTEROP
+                            IndPag = elementDetPag.GetElementsByTagName("indPag").Count > 0 ? (IndicadorPagamento)Convert.ToInt32(elementDetPag.GetElementsByTagName("indPag")[0].InnerText) : (IndicadorPagamento)(-1),
+#else
+                            IndPag = elementDetPag.GetElementsByTagName("indPag").Count > 0 ? (IndicadorPagamento?)Convert.ToInt32(elementDetPag.GetElementsByTagName("indPag")[0].InnerText) : null,
+#endif
+                            TPag = (MeioPagamento)Convert.ToInt32(elementDetPag.GetElementsByTagName("tPag")[0].InnerText),
+                            XPag = elementDetPag.GetElementsByTagName("xPag").Count > 0 ? elementDetPag.GetElementsByTagName("xPag")[0].InnerText : "",
+                            VPag = Convert.ToDouble(elementDetPag.GetElementsByTagName("vPag")[0].InnerText, CultureInfo.InvariantCulture),
+                            DPag = Convert.ToDateTime(elementDetPag.GetElementsByTagName("dPag")[0].InnerText, CultureInfo.InvariantCulture),
+                            CNPJPag = elementDetPag.GetElementsByTagName("CNPJPag").Count > 0 ? elementDetPag.GetElementsByTagName("CNPJPag")[0].InnerText : "",
+                            UFPag = elementDetPag.GetElementsByTagName("CNPJPag").Count > 0 ? (UFBrasil)Enum.Parse(typeof(UFBrasil), elementDetPag.GetElementsByTagName("UFPag")[0].InnerText) : UFBrasil.AN,
+                            CNPJIF = elementDetPag.GetElementsByTagName("CNPJIF").Count > 0 ? elementDetPag.GetElementsByTagName("CNPJIF")[0].InnerText : "",
+#if INTEROP
+                            TBand = elementDetPag.GetElementsByTagName("tBand").Count > 0 ? (BandeiraOperadoraCartao)Convert.ToInt32(elementDetPag.GetElementsByTagName("tBand")[0].InnerText) : (BandeiraOperadoraCartao)(-1),
+#else
+                            TBand = elementDetPag.GetElementsByTagName("tBand").Count > 0 ? (BandeiraOperadoraCartao?)Convert.ToInt32(elementDetPag.GetElementsByTagName("tBand")[0].InnerText) : null,
+#endif
+                            CAut = elementDetPag.GetElementsByTagName("cAut").Count > 0 ? elementDetPag.GetElementsByTagName("cAut")[0].InnerText : "",
+                            CNPJReceb = elementDetPag.GetElementsByTagName("CNPJReceb").Count > 0 ? elementDetPag.GetElementsByTagName("CNPJReceb")[0].InnerText : "",
+                            UFReceb = elementDetPag.GetElementsByTagName("CNPJReceb").Count > 0 ? (UFBrasil)Enum.Parse(typeof(UFBrasil), elementDetPag.GetElementsByTagName("UFReceb")[0].InnerText) : UFBrasil.AN,
+                        });
+                    }
+                }
             }
         }
 
@@ -273,6 +319,11 @@ namespace Unimake.Business.DFe.Xml.NFe
                         _detEvento = new DetEventoManif();
                         break;
 
+                    case TipoEventoNFe.AtorInteressadoNFe:
+                        COrgao = UFBrasil.AN; //Sempre será 91, somente o ambiente nacional vai autorizar este evento
+                        _detEvento = new DetEventoAtorInteressadoNFe();
+                        break;
+
                     case TipoEventoNFe.CancelamentoPorSubstituicao:
                         _detEvento = new DetEventoCancSubst();
                         break;
@@ -329,6 +380,24 @@ namespace Unimake.Business.DFe.Xml.NFe
 
                     case TipoEventoNFe.InternalizacaoSUFRAMA:
                         _detEvento = new DetEventoInternalizacaoSUFRAMA();
+                        break;
+
+                    case TipoEventoNFe.InsucessoEntregaNFe:
+                        COrgao = UFBrasil.SVRS; //Sempre será 92 no caso de Insucesso da Entrega da NFe, somente SVRS vai autorizar este evento.
+                        _detEvento = new DetEventoInsucessoEntregaNFe();
+                        break;
+
+                    case TipoEventoNFe.CancelamentoInsucessoEntregaNFe:
+                        COrgao = UFBrasil.SVRS; //Sempre será 92 no caso de Insucesso da Entrega da NFe, somente SVRS vai autorizar este evento.
+                        _detEvento = new DetEventoCancelamentoInsucessoEntregaNFe();
+                        break;
+
+                    case TipoEventoNFe.ConciliacaoFinanceira:
+                        _detEvento = new DetEventoConciliacaoFinanceira();
+                        break;
+
+                    case TipoEventoNFe.CancelamentoConciliacaoFinanceira:
+                        _detEvento = new DetEventoCancelamentoConciliacaoFinanceira();
                         break;
 
                     default:
@@ -404,6 +473,7 @@ namespace Unimake.Business.DFe.Xml.NFe
     [ProgId("Unimake.Business.DFe.Xml.NFe.EventoDetalhe")]
     [ComVisible(true)]
 #endif
+    [Serializable()]
     [XmlInclude(typeof(DetEventoCanc))]
     [XmlInclude(typeof(DetEventoCCE))]
     [XmlInclude(typeof(DetEventoCancSubst))]
@@ -662,17 +732,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => DescEventoField;
             set
             {
-                if (!value.Equals("Ciencia da Operacao") &&
-                    !value.Equals("Confirmacao da Operacao") &&
-                    !value.Equals("Desconhecimento da Operacao") &&
-                    !value.Equals("Operacao nao Realizada"))
-                {
-                    throw new Exception("O conteúdo da tag <descEvento> deve ser: Ciencia da Operacao, Confirmacao da Operacao, Desconhecimento da Operacao ou Operacao nao Realizada. O texto deve ficar idêntico ao descrito, inclusive letras maiúsculas e minúsculas.");
-                }
-                else
-                {
-                    DescEventoField = value;
-                }
+                DescEventoField = value;
             }
         }
 
@@ -960,8 +1020,24 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("longGPS", Order = 8)]
         public string LongGPS { get; set; }
 
+        private string HashComprovanteField;
+
         [XmlElement("hashComprovante", Order = 9)]
-        public string HashComprovante { get; set; }
+        public string HashComprovante
+        {
+            get => HashComprovanteField;
+            set
+            {
+                if (Converter.IsSHA1Base64(value))
+                {
+                    HashComprovanteField = value;
+                }
+                else
+                {
+                    HashComprovanteField = Converter.CalculateSHA1Hash(value);
+                }
+            }
+        }
 
         [XmlIgnore]
 #if INTEROP
@@ -989,18 +1065,24 @@ namespace Unimake.Business.DFe.Xml.NFe
         {
             base.WriteXml(writer);
 
-            writer.WriteRaw($@"
-            <descEvento>{DescEvento}</descEvento>
-            <cOrgaoAutor>{COrgaoAutorField}</cOrgaoAutor>
-            <tpAutor>{TpAutorField}</tpAutor>
-            <verAplic>{VerAplic}</verAplic>
-            <dhEntrega>{DhEntregaField}</dhEntrega>
-            <nDoc>{NDoc}</nDoc>
-            <xNome>{XNome}</xNome>
-            <latGPS>{LatGPS}</latGPS>
-            <longGPS>{LongGPS}</longGPS>
-            <hashComprovante>{HashComprovante}</hashComprovante>
-            <dhHashComprovante>{DhHashComprovanteField}</dhHashComprovante>");
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <cOrgaoAutor>{COrgaoAutorField}</cOrgaoAutor>
+                         <tpAutor>{TpAutorField}</tpAutor>
+                         <verAplic>{VerAplic}</verAplic>
+                         <dhEntrega>{DhEntregaField}</dhEntrega>
+                         <nDoc>{NDoc}</nDoc>
+                         <xNome>{XNome}</xNome>";
+
+            if (!string.IsNullOrEmpty(LatGPS) && !string.IsNullOrEmpty(LongGPS))
+            {
+                xml += $@"<latGPS>{LatGPS}</latGPS>
+                          <longGPS>{LongGPS}</longGPS>";
+            }
+
+            xml += $@"<hashComprovante>{HashComprovante}</hashComprovante>
+                      <dhHashComprovante>{DhHashComprovanteField}</dhHashComprovante>";
+
+            writer.WriteRaw(xml);
         }
 
         #endregion Public Methods
@@ -2046,4 +2128,617 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("descEvento")]
         public override string DescEvento { get; set; } = "Confirmacao de Internalizacao da Mercadoria na SUFRAMA";
     }
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetEventoInsucessoEntregaNFe")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoInsucessoEntregaNFe : EventoDetalhe
+    {
+        /// <summary>
+        /// Descrição do evento
+        /// </summary>
+        [XmlElement("descEvento")]
+        public override string DescEvento { get; set; } = "Insucesso na Entrega da NF-e";
+
+        /// <summary>
+        /// Código do Órgão Autor do Evento. Informar o Código da F da Chave de Acesso para este Evento.
+        /// </summary>
+        [XmlIgnore]
+        public UFBrasil COrgaoAutor { get; set; }
+
+        [XmlElement("cOrgaoAutor")]
+        public int COrgaoAutorField
+        {
+            get => (int)COrgaoAutor;
+            set => COrgaoAutor = (UFBrasil)Enum.Parse(typeof(UFBrasil), value.ToString());
+        }
+
+        /// <summary>
+        /// Versão do aplicativo do Autor do Evento. 
+        /// </summary>
+        [XmlElement("verAplic")]
+        public string VerAplic { get; set; }
+
+        /// <summary>
+        /// Data e hora da tentativa de entrega
+        /// Formato= AAAA-MM-DDTHH:MM:SS TZD
+        /// </summary>
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhTentativaEntrega { get; set; }
+#else
+        public DateTimeOffset DhTentativaEntrega { get; set; }
+#endif
+
+        [XmlElement("dhTentativaEntrega")]
+        public string DhTentativaEntregaField
+        {
+            get => DhTentativaEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhTentativaEntrega = DateTime.Parse(value);
+#else
+            set => DhTentativaEntrega = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        /// <summary>
+        /// Número da tentativa de entrega que não teve sucesso
+        /// </summary>
+        [XmlElement("nTentativa")]
+        public int NTentativa { get; set; }
+
+        /// <summary>
+        /// Motivo do insucesso da entrega
+        /// </summary>
+        [XmlElement("tpMotivo")]
+        public TipoMotivoInsucessoEntrega TpMotivo { get; set; }
+
+        /// <summary>
+        /// Justificativa do motivo do insucesso. Informar apenas para TpMotivo=4-Outros
+        /// </summary>
+        [XmlElement("xJustMotivo")]
+        public string XJustMotivo { get; set; }
+
+        /// <summary>
+        /// Latitude do ponto de entrega (Coordenada GPS)
+        /// </summary>
+        [XmlElement("latGPS")]
+        public string LatGPS { get; set; }
+
+        /// <summary>
+        /// Longitude do ponto de entrega (Coordenada GPS)+
+        /// </summary>
+        [XmlElement("longGPS")]
+        public string LongGPS { get; set; }
+
+        private string HashTentativaEntregaField;
+
+        /// <summary>
+        /// Hash SHA-1, no formato Base64, resultante da concatenação de: Chave de Acesso da NF-e + Base64 da imagem capturada na tentativa da entrega (ex: imagem capturada da assinatura eletrônica, digital do recebedor, foto, etc). 
+        /// 
+        /// Nota 1: A critério do autor do evento, este campo pode ser utilizado como índice para acesso as informações do Insucesso na Entrega da NF-e.
+        /// Nota 2: A SEFAZ não tem nenhum controle sobre a informação deste campo.
+        /// 
+        /// Propriedade, se não for informado em Base64, automaticamente converte o conteúdo para Base64, facilitando para o desenvolvedor.
+        /// </summary>
+        [XmlElement("hashTentativaEntrega")]
+        public string HashTentativaEntrega
+        {
+            get => HashTentativaEntregaField;
+            set
+            {
+                if (Converter.IsSHA1Base64(value))
+                {
+                    HashTentativaEntregaField = value;
+                }
+                else
+                {
+                    HashTentativaEntregaField = Converter.CalculateSHA1Hash(value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Data e hora da geração do hash da tentativa de entrega. 
+        /// Formato AAAA-MMDDThh:mm:ssTZD.
+        /// </summary>
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhHashTentativaEntrega { get; set; }
+#else
+        public DateTimeOffset DhHashTentativaEntrega { get; set; }
+#endif
+
+        [XmlElement("dhHashTentativaEntrega")]
+        public string DhHashTentativaEntregaField
+        {
+            get => DhHashTentativaEntrega.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhHashTentativaEntrega = DateTime.Parse(value);
+#else
+            set => DhHashTentativaEntrega = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <cOrgaoAutor>{COrgaoAutorField}</cOrgaoAutor>
+                         <verAplic>{VerAplic}</verAplic>
+                         <dhTentativaEntrega>{DhTentativaEntregaField}</dhTentativaEntrega>";
+
+            if (NTentativa > 0)
+            {
+                xml += $@"<nTentativa>{NTentativa}</nTentativa>";
+            }
+
+            xml += $@"<tpMotivo>{(int)TpMotivo}</tpMotivo>";
+
+            if (TpMotivo == TipoMotivoInsucessoEntrega.Outros)
+            {
+                xml += $@"<xJustMotivo>{XJustMotivo}</xJustMotivo>";
+            }
+
+            if (!string.IsNullOrEmpty(LatGPS) && !string.IsNullOrEmpty(LongGPS))
+            {
+                xml += $@"<latGPS>{LatGPS}</latGPS>
+                          <longGPS>{LongGPS}</longGPS>";
+            }
+
+
+            xml += $@"<hashTentativaEntrega>{HashTentativaEntrega}</hashTentativaEntrega>
+                         <dhHashTentativaEntrega>{DhHashTentativaEntregaField}</dhHashTentativaEntrega>";
+
+            writer.WriteRaw(xml);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetEventoCancelamentoInsucessoEntregaNFe")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoCancelamentoInsucessoEntregaNFe : EventoDetalhe
+    {
+        /// <summary>
+        /// Descrição do evento
+        /// </summary>
+        [XmlElement("descEvento")]
+        public override string DescEvento { get; set; } = "Cancelamento Insucesso na Entrega da NF-e";
+
+        /// <summary>
+        /// Código do Órgão Autor do Evento. Informar o Código da F da Chave de Acesso para este Evento.
+        /// </summary>
+        [XmlIgnore]
+        public UFBrasil COrgaoAutor { get; set; }
+
+        [XmlElement("cOrgaoAutor")]
+        public int COrgaoAutorField
+        {
+            get => (int)COrgaoAutor;
+            set => COrgaoAutor = (UFBrasil)Enum.Parse(typeof(UFBrasil), value.ToString());
+        }
+
+        /// <summary>
+        /// Versão do aplicativo do Autor do Evento. 
+        /// </summary>
+        [XmlElement("verAplic")]
+        public string VerAplic { get; set; }
+
+        /// <summary>
+        /// Informar o número do Protocolo de Autorização do Evento da NF-e a que se refere este cancelamento.
+        /// </summary>
+        [XmlElement("nProtEvento")]
+        public string NProtEvento { get; set; }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <cOrgaoAutor>{COrgaoAutorField}</cOrgaoAutor>
+                         <verAplic>{VerAplic}</verAplic>
+                         <nProtEvento>{NProtEvento}</nProtEvento>";
+
+            writer.WriteRaw(xml);
+        }
+    }
+
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetEventoAtorInteressadoNFe")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoAtorInteressadoNFe : EventoDetalhe
+    {
+        /// <summary>
+        /// Descrição do evento
+        /// </summary>
+        [XmlElement("descEvento")]
+        public override string DescEvento { get; set; } = "Ator interessado na NF-e";
+
+        /// <summary>
+        /// Código da UF do emitente do Evento
+        /// </summary>
+        [XmlIgnore]
+        public UFBrasil COrgaoAutor { get; set; }
+
+        [XmlElement("cOrgaoAutor")]
+        public int COrgaoAutorField
+        {
+            get => (int)COrgaoAutor;
+            set => COrgaoAutor = (UFBrasil)Enum.Parse(typeof(UFBrasil), value.ToString());
+        }
+
+        /// <summary>
+        /// Tipo do autor gerador do evento
+        /// </summary>
+        [XmlElement("tpAutor")]
+        public TipoAutorGeradorEvento TpAutor { get; set; }
+
+        /// <summary>
+        /// Versão do aplicativo do Autor do Evento. 
+        /// </summary>
+        [XmlElement("verAplic")]
+        public string VerAplic { get; set; }
+
+        /// <summary>
+        /// CNPJs ou CPFs autorizados a fazer download do XML da NFe
+        /// </summary>
+        [XmlElement("autXML")]
+        public AutXML AutXML { get; set; } = new AutXML();
+
+        /// <summary>
+        /// Tipo de autorização do evento do ator interessado na NFe
+        /// </summary>
+        [XmlElement("tpAutorizacao")]
+#if INTEROP
+        public TipoAutorizacao TpAutorizacao { get; set; } = (TipoAutorizacao)(-1);
+
+#else
+        public TipoAutorizacao? TpAutorizacao { get; set; }
+#endif
+
+        /// <summary>
+        /// Texto Fixo com as Condição de uso do tipo de autorização para o transportador
+        /// </summary>
+        public string XCondUso { get; set; } = "O emitente ou destinatário da NF-e, declara que permite o transportador declarado no campo CNPJ/CPF deste evento a autorizar os transportadores subcontratados ou redespachados a terem acesso ao download da NF-e";
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <cOrgaoAutor>{COrgaoAutorField}</cOrgaoAutor>
+                         <tpAutor>{(int)TpAutor}</tpAutor>
+                         <verAplic>{VerAplic}</verAplic>
+                         <autXML>";
+
+            if (!string.IsNullOrEmpty(AutXML.CPF))
+            {
+                xml += $"<CPF>{AutXML.CPF}</CPF>";
+            }
+            else
+            {
+                xml += $"<CNPJ>{AutXML.CNPJ}</CNPJ>";
+            }
+
+            xml += $@"</autXML>";
+
+#if INTEROP
+            if (TpAutorizacao != (TipoAutorizacao)(-1))
+#else
+            if (TpAutorizacao != null)
+#endif
+            {
+                xml += $@"<tpAutorizacao>{(int)TpAutorizacao}</tpAutorizacao>";
+            }
+
+            if (TpAutorizacao == TipoAutorizacao.Permite && !string.IsNullOrWhiteSpace(XCondUso))
+            {
+                xml += $@"<xCondUso>{XCondUso}</xCondUso>";
+            }
+
+            writer.WriteRaw(xml);
+        }
+
+        internal override void ProcessReader()
+        {
+            if (XmlReader == null)
+            {
+                return;
+            }
+
+            var xml = new XmlDocument();
+            xml.Load(XmlReader);
+
+            if (xml.GetElementsByTagName("detEvento")[0].Attributes.GetNamedItem("versao") != null)
+            {
+                Versao = xml.GetElementsByTagName("detEvento")[0].Attributes.GetNamedItem("versao").Value;
+            }
+            if (xml.GetElementsByTagName("cOrgaoAutor").Count > 0)
+            {
+                COrgaoAutor = (UFBrasil)Convert.ToInt32(xml.GetElementsByTagName("cOrgaoAutor")[0].InnerText);
+            }
+            if (xml.GetElementsByTagName("tpAutor").Count > 0)
+            {
+                TpAutor = (TipoAutorGeradorEvento)Convert.ToInt32(xml.GetElementsByTagName("tpAutor")[0].InnerText);
+            }
+            if (xml.GetElementsByTagName("verAplic").Count > 0)
+            {
+                VerAplic = xml.GetElementsByTagName("verAplic")[0].InnerText;
+            }
+            if (xml.GetElementsByTagName("tpAutorizacao").Count > 0)
+            {
+                TpAutorizacao = (TipoAutorizacao)Convert.ToInt32(xml.GetElementsByTagName("tpAutorizacao")[0].InnerText);
+            }
+
+            var detEventoNodeList = xml.GetElementsByTagName("detEvento");
+            foreach (var item in detEventoNodeList)
+            {
+                var detEventoElement = (XmlElement)item;
+
+                var autXMLNodeList = detEventoElement.GetElementsByTagName("autXML");
+
+                foreach (var itemAutXML in autXMLNodeList)
+                {
+                    var autXMLElement = (XmlElement)itemAutXML;
+
+                    if (autXMLElement.GetElementsByTagName("CPF").Count > 0)
+                    {
+                        AutXML.CPF = autXMLElement.GetElementsByTagName("CPF")[0].InnerText;
+                    }
+                    else
+                    {
+                        AutXML.CNPJ = autXMLElement.GetElementsByTagName("CNPJ")[0].InnerText;
+                    }
+                }
+            }
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetEventoConciliacaoFinanceira")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoConciliacaoFinanceira : EventoDetalhe
+    {
+        /// <summary>
+        /// Descrição do evento
+        /// </summary>
+        [XmlElement("descEvento")]
+        public override string DescEvento { get; set; } = "ECONF";
+
+        /// <summary>
+        /// Versão do aplicativo do Autor do Evento. 
+        /// </summary>
+        [XmlElement("verAplic")]
+        public string VerAplic { get; set; }
+
+        /// <summary>
+        /// Grupo de detalhamento do pagamento
+        /// </summary>
+        [XmlElement("detPag")]
+        public List<DetPagECONF> DetPag { get; set; }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <verAplic>{VerAplic}</verAplic>";
+
+            foreach (var detpag in DetPag)
+            {
+                xml += "<detPag>";
+
+#if INTEROP
+                if (detpag.IndPag != (IndicadorPagamento)(-1))
+#else
+                if (detpag.IndPag != null)
+#endif
+                {
+                    xml += $"<indPag>{(int)detpag.IndPag}</indPag>";
+                }
+
+                xml += $"<tPag>{((int)detpag.TPag).ToString("00")}</tPag>";
+
+                if (detpag.TPag == MeioPagamento.Outros)
+                {
+                    xml += $"<xPag>{detpag.XPag}</xPag>";
+                }
+
+                xml += $"<vPag>{detpag.VPagField}</vPag>";
+                xml += $"<dPag>{detpag.DPagField}</dPag>";
+
+                if (!string.IsNullOrWhiteSpace(detpag.CNPJPag))
+                {
+                    xml += $"<CNPJPag>{detpag.CNPJPag}</CNPJPag>";
+                    xml += $"<UFPag>{detpag.UFPag}</UFPag>";
+
+                    if (!string.IsNullOrWhiteSpace(detpag.CNPJIF))
+                    {
+                        xml += $"<CNPJIF>{detpag.CNPJIF}</CNPJIF>";
+                    }
+
+#if INTEROP
+                    if (detpag.TBand != (BandeiraOperadoraCartao)(-1))
+#else
+                    if (detpag.TBand != null)
+#endif
+                    {
+                        xml += $"<tBand>{((int)detpag.TBand).ToString("00")}</tBand>";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(detpag.CAut))
+                    {
+                        xml += $"<cAut>{detpag.CAut}</cAut>";
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(detpag.CNPJReceb))
+                {
+                    xml += $"<CNPJReceb>{detpag.CNPJReceb}</CNPJReceb>";
+                    xml += $"<UFReceb>{detpag.UFReceb}</UFReceb>";
+                }
+
+                xml += "</detPag>";
+            }
+
+            writer.WriteRaw(xml);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetPagECONF")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class DetPagECONF
+    {
+        private string XPagField { get; set; }
+
+        [XmlElement("indPag")]
+#if INTEROP
+        public IndicadorPagamento IndPag { get; set; } = (IndicadorPagamento)(-1);
+#else
+        public IndicadorPagamento? IndPag { get; set; }
+#endif
+
+        [XmlElement("tPag")]
+        public MeioPagamento TPag { get; set; }
+
+        [XmlElement("xPag")]
+        public string XPag
+        {
+            get => XPagField;
+            set => XPagField = (value == null ? value : XMLUtility.UnescapeReservedCharacters(value).Truncate(60).Trim());
+        }
+
+        [XmlIgnore]
+        public double VPag { get; set; }
+
+        [XmlElement("vPag")]
+        public string VPagField
+        {
+            get => VPag.ToString("F2", CultureInfo.InvariantCulture);
+            set => VPag = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Data do pagamento
+        /// </summary>
+        [XmlIgnore]
+        public DateTime DPag { get; set; }
+
+        [XmlElement("dPag")]
+        public string DPagField
+        {
+            get => DPag.ToString("yyyy-MM-dd");
+            set => DPag = DateTime.Parse(value);
+        }
+
+        /// <summary>
+        /// CNPJ transacional do pagamento. Preencher informando o CNPJ do estabelecimento onde o pagamento foi processado/transacionado/recebido quando a emissão do documento fiscal ocorrer em estabelecimento distinto
+        /// </summary>
+        [XmlElement("CNPJPag")]
+        public string CNPJPag { get; set; }
+
+        /// <summary>
+        /// UF do CNPJ do estabelecimento onde o pagamento foi processado/transacionado/recebido.
+        /// </summary>
+        [XmlElement("UFPag")]
+        public UFBrasil UFPag { get; set; }
+
+        /// <summary>
+        /// Preencher informando o CNPJ do estabelecimento onde o pagamento foi processado/transacionado/recebido quando a emissão do documento fiscal ocorrer em estabelecimento distinto.
+        /// </summary>
+        [XmlElement("CNPJIF")]
+        public string CNPJIF { get; set; }
+
+        /// <summary>
+        /// Utilizar a Tabela de Códigos das Operadoras de cartão de crédito e/ou débito publicada no Portal Nacional da Nota Fiscal Eletrônica.        
+        /// </summary>
+        [XmlElement("tBand")]
+#if INTEROP
+        public BandeiraOperadoraCartao TBand { get; set; } = (BandeiraOperadoraCartao)(-1);
+#else
+        public BandeiraOperadoraCartao? TBand { get; set; }
+#endif
+
+        /// <summary>
+        /// Identifica o número da autorização da transação da operação
+        /// </summary>
+        [XmlElement("cAut")]
+        public string CAut { get; set; }
+
+        /// <summary>
+        /// Informar o CNPJ do estabelecimento beneficiário do pagamento
+        /// </summary>
+        [XmlElement("CNPJReceb")]
+        public string CNPJReceb { get; set; }
+
+        /// <summary>
+        /// UF do CNPJ do estabelecimento beneficiário do pagamento.
+        /// </summary>
+        [XmlElement("UFReceb")]
+        public UFBrasil UFReceb { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.DetEventoCancelamentoConciliacaoFinanceira")]
+    [ComVisible(true)]
+#endif
+    [Serializable]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoCancelamentoConciliacaoFinanceira : EventoDetalhe
+    {
+        /// <summary>
+        /// Descrição do evento
+        /// </summary>
+        [XmlElement("descEvento")]
+        public override string DescEvento { get; set; } = "Cancelamento Conciliação Financeira";
+
+        /// <summary>
+        /// Versão do aplicativo do Autor do Evento. 
+        /// </summary>
+        [XmlElement("verAplic")]
+        public string VerAplic { get; set; }
+
+        /// <summary>
+        /// Informar o número do protocolo de autorização do evento de conciliação financeira da NFe/NFCe que se refere a este cancelamento
+        /// </summary>
+        [XmlElement("nProtEvento")]
+        public string NProtEvento { get; set; }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var xml = $@"<descEvento>{DescEvento}</descEvento>
+                         <verAplic>{VerAplic}</verAplic>
+                         <nProtEvento>{NProtEvento}</nProtEvento>";
+
+            writer.WriteRaw(xml);
+        }
+    }
+
 }

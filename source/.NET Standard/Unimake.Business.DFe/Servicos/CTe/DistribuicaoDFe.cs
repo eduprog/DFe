@@ -21,8 +21,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
 #endif
     public class DistribuicaoDFe : ServicoBase, IInteropService<DistDFeInt>
     {
-        #region Protected Methods
-
         /// <summary>
         /// Definir o valor de algumas das propriedades do objeto "Configuracoes"
         /// </summary>
@@ -41,10 +39,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
                 base.DefinirConfiguracao();
             }
         }
-
-        #endregion Protected Methods
-
-        #region Public Properties
 
         /// <summary>
         /// Conteúdo retornado pelo webservice depois do envio do XML
@@ -66,10 +60,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
@@ -82,9 +72,23 @@ namespace Unimake.Business.DFe.Servicos.CTe
         /// </summary>
         public DistribuicaoDFe() : base() { }
 
-        #endregion Public Constructors
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public DistribuicaoDFe(string conteudoXML, Configuracao configuracao) : this()
+        {
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
 
-        #region Public Methods
+            var doc = new XmlDocument();
+            doc.LoadXml(conteudoXML);
+
+            Inicializar(doc, configuracao);
+        }
 
         /// <summary>
         /// Executa o serviço: Assina o XML, valida e envia para o web-service
@@ -108,16 +112,20 @@ namespace Unimake.Business.DFe.Servicos.CTe
                     {
                         var conteudoXML = item.ConteudoXML;
 
-                        switch (item.TipoXML)
+                        try
                         {
-                            case TipoXMLDocZip.ProcEventoCTe:
-                                ProcEventoCTes.Add(XMLUtility.Deserializar<ProcEventoCTe>(conteudoXML));
-                                break;
+                            switch (item.TipoXML)
+                            {
+                                case TipoXMLDocZip.ProcEventoCTe:
+                                    ProcEventoCTes.Add(XMLUtility.Deserializar<ProcEventoCTe>(conteudoXML));
+                                    break;
 
-                            case TipoXMLDocZip.ProcCTe:
-                                ProcCTes.Add(XMLUtility.Deserializar<CteProc>(conteudoXML));
-                                break;
+                                case TipoXMLDocZip.ProcCTe:
+                                    ProcCTes.Add(XMLUtility.Deserializar<CteProc>(conteudoXML));
+                                    break;
+                            }
                         }
+                        catch { }
                     }
                 }
             }
@@ -222,8 +230,6 @@ namespace Unimake.Business.DFe.Servicos.CTe
             }
         }
 
-        #endregion Public Methods
-
         /// <summary>
         /// Resgata a lista dos CTes completos (XML de distribuição dos CTes) retornadas pelo serviço de distribuição do DFe
         /// </summary>
@@ -233,5 +239,33 @@ namespace Unimake.Business.DFe.Servicos.CTe
         /// Resgata a lista dos eventos completos (XML de distribuição dos eventos dos CTes) retornados pelo serviço de distribuição do DFe
         /// </summary>
         public List<ProcEventoCTe> ProcEventoCTes { get; private set; }
+
+#if INTEROP
+
+        /// <summary>
+        /// Retorna o quantidade de elementos na lista com os XMLs de distribuição dos CTe´s
+        /// </summary>
+        public int GetProcCTesCount() => ProcCTes.Count;
+
+        /// <summary>
+        /// Retorna o CTe (CteProc) do elemento informado por parâmetro
+        /// </summary>
+        /// <param name="elemento">Elemento a ser retornado</param>
+        /// <returns>Objeto da CT-e (CteProc)</returns>
+        public CteProc GetProcCTes(int elemento) => ProcCTes[elemento];
+
+        /// <summary>
+        /// Retorna o quantidade de elementos na lista com os XMLs de distribuição dos eventos dos CTe´s
+        /// </summary>
+        public int GetProcEventoCTesCount() => ProcEventoCTes.Count;
+
+        /// <summary>
+        /// Retorna o Evento do CTe (ProcEventoCTe) do elemento informado por parâmetro
+        /// </summary>
+        /// <param name="elemento">Elemento a ser retornado</param>
+        /// <returns>Objeto do evento do CT-e (ProcEventoCTes)</returns>
+        public ProcEventoCTe GetProcEventoCTes(int elemento) => ProcEventoCTes[elemento];
+
+#endif
     }
 }

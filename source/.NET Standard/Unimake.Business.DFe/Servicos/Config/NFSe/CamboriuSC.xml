@@ -4,7 +4,7 @@
 		<CancelarNfse versao="1.00">
 			<Descricao>Cancelar nota fiscal de serviço</Descricao>
 			<WebEnderecoHomologacao></WebEnderecoHomologacao>
-			<WebEnderecoProducao>http://simple.camboriu.sc.gov.br:8788/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
+			<WebEnderecoProducao>https://simple.camboriu.sc.gov.br/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
 			<SchemaArquivo></SchemaArquivo>
 			<TagAssinatura></TagAssinatura>
 			<TagAtributoID></TagAtributoID>
@@ -19,7 +19,7 @@
 		<ConsultarNfsePorRps versao="1.00">
 			<Descricao>Consulta NFSe por RPS</Descricao>
 			<WebEnderecoHomologacao></WebEnderecoHomologacao>
-			<WebEnderecoProducao>http://simple.camboriu.sc.gov.br:8788/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
+			<WebEnderecoProducao>https://simple.camboriu.sc.gov.br/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
 			<WebActionHomologacao></WebActionHomologacao>
 			<WebActionProducao></WebActionProducao>
 			<SchemaArquivo></SchemaArquivo>
@@ -34,7 +34,7 @@
 		<ConsultarNfse versao="1.00">
 			<Descricao>Consulta NFSe por RPS</Descricao>
 			<WebEnderecoHomologacao></WebEnderecoHomologacao>
-			<WebEnderecoProducao>http://simple.camboriu.sc.gov.br:8788/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
+			<WebEnderecoProducao>https://simple.camboriu.sc.gov.br/LISIPMC/NFSePrefeituraCamboriu.wso</WebEnderecoProducao>
 			<WebActionHomologacao></WebActionHomologacao>
 			<WebActionProducao></WebActionProducao>
 			<SchemaArquivo></SchemaArquivo>
@@ -49,7 +49,7 @@
 		<RecepcionarLoteRps versao="1.00">
 			<Descricao>Recepcionar Lote RPS</Descricao>
 			<WebEnderecoHomologacao></WebEnderecoHomologacao>
-			<WebEnderecoProducao>http://simple.camboriu.sc.gov.br:8788/LISIPMC/NFSePrefeituraCamboriu.wso?wsdl</WebEnderecoProducao>
+			<WebEnderecoProducao>https://simple.camboriu.sc.gov.br/LISIPMC/NFSePrefeituraCamboriu.wso?wsdl</WebEnderecoProducao>
 			<WebActionHomologacao></WebActionHomologacao>
 			<WebActionProducao></WebActionProducao>
 			<WebContentType>text/xml;charset=UTF-8</WebContentType>

@@ -16,8 +16,6 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
 #endif
     public class RecepcaoEvento : CTe.RecepcaoEvento
     {
-        #region Public Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
@@ -30,7 +28,12 @@ namespace Unimake.Business.DFe.Servicos.CTeOS
         /// </summary>
         public RecepcaoEvento() : base() { }
 
-        #endregion
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
+        public RecepcaoEvento(string conteudoXML, Configuracao configuracao) : base(conteudoXML, configuracao) { }
 
         /// <summary>
         /// Validar o XML

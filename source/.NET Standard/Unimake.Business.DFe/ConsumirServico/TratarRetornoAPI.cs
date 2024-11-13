@@ -1,12 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
+using Unimake.Business.DFe.Xml.DARE;
+using Unimake.Business.DFe.Xml.GNRE;
+using Unimake.Business.DFe.Xml.SNCM;
 
 namespace Unimake.Business.DFe
 {
@@ -19,52 +24,90 @@ namespace Unimake.Business.DFe
         /// Classifica, faz o tratamento e retorna um XML (caso a comunicação tenha retorno)
         /// </summary>
         /// <returns></returns>
-        public static XmlDocument ReceberRetorno(ref APIConfig Config, HttpResponseMessage Response)
+        public static XmlDocument ReceberRetorno(ref APIConfig Config, HttpResponseMessage Response, ref Stream stream)
         {
-            var ResponseString = Response.Content.ReadAsStringAsync().Result;
+            var responseString = Response.Content.ReadAsStringAsync().Result;
 
             if (Response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
                 var InternalServerError = new XmlDocument();
-                InternalServerError.LoadXml(StringToXml("O servidor retornou um erro (500)"));
+                InternalServerError.LoadXml(StringToXml("O servidor retornou um erro (500) || Mensagem retornada:  " + responseString));
                 return InternalServerError;
             }
 
             var resultadoRetorno = new XmlDocument();
-            Response.Content.Headers.ContentType.MediaType = (string.IsNullOrWhiteSpace(Config.ResponseMediaType) ? Response.Content.Headers.ContentType.MediaType : Config.ResponseMediaType);
+            var tipoRetorno = (string.IsNullOrWhiteSpace(Config.ResponseMediaType) ? Response.Content.Headers.ContentType.MediaType : Config.ResponseMediaType);
 
-            if (!ResponseString.StartsWith("<") && Response.IsSuccessStatusCode)
-            {   
-                if(ResponseString.StartsWith(" "))
+            if (!responseString.StartsWith("<") && Response.IsSuccessStatusCode)
+            {
+                if (responseString.StartsWith(" "))
                 {
-                    ResponseString = ResponseString.Substring(1);
+                    responseString = responseString.Substring(1);
                 }
             }
-            
+
             //Response.Content.Headers.ContentType.MediaType -> ContentType retornado na comunicação || (Config.ContentType)
-            switch (Response.Content.Headers.ContentType.MediaType)             //(Config.ContentType)
+            switch (tipoRetorno)             //(Config.ContentType)
             {
                 case "text/plain": //Retorno XML -> Não temos que fazer nada, já retornou no formato mais comum
                 case "application/xml": //Retorno XML -> Não temos que fazer nada, já retornou no formato mais comum
                 case "text/xml": //Retorno XML -> Não temos que fazer nada, já retornou no formato mais comum
                     try
                     {
-                        resultadoRetorno.LoadXml(ResponseString);
+                        resultadoRetorno.LoadXml(responseString);
                     }
                     catch
                     {
-                        resultadoRetorno.LoadXml(StringToXml(ResponseString));
+                        resultadoRetorno.LoadXml(StringToXml(responseString));
                     }
                     break;
 
                 case "application/json": //Retorno JSON -> Vamos ter que converter para XML
+                case "application/problem+json": //DARE SP retorna isso quando o JSON de envio tem problemas nas tags
                     try
                     {
-                        resultadoRetorno.LoadXml(BuscarXML(ref Config, ResponseString));
+                        resultadoRetorno.LoadXml(BuscarXML(ref Config, responseString));
+
+                        if (Config.Servico == Servico.DAREEnvio)
+                        {
+                            if (responseString.Contains("itensParaGeracao"))
+                            {
+                                DARELoteRetorno dareLote = JsonConvert.DeserializeObject<DARELoteRetorno>(responseString);
+
+                                resultadoRetorno = dareLote.GerarXML();
+                            }
+                            else if (responseString.Contains("documentoImpressao"))
+                            {
+                                DAREUnicoRetorno dareUnico = JsonConvert.DeserializeObject<DAREUnicoRetorno>(responseString);
+
+                                resultadoRetorno = CreateXmlDocumentDARERetorno(dareUnico);
+                            }
+                        }
                     }
                     catch
                     {
-                        resultadoRetorno.LoadXml(ResponseString);
+                        if (Config.PadraoNFSe == PadraoNFSe.BAUHAUS)
+                        {
+                            resultadoRetorno.LoadXml(StringToXml(responseString));
+                        }
+
+                        else if (Config.Servico == Servico.DAREReceita)
+                        {
+                            // Desserializando JSON para lista de objetos
+                            List<ReceitaDARE> dare = JsonConvert.DeserializeObject<List<ReceitaDARE>>(responseString);
+
+                            if (dare == null)
+                            {
+                                throw new InvalidOperationException("Não foi possível desserializar a lista de receitas.");
+                            }
+
+                            resultadoRetorno = CreateXmlDocumentReceitas(dare);
+                        }
+
+                        else
+                        {
+                            resultadoRetorno.LoadXml(responseString);
+                        }
                     }
 
                     break;
@@ -72,13 +115,22 @@ namespace Unimake.Business.DFe
                 case "text/html": //Retorno HTML -> Entendemos que sempre será erro
                     try
                     {
-                        resultadoRetorno.LoadXml(BuscarXML(ref Config, ResponseString));
+                        resultadoRetorno.LoadXml(BuscarXML(ref Config, responseString));
                     }
                     catch
                     {
-                        resultadoRetorno.LoadXml(HtmlToPlainText(ResponseString));
+                        resultadoRetorno.LoadXml(HtmlToPlainText(responseString));
                     }
                     break;
+
+                case "application/pdf":
+                    responseString = responseString.Replace("&lt;", "<").Replace("&gt;", ">").Replace("&amp;", "&");
+                    responseString = Convert.ToBase64String(Encoding.UTF8.GetBytes(responseString));
+                    stream = Response.IsSuccessStatusCode ? Response.Content.ReadAsStreamAsync().Result : null;
+                    resultadoRetorno = CreateXmlDocument(responseString);
+                    break;
+
+                default: return CreateXmlDocument(Response.Content.Headers.ToString());
             }
 
             if (Config.PadraoNFSe == PadraoNFSe.IPM)
@@ -110,7 +162,7 @@ namespace Unimake.Business.DFe
             try
             {
                 node = xml.GetElementsByTagName(config.TagRetorno)[0];         //tag retorno
-                if (node != null)
+                if (node != null && config.TagRetorno != "chaveAcesso")
                 {
                     var temp = Compress.GZIPDecompress(node.InnerText);
                     config.TagRetorno = "prop:innertext";
@@ -165,6 +217,39 @@ namespace Unimake.Business.DFe
             xml.Serialize(retorno, str);
 
             return retorno.ToString();
+        }
+
+        static XmlDocument CreateXmlDocument(string text)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNode root = xmlDoc.CreateElement("root");
+            xmlDoc.AppendChild(root);
+
+            XmlNode textoElement = xmlDoc.CreateElement("Base64Pdf");
+            textoElement.InnerText = text;
+            root.AppendChild(textoElement);
+
+            return xmlDoc;
+        }
+
+        static XmlDocument CreateXmlDocumentReceitas(List<ReceitaDARE> listaReceitas)
+        {
+            var receitas = new Xml.DARE.Receitas();
+            receitas.Receita = listaReceitas;
+
+            var xmlDoc = XMLUtility.Serializar<Xml.DARE.Receitas>(receitas);
+
+            return xmlDoc;
+        }
+
+        static XmlDocument CreateXmlDocumentDARERetorno(DAREUnicoRetorno dareUnico) 
+        {
+            var dareRetorno = new DARERetorno();
+            dareRetorno.DARE = dareUnico;
+
+            var xmlDoc = XMLUtility.Serializar<DARERetorno>(dareRetorno);
+
+            return xmlDoc;
         }
 
         #endregion Private Methods

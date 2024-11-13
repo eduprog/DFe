@@ -3,11 +3,11 @@
   <Servicos ID="NFSe">
     <RecepcionarLoteRps versao="2.01">
       <Descricao>Recepcionar Lote RPS</Descricao>
-      <WebEnderecoHomologacao>http://testenfse.abase.com.br/webservice/nfsews.asmx</WebEnderecoHomologacao>
+      <WebEnderecoHomologacao></WebEnderecoHomologacao>
       <WebEnderecoProducao>http://nfse.abase.com.br/webservice_v2/nfsews.asmx</WebEnderecoProducao>
       <WebActionHomologacao>http://nfse.abase.com.br/NFSeWS/RecepcionarLoteRps</WebActionHomologacao>
       <WebActionProducao>http://nfse.abase.com.br/NFSeWS/RecepcionarLoteRps</WebActionProducao>
-      <SchemaArquivo>nfse.xsd</SchemaArquivo>
+      <SchemaArquivo></SchemaArquivo>
       <TagAssinatura>Rps</TagAssinatura>
       <TagAtributoID>InfDeclaracaoPrestacaoServico</TagAtributoID>
       <TagLoteAssinatura>EnviarLoteRpsEnvio</TagLoteAssinatura>
@@ -22,11 +22,11 @@
     </RecepcionarLoteRps>   
     <CancelarNfse versao="2.01">
       <Descricao>Cancelar nota fiscal de serviço</Descricao>
-      <WebEnderecoHomologacao>http://testenfse.abase.com.br/webservice/nfsews.asmx</WebEnderecoHomologacao>
+      <WebEnderecoHomologacao></WebEnderecoHomologacao>
       <WebEnderecoProducao>http://nfse.abase.com.br/webservice_v2/nfsews.asmx</WebEnderecoProducao>
       <WebActionHomologacao>http://nfse.abase.com.br/NFSeWS/CancelaNfse</WebActionHomologacao>
       <WebActionProducao>http://nfse.abase.com.br/NFSeWS/CancelaNfse</WebActionProducao>
-      <SchemaArquivo>nfse.xsd</SchemaArquivo>
+      <SchemaArquivo></SchemaArquivo>
       <TagAssinatura>Pedido</TagAssinatura>
       <TagAtributoID>InfPedidoCancelamento</TagAtributoID>
       <TagLoteAssinatura></TagLoteAssinatura>
@@ -41,11 +41,11 @@
     </CancelarNfse>
     <ConsultarLoteRps versao="2.01">
       <Descricao>Consulta lote RPS</Descricao>
-      <WebEnderecoHomologacao>http://testenfse.abase.com.br/webservice/nfsews.asmx</WebEnderecoHomologacao>
+      <WebEnderecoHomologacao></WebEnderecoHomologacao>
       <WebEnderecoProducao>http://nfse.abase.com.br/webservice_v2/nfsews.asmx</WebEnderecoProducao>
       <WebActionHomologacao>http://nfse.abase.com.br/NFSeWS/ConsultaLoteRps</WebActionHomologacao>
       <WebActionProducao>http://nfse.abase.com.br/NFSeWS/ConsultaLoteRps</WebActionProducao>
-      <SchemaArquivo>nfse.xsd</SchemaArquivo>
+      <SchemaArquivo></SchemaArquivo>
       <TagAssinatura></TagAssinatura>
       <TagAtributoID></TagAtributoID>
       <TagLoteAssinatura></TagLoteAssinatura>
@@ -60,11 +60,11 @@
     </ConsultarLoteRps>
 	<ConsultarNfsePorRps versao="2.01">
       <Descricao>Consulta NFSe por RPS</Descricao>
-      <WebEnderecoHomologacao>http://testenfse.abase.com.br/webservice/nfsews.asmx</WebEnderecoHomologacao>
+      <WebEnderecoHomologacao></WebEnderecoHomologacao>
       <WebEnderecoProducao>http://nfse.abase.com.br/webservice_v2/nfsews.asmx</WebEnderecoProducao>
       <WebActionHomologacao>http://nfse.abase.com.br/NFSeWS/ConsultaNfseRps</WebActionHomologacao>
       <WebActionProducao>http://nfse.abase.com.br/NFSeWS/ConsultaNfseRps</WebActionProducao>
-      <SchemaArquivo>nfse.xsd</SchemaArquivo>
+      <SchemaArquivo></SchemaArquivo>
       <TagAssinatura></TagAssinatura>
       <TagAtributoID></TagAtributoID>
       <TagLoteAssinatura></TagLoteAssinatura>

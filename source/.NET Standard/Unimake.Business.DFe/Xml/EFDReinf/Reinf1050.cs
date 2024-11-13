@@ -6,18 +6,19 @@ using System.Runtime.InteropServices;
 using System;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
-using System.Collections.Generic;
 
 namespace Unimake.Business.DFe.Xml.EFDReinf
 {
+    /// <summary>
+    /// R-1050 - Tabela de entidades ligadas
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Reinf1050")]
     [ComVisible(true)]
 #endif
-
     [Serializable()]
-    [XmlRoot("Reinf", Namespace = "http://www.reinf.esocial.gov.br/schemas/evtTabProcesso/v2_01_02", IsNullable = false)]
+    [XmlRoot("Reinf", Namespace = "http://www.reinf.esocial.gov.br/schemas/evt1050TabLig/v2_01_02", IsNullable = false)]
     public class Reinf1050 : XMLBase
     {
         [XmlElement("evtTabLig")]
@@ -35,6 +36,9 @@ namespace Unimake.Business.DFe.Xml.EFDReinf
     [Serializable()]
     public class EvtTabLig : ReinfEventoBase
     {
+        /// <summary>
+        /// Informações de identificação do evento
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento IdeEvento { get; set; }
 
@@ -54,22 +58,25 @@ namespace Unimake.Business.DFe.Xml.EFDReinf
     public class InfoLig
     {
         [XmlElement("inclusao")]
-        public Reinf1050Inclusao Inclusao { get; set; }
+        public Inclusao1050 Inclusao { get; set; }
+
+        [XmlElement("alteracao")]
+        public Alteracao1050 Alteracao { get; set; }
+
+        [XmlElement("exclusao")]
+        public Exclusao1050 Exclusao { get; set; }
     }
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Reinf1050Inclusao")]
+    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Inclusao1050")]
     [ComVisible(true)]
 #endif
     [Serializable()]
-    public class Reinf1050Inclusao
+    public class Inclusao1050
     {
         [XmlElement("ideEntLig")]
         public IdeEntLig IdeEntLig { get; set; }
-
-        [XmlElement("alteracao")]
-        public Reinf1050Alteracao Alteracao { get; set; }
     }
 
 #if INTEROP
@@ -92,53 +99,39 @@ namespace Unimake.Business.DFe.Xml.EFDReinf
         [XmlElement("fimValid")]
         public string FimValid { get; set; }
 
-        [XmlElement("exclusao")]
-        public Reinf1050Exclusao Exclusao { get; set; }
-
         #region ShouldSerialize
 
         public bool ShouldSerializeFimValid() => !string.IsNullOrEmpty(FimValid);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Alteracao")]
+    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Alteracao1050")]
     [ComVisible(true)]
 #endif
     [Serializable()]
-    public class Reinf1050Alteracao
+    public class Alteracao1050
     {
-        [XmlElement("tpEntLig")]
-        public TipoEntidadeLigada TpEntLig { get; set; }
-
-        [XmlElement("cnpjLig")]
-        public string CnpjLig { get; set; }
-
-        [XmlElement("iniValid")]
-        public string IniValid { get; set; }
-
-        [XmlElement("fimValid")]
-        public string FimValid { get; set; }
+        [XmlElement("ideEntLig")]
+        public IdeEntLig IdeEntLig { get; set; }
 
         [XmlElement("novaValidade")]
-        public NovaValidade NovaValidade { get; set; }
-
-        #region ShouldSerialize
-
-        public bool ShouldSerializeFimValid() => !string.IsNullOrEmpty(FimValid);
-
-        #endregion
+        public NovaValidade1050 NovaValidade { get; set; }
     }
 
+    /// <summary>
+    /// Novo período de validade das informações que
+    /// estão sendo alteradas
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.NovaValidade")]
+    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.NovaValidade1050")]
     [ComVisible(true)]
 #endif
     [Serializable()]
-    public class NovaValidade
+    public class NovaValidade1050
     {
         [XmlElement("iniValid")]
         public string IniValid { get; set; }
@@ -150,16 +143,28 @@ namespace Unimake.Business.DFe.Xml.EFDReinf
 
         public bool ShouldSerializeFimValid() => !string.IsNullOrEmpty(FimValid);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Exclusao")]
+    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.Exclusao1050")]
     [ComVisible(true)]
 #endif
     [Serializable()]
-    public class Reinf1050Exclusao
+    public class Exclusao1050
+    {
+        [XmlElement("ideEntLig")]
+        public IdeEntLigExclusao IdeEntLig { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.EFDReinf.IdeEntLigExclusao")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    public class IdeEntLigExclusao
     {
         [XmlElement("cnpjLig")]
         public string CnpjLig { get; set; }
@@ -174,6 +179,6 @@ namespace Unimake.Business.DFe.Xml.EFDReinf
 
         public bool ShouldSerializeFimValid() => !string.IsNullOrEmpty(FimValid);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 }

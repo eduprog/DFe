@@ -24,7 +24,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void ConsultarNfseServicoPrestado(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void ConsultarNfseServicoPrestado(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "ConsultarNfseServicoPrestadoEnvio-ped-sitnfse.xml";
             var arqXML = "..\\..\\..\\NFSe\\Resources\\" + padraoNFSe.ToString() + "\\" + versaoSchema + "\\" + nomeXMLEnvio;
@@ -48,7 +48,7 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var consultarNfseServicoPrestado = new ConsultarNfseServicoPrestado(conteudoXML, configuracao);
-            consultarNfseServicoPrestado.Executar();
+            Assert.Multiple(() => TestUtility.AnalisaResultado(consultarNfseServicoPrestado));
         }
     }
 }

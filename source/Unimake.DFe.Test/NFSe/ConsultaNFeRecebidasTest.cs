@@ -24,7 +24,7 @@ namespace Unimake.DFe.Test.NFSe
         [Theory]
         [Trait("DFe", "NFSe")]
         [MemberData(nameof(Parametros))]
-        public void ConsultaNFeRecebidas(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio, string nomeMunicipio)
+        public void ConsultaNFeRecebidas(TipoAmbiente tipoAmbiente, PadraoNFSe padraoNFSe, string versaoSchema, int codMunicipio)
         {
             var nomeXMLEnvio = "ConsultaNFeRecebidas-ped-sitnfserec.xml";
 
@@ -58,7 +58,7 @@ namespace Unimake.DFe.Test.NFSe
             };
 
             var consultaNFeRecebidas = new ConsultaNFeRecebidas(conteudoXML, configuracao);
-            consultaNFeRecebidas.Executar();
+            Assert.Multiple(() => TestUtility.AnalisaResultado(consultaNFeRecebidas));
         }
     }
 }

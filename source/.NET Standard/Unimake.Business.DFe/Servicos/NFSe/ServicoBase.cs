@@ -20,21 +20,135 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 #endif
     public abstract class ServicoBase : Servicos.ServicoBase
     {
-        #region Protected Constructors
-
         /// <summary>
         /// Construtor
         /// </summary>
         protected ServicoBase() : base() { }
 
-        #endregion Protected Constructors
-
-        #region Protected Methods
 
         /// <summary>
         /// Definir configurações
         /// </summary>
         protected override void DefinirConfiguracao() { }
+
+        /// <summary>
+        /// Ajustes no XMLs, depois de assinado.
+        /// </summary>
+        protected override void AjustarXMLAposAssinado()
+        {
+            #region Resolver problema da assinatura de Uberlândia-MG, que fugiu padrão mundial
+
+            if (Configuracoes.CodigoMunicipio == 3170206) //Uberlândia (Tem esta zica na assinatura, pensa em merda.)
+            {
+                if (Configuracoes.Servico == Servico.NFSeRecepcionarLoteRps ||
+                    Configuracoes.Servico == Servico.NFSeRecepcionarLoteRpsSincrono ||
+                    Configuracoes.Servico == Servico.NFSeGerarNfse ||
+                    Configuracoes.Servico == Servico.NFSeSubstituirNfse ||
+                    Configuracoes.Servico == Servico.NFSeCancelarNfse)
+                {
+
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(ConteudoXML.OuterXml);
+                    var mudouXml = false;
+                    if (Configuracoes.TagAssinatura.Equals("Rps"))
+                    {
+                        if (Configuracoes.Servico == Servico.NFSeGerarNfse)
+                        {
+                            var nodeRps = xmlDoc.GetElementsByTagName("Rps")[0];
+                            var elementNodeRps = (XmlElement)nodeRps;
+                            var elementInfDeclaracao = (XmlElement)elementNodeRps.GetElementsByTagName("InfDeclaracaoPrestacaoServico")[0];
+                            var id = elementInfDeclaracao.GetAttribute("Id").Replace("ID_", "");
+                            var elementSignatureValue = (XmlElement)elementNodeRps.GetElementsByTagName("SignatureValue")[0];
+
+                            if (string.IsNullOrWhiteSpace(elementSignatureValue.GetAttribute("Id")))
+                            {
+                                var attributeId = xmlDoc.CreateAttribute("Id");
+                                attributeId.Value = "ID_ASSINATURA_" + id;
+                                elementSignatureValue.SetAttributeNode(attributeId);
+
+                                mudouXml = true;
+                            }
+                        }
+                        else
+                        {
+                            var listListaRps = xmlDoc.GetElementsByTagName("ListaRps");
+                            foreach (XmlNode nodeListaRps in listListaRps)
+                            {
+                                var elementListaRps = (XmlElement)nodeListaRps;
+                                foreach (XmlNode nodeRps in elementListaRps.GetElementsByTagName("Rps"))
+                                {
+                                    var elementRps = (XmlElement)nodeRps;
+                                    if (elementRps.GetElementsByTagName("InfDeclaracaoPrestacaoServico").Count > 0)
+                                    {
+                                        var elementInfDeclaracao = (XmlElement)elementRps.GetElementsByTagName("InfDeclaracaoPrestacaoServico")[0];
+                                        var id = elementInfDeclaracao.GetAttribute("Id").Replace("ID_", "");
+                                        var elementSignatureValue = (XmlElement)elementRps.GetElementsByTagName("SignatureValue")[0];
+
+                                        if (string.IsNullOrWhiteSpace(elementSignatureValue.GetAttribute("Id")))
+                                        {
+                                            var attributeId = xmlDoc.CreateAttribute("Id");
+                                            attributeId.Value = "ID_ASSINATURA_" + id;
+                                            elementSignatureValue.SetAttributeNode(attributeId);
+                                            mudouXml = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (mudouXml)
+                        {
+                            ConteudoXML.LoadXml(xmlDoc.OuterXml);
+                        }
+                    }
+                    else if (Configuracoes.TagAssinatura.Equals("Pedido")) //Para o serviço CancelarNfse
+                    {
+                        var nodePedido = xmlDoc.GetElementsByTagName("Pedido")[0];
+                        var elementNodePedido = (XmlElement)nodePedido;
+                        var elementInfPedidoCancelamento = (XmlElement)elementNodePedido.GetElementsByTagName("InfPedidoCancelamento")[0];
+                        var id = elementInfPedidoCancelamento.GetAttribute("Id").Replace("ID_PEDIDO_CANCELAMENTO_", "");
+                        var elementSignatureValue = (XmlElement)elementNodePedido.GetElementsByTagName("SignatureValue")[0];
+
+                        if (string.IsNullOrWhiteSpace(elementSignatureValue.GetAttribute("Id")))
+                        {
+                            var attributeId = xmlDoc.CreateAttribute("Id");
+                            attributeId.Value = "ID_ASSINATURA_PEDIDO_CANCELAMENTO_" + id;
+                            elementSignatureValue.SetAttributeNode(attributeId);
+
+                            mudouXml = true;
+                        }
+                    }
+
+                    if (mudouXml)
+                    {
+                        ConteudoXML.LoadXml(xmlDoc.OuterXml);
+                    }
+
+                }
+            }
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Conteúdo do XML assinado.
+        /// </summary>
+        public override XmlDocument ConteudoXMLAssinado
+        {
+            get
+            {
+                if (Configuracoes.PadraoNFSe == PadraoNFSe.DSF && Configuracoes.EncriptaTagAssinatura)
+                {
+                    var sh1 = Criptografia.GetSHA1HashData(ConteudoXML.GetElementsByTagName("Assinatura")[0].InnerText);
+                    ConteudoXML.GetElementsByTagName("Assinatura")[0].InnerText = sh1;
+                }
+
+                VerificarAssinarXML(Configuracoes.TagAssinatura, Configuracoes.TagAtributoID);
+                VerificarAssinarXML(Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID);
+
+                return ConteudoXML;
+            }
+        }
 
         /// <summary>
         /// Validar o XML
@@ -68,6 +182,19 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 #endif
         protected override void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
         {
+            if (configuracao.PadraoNFSe == PadraoNFSe.ABASE || configuracao.PadraoNFSe == PadraoNFSe.BETHA || configuracao.PadraoNFSe == PadraoNFSe.GINFES ||
+                configuracao.PadraoNFSe == PadraoNFSe.MEMORY || configuracao.PadraoNFSe == PadraoNFSe.EQUIPLANO || configuracao.PadraoNFSe == PadraoNFSe.WEBFISCO)
+            {
+                //Municípios pontuais com configuração diferente:
+                //São José dos Pinhais - PR     |GINFES
+                //Varginha - MG                 |BETHA
+                //Fortaleza - CE                |GINFES
+                if (configuracao.CodigoMunicipio != 4125506 || configuracao.CodigoMunicipio != 3170701 || configuracao.CodigoMunicipio != 2304400)
+                {
+                    configuracao.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), configuracao.PadraoNFSe.ToString());
+                }
+            }
+
             base.Inicializar(conteudoXML, configuracao);
         }
 
@@ -75,38 +202,6 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         /// Validar, o conteúdo das tags do XML, alguns validações manuais que o schema não faz. Vamos implementando novas regras na medida da necessidade de cada serviço.
         /// </summary>
         protected override void XmlValidarConteudo() { }
-
-        #endregion Protected Methods
-
-        #region Public Methods
-
-        /// <summary>
-        /// Executa o serviço: Assina o XML, valida e envia para o webservice
-        /// </summary>
-#if INTEROP
-        [ComVisible(false)]
-#endif
-        public override void Executar()
-        {
-            if (Configuracoes.UsaCertificadoDigital)
-            {
-                if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
-                {
-                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
-                }
-
-                if (!string.IsNullOrWhiteSpace(Configuracoes.TagLoteAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagLoteAssinatura))
-                {
-                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
-                }
-            }
-            
-            AjustarXMLAposAssinado();
-
-            XmlValidar();
-
-            base.Executar();
-        }
 
 #if INTEROP
 
@@ -116,7 +211,7 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         /// <param name="conteudoXML">Conteúdo do XML que será enviado para o WebService</param>
         /// <param name="configuracao">Objeto "Configuracoes" com as propriedade necessária para a execução do serviço</param>
         [ComVisible(true)]
-        public void Executar(string conteudoXML, Configuracao configuracao)
+        public virtual void Executar(string conteudoXML, Configuracao configuracao)
         {
             try
             {
@@ -147,6 +242,35 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         }
 
 #endif
+
+        /// <summary>
+        /// Executa o serviço: Assina o XML, valida e envia para o webservice
+        /// </summary>
+#if INTEROP
+        [ComVisible(false)]
+#endif
+        public override void Executar()
+        {
+
+            if (Configuracoes.UsaCertificadoDigital && Configuracoes.NaoAssina == null && Configuracoes.NaoAssina != Configuracoes.TipoAmbiente)
+            {
+                if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
+                {
+                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagAssinatura, Configuracoes.TagAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
+                }
+
+                if (!string.IsNullOrWhiteSpace(Configuracoes.TagLoteAssinatura) && !AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagLoteAssinatura))
+                {
+                    AssinaturaDigital.Assinar(ConteudoXML, Configuracoes.TagLoteAssinatura, Configuracoes.TagLoteAtributoID, Configuracoes.CertificadoDigital, AlgorithmType.Sha1, true, "Id");
+                }
+            }
+
+            AjustarXMLAposAssinado();
+
+            XmlValidar();
+
+            base.Executar();
+        }
 
 
         /// <summary>
@@ -210,7 +334,5 @@ namespace Unimake.Business.DFe.Servicos.NFSe
             stream.Write(byteData, 0, byteData.Length);
             stream.Close();
         }
-
-        #endregion Public Methods
     }
 }

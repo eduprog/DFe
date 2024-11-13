@@ -216,7 +216,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public Emit Emit { get; set; }
 
         /// <summary>
-        /// Esta TAG é de uso exclusivo do FISCO, não precisa gerar nada, só temos ela para caso de alguma necessidade de deserialização.
+        /// Esta TAG é de uso exclusivo do FISCO, não precisa gerar nada, só temos ela para caso de alguma necessidade de desserialização.
         /// </summary>
         [XmlElement("avulsa")]
         public Avulsa Avulsa { get; set; }
@@ -269,6 +269,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("infSolicNFF")]
         public InfSolicNFF InfSolicNFF { get; set; }
 
+        /// <summary>
+        /// Grupo de tags de produtos agropecuários: animais, vegetais e florestais
+        /// </summary>
+        [XmlElement("agropecuario")]
+        public Agropecuario Agropecuario { get; set; }
+
         [XmlAttribute(AttributeName = "Id", DataType = "ID")]
         public string Id
         {
@@ -287,18 +293,25 @@ namespace Unimake.Business.DFe.Xml.NFe
         {
             get
             {
-                ChaveField = ((int)Ide.CUF).ToString() +
-                    Ide.DhEmi.ToString("yyMM") +
-                    (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')) +
-                    ((int)Ide.Mod).ToString().PadLeft(2, '0') +
-                    Ide.Serie.ToString().PadLeft(3, '0') +
-                    Ide.NNF.ToString().PadLeft(9, '0') +
-                    ((int)Ide.TpEmis).ToString() +
-                    Ide.CNF.PadLeft(8, '0');
+                var conteudoChaveDFe = new XMLUtility.ConteudoChaveDFe
+                {
+                    UFEmissor = (UFBrasil)(int)Ide.CUF,
+                    AnoEmissao = Ide.DhEmi.ToString("yy"),
+                    MesEmissao = Ide.DhEmi.ToString("MM"),
+                    CNPJCPFEmissor = (string.IsNullOrWhiteSpace(Emit.CNPJ) ? Emit.CPF?.PadLeft(14, '0') : Emit.CNPJ.PadLeft(14, '0')),
+                    Modelo = (ModeloDFe)(int)Ide.Mod,
+                    Serie = Ide.Serie,
+                    NumeroDoctoFiscal = Ide.NNF,
+                    TipoEmissao = (TipoEmissao)(int)Ide.TpEmis,
+                    CodigoNumerico = Ide.CNF
+                };
+                ChaveField = XMLUtility.MontarChaveNFe(ref conteudoChaveDFe);
+                Ide.CDV = conteudoChaveDFe.DigitoVerificador;
 
-                Ide.CDV = XMLUtility.CalcularDVChave(ChaveField);
-
-                ChaveField += Ide.CDV.ToString();
+                if (InfRespTec != null)
+                {
+                    InfRespTec.GerarHashCSRT(ChaveField);
+                }
 
                 return ChaveField;
             }
@@ -1195,7 +1208,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => _CMun;
             set
             {
-                if (value <= 0 || value == null)
+                if (value <= 0)
                 {
                     throw new Exception("Código do município do destinatário (tag <cMun> da <enderDest>) está sem conteúdo. É obrigatório informar o código IBGE do município.");
                 }
@@ -1315,7 +1328,7 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => _CMun;
             set
             {
-                if (value <= 0 || value == null)
+                if (value <= 0)
                 {
                     throw new Exception("Código do município do local de " + GetType().Name.ToLower() + " (tag <cMun> da <" + GetType().Name.ToLower() + ">) está sem conteúdo. É obrigatório informar o código IBGE do município.");
                 }
@@ -1521,6 +1534,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("cBenef")]
         public string CBenef { get; set; }
 
+        /// <summary>
+        /// Grupo opcional para informações do Crédito Presumido. Obs.: A exigência do preenchimento das informações do crédito presumido fica a critério de cada UF.
+        /// </summary>
+        [XmlElement("gCred")]
+        public List<GCred> GCred { get; set; }
+
         [XmlElement("EXTIPI")]
         public string EXTIPI { get; set; }
 
@@ -1636,7 +1655,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public InfProdEmb InfProdEmb { get; set; }
 
         [XmlElement("veicProd")]
-        public List<VeicProd> VeicProd { get; set; }
+        public VeicProd VeicProd { get; set; }
 
         [XmlElement("med")]
         public Med Med { get; set; }
@@ -1895,38 +1914,80 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// <summary>
         /// Adicionar novo elemento a lista
         /// </summary>
-        /// <param name="veicProd">Elemento</param>
-        public void AddVeicProd(VeicProd veicProd)
+        /// <param name="elemento">Elemento</param>
+        public void AddGCred(GCred elemento)
         {
-            if (VeicProd == null)
+            if (GCred == null)
             {
-                VeicProd = new List<VeicProd>();
+                GCred = new List<GCred>();
             }
 
-            VeicProd.Add(veicProd);
+            GCred.Add(elemento);
         }
 
         /// <summary>
-        /// Retorna o elemento da lista VeicProd (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// Retorna o elemento da lista GCred (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
         /// </summary>
         /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
-        /// <returns>Conteúdo do index passado por parâmetro da VeicProd</returns>
-        public VeicProd GetVeicProd(int index)
+        /// <returns>Conteúdo do index passado por parâmetro da GCred</returns>
+        public GCred GetGCred(int index)
         {
-            if ((VeicProd?.Count ?? 0) == 0)
+            if ((GCred?.Count ?? 0) == 0)
             {
                 return default;
             };
 
-            return VeicProd[index];
+            return GCred[index];
         }
 
         /// <summary>
-        /// Retorna a quantidade de elementos existentes na lista VeicProd
+        /// Retorna a quantidade de elementos existentes na lista GCred
         /// </summary>
-        public int GetVeicProdCount => (VeicProd != null ? VeicProd.Count : 0);
+        public int GetGCredCount => (GCred != null ? GCred.Count : 0);
 
 #endif
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.GCred")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class GCred
+    {
+        /// <summary>
+        /// Código de Benefício Fiscal de Crédito Presumido utilizado pela UF, aplicado ao item. Obs.: Deve ser utilizado o mesmo código adotado na EFD e outras declarações, nas UF que o exigem.
+        /// </summary>
+        [XmlElement("cCredPresumido")]
+        public string CCredPresumido { get; set; }
+
+        /// <summary>
+        /// Informar o percentual do crédito presumido relativo ao código do crédito presumido informado.
+        /// </summary>
+        [XmlIgnore]
+        public double PCredPresumido { get; set; }
+
+        [XmlElement("pCredPresumido")]
+        public string PCredPresumidoField
+        {
+            get => PCredPresumido.ToString("F4", CultureInfo.InvariantCulture);
+            set => PCredPresumido = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Informar o valor do crédito presumido relativo ao código do crédito presumido informado.
+        /// </summary>
+        [XmlIgnore]
+        public double VCredPresumido { get; set; }
+
+        [XmlElement("vCredPresumido")]
+        public string VCredPresumidoField
+        {
+            get => VCredPresumido.ToString("F2", CultureInfo.InvariantCulture);
+            set => VCredPresumido = Converter.ToDouble(value);
+        }
     }
 
 #if INTEROP
@@ -1986,6 +2047,9 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("CNPJ")]
         public string CNPJ { get; set; }
 
+        [XmlElement("CPF")]
+        public string CPF { get; set; }
+
 #if INTEROP
         [XmlElement("UFTerceiro")]
         public UFBrasil UFTerceiro { get; set; } = UFBrasil.NaoDefinido;
@@ -2005,8 +2069,10 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVAFRMM() => VAFRMM > 0;
 
         public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
+        public bool ShouldSerializeCPF() => !string.IsNullOrWhiteSpace(CPF);
 
         public bool ShouldSerializeUFTerceiro() => UFTerceiro != null && UFTerceiro != UFBrasil.NaoDefinido;
+
 
         #endregion
 
@@ -2897,7 +2963,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Quantidade tributada - Informar a BC do ICMS próprio em quantidade conforme unidade de medida estabelecida na legislação para o produto.
         /// </summary>
         [XmlElement("qBCMono")]
-        public double QBCMono { get; set; }
+        public decimal QBCMono { get; set; }
 
         /// <summary>
         /// Alíquota ad rem do imposto. Alíquota ad rem do ICMS, estabelecida na legislação para o produto.
@@ -3112,7 +3178,7 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializePFCPField() => PFCP > 0;
 
-        public bool ShouldSerializeVFCPField() => VFCP > 0;
+        public bool ShouldSerializeVFCPField() => PFCP > 0;
 
         public bool ShouldSerializePMVASTField() => PMVAST != null;
 
@@ -3156,7 +3222,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Quantidade tributada - Informar a BC do ICMS próprio em quantidade conforme unidade de medida estabelecida na legislação para o produto.
         /// </summary>
         [XmlElement("qBCMono")]
-        public double QBCMono { get; set; }
+        public decimal QBCMono { get; set; }
 
         /// <summary>
         /// Alíquota ad rem do imposto.
@@ -3188,7 +3254,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Quantidade tributada sujeita a retenção - Informar a BC do ICMS sujeito a retenção em quantidade conforme unidade de medida estabelecida na legislação para o produto.
         /// </summary>
         [XmlElement("qBCMonoReten")]
-        public double QBCMonoReten { get; set; }
+        public decimal QBCMonoReten { get; set; }
 
         /// <summary>
         /// Alíquota ad rem do imposto com retenção
@@ -3346,6 +3412,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("motDesICMS")]
         public MotivoDesoneracaoICMS MotDesICMS { get; set; }
 
+        /// <summary>
+        /// Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd). 0=Não deduz   1=Sim, deduz.
+        /// </summary>
+        [XmlElement("indDeduzDeson")]
+#if INTEROP
+        public SimNao IndDeduzDeson { get; set; } = (SimNao)(-1);
+#else
+        public SimNao? IndDeduzDeson { get; set; }
+#endif
+
         #region ShouldSerialize
 
         public bool ShouldSerializeVBCFCPField() => VBCFCP > 0;
@@ -3357,6 +3433,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
 
         public bool ShouldSerializeMotDesICMS() => VICMSDeson > 0;
+
+#if INTEROP
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != (SimNao)(-1);
+#else
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != null;
+#endif
 
         #endregion
     }
@@ -3472,6 +3554,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("motDesICMS")]
         public MotivoDesoneracaoICMS MotDesICMS { get; set; }
 
+        /// <summary>
+        /// Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd). 0=Não deduz   1=Sim, deduz.
+        /// </summary>
+        [XmlElement("indDeduzDeson")]
+#if INTEROP
+        public SimNao IndDeduzDeson { get; set; } = (SimNao)(-1);
+#else
+        public SimNao? IndDeduzDeson { get; set; }
+#endif
+
         #region ShouldSerialize
 
         public bool ShouldSerializePMVASTField() => PMVAST != null;
@@ -3487,6 +3579,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
 
         public bool ShouldSerializeMotDesICMS() => VICMSDeson > 0;
+
+#if INTEROP
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != (SimNao)(-1);
+#else
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != null;
+#endif
 
         #endregion
     }
@@ -3519,11 +3617,28 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("motDesICMS")]
         public MotivoDesoneracaoICMS MotDesICMS { get; set; }
 
+        /// <summary>
+        /// Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd). 0=Não deduz   1=Sim, deduz.
+        /// </summary>
+        [XmlElement("indDeduzDeson")]
+#if INTEROP
+        public SimNao IndDeduzDeson { get; set; } = (SimNao)(-1);
+#else
+        public SimNao? IndDeduzDeson { get; set; }
+#endif
+
         #region ShouldSerialize
 
         public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
 
         public bool ShouldSerializeMotDesICMS() => VICMSDeson > 0;
+
+#if INTEROP
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != (SimNao)(-1);
+#else
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != null;
+#endif
+
 
         #endregion
     }
@@ -3560,6 +3675,12 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => PRedBC?.ToString("F4", CultureInfo.InvariantCulture);
             set => PRedBC = Converter.ToDouble(value);
         }
+
+        /// <summary>
+        /// Código de Benefício Fiscal na UF aplicado ao item quando houver RBC
+        /// </summary>
+        [XmlElement("cBenefRBC")]
+        public string CBenefRBC { get; set; }
 
         [XmlIgnore]
         public double? VBC { get; set; }
@@ -3685,8 +3806,9 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeModBC() => ModBC != null && ModBC != (ModalidadeBaseCalculoICMS)(-1);
         public bool ShouldSerializePRedBCField() => PRedBC != null;
+        public bool ShouldSerializeCBenefRBC() => !string.IsNullOrWhiteSpace(CBenefRBC) && PRedBC > 0;
         public bool ShouldSerializeVBCField() => VBC != null;
-        public bool ShouldSerializPICMSeField() => PICMS != null;
+        public bool ShouldSerializePICMSeField() => PICMS != null;
         public bool ShouldSerializeVICMSOpField() => VICMSOp != null;
 
         public bool ShouldSerializePDifField() => PDif != null;
@@ -3729,7 +3851,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Quantidade tributada - Informar a BC do ICMS em quantidade conforme unidade de medida estabelecida na legislação para o produto.
         /// </summary>
         [XmlElement("qBCMono")]
-        public double QBCMono { get; set; }
+        public decimal QBCMono { get; set; }
 
         /// <summary>
         /// Alíquota ad rem do ICMS estabelecida na legislação para o produto.
@@ -3998,7 +4120,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Quantidade tributada retida anteriormente - Informar a BC do ICMS em quantidade conforme unidade de medida estabelecida na legislação.
         /// </summary>
         [XmlElement("qBCMonoRet")]
-        public double QBCMonoRet { get; set; }
+        public decimal QBCMonoRet { get; set; }
 
         /// <summary>
         /// Alíquota ad rem do imposto retido anteriormente
@@ -4243,6 +4365,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         public MotivoDesoneracaoICMS? MotDesICMS { get; set; }
 #endif
 
+        /// <summary>
+        /// Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd). 0=Não deduz   1=Sim, deduz.
+        /// </summary>
+        [XmlElement("indDeduzDeson")]
+#if INTEROP
+        public SimNao IndDeduzDeson { get; set; } = (SimNao)(-1);
+#else
+        public SimNao? IndDeduzDeson { get; set; }
+#endif
+
         [XmlIgnore]
         public double VICMSSTDeson { get; set; }
 
@@ -4295,6 +4427,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public virtual bool ShouldSerializeModBCST() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1);
 
         public virtual bool ShouldSerializeMotDesICMS() => MotDesICMS != null && MotDesICMS != (MotivoDesoneracaoICMS)(-1) && VICMSDeson > 0;
+
+#if INTEROP
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != (SimNao)(-1) && MotDesICMS != (MotivoDesoneracaoICMS)(-1) && VICMSDeson > 0;
+#else
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != null && MotDesICMS != null && VICMSDeson > 0;
+#endif
 
         public virtual bool ShouldSerializeVICMSSTDesonField() => VICMSSTDeson > 0;
 
@@ -4513,6 +4651,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         public MotivoDesoneracaoICMS? MotDesICMS { get; set; }
 #endif
 
+        /// <summary>
+        /// Indica se o valor do ICMS desonerado (vICMSDeson) deduz do valor do item (vProd). 0=Não deduz   1=Sim, deduz.
+        /// </summary>
+        [XmlElement("indDeduzDeson")]
+#if INTEROP
+        public SimNao IndDeduzDeson { get; set; } = (SimNao)(-1);
+#else
+        public SimNao? IndDeduzDeson { get; set; }
+#endif
+
         [XmlIgnore]
         public double VICMSSTDeson { get; set; }
 
@@ -4565,6 +4713,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public virtual bool ShouldSerializeModBCST() => ModBCST != null && ModBCST != (ModalidadeBaseCalculoICMSST)(-1);
 
         public virtual bool ShouldSerializeMotDesICMS() => MotDesICMS != null && MotDesICMS != (MotivoDesoneracaoICMS)(-1) && VICMSDeson > 0;
+
+#if INTEROP
+        public bool ShouldSerializeIndDeduzDeson() => IndDeduzDeson != (SimNao)(-1) && MotDesICMS != (MotivoDesoneracaoICMS)(-1) && VICMSDeson > 0;
+#else
+        public bool ShouldSerializeIndDeduzDeson() => MotDesICMS != null && IndDeduzDeson != null && VICMSDeson > 0;
+#endif
 
         public virtual bool ShouldSerializeVICMSSTDesonField() => VICMSSTDeson > 0;
 
@@ -4800,7 +4954,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public OrigemMercadoria Orig { get; set; }
 
         [XmlElement("CSOSN")]
-        public virtual string CSOSN { get; set; }
+        public virtual string CSOSN { get; set; } = "102";
     }
 
 #if INTEROP
@@ -7868,11 +8022,40 @@ namespace Unimake.Business.DFe.Xml.NFe
             set => VPag = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Data do pagamento
+        /// </summary>
+        [XmlIgnore]
+        public DateTime DPag { get; set; }
+
+        [XmlElement("dPag")]
+        public string DPagField
+        {
+            get => DPag.ToString("yyyy-MM-dd");
+            set => DPag = DateTime.Parse(value);
+        }
+
+        /// <summary>
+        /// CNPJ transacional do pagamento. Preencher informando o CNPJ do estabelecimento onde o pagamento foi processado/transacionado/recebido quando a emissão do documento fiscal ocorrer em estabelecimento distinto
+        /// </summary>
+        [XmlElement("CNPJPag")]
+        public string CNPJPag { get; set; }
+
+        /// <summary>
+        /// UF do CNPJ do estabelecimento onde o pagamento foi processado/transacionado/recebido.
+        /// </summary>
+        [XmlElement("UFPag")]
+        public UFBrasil UFPag { get; set; }
+
         [XmlElement("card")]
         public Card Card { get; set; }
 
         public bool ShouldSerializeIndPag() => IndPag != null && IndPag != (IndicadorPagamento)(-1);
         public bool ShouldSerializeXPag() => !string.IsNullOrWhiteSpace(XPag);
+        public bool ShouldSerializeDPagField() => DPag > DateTime.MinValue;
+        public bool ShouldSerializeCNPJPag() => !string.IsNullOrWhiteSpace(CNPJPag);
+        public bool ShouldSerializeUFPag() => !string.IsNullOrWhiteSpace(CNPJPag);
+
 
 #if INTEROP
         [ObsoleteAttribute("Este método está obsoleto e será excluído em futuras versões. Utilize a propriedade IndPag para atribuir o conteúdo desejado.", false)]
@@ -7905,6 +8088,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("cAut")]
         public string CAut { get; set; }
 
+        [XmlElement("CNPJReceb")]
+        public string CNPJReceb { get; set; }
+
+        [XmlElement("idTermPag")]
+        public string IdTermPag { get; set; }
+
         #region ShouldSerialize
 
         public bool ShouldSerializeCNPJ() => !string.IsNullOrWhiteSpace(CNPJ);
@@ -7916,6 +8105,10 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
 
         public bool ShouldSerializeCAut() => !string.IsNullOrWhiteSpace(CAut);
+
+        public bool ShouldSerializeCNPJReceb() => !string.IsNullOrWhiteSpace(CNPJReceb);
+
+        public bool ShouldSerializeIdTermPag() => !string.IsNullOrWhiteSpace(IdTermPag);
 
         #endregion
     }
@@ -8474,6 +8667,7 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class InfRespTec
     {
         private string XContatoField;
+        private string HashCSRTField;
 
         [XmlElement("CNPJ")]
         public string CNPJ { get; set; }
@@ -8494,14 +8688,55 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("idCSRT")]
         public string IdCSRT { get; set; }
 
-        [XmlElement("hashCSRT", DataType = "base64Binary")]
-        public byte[] HashCSRT { get; set; }
+        /// <summary>
+        /// Você pode informar o conteúdo já convertido para Sha1Hash + Base64, ou pode informar somente a concatenação do CSRT + Chave de Acesso que a DLL já converte para Sha1Hash + Base64
+        /// </summary>
+        [XmlElement("hashCSRT")]
+        public string HashCSRT
+        {
+
+            get
+            {
+                if (string.IsNullOrWhiteSpace(HashCSRTField) || Converter.IsSHA1Base64(HashCSRTField))
+                {
+                    return HashCSRTField;
+                }
+                else
+                {
+                    return Converter.CalculateSHA1Hash(HashCSRTField);
+                }
+            }
+            set => HashCSRTField = value;
+        }
+
+        /// <summary>
+        /// Esta propriedade deve ser utilizada para informar o CSRT sem o hast, informando ela a DLL irá gerar o conteúdo da tag hashCSRT automaticamente
+        /// </summary>
+        [XmlIgnore]
+        public string CSRT { get; set; }
+
+        /// <summary>
+        /// Gerar o conteúdo da tag HashCSRT
+        /// </summary>
+        /// <param name="chaveAcesso"></param>
+        public void GerarHashCSRT(string chaveAcesso)
+        {
+            if (string.IsNullOrWhiteSpace(CSRT))
+            {
+                return;
+            }
+
+            if (!Converter.IsSHA1Base64(HashCSRT))
+            {
+                HashCSRT = Converter.CalculateSHA1Hash(CSRT + chaveAcesso);
+            }
+        }
 
         #region ShouldSerialize
 
         public bool ShouldSerializeIdCSRT() => !string.IsNullOrWhiteSpace(IdCSRT);
 
-        public bool ShouldSerializeHashCSRT() => HashCSRT != null;
+        public bool ShouldSerializeHashCSRT() => !string.IsNullOrWhiteSpace(HashCSRT);
 
         #endregion
     }
@@ -8533,5 +8768,100 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         [XmlElement("urlChave")]
         public string UrlChave { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.Agropecuario")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class Agropecuario
+    {
+        /// <summary>
+        /// Grupo de defensivo agrícola / agrotóxico
+        /// </summary>
+        [XmlElement("defensivo")]
+        public Defensivo Defensivo { get; set; }
+
+        /// <summary>
+        /// Grupo de Guia de Trânsito
+        /// </summary>
+        [XmlElement("guiaTransito")]
+        public GuiaTransito GuiaTransito { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.Defensivo")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+
+    public class Defensivo
+    {
+        /// <summary>
+        /// Informar o número da receita ou receituário de aplicação do defensivo
+        /// </summary>
+        [XmlElement("nReceituario")]
+        public string NReceituario { get; set; }
+
+        /// <summary>
+        /// Informar o CPF do Responsável Técnico legalmente habilitado, como engenheiro agrônomo, engenheiro florestal e técnico agrícola.
+        /// </summary>
+        [XmlElement("CPFRespTec")]
+        public string CPFRespTec { get; set; }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.GuiaTransito")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class GuiaTransito
+    {
+        /// <summary>
+        /// Tipo da guia
+        /// </summary>
+        [XmlElement("tpGuia")]
+        public TipoGuiaTransito TpGuia { get; set; }
+
+        /// <summary>
+        /// UF de emissão da guia
+        /// </summary>
+#if INTEROP
+        [XmlElement("UF")]
+        public UFBrasil UFGuia { get; set; } = UFBrasil.NaoDefinido;
+#else
+        [XmlElement("UF")]
+        public UFBrasil? UFGuia { get; set; }
+#endif
+
+        /// <summary>
+        /// Informar sempre que houver a série da guia
+        /// </summary>
+        [XmlElement("serieGuia")]
+        public string SerieGuia { get; set; }
+
+        /// <summary>
+        /// Número da Guia
+        /// </summary>
+        [XmlElement("nGuia")]
+        public string NGuia { get; set; }
+
+        #region ShouldSerialize
+
+#if INTEROP
+        public bool ShouldSerializeUFGuia() => UFGuia != UFBrasil.NaoDefinido;
+#else
+        public bool ShouldSerializeUFGuia() => UFGuia != null;
+#endif
+        public bool ShouldSerializeSerieGuia() => !string.IsNullOrWhiteSpace(SerieGuia);
+
+        #endregion
     }
 }

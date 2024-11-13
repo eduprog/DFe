@@ -19,11 +19,13 @@ namespace Unimake.Business.DFe.Security
         /// <param name="certificado">Certificado Digital</param>
         /// <param name="pinPassword">O Pin Code / Senha / Password do certificado digital</param>
         public static void SetPinPrivateKey(this X509Certificate2 certificado, string pinPassword)
-        {
+        {            
             if (certificado == null)
             {
                 throw new ArgumentNullException("certificado == null!");
             }
+
+            AppDomain.CurrentDomain.AssemblyResolve += Xml.AssemblyResolver.AssemblyResolve;
 
             var key = (RSACryptoServiceProvider)certificado.PrivateKey;
 
@@ -84,6 +86,8 @@ namespace Unimake.Business.DFe.Security
 
             try
             {
+                AppDomain.CurrentDomain.AssemblyResolve += Xml.AssemblyResolver.AssemblyResolve;
+
                 if (x509cert.PrivateKey is RSACryptoServiceProvider service)
                 {
                     if (service.CspKeyContainerInfo.Removable &&
@@ -188,6 +192,8 @@ namespace Unimake.Business.DFe.Security
         /// <param name="pinPassword">O Pin Code / Senha / Password do certificado digital</param>
         public void SetPinPrivateKey(X509Certificate2 certificado, string pinPassword)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += Xml.AssemblyResolver.AssemblyResolve;
+
             if (certificado == null)
             {
                 throw new ArgumentNullException("certificado == null!");
@@ -252,6 +258,8 @@ namespace Unimake.Business.DFe.Security
 
             try
             {
+                AppDomain.CurrentDomain.AssemblyResolve += Xml.AssemblyResolver.AssemblyResolve;
+
                 if (x509cert.PrivateKey is RSACryptoServiceProvider service)
                 {
                     if (service.CspKeyContainerInfo.Removable &&

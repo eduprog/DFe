@@ -39,9 +39,7 @@ namespace Unimake.DFe.Test.CTe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            var autorizacao = new Unimake.Business.DFe.Servicos.CTe.Autorizacao(xml, configuracao);
-
-            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == xml.GerarXML().InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
         /// <summary>
@@ -71,9 +69,7 @@ namespace Unimake.DFe.Test.CTe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            var autorizacao = new Unimake.Business.DFe.Servicos.CTe.AutorizacaoSinc(xml, configuracao);
-
-            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == xml.GerarXML().InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
 
@@ -100,9 +96,7 @@ namespace Unimake.DFe.Test.CTe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            var autorizacao = new Unimake.Business.DFe.Servicos.CTeOS.Autorizacao(xml, configuracao);
-
-            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == xml.GerarXML().InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
         /// <summary>
@@ -136,8 +130,11 @@ namespace Unimake.DFe.Test.CTe
         [InlineData(@"..\..\..\CTe\Resources\retConsSitCTe.xml")]
         [InlineData(@"..\..\..\CTe\Resources\retConsSitCTe_1.xml")]
         [InlineData(@"..\..\..\CTe\Resources\4_00_retConsSitCTe.xml")]
+        [InlineData(@"..\..\..\CTe\Resources\retConsSitCTe_2.xml")]
+        [InlineData(@"..\..\..\CTe\Resources\retConsSitCTe_3.xml")]
         public void SerializacaoDesserializacaoRetConsSitCTe(string arqXML)
         {
+            
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
 
             var doc = new XmlDocument();
@@ -155,6 +152,7 @@ namespace Unimake.DFe.Test.CTe
         /// <param name="arqXML">Arquivo a ser desserializado</param>
         [Theory]
         [Trait("DFe", "CTe")]
+        [InlineData(@"..\..\..\CTe\Resources\eventoCTe_110180.xml")]
         [InlineData(@"..\..\..\CTe\Resources\eventoCTe_110190.xml")]
         [InlineData(@"..\..\..\CTe\Resources\eventoCTe_110191.xml")]
         [InlineData(@"..\..\..\CTe\Resources\eventoCTe_610111.xml")]
@@ -170,5 +168,27 @@ namespace Unimake.DFe.Test.CTe
 
             Assert.True(doc.InnerText == xmlSerializado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
+
+        /// <summary>
+        /// Testar a serialização e desserialização do XML CteOSProc
+        /// </summary>
+        /// <param name="arqXML">Arquivo a ser desserializado</param>
+        [Theory]
+        [Trait("DFe", "CTe")]
+        [InlineData(@"..\..\..\CTe\Resources\cteOSProc.xml")]
+        public void SerializacaoDesserializacaoCTeOSProc(string arqXML)
+        {
+            Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
+
+            var doc = new XmlDocument();
+            doc.Load(arqXML);
+
+            var xml = new Business.DFe.Xml.CTeOS.CteOSProc();
+            xml = xml.LoadFromFile(arqXML);
+            var xmlSerializado = xml.GerarXML();
+
+            Assert.True(doc.InnerText == xmlSerializado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+        }
+
     }
 }
