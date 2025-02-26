@@ -1,15 +1,21 @@
 ﻿#pragma warning disable CS1591
 
+#if INTEROP
+using System.Runtime.InteropServices;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Xml.ESocial
 {
+    /// <summary>
+    /// S-2501 - Informações de Tributos Decorrentes de Processo Trabalhista
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.ESocial2501")]
@@ -17,15 +23,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtContProc/v_S_01_02_00", IsNullable = false)]
-    public class ESocial2501 : XMLBase
+    public class ESocial2501 : XMLBaseESocial
     {
+        /// <summary>
+        /// Evento Informações de Tributos Decorrentes de Processo Trabalhista
+        /// </summary>
         [XmlElement("evtContProc")]
         public EvtContProc EvtContProc { get; set; }
 
+        /// <summary>
+        /// Tag de assinatura digital
+        /// </summary>
         [XmlElement(ElementName = "Signature", Namespace = "http://www.w3.org/2000/09/xmldsig#")]
         public Signature Signature { get; set; }
     }
 
+    /// <summary>
+    /// Evento Informações de Tributos Decorrentes de Processo Trabalhista
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.EvtContProc")]
@@ -33,18 +48,33 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class EvtContProc
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do evento
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento2501 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador ou do contribuinte que está prestando a informação
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
 
+        /// <summary>
+        /// Identificação do processo
+        /// </summary>
         [XmlElement("ideProc")]
         public IdeProc IdeProc { get; set; }
 
+        /// <summary>
+        /// Identificação do trabalhador
+        /// </summary>
         [XmlElement("ideTrab")]
         public List<IdeTrab2501> IdeTrab { get; set; }
 
@@ -86,6 +116,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações de identificação do evento
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEvento2501")]
@@ -93,6 +126,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEvento2501 : IdeEvento2205 { }
 
+    /// <summary>
+    /// Identificação do processo
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeProc")]
@@ -100,9 +136,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeProc
     {
+        /// <summary>
+        /// Número do processo trabalhista, da ata ou número de identificação da conciliação
+        /// </summary>
         [XmlElement("nrProcTrab")]
         public string NrProcTrab { get; set; }
 
+        /// <summary>
+        /// Mês/ano em que é devida a obrigação de pagar a parcela prevista no acordo/sentença
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime PerApurPgto { get; set; }
@@ -110,6 +152,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public DateTimeOffset PerApurPgto { get; set; }
 #endif
 
+        /// <summary>
+        /// Mês/ano em que é devida a obrigação de pagar a parcela prevista no acordo/sentença.
+        /// </summary>
         [XmlElement("perApurPgto")]
         public string PerApurPgtoField
         {
@@ -121,16 +166,29 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Número sequencial atribuído pela empresa a cada conjunto de dados de tributos decorrentes de processo trabalhista, quando for necessário enviar o mesmo processo em múltiplos S-2501, para o mesmo perApurPgto.
+        /// </summary>
+        [XmlElement("ideSeqProc")]
+        public string IdeSeqProc { get; set; }
+
+        /// <summary>
+        /// Observação referente ao pagamento de parcela prevista no acordo/sentença
+        /// </summary>
         [XmlElement("obs")]
         public string Obs { get; set; }
 
         #region ShouldSerialize
 
         public bool ShouldSerializeObs() => !string.IsNullOrEmpty(Obs);
+        public bool ShouldSerializeIdeSeqProc() => !string.IsNullOrEmpty(IdeSeqProc);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Identificação do trabalhador
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeTrab2501")]
@@ -138,9 +196,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeTrab2501
     {
+        /// <summary>
+        /// Preencher com o número do CPF do trabalhador
+        /// </summary>
         [XmlAttribute(AttributeName = "cpfTrab")]
         public string CpfTrab { get; set; }
 
+        /// <summary>
+        /// Identificação do período e da base de cálculo dos tributos
+        /// </summary>
         [XmlElement("calcTrib")]
         public List<CalcTrib> CalcTrib { get; set; }
 
@@ -181,6 +245,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetCalcTribCount => (CalcTrib != null ? CalcTrib.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações de Imposto de Renda, por Código de Receita - CR.
+        /// </summary>
         [XmlElement("infoCRIRRF")]
         public List<InfoCRIRRF> InfoCRIRRF { get; set; }
 
@@ -221,10 +288,17 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetInfoCRIRRFCount => (InfoCRIRRF != null ? InfoCRIRRF.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações relacionadas à retenção na fonte, aos rendimentos tributáveis e não tributáveis,
+        /// deduções e/ou isenções, etc., de acordo com a legislação aplicada ao imposto de renda
+        /// </summary>
         [XmlElement("infoIRComplem")]
         public InfoIRComplem2501 InfoIRComplem { get; set; }
     }
 
+    /// <summary>
+    /// Identificação do período e da base de cálculo dos 
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.CalcTrib")]
@@ -232,6 +306,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class CalcTrib
     {
+        /// <summary>
+        /// Informar o mês/ano (formato AAAA-MM) de referência das informações
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime PerRef { get; set; }
@@ -280,6 +357,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrBcCp13 = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Informações das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, por Código de Receita - CR
+        /// </summary>
         [XmlElement("infoCRContrib")]
         public List<InfoCRContrib> InfoCRContrib { get; set; }
 
@@ -321,6 +401,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, por Código de Receita - CR
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCRContrib")]
@@ -328,6 +411,10 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoCRContrib
     {
+        /// <summary>
+        /// Código de Receita - CR relativo a contribuições sociais devidas à Previdência Social e a Outras Entidades e Fundos (Terceiros), 
+        /// conforme legislação em vigor na competência
+        /// </summary>
         [XmlAttribute(AttributeName = "tpCR")]
         public string TpCR { get; set; }
 
@@ -348,6 +435,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações de Imposto de Renda, por Código de Receita - CR
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCRIRRF")]
@@ -355,6 +445,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoCRIRRF
     {
+        /// <summary>
+        /// Código de Receita - CR relativo a Imposto de Renda Retido na Fonte
+        /// </summary>
         [XmlAttribute(AttributeName = "tpCR")]
         public string TpCR { get; set; }
 
@@ -374,12 +467,35 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrCR = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Valor relativo ao Imposto sobre a renda retido na fonte para o código de receita - 13º Salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrCR13 { get; set; }
+
+        [XmlAttribute("vrCR13")]
+        public string VrCR13Field
+        {
+            get => VrCR13.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrCR13 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Informações complementares, vinculadas ao infoCRIRRF/tpCR, relacionadas a rendimentos tributáveis e 
+        /// a deduções e/ou isenções de acordo com a legislação aplicada ao imposto de renda
+        /// </summary>
         [XmlElement("infoIR")]
         public InfoIR InfoIR { get; set; }
 
+        /// <summary>
+        /// Informações complementares relativas a Rendimentos Recebidos Acumuladamente - RRA
+        /// </summary>
         [XmlElement("infoRRA")]
         public InfoRRA2501 InfoRRA { get; set; }
 
+        /// <summary>
+        /// Dedução do rendimento tributável relativa a dependentes
+        /// </summary>
         [XmlElement("dedDepen")]
         public List<DedDepen2501> DedDepen { get; set; }
 
@@ -420,6 +536,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetDedDepenCount => (DedDepen != null ? DedDepen.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informação dos beneficiários da pensão alimentícia
+        /// </summary>
         [XmlElement("penAlim")]
         public List<PenAlim2501> PenAlim { get; set; }
 
@@ -460,6 +579,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetPenAlimCount => (PenAlim != null ? PenAlim.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações de processos relacionados a não retenção de tributos ou a depósitos judiciais
+        /// </summary>
         [XmlElement("infoProcRet")]
         public List<InfoProcRet2501> InfoProcRet { get; set; }
 
@@ -499,8 +621,18 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         public int GetInfoProcRetCount => (InfoProcRet != null ? InfoProcRet.Count : 0);
 #endif
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeVrCR13Field() => VrCR13 > 0;
+
+        #endregion
     }
 
+    /// <summary>
+    /// Informações complementares, vinculadas ao infoCRIRRF/tpCR, relacionadas a rendimentos tributáveis e 
+    /// a deduções e/ou isenções de acordo com a legislação aplicada ao imposto de renda.
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoIR")]
@@ -509,13 +641,19 @@ namespace Unimake.Business.DFe.Xml.ESocial
     public class InfoIR
     {
         /// <summary>
+        /// Rendimentos Isentos exclusivos do CR 0561.
+        /// </summary>
+        [XmlElement("rendIsen0561")]
+        public RendIsen0561 RendIsen0561 { get; set; }
+
+        /// <summary>
         /// Valor do rendimento tributável mensal do Imposto de Renda.
         /// Validação: Deve ser maior ou igual a 0 (zero).
         /// </summary>
         [XmlIgnore]
         public double VrRendTrib { get; set; }
 
-        [XmlAttribute(AttributeName = "vrRendTrib")]
+        [XmlAttribute("vrRendTrib")]
         public string VrRendTribField
         {
             get => VrRendTrib.ToString("F2", CultureInfo.InvariantCulture);
@@ -531,7 +669,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrRendTrib13 { get; set; }
 
-        [XmlAttribute(AttributeName = "vrRendTrib13")]
+        [XmlAttribute("vrRendTrib13")]
         public string VrRendTrib13Field
         {
             get => VrRendTrib13.ToString("F2", CultureInfo.InvariantCulture);
@@ -546,11 +684,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrRendMoleGrave { get; set; }
 
-        [XmlAttribute(AttributeName = "vrRendMoleGrave")]
+        [XmlAttribute("vrRendMoleGrave")]
         public string VrRendMoleGraveField
         {
             get => VrRendMoleGrave.ToString("F2", CultureInfo.InvariantCulture);
             set => VrRendMoleGrave = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do rendimento isento por ser portador de moléstia grave atestada por laudo médico - 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrRendMoleGrave13 { get; set; }
+
+        [XmlAttribute("vrRendMoleGrave13")]
+        public string VrRendMoleGrave13Field
+        {
+            get => VrRendMoleGrave13.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrRendMoleGrave13 = Converter.ToDouble(value);
         }
 
         /// <summary>
@@ -561,11 +712,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrRendIsen65 { get; set; }
 
-        [XmlAttribute(AttributeName = "vrRendIsen65")]
+        [XmlAttribute("vrRendIsen65")]
         public string VrRendInsen65Field
         {
             get => VrRendIsen65.ToString("F2", CultureInfo.InvariantCulture);
             set => VrRendIsen65 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor de parcela isenta de aposentadoria para beneficiário de 65 anos ou mais - 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrRendIsen65Dec { get; set; }
+
+        [XmlAttribute("vrRendIsen65Dec")]
+        public string VrRendInsen65DecField
+        {
+            get => VrRendIsen65Dec.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrRendIsen65Dec = Converter.ToDouble(value);
         }
 
         /// <summary>
@@ -576,11 +740,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrJurosMora { get; set; }
 
-        [XmlAttribute(AttributeName = "vrJurosMora")]
+        [XmlAttribute("vrJurosMora")]
         public string VrJuroMoraField
         {
             get => VrJurosMora.ToString("F2", CultureInfo.InvariantCulture);
             set => VrJurosMora = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Juros de mora recebidos, devidos pelo atraso no pagamento de remuneração por exercício de emprego, cargo ou função - 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrJurosMora13 { get; set; }
+
+        [XmlAttribute("vrJurosMora13")]
+        public string VrJuroMora13Field
+        {
+            get => VrJurosMora13.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrJurosMora13 = Converter.ToDouble(value);
         }
 
         /// <summary>
@@ -590,7 +767,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrRendIsenNTrib { get; set; }
 
-        [XmlAttribute(AttributeName = "vrRendIsenNTrib")]
+        [XmlAttribute("vrRendIsenNTrib")]
         public string VrRendInsenNTribField
         {
             get => VrRendIsenNTrib.ToString("F2", CultureInfo.InvariantCulture);
@@ -602,7 +779,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// tributável informado em vrRendIsenNTrib.
         /// Validação: Somente informar se vrRendIsenNTrib > 0.
         /// </summary>
-        [XmlAttribute(AttributeName = "descIsenNTrib")]
+        [XmlAttribute("descIsenNTrib")]
         public string DescIsenNTrib { get; set; }
 
         /// <summary>
@@ -612,11 +789,25 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlIgnore]
         public double VrPrevOficial { get; set; }
 
-        [XmlAttribute(AttributeName = "vrPrevOficial")]
+        [XmlAttribute("vrPrevOficial")]
         public string VrPrevOficialField
         {
             get => VrPrevOficial.ToString("F2", CultureInfo.InvariantCulture);
             set => VrPrevOficial = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor referente à previdência oficial.
+        /// Validação: Deve ser maior ou igual a 0 (zero).
+        /// </summary>
+        [XmlIgnore]
+        public double VrPrevOficial13 { get; set; }
+
+        [XmlAttribute("vrPrevOficial13")]
+        public string VrPrevOficia13lField
+        {
+            get => VrPrevOficial13.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrPrevOficial13 = Converter.ToDouble(value);
         }
 
         #region ShouldSerialize
@@ -627,9 +818,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeVrRendMoleGraveField() => VrRendMoleGrave > 0;
 
+        public bool ShouldSerializeVrRendMoleGrave13Field() => VrRendMoleGrave13 > 0;
+
         public bool ShouldSerializeVrRendIsen65Field() => VrRendIsen65 > 0;
 
+        public bool ShouldSerializeVrRendIsen65DecField() => VrRendIsen65Dec > 0;
+
         public bool ShouldSerializeVrJurosMoraField() => VrJurosMora > 0;
+
+        public bool ShouldSerializeVrJurosMora13Field() => VrJurosMora13 > 0;
 
         public bool ShouldSerializeVrRendIsenNTribField() => VrRendIsenNTrib > 0;
 
@@ -637,9 +834,14 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeVrPrevOficialField() => VrPrevOficial > 0;
 
+        public bool ShouldSerializeVrPrevOficial13Field() => VrPrevOficial13 > 0;
+
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações complementares relativas a Rendimentos Recebidos Acumuladamente - RRA
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoRRA2501")]
@@ -647,15 +849,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoRRA2501
     {
+        /// <summary>
+        /// Descrição dos Rendimentos Recebidos Acumuladamente - RRA
+        /// </summary>
         [XmlAttribute(AttributeName = "descRRA")]
         public string DescRRA { get; set; }
 
+        /// <summary>
+        /// Número de meses relativo aos Rendimentos Recebidos Acumuladamente - RRA
+        /// </summary>
         [XmlAttribute(AttributeName = "qtdMesesRRA")]
         public string QtdMesesRRA { get; set; }
 
+        /// <summary>
+        /// Detalhamento das despesas com processo judicial
+        /// </summary>
         [XmlElement("despProcJud")]
         public DespProcJud2501 DespProcJud { get; set; }
 
+        /// <summary>
+        /// Identificação dos advogados
+        /// </summary>
         [XmlElement("ideAdv")]
         public List<IdeAdv2501> IdeAdv { get; set; }
 
@@ -697,6 +911,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Detalhamento das despesas com processo judicial
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.DespProcJud2501")]
@@ -732,6 +949,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Identificação dos advogados
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeAdv2501")]
@@ -739,9 +959,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeAdv2501
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05
+        /// </summary>
         [XmlAttribute(AttributeName = "tpInsc")]
         public TiposInscricao TpInsc { get; set; }
 
+        /// <summary>
+        /// Informar o número de inscrição do advogado
+        /// </summary>
         [XmlAttribute(AttributeName = "nrInsc")]
         public string NrInsc { get; set; }
 
@@ -765,6 +991,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.DedDepen2501")]
@@ -772,9 +1001,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class DedDepen2501
     {
+        /// <summary>
+        /// Tipo de rendimento
+        /// </summary>
         [XmlAttribute(AttributeName = "tpRend")]
         public TipoDeRendimento TpRend { get; set; }
 
+        /// <summary>
+        /// Informar o número de inscrição do dependente no CPF
+        /// </summary>
         [XmlAttribute(AttributeName = "cpfDep")]
         public string CpfDep { get; set; }
 
@@ -797,6 +1032,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informação dos beneficiários da pensão alimentícia
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.PenAlim2501")]
@@ -804,9 +1042,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class PenAlim2501
     {
+        /// <summary>
+        /// Tipo de rendimento
+        /// </summary>
         [XmlAttribute(AttributeName = "tpRend")]
         public TipoDeRendimento TpRend { get; set; }
 
+        /// <summary>
+        /// Número do CPF do dependente/beneficiário da pensão alimentícia
+        /// </summary>
         [XmlAttribute(AttributeName = "cpfDep")]
         public string CpfDep { get; set; }
 
@@ -826,6 +1070,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações de processos relacionados a não retenção de tributos ou a depósitos judiciais
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoProcRet2501")]
@@ -833,15 +1080,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoProcRet2501
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de processo
+        /// </summary>
         [XmlAttribute(AttributeName = "tpProcRet")]
         public TipoProcesso TpProcRet { get; set; }
 
+        /// <summary>
+        /// Informar o número do processo administrativo/judicial
+        /// </summary>
         [XmlAttribute(AttributeName = "nrProcRet")]
         public string NrProcRet { get; set; }
 
+        /// <summary>
+        /// Código do indicativo da suspensão, atribuído pelo empregador em S-1070
+        /// </summary>
         [XmlAttribute(AttributeName = "codSusp")]
         public string CodSusp { get; set; }
 
+        /// <summary>
+        /// Informações de valores relacionados a não retenção de tributos ou a depósitos judiciais
+        /// </summary>
         [XmlElement("infoValores")]
         public List<InfoValores2501> InfoValores { get; set; }
 
@@ -886,9 +1145,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeCodSusp() => !string.IsNullOrEmpty(CodSusp);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações de valores relacionados a não retenção de tributos ou a depósitos judiciaiss
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoValores2501")]
@@ -896,6 +1158,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoValores2501
     {
+        /// <summary>
+        /// Indicativo de período de apuração
+        /// </summary>
         [XmlAttribute(AttributeName = "indApuracao")]
         public IndApuracao IndApuracao { get; set; }
 
@@ -976,6 +1241,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VlrRendSusp = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Detalhamento das deduções com exigibilidade suspensa
+        /// </summary>
         [XmlElement("dedSusp")]
         public List<DedSusp2501> DedSusp { get; set; }
 
@@ -1031,6 +1299,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion
     }
 
+    /// <summary>
+    /// Detalhamento das deduções com exigibilidade suspensa
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.DedSusp2501")]
@@ -1038,9 +1309,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class DedSusp2501
     {
+        /// <summary>
+        /// Indicativo do tipo de dedução
+        /// </summary>
         [XmlAttribute(AttributeName = "indTpDeducao")]
         public IndicativoTipoDeducao IndTpDeducao { get; set; }
 
+        /// <summary>
+        /// Valor da dedução da base de cálculo do imposto de renda com exigibilidade suspensa
+        /// </summary>
         [XmlIgnore]
         public double VlrDedSusp { get; set; }
 
@@ -1051,6 +1328,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VlrDedSusp = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Informação das deduções suspensas por dependentes e beneficiários da pensão alimentícia
+        /// </summary>
         [XmlElement("benefPen")]
         public List<BenefPen2501> BenefPen { get; set; }
 
@@ -1098,6 +1378,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion
     }
 
+    /// <summary>
+    /// Informação das deduções suspensas por dependentes e beneficiários da pensão alimentícia
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BenefPen2501")]
@@ -1105,6 +1388,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class BenefPen2501
     {
+        /// <summary>
+        /// Número de inscrição no CPF
+        /// </summary>
         [XmlAttribute(AttributeName = "cpfDep")]
         public string CpfDep { get; set; }
 
@@ -1124,8 +1410,19 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações relacionadas à retenção na fonte, aos rendimentos tributáveis e não tributáveis, deduções e/ou isenções, etc., de acordo com a legislação aplicada ao imposto de renda
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoIRComplem2501")]
+    [ComVisible(true)]
+#endif
     public class InfoIRComplem2501
     {
+        /// <summary>
+        /// Data da moléstia grave atribuída pelo laudo
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtLaudo { get; set; }
@@ -1144,6 +1441,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Informações de dependentes não cadastrados pelo S-2200/S-2205/S-2300
+        /// </summary>
         [XmlElement("infoDep")]
         public List<InfoDep2501> InfoDep { get; set; }
 
@@ -1185,6 +1485,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações de dependentes não cadastrados pelo S-2200/S-2205/S-2300
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoDep2501")]
@@ -1192,9 +1495,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoDep2501
     {
+        /// <summary>
+        /// Número de inscrição no CPF
+        /// </summary>
         [XmlAttribute(AttributeName = "cpfDep")]
         public string CpfDep { get; set; }
 
+        /// <summary>
+        /// Preencher com a data de nascimento
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtNascto { get; set; }
@@ -1213,12 +1522,21 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Nome do dependente
+        /// </summary>
         [XmlAttribute(AttributeName = "nome")]
         public string Nome { get; set; }
 
+        /// <summary>
+        /// Somente informar este campo em caso de dependente do trabalhador para fins de dedução de seu rendimento tributável pelo Imposto de Renda
+        /// </summary>
         [XmlAttribute(AttributeName = "depIRRF")]
         public string DepIRRF { get; set; }
 
+        /// <summary>
+        /// Tipo de dependente
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public TiposDeDependente TpDep { get; set; } = (TiposDeDependente)(-1);
@@ -1236,11 +1554,14 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlAttribute(AttributeName = "tpDep")]
         public TiposDeDependente TpDepAux
         {
-            get { return TpDep.GetValueOrDefault((TiposDeDependente)(-1)); }
-            set { TpDep = value; }
+            get => TpDep.GetValueOrDefault((TiposDeDependente)(-1));
+            set => TpDep = value;
         }
 #endif
 
+        /// <summary>
+        /// Informar a descrição da dependência
+        /// </summary>
         [XmlAttribute(AttributeName = "descrDep")]
         public string DescrDep { get; set; }
 
@@ -1255,14 +1576,87 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #if INTEROP
         public bool ShouldSerializeTpDepAux() => TpDep != (TiposDeDependente)(-1);
 #else
-        public bool ShouldSerializeTpDepAux()
-    {
-        return TpDep.HasValue;
-    }
+        public bool ShouldSerializeTpDepAux() => TpDep.HasValue;
 #endif
 
         public bool ShouldSerializeDescrDep() => !string.IsNullOrEmpty(DescrDep);
 
-        #endregion
+        #endregion ShouldSerialize
+    }
+
+    /// <summary>
+    /// Rendimentos Isentos exclusivos do CR 0561.
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.RendIsen0561")]
+    [ComVisible(true)]
+#endif
+    public class RendIsen0561
+    {
+        /// <summary>
+        /// Valor relativo a diárias.
+        /// </summary>
+        [XmlIgnore]
+        public double VlrDiarias { get; set; }
+
+        [XmlAttribute("vlrDiarias")]
+        public string VlrDiariasField
+        {
+            get => VlrDiarias.ToString("F2", CultureInfo.InvariantCulture);
+            set => VlrDiarias = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor relativo a ajuda de custo.
+        /// </summary>
+        [XmlIgnore]
+        public double VlrAjudaCusto { get; set; }
+
+        [XmlAttribute("vlrAjudaCusto")]
+        public string VlrAjudaCustoField
+        {
+            get => VlrAjudaCusto.ToString("F2", CultureInfo.InvariantCulture);
+            set => VlrAjudaCusto = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor relativo a indenização e rescisão de contrato, inclusive a título de PDV e acidentes de trabalho.
+        /// </summary>
+        [XmlIgnore]
+        public double VlrIndResContrato { get; set; }
+
+        [XmlAttribute("vlrIndResContrato")]
+        public string VlrIndResContratoField
+        {
+            get => VlrIndResContrato.ToString("F2", CultureInfo.InvariantCulture);
+            set => VlrIndResContrato = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        ///  Valor relativo ao abono pecuniário.
+        /// </summary>
+        [XmlIgnore]
+        public double VlrAbonoPec { get; set; }
+
+        [XmlAttribute("vlrAbonoPec")]
+        public string VlrAbonoPecField
+        {
+            get => VlrAbonoPec.ToString("F2", CultureInfo.InvariantCulture);
+            set => VlrAbonoPec = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor relativo ao auxílio moradia.
+        /// </summary>
+        [XmlIgnore]
+        public double VlrAuxMoradia { get; set; }
+
+        [XmlAttribute("vlrAuxMoradia")]
+        public string VlrAuxMoradiaField
+        {
+            get => VlrAuxMoradia.ToString("F2", CultureInfo.InvariantCulture);
+            set => VlrAuxMoradia = Converter.ToDouble(value);
+        }
     }
 }

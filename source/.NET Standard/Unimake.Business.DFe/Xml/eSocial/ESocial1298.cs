@@ -17,8 +17,11 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtReabreEvPer/v_S_01_02_00", IsNullable = false)]
-    public class ESocial1298 : XMLBase
+    public class ESocial1298 : XMLBaseESocial
     {
+        /// <summary>
+        /// Evento Reabertura dos Eventos Periódicos
+        /// </summary>
         [XmlElement("evtReabreEvPer")]
         public EvtReabreEvPer EvtReabreEvPer { get; set; }
 
@@ -42,9 +45,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do evento
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento1298 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
     }
@@ -73,23 +82,8 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// posterior ao início da obrigatoriedade dos eventos
         /// periódicos para o empregador.
         /// </summary>
-        [XmlIgnore]
-#if INTEROP
-        public DateTime PerApur { get; set; }
-#else
-        public DateTimeOffset PerApur { get; set; }
-#endif
-
         [XmlElement("perApur")]
-        public string PerApurField
-        {
-            get => PerApur.ToString("yyyy-MM");
-#if INTEROP
-            set => PerApur = DateTime.Parse(value);
-#else
-            set => PerApur = DateTimeOffset.Parse(value);
-#endif
-        }
+        public string PerApur { get; set; }
 
         /// <summary>
         /// Indicativo do tipo de guia.

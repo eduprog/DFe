@@ -90,6 +90,11 @@ namespace TreinamentoDLL
 
             MessageBox.Show(consultaCad.RetornoWSString);
             MessageBox.Show(consultaCad.Result.InfCons.XMotivo);
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"d:\teste\retconscad.xml");
+
+            var retConsCad = XMLUtility.Deserializar<Unimake.Business.DFe.Xml.NFe.RetConsCad>(xmlDoc);
         }
 
         private void BtnConsultaSituacaoMDFe_Click(object sender, EventArgs e)
@@ -301,6 +306,16 @@ namespace TreinamentoDLL
 
         private void BtnEnviarEventoCCe_Click(object sender, EventArgs e)
         {
+            #region Exemplo de como criar o objeto do XML desserializando um XML já existente
+
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"C:\projetos\uninfe\exemplos\NFe e NFCe 4.00\Eventos\cce26111253420477000192550550000033071213028272_01-ped-eve.xml");
+
+            var xmlDesserializado = new XmlNFe.EnvEvento();
+            xmlDesserializado = xmlDesserializado.LerXML<XmlNFe.EnvEvento>(xmlDoc);
+
+            #endregion
+
             var xml = new XmlNFe.EnvEvento
             {
                 Versao = "1.00",
@@ -1670,11 +1685,11 @@ namespace TreinamentoDLL
                                 Versao = "4.00",
                                 Ide = new XmlNFe.Ide
                                 {
-                                    CUF = UFBrasil.MG,
+                                    CUF = UFBrasil.PR,
                                     NatOp = "VENDA PRODUC.DO ESTABELEC",
                                     Mod = ModeloDFe.NFe,
-                                    Serie = 1,
-                                    NNF = 57990,
+                                    Serie = 59,
+                                    NNF = 1,
                                     DhEmi = DateTime.Now,
                                     DhSaiEnt = DateTime.Now,
                                     TpNF = TipoOperacao.Saida,
@@ -1834,7 +1849,7 @@ namespace TreinamentoDLL
 
 
             //Gravar o arquivo do conteúdo retornado em uma pasta qualquer para ter em segurança. Pode-se também gravar na base de dados. Fica a critério de cada um.
-            File.WriteAllText(@"c:\testenfe\retorno\nomearquivoretorno.xml", autorizacao.RetornoWSString);
+            File.WriteAllText(@"d:\testenfe\retorno\nomearquivoretorno.xml", autorizacao.RetornoWSString);
 
             if (autorizacao.Result.ProtNFe != null)
             {
@@ -1847,7 +1862,7 @@ namespace TreinamentoDLL
                     case 301: //Uso Denegado: Irregularidade fiscal do emitente
                     case 302: //Uso Denegado: Irregularidade fiscal do destinatário
                     case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
-                        autorizacao.GravarXmlDistribuicao(@"c:\testenfe\");
+                        autorizacao.GravarXmlDistribuicao(@"D:\testenfe\");
                         var docProcNFe = autorizacao.NfeProcResult.GerarXML().OuterXml; //Gerar o Objeto para pegar a string e gravar em banco de dados
                         MessageBox.Show(autorizacao.NfeProcResult.NomeArquivoDistribuicao);
                         break;
@@ -2183,7 +2198,7 @@ namespace TreinamentoDLL
                         CProd = "01042",
                         CEAN = "SEM GTIN",
                         XProd = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",
-                        NCM = "184714900", //84714900
+                        NCM = "84714900", //84714900
                         CFOP = "6101",
                         UCom = "LU",
                         QCom = 1.00m,
@@ -2196,54 +2211,54 @@ namespace TreinamentoDLL
                         IndTot = SimNao.Sim,
                         XPed = "300474",
                         NItemPed = "1",
-                        DI = new List<DI>
-                        {
-                            new DI
-                            {
-                                Adi = new List<Adi>
-                                {
-                                    new Adi
-                                    {
-                                        CFabricante = "",
-                                        NDraw = ""
-                                    },
-                                    new Adi
-                                    {
-                                        CFabricante = "",
-                                        NDraw = ""
-                                    }
-                                },
-                                CExportador = "",
-                                CNPJ = "",
-                                DDesemb = DateTime.Now,
-                                DDI = DateTime.Now,
-                                TpViaTransp = ViaTransporteInternacional.Rodoviaria,
-                                TpIntermedio = FormaImportacaoIntermediacao.ImportacaoPorContaOrdem
-                            },
-                            new DI
-                            {
-                                Adi = new List<Adi>
-                                {
-                                    new Adi
-                                    {
-                                        CFabricante = "",
-                                        NDraw = ""
-                                    },
-                                    new Adi
-                                    {
-                                        CFabricante = "",
-                                        NDraw = ""
-                                    }
-                                },
-                                CExportador = "",
-                                CNPJ = "00000000000000",
-                                NDI = "111",
-                                DDesemb = DateTime.Now,
-                                DDI = DateTime.Now,
-                                TpViaTransp = ViaTransporteInternacional.Rodoviaria,
-                                TpIntermedio = FormaImportacaoIntermediacao.ImportacaoPorContaOrdem
-                            },
-                        }
+                        //DI = new List<DI>
+                        //{
+                        //    new DI
+                        //    {
+                        //        Adi = new List<Adi>
+                        //        {
+                        //            new Adi
+                        //            {
+                        //                CFabricante = "",
+                        //                NDraw = ""
+                        //            },
+                        //            new Adi
+                        //            {
+                        //                CFabricante = "",
+                        //                NDraw = ""
+                        //            }
+                        //        },
+                        //        CExportador = "",
+                        //        CNPJ = "",
+                        //        DDesemb = DateTime.Now,
+                        //        DDI = DateTime.Now,
+                        //        TpViaTransp = ViaTransporteInternacional.Rodoviaria,
+                        //        TpIntermedio = FormaImportacaoIntermediacao.ImportacaoPorContaOrdem
+                        //    },
+                        //    new DI
+                        //    {
+                        //        Adi = new List<Adi>
+                        //        {
+                        //            new Adi
+                        //            {
+                        //                CFabricante = "",
+                        //                NDraw = ""
+                        //            },
+                        //            new Adi
+                        //            {
+                        //                CFabricante = "",
+                        //                NDraw = ""
+                        //            }
+                        //        },
+                        //        CExportador = "",
+                        //        CNPJ = "00000000000000",
+                        //        NDI = "111",
+                        //        DDesemb = DateTime.Now,
+                        //        DDI = DateTime.Now,
+                        //        TpViaTransp = ViaTransporteInternacional.Rodoviaria,
+                        //        TpIntermedio = FormaImportacaoIntermediacao.ImportacaoPorContaOrdem
+                        //    },
+                        //}
 
                     },
                     Imposto = new XmlNFe.Imposto
@@ -2257,14 +2272,14 @@ namespace TreinamentoDLL
                                 PCredSN = 2.8255,
                                 VCredICMSSN = 2.40
                             },
-                            ICMS02 = new XmlNFe.ICMS02
-                            {
-                                Orig = OrigemMercadoria.Nacional,
-                                CST = "02",
-                                QBCMono = 500,
-                                AdRemICMS = 1.1234,
-                                VICMSMono = 9.999
-                            }
+                            //ICMS02 = new XmlNFe.ICMS02
+                            //{
+                            //    Orig = OrigemMercadoria.Nacional,
+                            //    CST = "02",
+                            //    QBCMono = 500,
+                            //    AdRemICMS = 1.1234,
+                            //    VICMSMono = 9.999
+                            //}
                         },
                         PIS = new XmlNFe.PIS
                         {
@@ -5840,7 +5855,7 @@ namespace TreinamentoDLL
                                     EvtInfoEmpregador = new XmlESocial.EvtInfoEmpregador
                                     {
                                         ID = "ID1235345346546234",
-                                        IdeEvento = new XmlESocial.IdeEvento
+                                        IdeEvento = new XmlESocial.IdeEvento1000
                                         {
                                             ProcEmi = ProcEmiESocial.AppDoEmpregador,
                                             TpAmb = TipoAmbiente.Homologacao,
@@ -6107,16 +6122,154 @@ namespace TreinamentoDLL
             }
         }
 
-        private void BtnAbrirTeleConfigUnidanfe_Click(object sender, EventArgs e)
-        {
+        private void BtnAbrirTeleConfigUnidanfe_Click(object sender, EventArgs e) =>
             //Abrir a tela de configuração do UNIDANFE
             UnidanfeServices.ShowConfigurationScreen(@"d:\testenfe\unidanfe");
-        }
 
-        private void BtnAbrirTelaLicencaUnidanfe_Click(object sender, EventArgs e)
-        {
+        private void BtnAbrirTelaLicencaUnidanfe_Click(object sender, EventArgs e) =>
             //Abrir a tela de licenças do UNIDANFE:
             UnidanfeServices.ShowLicencaScreen(@"d:\testenfe\unidanfe");
+
+        private void BtnConsultaSituacaoCTe_Click(object sender, EventArgs e)
+        {
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.CTe,
+                CertificadoDigital = CertificadoSelecionado,
+                TipoEmissao = TipoEmissao.Normal
+            };
+
+            var consSitCTe = new ConsSitCTe
+            {
+                TpAmb = TipoAmbiente.Producao,
+                ChCTe = "11111111111111111111111111111111111111111111",
+                Versao = "4.00"
+            };
+
+            var consultaProtocolo = new ServicoCTe.ConsultaProtocolo(consSitCTe, configuracao);
+            consultaProtocolo.Executar();
+
+            var qq = consultaProtocolo.RetornoWSString;
+        }
+
+        private void BtnEnviarNFSeNacional_Click(object sender, EventArgs e)
+        {
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(@"D:\projetos\uninfe\exemplos\NFSe\NACIONAL\1.00\GerarNFSeEnvio-env-loterps.xml");
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                TipoAmbiente = TipoAmbiente.Homologacao,
+                CertificadoDigital = CertificadoSelecionado,
+                Servico = Servico.NFSeGerarNfse,
+                SchemaVersao = "1.00",
+                CodigoMunicipio = 1001058,
+                PadraoNFSe = PadraoNFSe.NACIONAL
+            };
+
+            var gerarNFSe = new ServicoNFSe.GerarNfse(conteudoXML, configuracao);
+            gerarNFSe.Executar();
+
+            MessageBox.Show(gerarNFSe.RetornoWSString);
+        }
+
+        private void BtnCancelarNFSeNacional_Click(object sender, EventArgs e)
+        {
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(@"d:\testenfe\nacional\cancelarNFSe.xml");
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                TipoAmbiente = TipoAmbiente.Homologacao,
+                CertificadoDigital = CertificadoSelecionado,
+                Servico = Servico.NFSeCancelarNfse,
+                SchemaVersao = "1.00",
+                CodigoMunicipio = 1001058,
+                PadraoNFSe = PadraoNFSe.NACIONAL
+            };
+
+            var cancelarNFSe = new ServicoNFSe.CancelarNfse(conteudoXML, configuracao);
+            cancelarNFSe.Executar();
+
+            MessageBox.Show(cancelarNFSe.RetornoWSString);
+        }
+
+        private void BtnConsultarNFSeRps_Click(object sender, EventArgs e)
+        {
+            // Consulta pela chave do DPS enviado
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(@"d:\testenfe\nacional\consultarNFSePorRps.xml");
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                TipoAmbiente = TipoAmbiente.Homologacao,
+                CertificadoDigital = CertificadoSelecionado,
+                Servico = Servico.NFSeConsultarNfsePorRps,
+                SchemaVersao = "1.00",
+                CodigoMunicipio = 1001058,
+                PadraoNFSe = PadraoNFSe.NACIONAL
+            };
+
+            var consultarNfsePorRps = new ServicoNFSe.ConsultarNfsePorRps(conteudoXML, configuracao);
+            consultarNfsePorRps.Executar();
+
+            MessageBox.Show(consultarNfsePorRps.RetornoWSString);
+        }
+
+        private void BtnConsultarNFSe_Click(object sender, EventArgs e)
+        {
+            // Consulta pela chave da NFSe enviado
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(@"d:\testenfe\nacional\consultarNFSe.xml");
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                TipoAmbiente = TipoAmbiente.Homologacao,
+                CertificadoDigital = CertificadoSelecionado,
+                Servico = Servico.NFSeConsultarNfse,
+                SchemaVersao = "1.00",
+                CodigoMunicipio = 1001058,
+                PadraoNFSe = PadraoNFSe.NACIONAL
+            };
+
+            var consultarNFSe = new ServicoNFSe.ConsultarNfse(conteudoXML, configuracao);
+            consultarNFSe.Executar();
+
+            MessageBox.Show(consultarNFSe.RetornoWSString);
+        }
+
+        private void BtnConsultarPdfNFSe_Click(object sender, EventArgs e)
+        {
+            // Consulta do PDF da NFSe pela chave
+            var conteudoXML = new XmlDocument();
+            conteudoXML.Load(@"d:\testenfe\nacional\consultarPdfNFSe.xml");
+
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFSe,
+                TipoAmbiente = TipoAmbiente.Homologacao,
+                CertificadoDigital = CertificadoSelecionado,
+                Servico = Servico.NFSeConsultarNfsePDF,
+                SchemaVersao = "1.00",
+                CodigoMunicipio = 1001058,
+                PadraoNFSe = PadraoNFSe.NACIONAL
+            };
+
+            var consultarNfsePDF = new ServicoNFSe.ConsultarNfsePDF(conteudoXML, configuracao);
+            consultarNfsePDF.Executar();
+
+            MessageBox.Show(consultarNfsePDF.RetornoWSString);
+
+            //Vou chamar o método para extrair o PDF do retorno
+            //Parâmetros:
+            // - Nome da pasta
+            // - Nome do arquivo PDF
+            // - Nome da tag para extração do PDF (para o NACIONAL, sempre será Base64Pdf)
+            consultarNfsePDF.ExtrairPDF(@"c:\projetos\teste\nacional\pdf", "NFSe emitida dia XX/XX/XX", "Base64Pdf");
         }
     }
 }

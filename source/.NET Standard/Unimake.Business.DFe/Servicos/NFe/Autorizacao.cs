@@ -39,19 +39,39 @@ namespace Unimake.Business.DFe.Servicos.NFe
             {
                 try
                 {
-                    if (RetornoWSXML.GetElementsByTagName("xMotivo") != null)
+                    if (RetornoWSXML.GetElementsByTagName("xMotivo").Count > 0)
                     {
                         var xMotivo = RetornoWSXML.GetElementsByTagName("xMotivo")[0].InnerText;
-                        if (xMotivo.Contains("[nItem:"))
+                        if (!string.IsNullOrWhiteSpace(xMotivo))
                         {
-                            var nItem = Convert.ToInt32((xMotivo.Substring(xMotivo.IndexOf("[nItem:") + 7)).Substring(0, (xMotivo.Substring(xMotivo.IndexOf("[nItem:") + 7)).Length - 1));
-                            RetornoWSString = RetornoWSString.Replace(xMotivo, xMotivo + " [cProd:" + EnviNFe.NFe[0].InfNFe[0].Det[nItem - 1].Prod.CProd + "] [xProd:" + EnviNFe.NFe[0].InfNFe[0].Det[nItem - 1].Prod.XProd + "]");
-
-                            RetornoWSXML = new XmlDocument
+                            var xMotivoLower = xMotivo.ToLower();
+                            if (xMotivoLower.Contains("[nitem:"))
                             {
-                                PreserveWhitespace = false
-                            };
-                            RetornoWSXML.LoadXml(RetornoWSString);
+                                var nItemIndex = xMotivoLower.IndexOf("[nitem:") + 7;
+                                var nItemString = xMotivo.Substring(nItemIndex).Split(']')[0];
+
+                                if (int.TryParse(nItemString, out var nItem) && nItem > 0)
+                                {
+                                    if (EnviNFe.NFe.Count > 0 &&
+                                        EnviNFe.NFe[0].InfNFe.Count > 0 &&
+                                        (nItem - 1) < EnviNFe.NFe[0].InfNFe[0].Det.Count)
+                                    {
+                                        var det = EnviNFe.NFe[0].InfNFe[0].Det[nItem - 1];
+                                        if (det?.Prod != null)
+                                        {
+                                            var cProd = det.Prod.CProd;
+                                            var xProd = det.Prod.XProd;
+
+                                            RetornoWSString = RetornoWSString.Replace(
+                                                xMotivo,
+                                                $"{xMotivo} [cProd:{cProd}] [xProd:{xProd}]"
+                                            );
+
+                                            RetornoWSXML.LoadXml(RetornoWSString); // Atualizar XML
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -183,114 +203,147 @@ namespace Unimake.Business.DFe.Servicos.NFe
         {
             get
             {
-                if (EnviNFe.IndSinc == SimNao.Sim && Result.ProtNFe != null) //Envio síncrono
+                switch (EnviNFe.IndSinc)
                 {
-                    if (NfeProcs.ContainsKey(EnviNFe.NFe[0].InfNFe[0].Chave))
-                    {
-                        NfeProcs[EnviNFe.NFe[0].InfNFe[0].Chave].ProtNFe = Result.ProtNFe;
-                    }
-                    else
-                    {
-                        NfeProcs.Add(EnviNFe.NFe[0].InfNFe[0].Chave,
-                            new NfeProc
-                            {
-                                Versao = EnviNFe.Versao,
-                                NFe = EnviNFe.NFe[0],
-                                ProtNFe = Result.ProtNFe
-                            });
-                    }
-                }
-                else
-                {
-                    if (RetConsReciNFe == null && RetConsSitNFes.Count <= 0)
-                    {
-                        throw new Exception("Defina o conteúdo da Propriedade RetConsReciNFe ou RetConsSitNFe, sem a definição de uma delas não é possível obter o conteúdo da NFeProcResults.");
-                    }
+                    case SimNao.Nao: //Envio assíncrono
+                        goto default;
 
-                    for (var i = 0; i < EnviNFe.NFe.Count; i++)
-                    {
-                        ProtNFe protNFe = null;
-
-                        if (RetConsReciNFe != null && RetConsReciNFe.ProtNFe != null)
+                    case SimNao.Sim: //Envio síncrono
+                        if (Result.ProtNFe != null)
                         {
-                            #region Resultado do envio do CT-e através da consulta recibo
-
-                            if (RetConsReciNFe.CStat == 104) //Lote Processado
+                            var autorizado = false;
+                            switch (Result.ProtNFe.InfProt.CStat)                                                                  
                             {
-                                foreach (var item in RetConsReciNFe.ProtNFe)
-                                {
-                                    if (item.InfProt.ChNFe == EnviNFe.NFe[i].InfNFe[0].Chave)
+                                case 100: //Autorizado o uso da NF-e
+                                case 110: //Uso Denegado
+                                case 150: //Autorizado o uso da NF-e, autorização fora de prazo
+                                case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
+                                case 301: //Uso Denegado: Irregularidade fiscal do emitente
+                                case 302: //Uso Denegado: Irregularidade fiscal do destinatário
+                                case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
+                                    if (NfeProcs.ContainsKey(EnviNFe.NFe[0].InfNFe[0].Chave))
                                     {
-                                        switch (item.InfProt.CStat)
-                                        {
-                                            case 100: //Autorizado o uso da NF-e
-                                            case 110: //Uso Denegado
-                                            case 150: //Autorizado o uso da NF-e, autorização fora de prazo
-                                            case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
-                                            case 301: //Uso Denegado: Irregularidade fiscal do emitente
-                                            case 302: //Uso Denegado: Irregularidade fiscal do destinatário
-                                            case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
-                                                protNFe = item;
-                                                break;
-                                        }
-
-                                        break;
+                                        NfeProcs[EnviNFe.NFe[0].InfNFe[0].Chave].ProtNFe = Result.ProtNFe;
                                     }
-                                }
-                            }
-                            #endregion
-                        }
-                        else if (RetConsSitNFes.Count > 0)
-                        {
-                            #region Resultado do envio do NF-e através da consulta situação
-
-                            foreach (var item in RetConsSitNFes)
-                            {
-                                if (item != null && item.ProtNFe != null)
-                                {
-                                    if (item.ProtNFe.InfProt.ChNFe == EnviNFe.NFe[i].InfNFe[0].Chave)
+                                    else
                                     {
-                                        switch (item.ProtNFe.InfProt.CStat)
-                                        {
-                                            case 100: //Autorizado o uso da NF-e
-                                            case 110: //Uso Denegado
-                                            case 150: //Autorizado o uso da NF-e, autorização fora de prazo
-                                            case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
-                                            case 301: //Uso Denegado: Irregularidade fiscal do emitente
-                                            case 302: //Uso Denegado: Irregularidade fiscal do destinatário
-                                            case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
-                                                protNFe = item.ProtNFe;
-                                                break;
-                                        }
+                                        NfeProcs.Add(EnviNFe.NFe[0].InfNFe[0].Chave,
+                                            new NfeProc
+                                            {
+                                                Versao = EnviNFe.Versao,
+                                                NFe = EnviNFe.NFe[0],
+                                                ProtNFe = Result.ProtNFe
+                                            });
                                     }
-                                }
+
+                                    autorizado = true;
+
+                                    break;
                             }
 
-                            #endregion
-                        }
-
-                        if (NfeProcs.ContainsKey(EnviNFe.NFe[i].InfNFe[0].Chave))
-                        {
-                            NfeProcs[EnviNFe.NFe[i].InfNFe[0].Chave].ProtNFe = protNFe;
+                            if (!autorizado)
+                            {
+                                goto default;
+                            }
                         }
                         else
                         {
-                            //Se por algum motivo não tiver assinado, só vou forçar atualizar o ConteudoXML para ficar correto na hora de gerar o arquivo de distribuição. Pode estar sem assinar no caso do desenvolvedor estar forçando gerar o XML já autorizado a partir de uma consulta situação da NFe, caso tenha perdido na tentativa do primeiro envio.
-                            if (EnviNFe.NFe[i].Signature == null)
+                            goto default;
+                        }
+                        break;
+
+                    default:
+                        if (RetConsReciNFe == null && RetConsSitNFes.Count <= 0)
+                        {
+                            throw new Exception("Defina o conteúdo da Propriedade RetConsReciNFe ou RetConsSitNFe, sem a definição de uma delas não é possível obter o conteúdo da NFeProcResults.");
+                        }
+
+                        for (var i = 0; i < EnviNFe.NFe.Count; i++)
+                        {
+                            ProtNFe protNFe = null;
+
+                            if (RetConsReciNFe != null && RetConsReciNFe.ProtNFe != null)
                             {
-                                ConteudoXML = ConteudoXMLAssinado;
-                                AjustarXMLAposAssinado();
+                                #region Resultado do envio do CT-e através da consulta recibo
+
+                                if (RetConsReciNFe.CStat == 104) //Lote Processado
+                                {
+                                    foreach (var item in RetConsReciNFe.ProtNFe)
+                                    {
+                                        if (item.InfProt.ChNFe == EnviNFe.NFe[i].InfNFe[0].Chave)
+                                        {
+                                            switch (item.InfProt.CStat)
+                                            {
+                                                case 100: //Autorizado o uso da NF-e
+                                                case 110: //Uso Denegado
+                                                case 150: //Autorizado o uso da NF-e, autorização fora de prazo
+                                                case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
+                                                case 301: //Uso Denegado: Irregularidade fiscal do emitente
+                                                case 302: //Uso Denegado: Irregularidade fiscal do destinatário
+                                                case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
+                                                    protNFe = item;
+                                                    break;
+                                            }
+
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+                            else if (RetConsSitNFes.Count > 0)
+                            {
+                                #region Resultado do envio do NF-e através da consulta situação
+
+                                foreach (var item in RetConsSitNFes)
+                                {
+                                    if (item != null && item.ProtNFe != null)
+                                    {
+                                        if (item.ProtNFe.InfProt.ChNFe == EnviNFe.NFe[i].InfNFe[0].Chave)
+                                        {
+                                            switch (item.ProtNFe.InfProt.CStat)
+                                            {
+                                                case 100: //Autorizado o uso da NF-e
+                                                case 110: //Uso Denegado
+                                                case 150: //Autorizado o uso da NF-e, autorização fora de prazo
+                                                case 205: //NF-e está denegada na base de dados da SEFAZ [nRec:999999999999999]
+                                                case 301: //Uso Denegado: Irregularidade fiscal do emitente
+                                                case 302: //Uso Denegado: Irregularidade fiscal do destinatário
+                                                case 303: //Uso Denegado: Destinatário não habilitado a operar na UF
+                                                    protNFe = item.ProtNFe;
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                #endregion
                             }
 
-                            NfeProcs.Add(EnviNFe.NFe[i].InfNFe[0].Chave,
-                                new NfeProc
+                            if (NfeProcs.ContainsKey(EnviNFe.NFe[i].InfNFe[0].Chave))
+                            {
+                                NfeProcs[EnviNFe.NFe[i].InfNFe[0].Chave].ProtNFe = protNFe;
+                            }
+                            else
+                            {
+                                //Se por algum motivo não tiver assinado, só vou forçar atualizar o ConteudoXML para ficar correto na hora de gerar o arquivo de distribuição. Pode estar sem assinar no caso do desenvolvedor estar forçando gerar o XML já autorizado a partir de uma consulta situação da NFe, caso tenha perdido na tentativa do primeiro envio.
+                                if (EnviNFe.NFe[i].Signature == null)
                                 {
-                                    Versao = EnviNFe.Versao,
-                                    NFe = EnviNFe.NFe[i],
-                                    ProtNFe = protNFe
-                                });
+                                    ConteudoXML = ConteudoXMLAssinado;
+                                    AjustarXMLAposAssinado();
+                                }
+
+                                NfeProcs.Add(EnviNFe.NFe[i].InfNFe[0].Chave,
+                                    new NfeProc
+                                    {
+                                        Versao = EnviNFe.Versao,
+                                        NFe = EnviNFe.NFe[i],
+                                        ProtNFe = protNFe
+                                    });
+                            }
                         }
-                    }
+
+                        break;
                 }
 
                 return NfeProcs;

@@ -19,7 +19,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtCdBenTerm/v_S_01_02_00", IsNullable = false)]
-    public class ESocial2420 : XMLBase
+    public class ESocial2420 : XMLBaseESocial
     {
         /// <summary>
         /// Evento - Cadastro de Benefício - Entes Públicos - Término
@@ -72,6 +72,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public InfoBenTermino2420 InfoBenTermino { get; set; }
     }
 
+    /// <summary>
+    /// Informações de identificação do evento
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEvento2420")]
@@ -79,6 +82,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEvento2420 : IdeEvento2206 { }
 
+    /// <summary>
+    /// Identificação do beneficiário e do benefício.
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeBeneficio2420")]

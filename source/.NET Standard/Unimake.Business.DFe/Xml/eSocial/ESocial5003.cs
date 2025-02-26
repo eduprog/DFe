@@ -11,6 +11,9 @@ using Unimake.Business.DFe.Xml.ESocial;
 
 namespace Unimake.Business.DFe.Xml.ESocial
 {
+    /// <summary>
+    /// S-5003 - Informações do FGTS por Trabalhador
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.ESocial5003")]
@@ -19,8 +22,11 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtBasesFGTS/v_S_01_02_00", IsNullable = false)]
 
-    public class ESocial5003 : XMLBase
+    public class ESocial5003 : XMLBaseESocial
     {
+        /// <summary>
+        /// Evento Informações do FGTS por Trabalhador
+        /// </summary>
         [XmlElement("evtBasesFGTS")]
         public EvtBasesFGTS EvtBasesFGTS { get; set; }
 
@@ -28,6 +34,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public Signature Signature { get; set; }
     }
 
+    /// <summary>
+    /// Evento Informações do FGTS por Trabalhador
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.EvtBasesFGTS")]
@@ -35,22 +44,40 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class EvtBasesFGTS
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// Identificação do evento de retorno
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento5003 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
 
+        /// <summary>
+        /// Grupo que apresenta a identificação básica do trabalhador ao qual se refere o evento de retorno
+        /// </summary>
         [XmlElement("ideTrabalhador")]
         public IdeTrabalhador5003 IdeTrabalhador { get; set; }
 
+        /// <summary>
+        /// Informações relativas ao Fundo de Garantia do Tempo de Serviço - FGTS
+        /// </summary>
         [XmlElement("infoFGTS")]
         public InfoFGTS5003 InfoFGTS { get; set; }
     }
 
+    /// <summary>
+    /// Identificação do evento de retorno
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEvento5003")]
@@ -58,31 +85,29 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEvento5003
     {
+        /// <summary>
+        /// Preencher com o número do recibo do arquivo que deu origem ao presente arquivo de retorno ao empregador
+        /// </summary>
         [XmlElement("nrRecArqBase")]
         public string NrRecArqBase { get; set; }
 
+        /// <summary>
+        /// Indicativo de período de apuração
+        /// </summary>
         [XmlElement("indApuracao")]
         public IndApuracao IndApuracao { get; set; }
 
-        [XmlIgnore]
-#if INTEROP
-        public DateTime PerApur { get; set; }
-#else
-        public DateTimeOffset PerApur { get; set; }
-#endif
-
+        /// <summary>
+        /// Informar o mês/ano (formato AAAA-MM) de referência das informações, se indApuracao for igual a [1], 
+        /// ou apenas o ano (formato AAAA), se indApuracao for igual a [2]
+        /// </summary>
         [XmlElement("perApur")]
-        public string PerApurField
-        {
-            get => PerApur.ToString("yyyy-MM");
-#if INTEROP
-            set => PerApur = DateTime.Parse(value);
-#else
-            set => PerApur = DateTimeOffset.Parse(value);
-#endif
-        }
+        public string PerApur { get; set; }
     }
 
+    /// <summary>
+    /// Grupo que apresenta a identificação básica do trabalhador ao qual se refere o evento de retorno
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeTrabalhador5003")]
@@ -90,10 +115,16 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeTrabalhador5003
     {
+        /// <summary>
+        /// Preencher com o número do CPF do trabalhador
+        /// </summary>
         [XmlElement("cpfTrab")]
         public string CpfTrab { get; set; }
     }
 
+    /// <summary>
+    /// Informações relativas ao Fundo de Garantia do Tempo de Serviço - FGTS
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoFGTS5003")]
@@ -101,6 +132,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoFGTS5003
     {
+        /// <summary>
+        /// Data de vencimento do FGTS mensal
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtVenc { get; set; }
@@ -119,9 +153,19 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Preencher com o código correspondente à classificação tributária do contribuinte, conforme Tabela 08
+        /// </summary>
         [XmlElement("classTrib")]
-        public string ClassTrib { get; set; }
+#if INTEROP
+        public ClassificacaoTributaria ClassTrib { get; set; } = (ClassificacaoTributaria)(-1);
+#else
+        public ClassificacaoTributaria? ClassTrib { get; set; }
+#endif
 
+        /// <summary>
+        /// Identificação do estabelecimento ou obra de construção civil
+        /// </summary>
         [XmlElement("ideEstab")]
         public List<IdeEstab5003> IdeEstab { get; set; }
 
@@ -166,11 +210,19 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeDtVencField() => DtVenc > DateTime.MinValue;
 
-        public bool ShouldSerializeClassTrib() => !string.IsNullOrEmpty(ClassTrib);
+#if INTEROP
+        public bool ShouldSerializeClassTrib() => ClassTrib != (ClassificacaoTributaria)(-1);
+#else
+        public bool ShouldSerializeClassTrib() => ClassTrib != null;
 
-        #endregion
+#endif
+
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Identificação do estabelecimento ou obra de construção civil
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEstab5003")]
@@ -178,6 +230,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEstab5003
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05
+        /// </summary>
         [XmlElement("tpInsc")]
 #if INTEROP
         public TpInsc TpInsc { get; set; } = (TpInsc)(-1);
@@ -185,9 +240,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public TpInsc? TpInsc { get; set; }
 #endif
 
+        /// <summary>
+        /// Informar o número de inscrição do contribuinte de acordo com o tipo de inscrição indicado no campo ideEstab/tpInsc
+        /// </summary>
         [XmlElement("nrInsc")]
         public string NrInsc { get; set; }
 
+        /// <summary>
+        /// Identificação da lotação tributária
+        /// </summary>
         [XmlElement("ideLotacao")]
         public List<IdeLotacao5003> IdeLotacao { get; set; }
 
@@ -238,9 +299,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeNrInsc() => !string.IsNullOrEmpty(NrInsc);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Identificação da lotação tributária
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeLotacao5003")]
@@ -248,9 +312,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeLotacao5003
     {
+        /// <summary>
+        /// Informar o código atribuído pelo empregador para a lotação tributária
+        /// </summary>
         [XmlElement("codLotacao")]
         public string CodLotacao { get; set; }
 
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de lotação, conforme Tabela 10
+        /// </summary>
         [XmlElement("tpLotacao")]
 #if INTEROP
         public TpLotacao TpLotacao { get; set; } = (TpLotacao)(-1);
@@ -258,6 +328,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public TpLotacao? TpLotacao { get; set; }
 #endif
 
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05
+        /// </summary>
         [XmlElement("tpInsc")]
 #if INTEROP
         public TpInsc TpInsc { get; set; } = (TpInsc)(-1);
@@ -265,9 +338,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public TiposInscricao? TpInsc { get; set; }
 #endif
 
+        /// <summary>
+        /// Preencher com o número de inscrição (CNPJ, CPF, CNO) ao qual pertence a lotação tributária, conforme indicado na Tabela 10
+        /// </summary>
         [XmlElement("nrInsc")]
         public string NrInsc { get; set; }
 
+        /// <summary>
+        /// Informações relativas à matrícula e categoria do trabalhador
+        /// </summary>
         [XmlElement("infoTrabFGTS")]
         public List<InfoTrabFGTS> InfoTrabFGTS { get; set; }
 
@@ -326,9 +405,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeNrInsc() => !string.IsNullOrEmpty(NrInsc);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações relativas à matrícula e categoria do trabalhador
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoTrabFGTS")]
@@ -336,15 +418,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoTrabFGTS
     {
+        /// <summary>
+        /// Matrícula atribuída ao trabalhador pela empresa ou, no caso de servidor público, a matrícula constante no Sistema de Administração de Recursos Humanos do órgão
+        /// </summary>
         [XmlElement("matricula")]
         public string Matricula { get; set; }
 
+        /// <summary>
+        /// Preencher com o código da categoria do trabalhador, conforme Tabela 01
+        /// </summary>
         [XmlElement("codCateg")]
         public CodCateg CodCateg { get; set; }
 
+        /// <summary>
+        /// Preencher com o código correspondente à categoria de origem do dirigente sindical ou do trabalhador cedido
+        /// </summary>
         [XmlElement("categOrig")]
         public string CategOrig { get; set; }
 
+        /// <summary>
+        /// Tipo de regime trabalhista
+        /// </summary>
         [XmlElement("tpRegTrab")]
 #if INTEROP
         public TipoRegimeTrabalhista TpRegTrab { get; set; } = (TipoRegimeTrabalhista)(-1);
@@ -352,6 +446,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public TipoRegimeTrabalhista? TpRegTrab { get; set; }
 #endif
 
+        /// <summary>
+        /// Indicar se a remuneração é relativa a verbas de natureza salarial ou não salarial devidas pela empresa sucessora a empregados desligados ainda na sucedida
+        /// </summary>
         [XmlElement("remunSuc")]
 #if INTEROP
         public SimNaoLetra RemunSuc { get; set; } = (SimNaoLetra)(-1);
@@ -359,6 +456,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public SimNaoLetra? RemunSuc { get; set; }
 #endif
 
+        /// <summary>
+        /// Preencher com a data de desligamento do vínculo (último dia trabalhado)
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtDeslig { get; set; }
@@ -377,9 +477,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Código de motivo do desligamento, conforme Tabela 19
+        /// </summary>
         [XmlElement("mtvDeslig")]
         public string MtvDeslig { get; set; }
 
+        /// <summary>
+        /// Data do término
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtTerm { get; set; }
@@ -398,18 +504,33 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         }
 
+        /// <summary>
+        /// Código de motivo do término do TSVE
+        /// </summary>
         [XmlElement("mtvDesligTSV")]
         public string MtvDesligTSV { get; set; }
 
+        /// <summary>
+        /// Grupo de informações da sucessão de vínculo trabalhista
+        /// </summary>
         [XmlElement("sucessaoVinc")]
         public SucessaoVinc5003 SucessaoVinc { get; set; }
 
+        /// <summary>
+        /// Informações referentes a bases de cálculo e valores do FGTS
+        /// </summary>
         [XmlElement("infoBaseFGTS")]
         public InfoBaseFGTS InfoBaseFGTS { get; set; }
 
+        /// <summary>
+        /// Informação sobre processo judicial que suspende a exigibilidade da Contribuição Social Rescisória
+        /// </summary>
         [XmlElement("procCS")]
         public ProcCS5003 ProcCS { get; set; }
 
+        /// <summary>
+        /// Informações relativas ao desconto do eConsignado
+        /// </summary>
         [XmlElement("eConsignado")]
         public List<EConsignado> EConsignado { get; set; }
 
@@ -476,9 +597,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeMtvDesligTSV() => !string.IsNullOrEmpty(MtvDesligTSV);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Grupo de informações da sucessão de vínculo trabalhista
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.SucessaoVinc5003")]
@@ -486,15 +610,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class SucessaoVinc5003
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05
+        /// </summary>
         [XmlElement("tpInsc")]
         public TiposInscricao TpInsc { get; set; }
 
+        /// <summary>
+        /// Informar o número de inscrição do empregador anterior, de acordo com o tipo de inscrição indicado no campo sucessaoVinc/tpInsc
+        /// </summary>
         [XmlElement("nrInsc")]
         public string NrInsc { get; set; }
 
+        /// <summary>
+        /// Matrícula do trabalhador no empregador anterior
+        /// </summary>
         [XmlElement("matricAnt")]
         public string MatricAnt { get; set; }
 
+        /// <summary>
+        /// Preencher com a data de admissão do trabalhador
+        /// </summary>
         [XmlIgnore]
 #if INTEROP
         public DateTime DtAdm { get; set; }
@@ -517,9 +653,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeMatricAnt() => !string.IsNullOrEmpty(MatricAnt);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações referentes a bases de cálculo e valores do FGTS
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoBaseFGTS")]
@@ -527,6 +666,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoBaseFGTS
     {
+        /// <summary>
+        /// Informações sobre bases de cálculo e valores do FGTS referentes à remuneração do período de apuração e de períodos anteriores, exceto se {tpAcConv} = [E, H, I]
+        /// </summary>
         [XmlElement("basePerApur")]
         public List<BasePerApur> BasePerApur { get; set; }
 
@@ -567,6 +709,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetBasePerApurCount => (BasePerApur != null ? BasePerApur.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações referentes a bases de cálculo e valores do FGTS de períodos anteriores quando tpAcConv = [E, H, I]
+        /// </summary>
         [XmlElement("infoBasePerAntE")]
         public List<InfoBasePerAntE> InfoBasePerAntE { get; set; }
 
@@ -608,6 +753,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações sobre bases de cálculo e valores do FGTS referentes à remuneração do período de apuração e de períodos anteriores, exceto se {tpAcConv} = [E, H, I]
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasePerApur")]
@@ -615,6 +763,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class BasePerApur
     {
+        /// <summary>
+        /// Tipo de valor que influi na apuração do FGTS
+        /// </summary>
         [XmlElement("tpValor")]
         public TpValor TpValor { get; set; }
 
@@ -632,6 +783,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double RemFGTS { get; set; }
+
         [XmlElement("remFGTS")]
         public string RemFGTSField
         {
@@ -647,6 +799,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double DpsFGTS { get; set; }
+
         [XmlElement("dpsFGTS")]
         public string DpsFGTSFIeld
         {
@@ -654,6 +807,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => DpsFGTS = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Detalhamento da(s) rubrica(s) com incidência de FGTS suspensa em decorrência de decisão judicial
+        /// </summary>
         [XmlElement("detRubrSusp")]
         public List<DetRubrSusp> DetRubrSusp { get; set; }
 
@@ -701,6 +857,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Detalhamento da(s) rubrica(s) com incidência de FGTS suspensa em decorrência de decisão judicial
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.DetRubrSusp")]
@@ -708,9 +867,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class DetRubrSusp
     {
+        /// <summary>
+        /// Informar o código atribuído pelo empregador que identifica a rubrica em sua folha de pagamento
+        /// </summary>
         [XmlElement("codRubr")]
         public string CodRubr { get; set; }
 
+        /// <summary>
+        /// Preencher com o identificador da Tabela de Rubricas para a rubrica definida em codRubr
+        /// </summary>
         [XmlElement("ideTabRubr")]
         public string IdeTabRubr { get; set; }
 
@@ -723,6 +888,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrRubr { get; set; }
+
         [XmlElement("vrRubr")]
         public string VrRubrField
         {
@@ -730,8 +896,11 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrRubr = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Processo(s) judicial(is) com decisão/sentença favorável, determinando a não incidência de FGTS
+        /// </summary>
         [XmlElement("ideProcessoFGTS")]
-        public List<IdeProcessoFGTS> IdeProcessoFGTS { get; set; }
+        public List<IdeProcessoFGTS5003> IdeProcessoFGTS { get; set; }
 
 #if INTEROP
 
@@ -739,22 +908,22 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// Adicionar novo elemento a lista
         /// </summary>
         /// <param name="item">Elemento</param>
-        public void AddIdeProcessoFGTS(IdeProcessoFGTS item)
+        public void AddIdeProcessoFGTS(IdeProcessoFGTS5003 item)
         {
             if (IdeProcessoFGTS == null)
             {
-                IdeProcessoFGTS = new List<IdeProcessoFGTS>();
+                IdeProcessoFGTS = new List<IdeProcessoFGTS5003>();
             }
 
             IdeProcessoFGTS.Add(item);
         }
 
         /// <summary>
-        /// Retorna o elemento da lista IdeProcessoFGTS (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// Retorna o elemento da lista IdeProcessoFGTS5003 (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
         /// </summary>
         /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
         /// <returns>Conteúdo do index passado por parâmetro da IdeProcessoFGTS</returns>
-        public IdeProcessoFGTS GetIdeProcessoFGTS(int index)
+        public IdeProcessoFGTS5003 GetIdeProcessoFGTS(int index)
         {
             if ((IdeProcessoFGTS?.Count ?? 0) == 0)
             {
@@ -770,38 +939,59 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetIdeProcessoFGTSCount => (IdeProcessoFGTS != null ? IdeProcessoFGTS.Count : 0);
 #endif
     }
-}
 
+    /// <summary>
+    /// Processo(s) judicial(is) com decisão/sentença favorável, determinando a não incidência de FGTS
+    /// </summary>
 #if INTEROP
-[ClassInterface(ClassInterfaceType.AutoDual)]
-[ProgId("Unimake.Business.DFe.Xml.ESocial.InfoBasePerAntE")]
-[ComVisible(true)]
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeProcessoFGTS5003")]
+    [ComVisible(true)]
 #endif
-public class InfoBasePerAntE
-{
-    [XmlIgnore]
+    public class IdeProcessoFGTS5003 : IdeProcessoFGTS1010 { }
+
+    /// <summary>
+    /// Informações referentes a bases de cálculo e valores do FGTS de períodos anteriores quando tpAcConv = [E, H, I]
+    /// </summary>
 #if INTEROP
-    public DateTime PerRef { get; set; }
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoBasePerAntE")]
+    [ComVisible(true)]
+#endif
+    public class InfoBasePerAntE
+    {
+        /// <summary>
+        /// Informar o período ao qual se refere a remuneração, no formato AAAA-MM
+        /// </summary>
+        [XmlIgnore]
+#if INTEROP
+        public DateTime PerRef { get; set; }
 #else
         public DateTimeOffset PerRef { get; set; }
 #endif
 
-    [XmlElement("perRef")]
-    public string PerRefField
-    {
-        get => PerRef.ToString("yyyy-MM");
+        [XmlElement("perRef")]
+        public string PerRefField
+        {
+            get => PerRef.ToString("yyyy-MM");
 #if INTEROP
-        set => PerRef = DateTime.Parse(value);
+            set => PerRef = DateTime.Parse(value);
 #else
             set => PerRef = DateTimeOffset.Parse(value);
 #endif
-    }
+        }
 
-    [XmlElement("tpAcConv")]
-    public string TpAcConv { get; set; }
+        /// <summary>
+        /// Tipo do instrumento ou situação ensejadora da remuneração relativa a períodos de apuração anteriores
+        /// </summary>
+        [XmlElement("tpAcConv")]
+        public string TpAcConv { get; set; }
 
-    [XmlElement("basePerAntE")]
-    public List<BasePerAntE> BasePerAntE { get; set; }
+        /// <summary>
+        /// Informações sobre bases de cálculo e valores do FGTS referentes à remuneração de períodos anteriores quando tpAcConv = [E, H, I]
+        /// </summary>
+        [XmlElement("basePerAntE")]
+        public List<BasePerAntE> BasePerAntE { get; set; }
 
 #if INTEROP
 
@@ -839,54 +1029,65 @@ public class InfoBasePerAntE
     /// </summary>
     public int GetBasePerAntECount => (BasePerAntE != null ? BasePerAntE.Count : 0);
 #endif
-}
+    }
 
+    /// <summary>
+    /// Informações sobre bases de cálculo e valores do FGTS referentes à remuneração de períodos anteriores quando tpAcConv = [E, H, I]
+    /// </summary>
 #if INTEROP
-[ClassInterface(ClassInterfaceType.AutoDual)]
-[ProgId("Unimake.Business.DFe.Xml.ESocial.BasePerAntE")]
-[ComVisible(true)]
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.BasePerAntE")]
+    [ComVisible(true)]
 #endif
-public class BasePerAntE
-{
-    [XmlElement("tpValorE")]
-    public TpValor TpValorE { get; set; }
-
-    /// <summary>
-    /// Valores válidos:
-    /// 1 - Normal (incidência de FGTS)
-    /// 9 - Incidência de FGTS suspensa em decorrência de decisão judicial
-    /// </summary>
-    [XmlElement("indIncidE")]
-    public IndIncid IndIncidE { get; set; }
-
-    /// <summary>
-    /// Remuneração (valor da base de cálculo) do FGTS,
-    /// conforme definido nos campos tpValorE e indIncidE.
-    /// </summary>
-    [XmlIgnore]
-    public double RemFGTSE { get; set; }
-    [XmlElement("remFGTSE")]
-    public string RemFGTSEField
+    public class BasePerAntE
     {
-        get => RemFGTSE.ToString("F2", CultureInfo.InvariantCulture);
-        set => RemFGTSE = Converter.ToDouble(value);
-    }
+        /// <summary>
+        /// Tipo de valor que influi na apuração do FGTS
+        /// </summary>
+        [XmlElement("tpValorE")]
+        public TpValor TpValorE { get; set; }
 
-    /// <summary>
-    /// Valor histórico do FGTS a ser depositado na conta vinculada do trabalhador.
-    /// Validação: Deve ser maior que 0 (zero) e informado somente se indIncidE = [1].
-    /// </summary>
-    [XmlIgnore]
-    public double DpsFGTSE { get; set; }
-    [XmlElement("dpsFGTSE")]
-    public string DpsFGTSEFIeld
-    {
-        get => DpsFGTSE.ToString("F2", CultureInfo.InvariantCulture);
-        set => DpsFGTSE = Converter.ToDouble(value);
-    }
+        /// <summary>
+        /// Valores válidos:
+        /// 1 - Normal (incidência de FGTS)
+        /// 9 - Incidência de FGTS suspensa em decorrência de decisão judicial
+        /// </summary>
+        [XmlElement("indIncidE")]
+        public IndIncid IndIncidE { get; set; }
 
-    [XmlElement("detRubrSusp")]
-    public List<DetRubrSusp> DetRubrSusp { get; set; }
+        /// <summary>
+        /// Remuneração (valor da base de cálculo) do FGTS,
+        /// conforme definido nos campos tpValorE e indIncidE.
+        /// </summary>
+        [XmlIgnore]
+        public double RemFGTSE { get; set; }
+
+        [XmlElement("remFGTSE")]
+        public string RemFGTSEField
+        {
+            get => RemFGTSE.ToString("F2", CultureInfo.InvariantCulture);
+            set => RemFGTSE = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor histórico do FGTS a ser depositado na conta vinculada do trabalhador.
+        /// Validação: Deve ser maior que 0 (zero) e informado somente se indIncidE = [1].
+        /// </summary>
+        [XmlIgnore]
+        public double DpsFGTSE { get; set; }
+
+        [XmlElement("dpsFGTSE")]
+        public string DpsFGTSEFIeld
+        {
+            get => DpsFGTSE.ToString("F2", CultureInfo.InvariantCulture);
+            set => DpsFGTSE = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Detalhamento da(s) rubrica(s) com incidência de FGTS suspensa em decorrência de decisão judicial
+        /// </summary>
+        [XmlElement("detRubrSusp")]
+        public List<DetRubrSusp> DetRubrSusp { get; set; }
 
 #if INTEROP
 
@@ -925,14 +1126,17 @@ public class BasePerAntE
     public int GetDetRubrSuspCount => (DetRubrSusp != null ? DetRubrSusp.Count : 0);
 #endif
 
-    #region ShouldSerialize
+        #region ShouldSerialize
 
-    public bool ShouldSerializeDpsFGTSEField() => DpsFGTSE > 0;
+        public bool ShouldSerializeDpsFGTSEField() => DpsFGTSE > 0;
 
-    #endregion
+        #endregion ShouldSerialize
 
-}
+    }
 
+    /// <summary>
+    /// Informação sobre processo judicial que suspende a exigibilidade da Contribuição Social Rescisória
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.ProcCS5003")]
@@ -940,6 +1144,9 @@ public class BasePerAntE
 #endif
     public class ProcCS5003 : ProcCS2299 { }
 
+    /// <summary>
+    /// Informações relativas ao desconto do eConsignado
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.EConsignado")]
@@ -947,14 +1154,24 @@ public class BasePerAntE
 #endif
     public class EConsignado
     {
+        /// <summary>
+        /// Instituição financeira do empréstimo eConsignado
+        /// </summary>
         [XmlElement("instFinanc")]
         public string InstFinanc { get; set; }
 
+        /// <summary>
+        /// Número do contrato do empréstimo eConsignado
+        /// </summary>
         [XmlElement("nrContrato")]
         public string NrContrato { get; set; }
 
+        /// <summary>
+        /// Valor do desconto do empréstimo eConsignado
+        /// </summary>
         [XmlIgnore]
         public double VreConsignado { get; set; }
+
         [XmlElement("vreConsignado")]
         public string VreConsignadoField
         {
@@ -962,3 +1179,4 @@ public class BasePerAntE
             set => VreConsignado = Converter.ToDouble(value);
         }
     }
+}

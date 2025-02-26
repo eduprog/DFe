@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using Unimake.Business.DFe.Security;
 using Unimake.Exceptions;
+using System.Runtime.CompilerServices;
 
 namespace Unimake.Business.DFe.Servicos.NFSe
 {
@@ -29,7 +30,53 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         /// <summary>
         /// Definir configurações
         /// </summary>
-        protected override void DefinirConfiguracao() { }
+        protected override void DefinirConfiguracao()
+        { 
+            if (Configuracoes.PadraoNFSe == PadraoNFSe.MEMORY)
+            {
+                var numeroRPS = GetXMLElementInnertext("numeroRPS");
+                var numeroNFSE = GetXMLElementInnertext("numeroNFSE");
+                var protocolo = GetXMLElementInnertext("protocolo");
+                var codMunicipio = GetXMLElementInnertext("codMunicipio");
+
+                if (codMunicipio == null && Configuracoes.Servico == Servico.NFSeRecepcionarLoteRps)
+                {
+                    var nodeloteRps = ConteudoXML.GetElementsByTagName("LoteRps")?[0];
+                    codMunicipio = nodeloteRps.Attributes.GetNamedItem("codMunicipio").Value;
+                }
+
+                // Replaces necessários para a comunicação com o webservice, deve estar antes da linha que altera o Codigo do Municipio
+                Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{numeroRPS}", numeroRPS)
+                                                                         .Replace("{numeroNFSE}", numeroNFSE)
+                                                                         .Replace("{protocolo}", protocolo)
+                                                                         .Replace("{codMunicipio}", codMunicipio)
+                                                                         .Replace("{cnpjPrestador}", Configuracoes.MunicipioUsuario)
+                                                                         .Replace("{hashValidador}", Configuracoes.MunicipioSenha);
+
+                
+                Configuracoes.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), Configuracoes.PadraoNFSe.ToString());
+
+            }
+
+            //Padrões com link unico, alteração para a dll buscar o arquivo de configuração em comum
+            if (Configuracoes.PadraoNFSe == PadraoNFSe.ABASE || 
+                Configuracoes.PadraoNFSe == PadraoNFSe.BETHA || 
+                Configuracoes.PadraoNFSe == PadraoNFSe.GINFES ||
+                Configuracoes.PadraoNFSe == PadraoNFSe.EQUIPLANO || 
+                Configuracoes.PadraoNFSe == PadraoNFSe.WEBFISCO)
+            {
+                //Municípios pontuais com configuração diferente:
+                //São José dos Pinhais - PR     |GINFES
+                //Varginha - MG                 |BETHA
+                //Fortaleza - CE                |GINFES
+                if (Configuracoes.CodigoMunicipio != 4125506 || Configuracoes.CodigoMunicipio != 3170701 || Configuracoes.CodigoMunicipio != 2304400)
+                {
+                    Configuracoes.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), Configuracoes.PadraoNFSe.ToString());
+                }
+            }
+        }
+
+        private string GetXMLElementInnertext(string tag) => ConteudoXML.GetElementsByTagName(tag)[0]?.InnerText;
 
         /// <summary>
         /// Ajustes no XMLs, depois de assinado.
@@ -139,8 +186,33 @@ namespace Unimake.Business.DFe.Servicos.NFSe
             {
                 if (Configuracoes.PadraoNFSe == PadraoNFSe.DSF && Configuracoes.EncriptaTagAssinatura)
                 {
-                    var sh1 = Criptografia.GetSHA1HashData(ConteudoXML.GetElementsByTagName("Assinatura")[0].InnerText);
-                    ConteudoXML.GetElementsByTagName("Assinatura")[0].InnerText = sh1;
+                    var listLote = ConteudoXML.GetElementsByTagName("Lote");
+
+                    foreach (XmlNode nodeLote in listLote)
+                    {
+                        var elementListLote = (XmlElement)nodeLote;
+
+                        foreach (XmlNode nodeRps in elementListLote.GetElementsByTagName("RPS"))
+                        {
+                            var elementRps = (XmlElement)nodeRps;
+
+                            var tagAssinatura = elementRps.GetElementsByTagName("Assinatura");
+
+                            if (tagAssinatura.Count > 0)
+                            {
+                                var conteudoTagAssinatura = tagAssinatura[0].InnerText;
+
+                                // O formato esperado do hash SHA-1 é 40 caracteres
+                                // Se vier encriptado, vamos fazer nada
+                                if (conteudoTagAssinatura.Length > 40)
+                                {
+                                    var sh1 = Criptografia.GetSHA1HashData(conteudoTagAssinatura);
+
+                                    elementRps.GetElementsByTagName("Assinatura")[0].InnerText = sh1;
+                                }
+                            }
+                        }
+                    }                    
                 }
 
                 VerificarAssinarXML(Configuracoes.TagAssinatura, Configuracoes.TagAtributoID);
@@ -182,19 +254,6 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 #endif
         protected override void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
         {
-            if (configuracao.PadraoNFSe == PadraoNFSe.ABASE || configuracao.PadraoNFSe == PadraoNFSe.BETHA || configuracao.PadraoNFSe == PadraoNFSe.GINFES ||
-                configuracao.PadraoNFSe == PadraoNFSe.MEMORY || configuracao.PadraoNFSe == PadraoNFSe.EQUIPLANO || configuracao.PadraoNFSe == PadraoNFSe.WEBFISCO)
-            {
-                //Municípios pontuais com configuração diferente:
-                //São José dos Pinhais - PR     |GINFES
-                //Varginha - MG                 |BETHA
-                //Fortaleza - CE                |GINFES
-                if (configuracao.CodigoMunicipio != 4125506 || configuracao.CodigoMunicipio != 3170701 || configuracao.CodigoMunicipio != 2304400)
-                {
-                    configuracao.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), configuracao.PadraoNFSe.ToString());
-                }
-            }
-
             base.Inicializar(conteudoXML, configuracao);
         }
 

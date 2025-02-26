@@ -1237,6 +1237,7 @@ namespace Unimake.Business.DFe.Xml.CTe
             "UFFim",
             "TpCTe",
             "DhEmi",
+            "DhPass",
             "DhRecbto"
         };
 
@@ -1525,12 +1526,20 @@ namespace Unimake.Business.DFe.Xml.CTe
                         _detEvento = new DetEventoCancelamentoInsucessoEntrega();
                         break;
 
+                    case TipoEventoCTe.RegistroPassagem:
+                        _detEvento = new DetEventoRegistroPassagem();
+                        break;
+
                     case TipoEventoCTe.RegistroPassagemAutomatico:
                         _detEvento = new DetEventoRegistroPassagemAutomatico();
                         break;
 
                     case TipoEventoCTe.RegistoPassagemAutomaticoOriginadoMDFe:
                         _detEvento = new DetEventoRegistroPassagemAutomaticoMDFe();
+                        break;
+
+                    case TipoEventoCTe.AutorizadoCTeComplementar:
+                        _detEvento = new DetEventoAutorizadoCTeComplementar();
                         break;
 
                     default:
@@ -2325,23 +2334,6 @@ namespace Unimake.Business.DFe.Xml.CTe
         public string XNome { get; set; }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoRegistroPassagemAutomatico")]
@@ -2605,6 +2597,317 @@ namespace Unimake.Business.DFe.Xml.CTe
 
         [XmlElement("chMDFe")]
         public string ChMDFe { get; set; }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na desserialização
+        /// </summary>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoRegistroPassagem")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoRegistroPassagem : EventoDetalhe
+    {
+        private EvCTeRegPassagem _evCTeRegPassagem;
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EvCTeRegPassagem.DescEvento;
+            set => EvCTeRegPassagem.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public string CUFTransito
+        {
+            get => EvCTeRegPassagem.CUFTransito;
+            set => EvCTeRegPassagem.CUFTransito = value;
+        }
+
+        [XmlIgnore]
+        public string CUnidFiscal
+        {
+            get => EvCTeRegPassagem.CUnidFiscal;
+            set => EvCTeRegPassagem.CUnidFiscal = value;
+        }
+
+        [XmlIgnore]
+        public string XUnidFiscal
+        {
+            get => EvCTeRegPassagem.XUnidFiscal;
+            set => EvCTeRegPassagem.XUnidFiscal = value;
+        }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhPass
+        {
+            get => EvCTeRegPassagem.DhPass;
+            set => EvCTeRegPassagem.DhPass = value;
+        }
+#else
+        public DateTimeOffset DhPass
+        {
+            get => EvCTeRegPassagem.DhPass;
+            set => EvCTeRegPassagem.DhPass = value;
+        }
+#endif
+
+        [XmlIgnore]
+        public string DhPassField
+        {
+            get => EvCTeRegPassagem.DhPassField;
+            set => EvCTeRegPassagem.DhPassField = value;
+        }
+
+        [XmlIgnore]
+        public string CPFFunc
+        {
+            get => EvCTeRegPassagem.CPFFunc;
+            set => EvCTeRegPassagem.CPFFunc = value;
+        }
+
+        [XmlIgnore]
+        public string XFunc
+        {
+            get => EvCTeRegPassagem.XFunc;
+            set => EvCTeRegPassagem.XFunc = value;
+        }
+
+        [XmlIgnore]
+        public string TpTransm
+        {
+            get => EvCTeRegPassagem.TpTransm;
+            set => EvCTeRegPassagem.TpTransm = value;
+        }
+
+        [XmlIgnore]
+        public string TpSentido
+        {
+            get => EvCTeRegPassagem.TpSentido;
+            set => EvCTeRegPassagem.TpSentido = value;
+        }
+
+        [XmlIgnore]
+        public string Placa
+        {
+            get => EvCTeRegPassagem.Placa;
+            set => EvCTeRegPassagem.Placa = value;
+        }
+
+        [XmlIgnore]
+        public string ChMDFe
+        {
+            get => EvCTeRegPassagem.ChMDFe;
+            set => EvCTeRegPassagem.ChMDFe = value;
+        }
+
+
+        [XmlIgnore]
+        public EvCTeRegPassagem EvCTeRegPassagem
+        {
+            get => _evCTeRegPassagem ?? (_evCTeRegPassagem = new EvCTeRegPassagem());
+            set => _evCTeRegPassagem = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evCTeRegPassagem>
+                <descEvento>{DescEvento}</descEvento>
+                <cUFTransito>{CUFTransito}</cUFTransito>
+                <cUnidFiscal>{CUnidFiscal}</cUnidFiscal>
+                <xUnidFiscal>{XUnidFiscal}</xUnidFiscal>
+                <dhPass>{DhPassField}</dhPass>
+                <CPFFunc>{CPFFunc}</CPFFunc>
+                <xFunc>{XFunc}</xFunc>
+                <tpTransm>{TpTransm}</tpTransm>
+                <tpSentido>{TpSentido}</tpSentido>
+                <placa>{Placa}</placa>
+                <chMDFe>{ChMDFe}</chMDFe>
+                </evCTeRegPassagem>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeRegPassagem")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evCTeRegPassagem")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvCTeRegPassagem : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento")]
+        public string DescEvento { get; set; } = "Registro de Passagem";
+
+        [XmlElement("cUFTransito")]
+        public string CUFTransito { get; set; }
+
+        [XmlElement("cUnidFiscal")]
+        public string CUnidFiscal { get; set; }
+
+        [XmlElement("xUnidFiscal")]
+        public string XUnidFiscal { get; set; }
+
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhPass { get; set; }
+#else
+        public DateTimeOffset DhPass { get; set; }
+#endif
+
+        [XmlElement("dhPass")]
+        public string DhPassField
+        {
+            get => DhPass.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhPass = DateTime.Parse(value);
+#else
+            set => DhPass = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        [XmlElement("CPFFunc")]
+        public string CPFFunc { get; set; }
+
+        [XmlElement("xFunc")]
+        public string XFunc { get; set; }
+
+        [XmlElement("tpTransm")]
+        public string TpTransm { get; set; }
+
+        [XmlElement("tpSentido")]
+        public string TpSentido { get; set; }
+
+        [XmlElement("placa")]
+        public string Placa { get; set; }
+
+        [XmlElement("chMDFe")]
+        public string ChMDFe { get; set; }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na desserialização
+        /// </summary>
+        ///<param name="document">XmlDocument recebido durante o processo de desserialização</param>
+        public void ReadXml(XmlDocument document)
+        {
+
+        }
+
+        /// <summary>
+        /// Executa o processamento do XMLReader recebido na serialização
+        /// </summary>
+        ///<param name="writer">string XML recebido durante o processo de serialização</param>
+        public void WriteXml(System.IO.StringWriter writer)
+        {
+
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.DetEventoAutorizadoCTeComplementar")]
+    [ComVisible(true)]
+#endif
+    [XmlInclude(typeof(EventoDetalhe))]
+    [XmlRoot(ElementName = "detEvento")]
+    public class DetEventoAutorizadoCTeComplementar : EventoDetalhe
+    {
+        private EvCTeComplementar _evCTeComplementar;
+
+        [XmlIgnore]
+        public override string DescEvento
+        {
+            get => EvCTeComplementar.DescEvento;
+            set => EvCTeComplementar.DescEvento = value;
+        }
+
+        [XmlIgnore]
+        public string ChCTeCompl
+        {
+            get => EvCTeComplementar.ChCTeCompl;
+            set => EvCTeComplementar.ChCTeCompl = value;
+        }
+
+        [XmlIgnore]
+        public string NProt
+        {
+            get => EvCTeComplementar.NProt;
+            set => EvCTeComplementar.NProt = value;
+        }
+
+        [XmlIgnore]
+        public string DhRecbto
+        {
+            get => EvCTeComplementar.DhRecbto;
+            set => EvCTeComplementar.DhRecbto = value;
+        }
+
+        [XmlIgnore]
+        public EvCTeComplementar EvCTeComplementar
+        {
+            get => _evCTeComplementar ?? (_evCTeComplementar = new EvCTeComplementar());
+            set => _evCTeComplementar = value;
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            base.WriteXml(writer);
+
+            var writeRaw = $@"<evCTeComplementar>
+                <descEvento>{DescEvento}</descEvento>
+                <chCTeCompl>{ChCTeCompl}</chCTeCompl>
+                <dhRecbto>{DhRecbto}</dhRecbto>
+                <nProt>{NProt}</nProt>";
+
+            writeRaw += "</evCTeComplementar>";
+
+            writer.WriteRaw(writeRaw);
+        }
+    }
+
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.CTe.EvCTeComplementar")]
+    [ComVisible(true)]
+#endif
+    [XmlRoot(ElementName = "evCTeComplementar")]
+    [XmlInclude(typeof(EventoDetalhe))]
+    public class EvCTeComplementar : Contract.Serialization.IXmlSerializable
+    {
+        [XmlElement("descEvento")]
+        public string DescEvento { get; set; } = "Autorizado CT-e Complementar";
+
+        [XmlElement("chCTeCompl")]
+        public string ChCTeCompl { get; set; }
+
+        [XmlElement("dhRecbto")]
+        public string DhRecbto { get; set; }
+
+        [XmlElement("nProt")]
+        public string NProt { get; set; }
 
         /// <summary>
         /// Executa o processamento do XMLReader recebido na desserialização

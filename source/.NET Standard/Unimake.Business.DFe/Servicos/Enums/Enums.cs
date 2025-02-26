@@ -486,6 +486,30 @@ namespace Unimake.Business.DFe.Servicos
         [Description("Autorização síncrona de NF3e")]
         NF3eAutorizacaoSinc = 79,
 
+        /// <summary>
+        /// 80 - Consulta status serviço NFCom (nota de comunicação)
+        /// </summary>
+        [Description("Consulta status do serviço da NFCom")]
+        NFComStatusServico = 80,
+
+        /// <summary>
+        /// 81 - Consulta protocolo da NFCom (nota de comunicação)
+        /// </summary>
+        [Description("Consulta situação da NFCom")]
+        NFComConsultaProtocolo = 81,
+
+        /// <summary>
+        /// 82 - Envio de Eventos da NFCom
+        /// </summary>
+        [Description("Envio de eventos da NFCom")]
+        NFComRecepcaoEvento = 82,
+
+        /// <summary>
+        /// 83 - Envio do XML de NFCom
+        /// </summary>d
+        [Description("Autorização síncrona de NFCom")]
+        NFComAutorizacaoSinc = 83,
+
         #endregion
 
         #region Gerais
@@ -571,6 +595,11 @@ namespace Unimake.Business.DFe.Servicos
         /// 14 - NF3e - Nota fiscal de energia eletrônica
         /// </summary>
         NF3e = 14,
+        /// <summary>
+        /// 15 - NFCom - Nota fiscal fatura de serviço de comunicação eletrônica
+        /// </summary>
+        NFCom = 15,
+
     }
 
     #endregion       
@@ -823,6 +852,12 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("66")]
         NF3e = 66,
+
+        /// <summary>
+        /// NFCom (Modelo: 62)
+        /// </summary>
+        [XmlEnum("62")]
+        NFCom = 62,
     }
 
     #endregion
@@ -1199,6 +1234,12 @@ namespace Unimake.Business.DFe.Servicos
         CancelamentoInsucessoEntrega = 110191,
 
         /// <summary>
+        /// 240130 - Autorizado CT-e Complementar
+        /// </summary>
+        [XmlEnum("240130")]
+        AutorizadoCTeComplementar = 240130,
+
+        /// <summary>
         /// 510620 - Registro de Passagem Automático do CTe (Evento exclusivo do fisco)
         /// </summary>
         [XmlEnum("510620")]
@@ -1545,7 +1586,13 @@ namespace Unimake.Business.DFe.Servicos
         /// 9 - Contingência off-line da NFC-e
         /// </summary>
         [XmlEnum("9")]
-        ContingenciaOffLine = 9
+        ContingenciaOffLine = 9,
+
+        /// <summary>
+        /// 2 - Contingência off-line da NF3e e da NFCom
+        /// </summary>
+        [XmlEnum("2")]
+        ContingenciaOfflineNF3e = 10
     }
 
     #endregion
@@ -6716,7 +6763,55 @@ namespace Unimake.Business.DFe.Servicos
         /// PUBLICA
         /// </summary>
         [Description("PUBLICA")]
-        PUBLICA = 54
+        PUBLICA = 54,
+
+        /// <summary>
+        /// TIPLAN
+        /// </summary>
+        [Description("TIPLAN")]
+        TIPLAN = 55,
+
+        /// <summary>
+        /// PRODEB
+        /// </summary>
+        [Description("PRODEB")]
+        PRODEB = 56,
+
+        /// <summary>
+        /// LIBRE
+        /// </summary>
+        [Description("LIBRE")]
+        LIBRE =  57,
+
+        /// <summary>
+        /// MANAUS_AM
+        /// </summary>
+        [Description("MANAUS_AM")]
+        MANAUS_AM = 58,
+
+        /// <summary>
+        /// NATALENSE
+        /// </summary>
+        [Description("NATALENSE")]
+        NATALENSE = 59,
+
+        /// <summary>
+        /// VITORIAS_ES
+        /// </summary>
+        [Description("VITORIA_ES")]
+        VITORIA_ES = 60,
+
+        /// <summary>
+        /// RLZ_INFORMATICA
+        /// </summary>
+        [Description("RLZ_INFORMATICA")]
+        RLZ_INFORMATICA = 61,
+
+        /// <summary>
+        /// SISPMJP
+        /// </summary>
+        [Description("SISPMJP")]
+        SISPMJP = 62,
     }
 
     #endregion
@@ -7034,6 +7129,34 @@ namespace Unimake.Business.DFe.Servicos
         NF3e = 32,
 
         #endregion NF3e
+
+        #region NFCom
+
+        /// <summary>
+        /// XML de consulta status do serviço da NFCom
+        /// </summary>
+        [Description("XML de consulta status do serviço da NFCom")]
+        NFComStatusServico = 33,
+
+        /// <summary>
+        /// XML de consulta situação da NFCom
+        /// </summary>
+        [Description("XML de consulta situação da NFCom")]
+        NFComConsultaSituacao = 34,
+
+        /// <summary>
+        /// XML de envio de evento da NFCom
+        /// </summary>
+        [Description("XML de envio de evento da NFCom")]
+        NFComEnvioEvento = 35,
+
+        /// <summary>
+        /// XML individual da NFCom
+        /// </summary>
+        [Description("XML individual da NFCom")]
+        NFCom = 36,
+
+        #endregion NFCom
 
         /// <summary>
         /// Não foi possível identificar o tipo do XML
@@ -7551,6 +7674,12 @@ namespace Unimake.Business.DFe.Servicos
     /// </summary>
     public enum ClassificacaoTributaria
     {
+        /// <summary>
+        /// 00 - Utilizado para limpar a base de dados do contribuinte no ambiente produção restrita (homologação)
+        /// </summary>
+        [XmlEnum("00")]
+        RemoverContribuinte = 0,
+
         /// <summary>
         /// 01 - Empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída.
         /// </summary>
@@ -9110,7 +9239,51 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion
 
-    #region ESocial
+    #region ESocial    
+
+    #region TipoValorApuracaoContribuicao
+
+    /// <summary>
+    /// Tipo de valor que influi na apuração da contribuição devida
+    /// </summary>
+    public enum TipoValorApuracaoContribuicao
+    {
+        /// <summary>
+        /// Base de cálculo da contribuição para o PIS/PASEP
+        /// </summary>
+        [XmlEnum("11")]
+        BaseCalculoContribuicaoPISPASEP = 11,
+
+        /// <summary>
+        /// Incidência suspensa em decorrência de decisão judicial - BC PIS/PASEP
+        /// </summary>
+        [XmlEnum("91")]
+        IncidenciaSuspensaDecisaoJudicial = 91
+    }
+
+    #endregion
+
+    #region IndicativoDecimoTerceiro
+
+    /// <summary>
+    /// Indicativo de 13o Salário
+    /// </summary>
+    public enum IndicativoDecimoTerceiro
+    {
+        /// <summary>
+        /// Mensal
+        /// </summary>
+        [XmlEnum("0")]
+        Mensal = 0,
+
+        /// <summary>
+        /// 13º Salário
+        /// </summary>
+        [XmlEnum("1")]
+        DecimoTerceiroSalario = 1
+    }
+
+    #endregion
 
     #region Indicativo indCoop
 
@@ -9971,6 +10144,7 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [XmlEnum("1")]
         Mensal = 1,
+
         /// <summary>
         /// Anual (13° salário)
         /// </summary>
@@ -13048,10 +13222,22 @@ namespace Unimake.Business.DFe.Servicos
         DecisaoSemRepercussaoTributariaFgts = 2,
 
         /// <summary>
-        /// 3 - Decisão com repercussão exclusiva para declaração de rendimentos para fins de Imposto de Renda
+        /// 3 - Decisão com repercussão exclusiva para declaração de rendimentos para fins de Imposto de Renda com rendimentos informados em S-2501
         /// </summary>
         [XmlEnum("3")]
-        DecisaoRepercussaoDeclaracaoRendimentosIR = 3
+        DecisaoComRepercussaoExclusivaDeclaracaoRendimentosIR = 3,
+
+        /// <summary>
+        /// 4 - Decisão com repercussão exclusiva para declaração de rendimentos para fins de Imposto de Renda com pagamento através de depósito judicial
+        /// </summary>
+        [XmlEnum("4")]
+        DecisaoComRepercusaoExclusivaDeclaracaoRendimentoIRPagtoJudicial = 4,
+
+        /// <summary>
+        /// 5 - Decisão com repercussão tributária e/ou FGTS com pagamento através de depósito judicial
+        /// </summary>
+        [XmlEnum("5")]
+        DecisaoComRepercusaoTributariaFGTSPagtoJudicial = 5
     }
 
     #endregion
@@ -13722,6 +13908,53 @@ namespace Unimake.Business.DFe.Servicos
     }
     #endregion MtvDeslig
 
+    #region tpValorProcTrab
+
+    /// <summary>
+    /// tpValorProcTrab - Tipo de valor que influi na apuração do FGTS
+    /// </summary>
+    public enum TipoValorApuracaoFGTS
+    {
+        /// <summary>
+        /// FGTS Origem Processo Trabalhista: 
+        /// quando codCateg = [101, 102, 104, 105, 106, 111, 201, 202, 301, 302, 303, 304, 306, 307, 309, 310, 312, 721] ou 
+        /// ([401, 410], se categOrig for diferente de [103, 107, 108])
+        /// </summary>
+        [XmlEnum("71")]
+        FGTSOrigemProcessoTrabalhista = 71,
+
+        /// <summary>
+        /// FGTS Origem Processo Trabalhista - Aprendiz/Contrato Verde e Amarelo: quando codCateg = [103, 107, 108] ou ([401, 410], 
+        /// se categOrig = [103, 107, 108])
+        /// </summary>
+        [XmlEnum("72")]
+        FGTSOrigemProcessoTrabalhistaAprendizContrato = 72,
+
+        /// <summary>
+        /// FGTS Origem Processo Trabalhista - Indenização compensatória do empregado doméstico: quando codCateg = [104]
+        /// </summary>
+        [XmlEnum("73")]
+        FGTSOrigemProcessoTrabalhistaIndenizacao = 73
+    }
+
+    #endregion tpValorProcTrab
+
+    #region TpDesc - eSocial
+
+    /// <summary>
+    /// Indicativo do tipo de desconto
+    /// </summary>
+    public enum TipoDesconto
+    {
+        /// <summary>
+        /// eConsignado 
+        /// </summary>
+        [XmlEnum("1")]
+        EConsignado = 1,
+    }
+
+    #endregion TpDesc - eSocial
+
     #endregion ESocial
 
     #region NF3e
@@ -13753,28 +13986,6 @@ namespace Unimake.Business.DFe.Servicos
     }
 
     #endregion FinNF3e
-
-    #region TpEmis
-
-    /// <summary>
-    /// Forma de emissão do Documento Fiscal
-    /// </summary>
-    public enum TipoEmissaoNF3e
-    {
-        /// <summary>
-        /// 1 - Normal.
-        /// </summary>
-        [XmlEnum("1")]
-        Normal = 1,
-
-        /// <summary>
-        /// 2 - ContingenciaOffLine.
-        /// </summary>
-        [XmlEnum("2")]
-        ContingenciaOffLine = 2,
-    }
-
-    #endregion TpEmisNF3e
 
     #region TipoAcessante
     /// <summary>
@@ -13851,10 +14062,10 @@ namespace Unimake.Business.DFe.Servicos
         Comercial = 01,
 
         /// <summary>
-        /// 2 - ConsumoPropio.
+        /// 2 - ConsumoProprio.
         /// </summary>
         [XmlEnum("02")]
-        ConsumoPropio = 02,
+        ConsumoProprio = 02,
 
         /// <summary>
         /// 3 - IluminacaoPublica.
@@ -14610,7 +14821,7 @@ namespace Unimake.Business.DFe.Servicos
     /// <summary>
     /// Unidade de Medida
     /// </summary>
-    public enum UMed
+    public enum UnidadeMedidaEnergia
     {
         /// <summary>
         /// 1 = kW (Aplica-se somente a TUSD)
@@ -14718,7 +14929,7 @@ namespace Unimake.Business.DFe.Servicos
     /// <summary>
     /// Indicador da origem da quantidade faturada
     /// </summary>
-    public enum IndOrigemQtd
+    public enum IndicadorOrigemQuantidadeFaturada
     {
         /// <summary>
         /// 1 - Media.
@@ -14764,7 +14975,7 @@ namespace Unimake.Business.DFe.Servicos
     /// <summary>
     /// Tipo de grandeza medida
     /// </summary>
-    public enum TipoGrMedida
+    public enum TipoGrandezaMedida
     {
         /// <summary>
         /// 01 - Demanda.
@@ -14832,7 +15043,7 @@ namespace Unimake.Business.DFe.Servicos
     /// <summary>
     /// classificação Tributária do PIS
     /// </summary>
-    public enum CST
+    public enum CSTPisCofins
     {
         /// <summary>
         /// 01 – Tributável com alíquota básica
@@ -14847,10 +15058,10 @@ namespace Unimake.Business.DFe.Servicos
         AliquotaDiferenciada = 02,
 
         /// <summary>
-        /// 06 – Tributável com alíquota erro
+        /// 06 – Tributável com alíquota zero
         /// </summary>
         [XmlEnum("06")]
-        AliquotaComErro = 06,
+        AliquotaZero = 06,
 
         /// <summary>
         /// 07 – Operação isenta de contribuição
@@ -14883,22 +15094,22 @@ namespace Unimake.Business.DFe.Servicos
     /// <summary>
     /// Tipo de Processo
     /// </summary>
-    public enum TipoProcessoNF3e
+    public enum TipoProcessoNF3eNFCom
     {
         /// <summary>
-        /// 
+        /// 0 - SEFAZ
         /// </summary>
         [XmlEnum("0")]
         SEFAZ = 0,
 
         /// <summary>
-        /// 
+        /// 1 - Justiça federal
         /// </summary>
         [XmlEnum("1")]
         JusticaFederal = 1,
 
         /// <summary>
-        /// 
+        /// 2 - Justiça estadual
         /// </summary>
         [XmlEnum("2")]
         JusticaEstadual = 2
@@ -14906,21 +15117,410 @@ namespace Unimake.Business.DFe.Servicos
     #endregion TpProc
 
     #region TipoLancamento
+
     /// <summary>
-    /// 
+    /// Tipo de lançamento contábil
     /// </summary>
     public enum TipoLancamento
     {
         /// <summary>
-        /// 
+        /// Débito
         /// </summary>
+        [XmlEnum("D")]
         D = 0,
+
         /// <summary>
-        /// 
+        /// Crédito
         /// </summary>
+        [XmlEnum("C")]
         C = 1,
     }
 
     #endregion TipoLancamento
+
+    #region TipoEventoNF3e
+
+    /// <summary>
+    /// Tipo de evento da NF3e
+    /// </summary>
+    public enum TipoEventoNF3e
+    {
+        /// <summary>
+        /// 0 - Evento desconhecido
+        /// </summary>
+        [XmlEnum("0")]
+        Desconhecido = 0,
+
+        /// <summary>
+        /// Evento de cancelamento
+        /// </summary>
+        [XmlEnum("110111")]
+        Cancelamento = 110111,
+    }
+
+    #endregion TipoEventoNF3e
+
     #endregion NF3e
+
+    #region NFCom
+
+    #region FinalidadeNFCom
+
+    /// <summary>
+    /// Finalidade de emissão da NFCom
+    /// </summary>
+    public enum FinalidadeNFCom
+    {
+        /// <summary>
+        /// 0 - NFCom normal
+        /// </summary>
+        [XmlEnum("0")]
+        Normal = 0,
+
+        /// <summary>
+        /// 3 - NFCom de substituição
+        /// </summary>
+        [XmlEnum("3")]
+        Substituicao = 3,
+
+        /// <summary>
+        /// 4 - NFCom de ajuste
+        /// </summary>
+        [XmlEnum("4")]
+        Ajuste = 4,
+    }
+
+    #endregion FinalidadeNFCom
+
+    #region TipoFaturamentoNFCom
+
+    /// <summary>
+    /// Tipo de faturamento da NFCom
+    /// </summary>
+    public enum TipoFaturamentoNFCom
+    {
+        /// <summary>
+        /// 0 - Faturamento normal
+        /// </summary>
+        [XmlEnum("0")]
+        FaturamentoNormal = 0,
+
+        /// <summary>
+        /// 1 - Faturamento centralizado
+        /// </summary>
+        [XmlEnum("1")]
+        FaturamentoCentralizado = 1,
+
+        /// <summary>
+        /// 2 - Cofaturamento
+        /// </summary>
+        [XmlEnum("2")]
+        Cofaturamento = 2
+    }
+
+    #endregion TipoFaturamentoNFCom
+
+    #region IndicativoPrePago
+
+    /// <summary>
+    /// Indicador de serviço pré-pago
+    /// </summary>
+    public enum IndicadorServicoPrePago
+    {
+        /// <summary>
+        /// 1 – Serviço pré-pago (informar a tag somente se a nota for referente a um 
+        /// serviço exclusivamente pré-pago)
+        /// </summary>
+        [XmlEnum("1")]
+        ServicoPrePago = 1
+    }
+
+    #endregion IndicativoPrePago
+
+    #region IndicadorSessaoMeiosDeRede 
+
+    /// <summary>
+    /// Indicador de sessão de meios de rede
+    /// </summary>
+    public enum IndicadorSessaoMeiosDeRede
+    {
+        /// <summary>
+        /// Uma vez informado (valor = 1), essa tag dispensa geração do grupo Fatura.
+        /// Apenas para notas dos tipos Normal e Substituição com tipo de faturamento normal
+        /// </summary>
+        [XmlEnum("1")]
+        IndicadorSessaoMeioDeRede = 1
+    }
+
+    #endregion IndicadorSessaoMeiosDeRede 
+
+    #region IndicadorNotaEntrada
+
+    /// <summary>
+    /// Indicador de nota de entrada
+    /// </summary>
+    public enum IndicadorNotaEntrada
+    {
+        /// <summary>
+        /// 1 – Informar quando for nota de ajuste e possuir itens com CFOP de entrada
+        /// </summary>
+        [XmlEnum("1")]
+        IndicaNotaEntradaAjuste = 1
+    }
+
+    #endregion
+
+    #region TipoAssinante
+
+    /// <summary>
+    /// Tipo de assinante
+    /// </summary>
+    public enum TipoAssinante
+    {
+        /// <summary>
+        /// 1 - Comercial
+        /// </summary>
+        [XmlEnum("1")]
+        Comercial = 1,
+
+        /// <summary>
+        /// 2 - Industrial
+        /// </summary>
+        [XmlEnum("2")]
+        Industrial = 2,
+
+        /// <summary>
+        /// 3 - Residencial/Pessoa Física
+        /// </summary>
+        [XmlEnum("3")]
+        ResidencialPF = 3,
+
+        /// <summary>
+        /// 4 - Produtor rural
+        /// </summary>
+        [XmlEnum("4")]
+        ProdutorRural = 4,
+
+        /// <summary>
+        /// 5 - Órgão da administração pública estadual direta e suas fundações e autarquias, quando mantidas pelo 
+        /// poder público estadual e regidas por normas de direito público, nos termos do Convênio ICMS 107/95
+        /// </summary>
+        [XmlEnum("5")]
+        OrgaoAdministracaoPublicaEstadual = 5,
+
+        /// <summary>
+        /// 6 - Prestador de serviço de telecomunicação responsável pelo recolhimento do imposto incidente sobre a cessão 
+        /// dos meios de rede do prestador do serviço ao usuário final, nos termos do Convênio ICMS 17/13
+        /// </summary>
+        [XmlEnum("6")]
+        PrestadorServicoTelecomunicacao = 6,
+
+        /// <summary>
+        /// 7 - Missões Diplomáticas, Repartições Consulares e Organismos Internacionais, nos termos do Convênio ICMS 158/94
+        /// </summary>
+        [XmlEnum("7")]
+        MissoesDiplomaticas = 7,
+
+        /// <summary>
+        /// 8 - Igrejas e Templos de qualquer natureza
+        /// </summary>
+        [XmlEnum("8")]
+        IgrejasTemplos = 8,
+
+        /// <summary>
+        /// 99 - Outros não especificados anteriormente
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99
+    }
+
+    #endregion TipoAssinante
+
+    #region TipoServicoUtilizado 
+
+    /// <summary>
+    /// Tipo de serviço utilizado
+    /// </summary>
+    public enum TipoServicoUtilizado
+    {
+        /// <summary>
+        /// 1 - Telefonia
+        /// </summary>
+        [XmlEnum("1")]
+        Telefonia = 1,
+
+        /// <summary>
+        /// 2 - Comunicação de dados
+        /// </summary>
+        [XmlEnum("2")]
+        ComunicacaoDados = 2,
+
+        /// <summary>
+        /// 3 - TV por Assinatura
+        /// </summary>
+        [XmlEnum("3")]
+        TVPorAssinatura = 3,
+
+        /// <summary>
+        /// 4 - Provimento de acesso à Internet
+        /// </summary>
+        [XmlEnum("4")]
+        ProvimentoAcessoInternet = 4,
+
+        /// <summary>
+        /// 5 - Multimídia
+        /// </summary>
+        [XmlEnum("5")]
+        Multimidia = 5,
+
+        /// <summary>
+        /// 6 - Outros
+        /// </summary>
+        [XmlEnum("6")]
+        Outros = 6,
+
+        /// <summary>
+        /// 7 - Varios
+        /// </summary>
+        [XmlEnum("7")]
+        Varios = 7
+    }
+
+    #endregion TipoServicoUtilizado 
+
+    #region MotivoSubstituicaoNFCom
+
+    /// <summary>
+    /// Motivo da substituição
+    /// </summary>
+    public enum MotivoSubstituicaoNFCom
+    {
+        /// <summary>
+        /// 01 - Erro de preço
+        /// </summary>
+        [XmlEnum("01")]
+        ErroPreco = 1,
+
+        /// <summary>
+        /// 02 - Erro cadastral
+        /// </summary>
+        [XmlEnum("02")]
+        ErroCadastral = 2,
+
+        /// <summary>
+        /// 03 - Decisão judicial
+        /// </summary>
+        [XmlEnum("03")]
+        DecisaoJudicial = 3,
+
+        /// <summary>
+        /// 04 - Erro de tributação
+        /// </summary>
+        [XmlEnum("04")]
+        ErroTributacao = 4,
+
+        /// <summary>
+        /// 05 - Descontinuidade do serviço
+        /// </summary>
+        [XmlEnum("05")]
+        DescontinuidadeServico = 5
+
+    }
+
+    #endregion MotivoSubstituicaoNFCom
+
+    #region UnidadeBasicaMedida
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum UnidadeBasicaMedida
+    {
+        /// <summary>
+        /// 1 - Minuto
+        /// </summary>
+        [XmlEnum("1")]
+        Minuto = 1,
+
+        /// <summary>
+        /// 2 - MegaBytes
+        /// </summary>
+        [XmlEnum("2")]
+        MB = 2,
+
+        /// <summary>
+        /// 3 - GigaBytes
+        /// </summary>
+        [XmlEnum("3")]
+        GB = 3,
+
+        /// <summary>
+        /// 4 - Unidade
+        /// </summary>
+        [XmlEnum("4")]
+        UN = 4
+    }
+
+    #endregion UnidadeBasicaMedida
+
+    #region IndicadorDevolucao
+
+    /// <summary>
+    /// Indicador de devolução do valor do item
+    /// </summary>
+    public enum IndicadorDevolucao
+    {
+        /// <summary>
+        /// 1 - Devolução do valor do item
+        /// </summary>
+        [XmlEnum("1")]
+        DevolucaoValorItem = 1
+    }
+
+    #endregion IndicadorDevolucao
+
+    #region TipoRessarcimento
+
+    /// <summary>
+    /// Tipo de Ressarcimento
+    /// </summary>
+    public enum TipoRessarcimento
+    {
+        /// <summary>
+        /// 1 - Cobrança indevida
+        /// </summary>
+        [XmlEnum("1")]
+        CobrancaIndevida = 1,
+
+        /// <summary>
+        /// 2 - Interrupção
+        /// </summary>
+        [XmlEnum("2")]
+        Interrupcao = 2,
+
+        /// <summary>
+        /// 99 - Outros
+        /// </summary>
+        [XmlEnum("99")]
+        Outros = 99
+    }
+
+    #endregion TipoRessarcimento
+
+    #region TipoEventoNFCom
+    /// <summary>
+    /// Códigos de tipo de evento da NFCom
+    /// </summary>
+    public enum TipoEventoNFCom
+    {
+        /// <summary>
+        /// 110111 - Cancelamento NFCom
+        /// </summary>
+        [XmlEnum("110111")]
+        Cancelamento = 110111,
+    }
+
+    #endregion TipoEventoNFCom
+
+    #endregion NFCom
 }

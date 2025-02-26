@@ -22,8 +22,11 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtBasesTrab/v_S_01_02_00", IsNullable = false)]
-    public class ESocial5001 : XMLBase
+    public class ESocial5001 : XMLBaseESocial
     {
+        /// <summary>
+        /// Evento Informações das Contribuições Sociais por Trabalhador
+        /// </summary>
         [XmlElement("evtBasesTrab")]
         public EvtBasesTrab EvtBasesTrab { get; set; }
 
@@ -42,11 +45,25 @@ namespace Unimake.Business.DFe.Xml.ESocial
     public class EvtBasesTrab
     {
         /// <summary>
+        /// Versão do schema XML - Utilizado somente em tempo de serialização/desserialização, mas não é gerado no XML. Somente de uso interno da DLL para fazer tratamentos entre versões de schemas.
+        /// </summary>
+        [XmlIgnore]
+        public string VersaoSchema { get; set; } = "S_01_02_00";
+
+        /// <summary>
+        /// Retorna somente o valor inteiro da versão para facilitar comparações
+        /// </summary>
+        private int VersaoSchemaInt => Convert.ToInt32(VersaoSchema.Replace("S_", "").Replace("_", ""));
+
+        /// <summary>
         /// ID
         /// </summary>
         [XmlAttribute(AttributeName = "Id")]
         public string Id { get; set; }
 
+        /// <summary>
+        /// Identificação do evento de retorno
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento5001 IdeEvento { get; set; }
 
@@ -112,6 +129,18 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlElement("infoCp")]
         public InfoCp InfoCp { get; set; }
+
+        /// <summary>
+        /// Informações sobre bases de cálculo do PIS/PASEP
+        /// </summary>
+        [XmlElement("infoPisPasep")]
+        public InfoPisPasep InfoPisPasep { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeInfoPisPasep() => VersaoSchemaInt >= 10300;
+
+        #endregion
     }
 
     /// <summary>
@@ -148,34 +177,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// posterior ao início da obrigatoriedade dos eventos
         /// periódicos para o empregador.
         /// </summary>
-        [XmlIgnore]
-#if INTEROP
-        public DateTime PerApur { get; set; }
-#else
-        public DateTimeOffset PerApur { get; set; }
-#endif
-
-        /// <summary>
-        /// Informar o mês/ano (formato AAAA-MM) de referência
-        /// das informações, se indApuracao for igual a[1], ou apenas
-        /// o ano(formato AAAA), se indApuracao for igual a[2].
-        /// Validação: Deve ser um mês/ano ou ano válido, igual ou
-        /// posterior ao início da obrigatoriedade dos eventos
-        /// periódicos para o empregador.
-        /// </summary>
         [XmlElement("perApur")]
-        public string PerApurField
-        {
-            get => PerApur.ToString("yyyy-MM");
-#if INTEROP
-            set => PerApur = DateTime.Parse(value);
-#else
-            set => PerApur = DateTimeOffset.Parse(value);
-#endif
-        }
+        public string PerApur { get; set; }
     }
-
-    #region IdeTrabalhador
 
     /// <summary>
     /// Identificação do trabalhador.
@@ -244,8 +248,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetProcJudTrabCount => (ProcJudTrab != null ? ProcJudTrab.Count : 0);
 #endif
     }
-
-    #region InfoCompl5001
 
     /// <summary>
     /// Informações complementares do trabalhador e do contrato.
@@ -349,14 +351,39 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações relativas ao trabalho intermitente
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoInterm5001")]
     [ComVisible(true)]
 #endif
-    public class InfoInterm5001 : InfoInterm1200 { }
+    public class InfoInterm5001 : InfoInterm1200
+    {
+        /// <summary>
+        /// Versão do schema XML - Utilizado somente em tempo de serialização/desserialização, mas não é gerado no XML. Somente de uso interno da DLL para fazer tratamentos entre versões de schemas.
+        /// </summary>
+        [XmlIgnore]
+        public string VersaoSchema { get; set; } = "S_01_02_00";
 
-    #region SucessaoVinc5001
+        /// <summary>
+        /// Retorna somente o valor inteiro da versão para facilitar comparações
+        /// </summary>
+        private int VersaoSchemaInt => Convert.ToInt32(VersaoSchema.Replace("S_", "").Replace("_", ""));
+
+        /// <summary>
+        /// Horas trabalhadas no dia pelo empregado com contrato de trabalho intermitente, no formato HHMM.
+        /// </summary>
+        [XmlElement("hrsTrab")]
+        public string HrsTrab { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeMatricAnt() => !string.IsNullOrEmpty(HrsTrab) && VersaoSchemaInt >= 10300;
+
+        #endregion
+    }
 
     /// <summary>
     /// Grupo de informações da sucessão de vínculo trabalhista.
@@ -405,12 +432,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public DateTimeOffset DtAdm { get; set; }
 #endif
 
-        /// <summary>
-        /// Preencher com a data de admissão do trabalhador. No
-        /// caso de transferência do empregado, deve ser preenchida
-        /// a data inicial do vínculo no primeiro empregador(data de
-        /// início do vínculo).
-        /// </summary>
         [XmlElement("dtAdm")]
         public string DtAdmField
         {
@@ -424,11 +445,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         #region ShouldSerialize
         public bool ShouldSerializeMatricAnt() => !string.IsNullOrEmpty(MatricAnt);
+
         #endregion ShouldSerialize
     }
-    #endregion SucessaoVinc5001
-
-    #region InfoComplCont5001
 
     /// <summary>
     /// Grupo preenchido exclusivamente quando o evento de remuneração se referir a 
@@ -485,11 +504,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
 
     }
-    #endregion InfoComplCont5001
-
-    #endregion InfoCompl5001
-
-    #region ProcJudTrab
 
     /// <summary>
     /// Informações sobre processos judiciais do trabalhador com decisão favorável quanto à não incidência ou alterações na incidência de contribuição previdenciária.
@@ -518,10 +532,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlElement("codSusp")]
         public string CodSusp { get; set; }
     }
-    #endregion ProcJudTrab
-    #endregion IdeTrabalhador
-
-    #region InfoCpCalc
 
     /// <summary>
     /// Cálculo da contribuição previdenciária do segurado,
@@ -569,9 +579,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrDescSeg = Converter.ToDouble(value);
         }
     }
-    #endregion  InfoCpCalc
-
-    #region InfoCp
 
     /// <summary>
     /// Cálculo da contribuição previdenciária do segurado,
@@ -636,8 +643,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
-    #region IdeEstabLot5001
-
     /// <summary>
     /// Identificação do estabelecimento ou obra de construção civil e da lotação tributária.
     /// </summary>
@@ -676,6 +681,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlElement("infoCategIncid")]
         public List<InfoCategIncid> InfoCategIncid { get; set; }
+
 #if INTEROP
 
         /// <summary>
@@ -713,9 +719,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetInfoCategIncidCount => (InfoCategIncid != null ? InfoCategIncid.Count : 0);
 #endif
     }
-    #endregion IdeEstabLot5001
-
-    #region InfoCategIncid
 
     /// <summary>
     /// Informações relativas à matrícula e categoria do trabalhador e tipos de incidências.
@@ -896,16 +899,16 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
         #region ShouldSerialize
         public bool ShouldSerializeMatricula() => !string.IsNullOrEmpty(Matricula);
+
 #if INTEROP
         public bool ShouldSerializeIndSimples() => IndSimples != (IndSimples)(-1);
 #else
         public bool ShouldSerializeIndSimples() => IndSimples != null;
 
 #endif
+
         #endregion  ShouldSerialize
     }
-
-    #region InfoBaseCS
 
     /// <summary>
     /// Informações sobre bases de cálculo, descontos e
@@ -952,9 +955,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => Valor = Converter.ToDouble(value);
         }
     }
-    #endregion InfoBaseCS
-
-    #region CalcTerc
 
     /// <summary>
     /// Cálculo das contribuições sociais devidas a Outras Entidades e Fundos.
@@ -1004,9 +1004,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrDescTerc = Converter.ToDouble(value);
         }
     }
-    #endregion CalcTerc
-
-    #region InfoPerRef
 
     /// <summary>
     /// Informações de remuneração por período de referência.
@@ -1141,8 +1138,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
-    #region IdeADC
-
     /// <summary>
     /// Identificação do instrumento ou situação ensejadora da
     /// remuneração relativa a períodos de apuração anteriores.
@@ -1243,7 +1238,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         #region ShouldSerialize
+
         public bool ShouldSerializeDtAcConvField() => DtAcConv > DateTimeOffset.MinValue;
+
 #if INTEROP
         public bool ShouldSerializeRemunSuc() => RemunSuc != (SimNaoLetra)(-1);
 #else
@@ -1252,9 +1249,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         #endregion ShouldSerialize
     }
-    #endregion IdeADC
 
-    #region  DetInfoPerRef
     /// <summary>
     /// Detalhamento das informações de remuneração por
     /// período de referência.Deve ser preenchido com
@@ -1296,11 +1291,211 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrPerRef = Converter.ToDouble(value);
         }
     }
-    #endregion DetInfoPerRef
 
-    #endregion InfoPerRef
+    /// <summary>
+    /// Informações sobre bases de cálculo do PIS/PASEP informadas nos eventos S-1200, S-2299, S-2399 ou S-1202.
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoPisPasep")]
+    [ComVisible(true)]
+#endif
+    public class InfoPisPasep
+    {
+        /// <summary>
+        /// Identificação do estabelecimento ou obra de construção civil.
+        /// </summary>
+        [XmlElement("ideEstab")]
+        public List<IdeEstab5001> IdeEstab { get; set; }
 
-    #endregion InfoCategIncid
+#if INTEROP
 
-    #endregion InfoCp
+        /// <summary>
+        /// Adicionar novo elemento à lista.
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddIdeEstab(IdeEstab5001 item)
+        {
+            if (IdeEstab == null)
+            {
+                IdeEstab = new List<IdeEstab5001>();
+            }
+
+            IdeEstab.Add(item);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista IdeEstab (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista).
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero)).</param>
+        /// <returns>Conteúdo do index passado por parâmetro da IdeEstab.</returns>
+        public IdeEstab5001 GetIdeEstab(int index)
+        {
+            if ((IdeEstab?.Count ?? 0) == 0)
+            {
+                return default;
+            }
+
+            return IdeEstab[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista IdeEstab.
+        /// </summary>
+        public int GetIdeEstabCount => (IdeEstab != null ? IdeEstab.Count : 0);
+#endif
+    }
+
+    /// <summary>
+    /// Identificação do estabelecimento ou obra de construção civil.
+    /// </summary>
+    public class IdeEstab5001
+    {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05.
+        /// </summary>
+        [XmlElement("tpInsc")]
+        public TipoInscricaoEstabelecimento TpInsc { get; set; }
+
+        /// <summary>
+        /// Informar o número de inscrição do contribuinte de acordo com o tipo de inscrição indicado.
+        /// </summary>
+        [XmlElement("nrInsc")]
+        public string NrInsc { get; set; }
+
+        /// <summary>
+        /// Informações relativas à matrícula e categoria do trabalhador.
+        /// </summary>
+        [XmlElement("infoCategPisPasep")]
+        public List<InfoCategPisPasep> InfoCategPisPasep { get; set; }
+
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento à lista.
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddInfoCategPisPasep(InfoCategPisPasep item)
+        {
+            if (InfoCategPisPasep == null)
+            {
+                InfoCategPisPasep = new List<InfoCategPisPasep>();
+            }
+
+            InfoCategPisPasep.Add(item);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista InfoCategPisPasep.
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado.</param>
+        /// <returns>Conteúdo do index passado por parâmetro da InfoCategPisPasep.</returns>
+        public InfoCategPisPasep GetInfoCategPisPasep(int index)
+        {
+            if ((InfoCategPisPasep?.Count ?? 0) == 0)
+            {
+                return default;
+            }
+
+            return InfoCategPisPasep[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista InfoCategPisPasep.
+        /// </summary>
+        public int GetInfoCategPisPasepCount => (InfoCategPisPasep != null ? InfoCategPisPasep.Count : 0);
+#endif
+    }
+
+    /// <summary>
+    /// Informações relativas à matrícula e categoria do trabalhador.
+    /// </summary>
+    public class InfoCategPisPasep
+    {
+        /// <summary>
+        /// Matrícula atribuída ao trabalhador pela empresa.
+        /// </summary>
+        [XmlElement("matricula")]
+        public string Matricula { get; set; }
+
+        /// <summary>
+        /// Preencher com o código da categoria do trabalhador, conforme Tabela 01.
+        /// </summary>
+        [XmlElement("codCateg")]
+        public CodCateg CodCateg { get; set; }
+
+        /// <summary>
+        /// Informações sobre bases de cálculo do PIS/PASEP.
+        /// </summary>
+        [XmlElement("infoBasePisPasep")]
+        public List<InfoBasePisPasep> InfoBasePisPasep { get; set; }
+
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento à lista.
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddInfoBasePisPasep(InfoBasePisPasep item)
+        {
+            if (InfoBasePisPasep == null)
+            {
+                InfoBasePisPasep = new List<InfoBasePisPasep>();
+            }
+
+            InfoBasePisPasep.Add(item);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista InfoBasePisPasep.
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado.</param>
+        /// <returns>Conteúdo do index passado por parâmetro da InfoBasePisPasep.</returns>
+        public InfoBasePisPasep GetInfoBasePisPasep(int index)
+        {
+            if ((InfoBasePisPasep?.Count ?? 0) == 0)
+            {
+                return default;
+            }
+
+            return InfoBasePisPasep[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista InfoBasePisPasep.
+        /// </summary>
+        public int GetInfoBasePisPasepCount => (InfoBasePisPasep != null ? InfoBasePisPasep.Count : 0);
+#endif
+    }
+
+    /// <summary>
+    /// Informações sobre bases de cálculo do PIS/PASEP.
+    /// </summary>
+    public class InfoBasePisPasep
+    {
+        /// <summary>
+        /// Indicativo de 13° salário.
+        /// </summary>
+        [XmlElement("ind13")]
+        public IndicativoDecimoTerceiro Ind13 { get; set; }
+
+        /// <summary>
+        /// Tipo de valor que influi na apuração da contribuição devida.
+        /// </summary>
+        [XmlElement("tpValorPisPasep")]
+        public TipoValorApuracaoContribuicao TpValorPisPasep { get; set; }
+
+        /// <summary>
+        /// Valor da base de cálculo, dedução ou desconto da contribuição social devida ao PIS/PASEP.
+        /// </summary>
+        [XmlIgnore]
+        public double ValorPisPasep { get; set; }
+
+        [XmlElement("valorPisPasep")]
+        public string ValorPisPasepField
+        {
+            get => ValorPisPasep.ToString("F2", CultureInfo.InvariantCulture);
+            set => ValorPisPasep = Converter.ToDouble(value);
+        }
+    }
 }

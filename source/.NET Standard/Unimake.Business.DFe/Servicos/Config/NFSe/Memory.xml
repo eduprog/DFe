@@ -13,13 +13,15 @@
 			<TagLoteAssinatura></TagLoteAssinatura>
 			<TagLoteAtributoID></TagLoteAtributoID>
 			<WebContentType>text/xml; charset=iso-8859-1</WebContentType>
-			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>{xmlBody}</soapenv:Body></soapenv:Envelope>]]></WebSoapString>
+			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:loterpswsdl"><soapenv:Header/><soapenv:Body><urn:tm_lote_rps_service.importarLoteRPS soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><xml xsi:type="xsd:string">{oCDATA}{xmlBodyScapeRetorno}{cCDATA}</xml><codMunicipio xsi:type="xsd:string">{codMunicipio}</codMunicipio><cnpjPrestador xsi:type="xsd:string">{cnpjPrestador}</cnpjPrestador><hashValidador xsi:type="xsd:string">{hashValidador}</hashValidador></urn:tm_lote_rps_service.importarLoteRPS></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>prop:innertext</WebTagRetorno>
 			<WebTagRetornoHomologacao>SOAP-ENV:Body</WebTagRetornoHomologacao>
 			<WebEncodingRetorno>iso-8859-1</WebEncodingRetorno>
 			<WebSoapVersion>soap12</WebSoapVersion>
 			<SchemaVersao>1.00</SchemaVersao>
 			<TargetNS></TargetNS>
+			<UsaCertificadoDigital>false</UsaCertificadoDigital>
+			<TemCDATA>true</TemCDATA>
 		</RecepcionarLoteRps>
 		<ConsultarNfsePorRps versao="1.00">
 			<Descricao>Consulta nota fiscal de serviço por RPS</Descricao>
@@ -33,12 +35,13 @@
 			<TagLoteAssinatura></TagLoteAssinatura>
 			<TagLoteAtributoID></TagLoteAtributoID>
 			<WebContentType>text/xml; charset=iso-8859-1</WebContentType>
-			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>{xmlBody}</soapenv:Body></soapenv:Envelope>]]></WebSoapString>
+			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:loterpswsdl"><soapenv:Header/><soapenv:Body><urn:tm_lote_rps_service.consultarRPS soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><numeroRPS xsi:type="xsd:string">{numeroRPS}</numeroRPS><codMunicipio xsi:type="xsd:string">{codMunicipio}</codMunicipio><cnpjPrestador xsi:type="xsd:string">{cnpjPrestador}</cnpjPrestador><hashValidador xsi:type="xsd:string">{hashValidador}</hashValidador></urn:tm_lote_rps_service.consultarRPS></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>SOAP-ENV:Body</WebTagRetorno>
 			<WebEncodingRetorno>iso-8859-1</WebEncodingRetorno>
 			<WebSoapVersion>soap12</WebSoapVersion>
 			<SchemaVersao>1.00</SchemaVersao>
 			<TargetNS></TargetNS>
+			<UsaCertificadoDigital>false</UsaCertificadoDigital>
 		</ConsultarNfsePorRps>
 		<ConsultarNfse versao="1.00">
 			<Descricao>Consulta nota fiscal de serviço do prestador</Descricao>
@@ -52,12 +55,13 @@
 			<TagLoteAssinatura></TagLoteAssinatura>
 			<TagLoteAtributoID></TagLoteAtributoID>
 			<WebContentType>text/xml; charset=iso-8859-1</WebContentType>
-			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>{xmlBody}</soapenv:Body></soapenv:Envelope>]]></WebSoapString>
+			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:loterpswsdl"><soapenv:Header/><soapenv:Body><urn:tm_lote_rps_service.consultarNFSE soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><numeroNFSE xsi:type="xsd:string">{numeroNFSE}</numeroNFSE><codMunicipio xsi:type="xsd:string">{codMunicipio}</codMunicipio><cnpjPrestador xsi:type="xsd:string">{cnpjPrestador}</cnpjPrestador><hashValidador xsi:type="xsd:string">{hashValidador}</hashValidador></urn:tm_lote_rps_service.consultarNFSE></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>SOAP-ENV:Body</WebTagRetorno>
 			<WebEncodingRetorno>iso-8859-1</WebEncodingRetorno>
 			<WebSoapVersion>soap12</WebSoapVersion>
 			<SchemaVersao>1.00</SchemaVersao>
 			<TargetNS></TargetNS>
+			<UsaCertificadoDigital>false</UsaCertificadoDigital>
 		</ConsultarNfse>
 		<ConsultarLoteRps versao="1.00">
 			<Descricao>Consulta o Lote RPS enviado</Descricao>
@@ -71,12 +75,13 @@
 			<TagLoteAssinatura></TagLoteAssinatura>
 			<TagLoteAtributoID></TagLoteAtributoID>
 			<WebContentType>text/xml; charset=iso-8859-1</WebContentType>
-			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>{xmlBody}</soapenv:Body></soapenv:Envelope>]]></WebSoapString>
+			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:loterpswsdl"><soapenv:Header/><soapenv:Body><urn:tm_lote_rps_service.consultarLoteRPS soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><protocolo xsi:type="xsd:string">{protocolo}</protocolo><codMunicipio xsi:type="xsd:string">{codMunicipio}</codMunicipio><cnpjPrestador xsi:type="xsd:string">{cnpjPrestador}</cnpjPrestador><hashValidador xsi:type="xsd:string">{hashValidador}</hashValidador></urn:tm_lote_rps_service.consultarLoteRPS></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>SOAP-ENV:Body</WebTagRetorno>
 			<WebEncodingRetorno>iso-8859-1</WebEncodingRetorno>
 			<WebSoapVersion>soap12</WebSoapVersion>
 			<SchemaVersao>1.00</SchemaVersao>
 			<TargetNS></TargetNS>
+			<UsaCertificadoDigital>false</UsaCertificadoDigital>
 		</ConsultarLoteRps>
 		<CancelarNfse versao="1.00">
 			<Descricao>Cancelar nota fiscal de serviço</Descricao>
@@ -90,12 +95,13 @@
 			<TagLoteAssinatura></TagLoteAssinatura>
 			<TagLoteAtributoID></TagLoteAtributoID>
 			<WebContentType>text/xml; charset=iso-8859-1</WebContentType>
-			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header/><soapenv:Body>{xmlBody}</soapenv:Body></soapenv:Envelope>]]></WebSoapString>
+			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:loterpswsdl"><soapenv:Header/><soapenv:Body><urn:tm_lote_rps_service.cancelarNFSE soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><numeroNFSE xsi:type="xsd:string">{numeroNFSE}</numeroNFSE><codMunicipio xsi:type="xsd:string">{codMunicipio}</codMunicipio><cnpjPrestador xsi:type="xsd:string">{cnpjPrestador}</cnpjPrestador><hashValidador xsi:type="xsd:string">{hashValidador}</hashValidador></urn:tm_lote_rps_service.cancelarNFSE></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>SOAP-ENV:Body</WebTagRetorno>
 			<WebEncodingRetorno>iso-8859-1</WebEncodingRetorno>
 			<WebSoapVersion>soap12</WebSoapVersion>
 			<SchemaVersao>1.00</SchemaVersao>
 			<TargetNS></TargetNS>
+			<UsaCertificadoDigital>false</UsaCertificadoDigital>
 		</CancelarNfse>
 	</Servicos>
 </Configuracoes>

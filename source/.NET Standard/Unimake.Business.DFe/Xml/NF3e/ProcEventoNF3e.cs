@@ -5,45 +5,93 @@ using System.Runtime.InteropServices;
 # endif
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
+using System.Reflection;
 using Unimake.Business.DFe.Utility;
-using Unimake.Business.DFe.Xml.NFe;
 
 namespace Unimake.Business.DFe.Xml.NF3e
 {
-
+    /// <summary>
+    /// Pedido de Registro de Evento de NF3e processado
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.NFe.ProcEventoNF3e")]
     [ComVisible(true)]
 #endif
-
     [Serializable()]
     [XmlRoot("procEventoNF3e", Namespace = "http://www.portalfiscal.inf.br/nf3e", IsNullable = false)]
     public class ProcEventoNF3e : XMLBase
     {
         #region Public Properties
 
-        [XmlElement("evento", Order = 0, Namespace = "http://www.portalfiscal.inf.br/nf3e")]
-        public Evento Evento { get; set; }
+        /// <summary>
+        /// Versão do evento
+        /// </summary>
+        [XmlAttribute(AttributeName = "versao", DataType = "token")]
+        public string Versao { get; set; }
+
+        /// <summary>
+        /// IP do transmissor do documento fiscal para o ambiente autorizador
+        /// </summary>
+        [XmlAttribute(AttributeName = "ipTransmissor", DataType = "token")]
+        public string IpTransmissor { get; set; }
+
+        /// <summary>
+        /// Porta de origem utilizada na conexão (De 0 a 65535)
+        /// </summary>
+        [XmlAttribute(AttributeName = "nPortaCon", DataType = "token")]
+        public string NPortaCon { get; set; }
+
+        /// <summary>
+        /// Data e Hora da Conexão de Origem
+        /// </summary>
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DhConexao { get; set; }
+#else
+        public DateTimeOffset DhConexao { get; set; }
+#endif
+
+        [XmlAttribute(AttributeName = "dhConexao", DataType = "token")]
+        public string DhConexaoField
+        {
+            get => DhConexao.ToString("yyyy-MM-ddTHH:mm:sszzz");
+#if INTEROP
+            set => DhConexao = DateTime.Parse(value);
+#else
+            set => DhConexao = DateTimeOffset.Parse(value);
+#endif
+        }
+
+        /// <summary>
+        /// Evento da NF3e
+        /// </summary>
+        [XmlElement("eventoNF3e", Order = 0, Namespace = "http://www.portalfiscal.inf.br/nf3e")]
+        public EventoNF3e EventoNF3e { get; set; }
+
+        /// <summary>
+        /// Retorno do evento NF3e
+        /// </summary>
+        [XmlElement("retEventoNF3e", Order = 1, Namespace = "http://www.portalfiscal.inf.br/nf3e")]
+        public RetEventoNF3e RetEventoNF3e { get; set; }
 
         /// <summary>
         /// Nome do arquivo de distribuição
         /// </summary>
         [XmlIgnore]
-        public string NomeArquivoDistribuicao => Evento.InfEvento.ChNF3e + "_" + ((int)Evento.InfEvento.TpEvento).ToString("000000") + "_" + Evento.InfEvento.NSeqEvento.ToString("00") + "-proceventonf3e.xml";
-
-        [XmlElement("retEvento", Order = 1, Namespace = "http://www.portalfiscal.inf.br/nf3e")]
-        public RetEvento RetEvento { get; set; }
-
-        [XmlAttribute(AttributeName = "versao", DataType = "token")]
-        public string Versao { get; set; }
+        public string NomeArquivoDistribuicao => EventoNF3e.InfEvento.ChNF3e + "_" + ((int)EventoNF3e.InfEvento.TpEvento).ToString("000000") + "_" + EventoNF3e.InfEvento.NSeqEvento + "-proceventonf3e.xml";
 
         #endregion Public Properties
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeIpTransmissor() => !string.IsNullOrEmpty(IpTransmissor);
+        public bool ShouldSerializeNPortaCon() => !string.IsNullOrEmpty(NPortaCon);
+        public bool ShouldSerializeDhConexaoField() => DhConexao > DateTime.MinValue;
+
+        #endregion ShouldSerialize
 
         #region Public Methods
 
@@ -53,10 +101,10 @@ namespace Unimake.Business.DFe.Xml.NF3e
 
             var attribute = GetType().GetCustomAttribute<XmlRootAttribute>();
 
-            var xmlElementEvento = (XmlElement)xmlDocument.GetElementsByTagName("evento")[0];
+            var xmlElementEvento = (XmlElement)xmlDocument.GetElementsByTagName("eventoNF3e")[0];
             xmlElementEvento.SetAttribute("xmlns", attribute.Namespace);
 
-            var xmlElementRetEvento = (XmlElement)xmlDocument.GetElementsByTagName("retEvento")[0];
+            var xmlElementRetEvento = (XmlElement)xmlDocument.GetElementsByTagName("retEventoNF3e")[0];
             xmlElementRetEvento.SetAttribute("xmlns", attribute.Namespace);
 
             var xmlElementRetEventoInfEvento = (XmlElement)xmlElementRetEvento.GetElementsByTagName("infEvento")[0];
@@ -67,54 +115,18 @@ namespace Unimake.Business.DFe.Xml.NF3e
 
         public override void ReadXml(XmlDocument document)
         {
-            var nodeListEvento = document.GetElementsByTagName("evento");
+            var nodeListEvento = document.GetElementsByTagName("eventoNF3e");
 
-            if (nodeListEvento != null)
+            if (nodeListEvento.Count > 0)
             {
-                Evento = XMLUtility.Deserializar<Evento>(((XmlElement)nodeListEvento[0]).OuterXml);
-                var nodeListEventoSignature = ((XmlElement)nodeListEvento[0]).GetElementsByTagName("Signature");
-                if (nodeListEventoSignature != null)
-                {
-                    //TODO: Wandrey - Pelo que eu vi a SEFAZ MG corrigiu esta falha, testar consultando a chave 31230507400075000109550090000001901987052951 em homologação, se sim, remover esta parte específica.
-
-                    //SEFAZ MG está retornando o nome da tag signature da seguinte forma <Signature:Signature> e o correto é somente <Signature>
-                    //Até que eles façam a correção, já solicitamos abertura de chamado na SEFAZ MG, vamos manter este código para evitar erro de objeto não reconhecido.
-                    if (Evento.InfEvento.ChNFe.Substring(0, 2) == "31")
-                    {
-                        var nodeListSignature = ((XmlElement)nodeListEvento[0]).GetElementsByTagName("Signature:Signature");
-
-                        if (nodeListSignature.Count > 0)
-                        {
-                            nodeListEventoSignature = ((XmlElement)nodeListEvento[0]).GetElementsByTagName("Signature:Signature");
-
-                            if (nodeListEventoSignature.Count > 0 && (((XmlElement)nodeListEventoSignature[0]).OuterXml.Contains("Signature:Signature")))
-                            {
-                                Evento.Signature = XMLUtility.Deserializar<Signature>(((XmlElement)nodeListEventoSignature[0]).OuterXml.Replace("Signature:Signature", "Signature").Replace("xmlns:Signature=\"http://www.w3.org/2000/09/xmldsig#\"", ""));
-                            }
-                        }
-                        else
-                        {
-                            var signature = ((XmlElement)nodeListEventoSignature[0]).OuterXml;
-
-                            signature = signature.Replace("<Signature xmlns=\"http://www.portalfiscal.inf.br/nfe\">", "<Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\">");
-
-                            Evento.Signature = XMLUtility.Deserializar<Signature>(signature);
-                        }
-                    }
-                    else
-                    {
-                        if (nodeListEventoSignature.Count > 0)
-                        {
-                            Evento.Signature = XMLUtility.Deserializar<Signature>(((XmlElement)nodeListEventoSignature[0]).OuterXml);
-                        }
-                    }
-                }
+                EventoNF3e = XMLUtility.Deserializar<EventoNF3e>(((XmlElement)nodeListEvento[0]).OuterXml);
             }
 
-            var nodeListRetEvento = document.GetElementsByTagName("retEvento");
+            var nodeListRetEvento = document.GetElementsByTagName("retEventoNF3e");
+
             if (nodeListRetEvento.Count > 0)
             {
-                RetEvento = XMLUtility.Deserializar<RetEvento>(((XmlElement)nodeListRetEvento[0]).OuterXml);
+                RetEventoNF3e = XMLUtility.Deserializar<RetEventoNF3e>(((XmlElement)nodeListRetEvento[0]).OuterXml);
             }
         }
 

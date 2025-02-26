@@ -1,4 +1,9 @@
 ﻿#pragma warning disable CS1591
+
+#if INTEROP
+using System.Runtime.InteropServices;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,15 +11,11 @@ using System.Xml;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
-using Unimake.Business.DFe.Xml.NFe;
-#if INTEROP
-using System.Runtime.InteropServices;
-#endif
 
 namespace Unimake.Business.DFe.Xml.ESocial
 {
     /// <summary>
-    ///  Remuneração de Trabalhador vinculado ao Regime Geral de Previdência Social
+    /// S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social
     /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
@@ -23,10 +24,10 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtRemun/v_S_01_02_00", IsNullable = false)]
-    public class ESocial1200 : XMLBase
+    public class ESocial1200 : XMLBaseESocial
     {
         /// <summary>
-        /// Remuneração de Trabalhador vinculado ao Regime Geral de Previdência Social
+        /// Evento Remuneração de Trabalhador vinculado ao RGPS
         /// </summary>
         [XmlElement("evtRemun")]
         public EvtRemun EvtRemun { get; set; }
@@ -51,15 +52,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do evento
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento1200 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
 
+        /// <summary>
+        /// Identificação do trabalhador
+        /// </summary>
         [XmlElement("ideTrabalhador")]
         public IdeTrabalhador IdeTrabalhador { get; set; }
 
+        /// <summary>
+        /// Demonstrativo de valores devidos ao trabalhador
+        /// </summary>
         [XmlElement("dmDev")]
         public List<DmDev> DmDev { get; set; }
 
@@ -139,31 +152,8 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// posterior ao início da obrigatoriedade dos eventos
         /// periódicos para o empregador.
         /// </summary>
-        [XmlIgnore]
-#if INTEROP
-        public DateTime PerApur { get; set; }
-#else        
-        public DateTimeOffset PerApur { get; set; }
-#endif
-
-        /// <summary>
-        /// Informar o mês/ano (formato AAAA-MM) de referência
-        /// das informações, se indApuracao for igual a[1], ou apenas
-        /// o ano(formato AAAA), se indApuracao for igual a[2].
-        /// Validação: Deve ser um mês/ano ou ano válido, igual ou
-        /// posterior ao início da obrigatoriedade dos eventos
-        /// periódicos para o empregador.
-        /// </summary>
         [XmlElement("perApur")]
-        public string PerApurField
-        {
-            get => PerApur.ToString("yyyy-MM");
-#if INTEROP
-            set => PerApur = DateTime.Parse(value);
-#else
-            set => PerApur = DateTimeOffset.Parse(value);
-#endif
-        }
+        public string PerApur { get; set; }
 
         /// <summary>
         /// Indicativo do tipo de guia.
@@ -226,32 +216,19 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public string CpfTrab { get; set; }
 
         /// <summary>
-        /// Grupo preenchido exclusivamente em caso de trabalhador
-        /// que possua outros vínculos/atividades nos quais já tenha
-        /// ocorrido desconto de contribuição previdenciária.
+        /// Informação de múltiplos vínculos
         /// </summary>
         [XmlElement("infoMV")]
         public InfoMV1200 InfoMV { get; set; }
 
         /// <summary>
-        /// Grupo preenchido quando o evento de remuneração se
-        /// referir a trabalhador cuja categoria não está sujeita ao
-        /// evento de admissão ou ao evento TSVE - Início, bem
-        /// como para informar remuneração devida pela empresa
-        /// sucessora a empregado desligado ainda na sucedida.No
-        /// caso das categorias em que o envio do evento TSVE -
-        /// Início for opcional, o preenchimento do grupo somente é
-        /// exigido se não houver o respectivo evento.As
-        /// informações complementares são necessárias para correta
-        /// identificação do trabalhador.
+        /// Informações complementares de identificação do trabalhador
         /// </summary>
         [XmlElement("infoComplem")]
         public InfoComplem InfoComplem { get; set; }
 
         /// <summary>
-        /// Informações sobre a existência de processos judiciais do
-        ///trabalhador com decisão favorável quanto à não
-        ///incidência de contribuições sociais e/ou Imposto de Renda.
+        /// Informações complementares de identificação do trabalhador
         /// </summary>
         [XmlElement("procJudTrab")]
         public List<ProcJudTrab1200> ProcJudTrab { get; set; }
@@ -293,7 +270,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         /// <summary>
-        /// Informações relativas ao trabalho intermitente.
+        /// Informações relativas ao trabalho intermitente
         /// </summary>
         [XmlElement("infoInterm")]
         public List<InfoInterm1200> InfoInterm { get; set; }
@@ -354,11 +331,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public IndMV IndMV { get; set; }
 
         /// <summary>
-        /// Informações relativas ao trabalhador que possui vínculo
-        /// empregatício com outra(s) empresa(s) e/ou que exerce
-        /// outras atividades como contribuinte individual,
-        /// detalhando as empresas que efetuaram(ou efetuarão)
-        /// desconto da contribuição.
+        /// Remuneração recebida pelo trabalhador em outras empresas ou atividades
         /// </summary>
         [XmlElement("remunOutrEmpr")]
         public List<RemunOutrEmpr> RemunOutrEmpr { get; set; }
@@ -525,7 +498,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
 
         /// <summary>
-        /// Grupo de informações da sucessão de vínculo trabalhista.
+        /// Grupo de informações da sucessão de vínculo trabalhista
         /// </summary>
         [XmlElement("sucessaoVinc")]
         public SucessaoVinc1200 SucessaoVinc { get; set; }
@@ -667,7 +640,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// Retornar alerta caso seja informado 0 (zero).
         /// </summary>
         [XmlElement("dia")]
-        public int Dia { get; set; }
+        public string Dia { get; set; }
     }
 
     /// <summary>
@@ -716,39 +689,25 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         /// <summary>
-        /// Informações complementares relativas a Rendimentos Recebidos Acumuladamente - RRA.
+        /// Informações complementares de RRA
         /// </summary>
         [XmlElement("infoRRA")]
         public InfoRRA1200 InfoRRA { get; set; }
 
         /// <summary>
-        /// Informações relativas ao período de apuração.
+        /// Informações relativas ao período de apuração
         /// </summary>
         [XmlElement("infoPerApur")]
         public InfoPerApur InfoPerApur { get; set; }
 
         /// <summary>
-        /// Grupo destinado às informações de:
-        /// a) remuneração relativa a diferenças salariais provenientes
-        /// de acordo coletivo, convenção coletiva e dissídio;
-        /// b) remuneração relativa a diferenças de vencimento
-        /// provenientes de disposições legais;
-        /// c) bases de cálculo para efeitos de apuração de FGTS
-        /// resultantes de conversão de licença saúde em acidente de
-        /// trabalho;
-        /// d) verbas de natureza salarial ou não salarial devidas após
-        /// o desligamento.
-        /// OBS.: As informações previstas acima podem se referir ao
-        /// período de apuração definido em perApur ou a períodos
-        /// anteriores a perApur.
+        /// Informações relativas a períodos anteriores
         /// </summary>
         [XmlElement("infoPerAnt")]
         public InfoPerAnt1200 InfoPerAnt { get; set; }
 
         /// <summary>
-        /// Grupo preenchido exclusivamente quando o evento de remuneração se referir a 
-        /// trabalhador cuja categoria não estiver obrigada ao evento de início de TSVE e se não
-        /// houver evento S-2300 correspondente.
+        /// Informações complementares contratuais do trabalhador
         /// </summary>
         [XmlElement("infoComplCont")]
         public InfoComplCont InfoComplCont { get; set; }
@@ -786,13 +745,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     public class InfoPerApur
     {
         /// <summary>
-        /// Identificação do estabelecimento e da lotação nos quais o
-        /// trabalhador possui remuneração no período de apuração.
-        /// O estabelecimento identificado no grupo pode ser: o
-        /// número do CNPJ do estabelecimento da própria empresa
-        /// (matriz/filial), o número da obra(própria) no CNO, ou o
-        /// número do CAEPF(no caso de pessoa física obrigada a
-        /// inscrição no Cadastro de Atividade Econômica da Pessoa Física).
+        /// Identificação do estabelecimento e lotação
         /// </summary>
         [XmlElement("ideEstabLot")]
         public IdeEstabLot IdeEstabLot { get; set; }
@@ -855,7 +808,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public string QtdDiasAv { get; set; }
 
         /// <summary>
-        /// Remuneração do trabalhador 
+        /// Remuneração do trabalhador
         /// </summary>
         [XmlElement("remunPerApur")]
         public List<RemunPerApur1200> RemunPerApur { get; set; }
@@ -936,7 +889,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         /// <summary>
-        /// Rubricas que compõem a remuneração do trabalhador
+        /// Itens da remuneração do trabalhador
         /// </summary>
         [XmlElement("itensRemun")]
         public List<ItensRemun1200> ItensRemun { get; set; }
@@ -979,7 +932,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         /// <summary>
-        /// Grau de exposição a agentes nocivos 
+        /// Grau de exposição a agentes nocivos
         /// </summary>
         [XmlElement("infoAgNocivo")]
         public InfoAgNocivo1200 InfoAgNocivo { get; set; }
@@ -1004,7 +957,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ProgId("Unimake.Business.DFe.Xml.ESocial.ItensRemun1200")]
     [ComVisible(true)]
 #endif
-    public class ItensRemun1200 : ItensRemun {}
+    public class ItensRemun1200 : ItensRemun { }
 
     /// <summary>
     /// Grau de exposição a agentes nocivos 
@@ -1048,8 +1001,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     public class InfoPerAnt1200
     {
         /// <summary>
-        /// Identificação do instrumento ou situação ensejadora da
-        /// remuneração relativa a períodos de apuração anteriores.
+        /// Instrumento ou situação ensejadora da remuneração em períodos anteriores
         /// </summary>
         [XmlElement("ideADC")]
         public List<IdeADC> IdeADC { get; set; }
@@ -1175,7 +1127,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public SimNaoLetra RemunSuc { get; set; }
 
         /// <summary>
-        ///  Identificação do período ao qual se referem as diferenças de remuneração.
+        /// Identificação do período de referência da remuneração
         /// </summary>
         [XmlElement("idePeriodo")]
         public List<IdePeriodo1200> IdePeriodo1200 { get; set; }
@@ -1243,14 +1195,6 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public DateTimeOffset PerRef { get; set; }
 #endif
 
-        /// <summary>
-        /// Informar o período ao qual se refere o complemento de remuneração, no formato AAAA-MM.
-        /// Validação: Deve ser igual ou anterior ao período de
-        /// apuração informado em perApur.
-        /// Deve ser informado no formato AAAA-MM.
-        /// Se tpAcConv = [H], deve ser anterior ao início do FGTS
-        /// Digital e igual ou posterior a[1994 - 07].
-        /// </summary>
         [XmlElement("perRef")]
         public string PerRefField
         {
@@ -1263,9 +1207,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
 
         /// <summary>
-        /// Identificação do estabelecimento e da lotação ao qual se
-        /// referem as diferenças de remuneração do mês
-        /// identificado no grupo superior.
+        /// Identificação do estabelecimento e lotação
         /// </summary>
         [XmlElement("ideEstabLot")]
         public List<IdeEstabLotAnt> IdeEstabLot { get; set; }
@@ -1317,7 +1259,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEstabLotAnt")]
     [ComVisible(true)]
-#endif    
+#endif
     public class IdeEstabLotAnt
     {
         /// <summary>
@@ -1344,8 +1286,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public string Codlotacao { get; set; }
 
         /// <summary>
-        /// Informações relativas à remuneração do trabalhador em períodos anteriores.
+        /// Informações relativas à remuneração do trabalhador em períodos anteriores
         /// </summary>
+        [XmlElement("remunPerAnt")]
         public List<RemunPerAnt1200> RemunPerAnt { get; set; }
 #if INTEROP
 
@@ -1395,6 +1338,10 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class RemunPerAnt1200
     {
+        /// <summary>
+        /// Matrícula atribuída ao trabalhador pela empresa ou, no caso de servidor público, 
+        /// a matrícula constante no Sistema de Administração de Recursos Humanos do órgão
+        /// </summary>
         [XmlElement("matricula")]
         public string Matricula { get; set; }
 
@@ -1420,7 +1367,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
 
         /// <summary>
-        /// Rubricas que compõem a remuneração do trabalhador.
+        /// Rubricas que compõem a remuneração do trabalhador
         /// </summary>
         [XmlElement("itensRemun")]
         public List<ItensRemun1200> ItensRemun { get; set; }
@@ -1461,11 +1408,10 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         public int GetItensRemunCount => (ItensRemun != null ? ItensRemun.Count : 0);
 #endif
+
         /// <summary>
-        ///  Grupo referente ao detalhamento do grau de exposição
-        /// do trabalhador aos agentes nocivos que ensejam a
-        /// cobrança da contribuição adicional para financiamento
-        /// dos benefícios de aposentadoria especial.
+        /// Grupo referente ao detalhamento do grau de exposição do trabalhador aos agentes nocivos que 
+        /// ensejam a cobrança da contribuição adicional para financiamento dos benefícios de aposentadoria especial
         /// </summary>
         [XmlElement("infoAgNocivo")]
         public InfoAgNocivo1200 InfoAgNocivo { get; set; }
@@ -1492,7 +1438,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoComplCont")]
     [ComVisible(true)]
-#endif    
+#endif
     public class InfoComplCont
     {
         /// <summary>

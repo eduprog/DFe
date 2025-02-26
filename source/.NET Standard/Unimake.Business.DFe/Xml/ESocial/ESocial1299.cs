@@ -19,7 +19,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtFechaEvPer/v_S_01_02_00", IsNullable = false)]
-    public class ESocial1299 : XMLBase
+    public class ESocial1299 : XMLBaseESocial
     {
         /// <summary>
         /// Evento Fechamento dos Eventos Periódicos
@@ -46,12 +46,22 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlAttribute(AttributeName = "Id")]
         public string ID { get; set; }
+
+        /// <summary>
+        /// Informações de identificação do evento
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento1299 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
 
+        /// <summary>
+        /// Informações do fechamento
+        /// </summary>
         [XmlElement("infoFech")]
         public InfoFech InfoFech { get; set; }
     }

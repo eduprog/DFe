@@ -1,15 +1,21 @@
 ﻿#pragma warning disable CS1591
 
+#if INTEROP
+using System.Runtime.InteropServices;
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Xml.ESocial
 {
+    /// <summary>
+    /// S-5011 - Informações das Contribuições Sociais Consolidadas por Contribuinte
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.ESocial5011")]
@@ -17,8 +23,11 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     [Serializable()]
     [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtCS/v_S_01_02_00", IsNullable = false)]
-    public class ESocial5011 : XMLBase
+    public class ESocial5011 : XMLBaseESocial
     {
+        /// <summary>
+        /// Evento Informações das Contribuições Sociais Consolidadas por Contribuinte
+        /// </summary>
         [XmlElement("evtCS")]
         public EvtCS EvtCS { get; set; }
 
@@ -26,6 +35,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public Signature Signature { get; set; }
     }
 
+    /// <summary>
+    /// Evento Informações das Contribuições Sociais Consolidadas por Contribuinte
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.EvtCS")]
@@ -33,19 +45,34 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class EvtCS
     {
+        /// <summary>
+        /// ID
+        /// </summary>
         [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// Identificação do evento de retorno
+        /// </summary>
         [XmlElement("ideEvento")]
         public IdeEvento5011 IdeEvento { get; set; }
 
+        /// <summary>
+        /// Informações de identificação do empregador
+        /// </summary>
         [XmlElement("ideEmpregador")]
         public IdeEmpregador IdeEmpregador { get; set; }
 
+        /// <summary>
+        /// Informações relativas às contribuições sociais devidas à Previdência Social e a Outras Entidades e Fundos
+        /// </summary>
         [XmlElement("infoCS")]
         public InfoCS InfoCS { get; set; }
     }
 
+    /// <summary>
+    /// Identificação do evento de retorno
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEvento5011")]
@@ -53,28 +80,22 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEvento5011
     {
+        /// <summary>
+        /// Indicativo de período de apuração
+        /// </summary>
         [XmlElement("indApuracao")]
         public IndApuracao IndApuracao { get; set; }
 
-        [XmlIgnore]
-#if INTEROP
-        public DateTime PerApur { get; set; }
-#else
-        public DateTimeOffset PerApur { get; set; }
-#endif
-
+        /// <summary>
+        /// Informar o mês/ano (formato AAAA-MM) de referência das informações, se indApuracao for igual a [1], ou apenas o ano (formato AAAA), se indApuracao for igual a [2]
+        /// </summary>
         [XmlElement("perApur")]
-        public string PerApurField
-        {
-            get => PerApur.ToString("yyyy-MM");
-#if INTEROP
-            set => PerApur = DateTime.Parse(value);
-#else
-            set => PerApur = DateTimeOffset.Parse(value);
-#endif
-        }
+        public string PerApur { get; set; }
     }
 
+    /// <summary>
+    /// Informações relativas às contribuições sociais devidas à Previdência Social e a Outras Entidades e Fundos
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCS")]
@@ -82,12 +103,21 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoCS
     {
+        /// <summary>
+        /// Preencher com o número do recibo do arquivo que deu origem ao presente arquivo de retorno ao empregador
+        /// </summary>
         [XmlElement("nrRecArqBase")]
         public string NrRecArqBase { get; set; }
 
+        /// <summary>
+        /// Indicativo de existência de valores de bases e de contribuições sociais
+        /// </summary>
         [XmlElement("indExistInfo")]
         public IndicativoExistenciaTributos IndExistInfo { get; set; }
 
+        /// <summary>
+        /// Informações de contribuição previdenciária do segurado
+        /// </summary>
         [XmlElement("infoCPSeg")]
         public InfoCPSeg InfoCPSeg { get; set; }
 
@@ -134,6 +164,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetIdeEstabCount => (IdeEstab != null ? IdeEstab.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações consolidadas das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, por Código de Receita - CR
+        /// </summary>
         [XmlElement("infoCRContrib")]
         public List<InfoCRContrib5011> InfoCRContrib { get; set; }
 
@@ -175,6 +208,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações de contribuição previdenciária do segurado
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCPSeg")]
@@ -188,6 +224,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrDescCP { get; set; }
+
         [XmlElement("vrDescCP")]
         public string VrDescCPField
         {
@@ -201,6 +238,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCpSeg { get; set; }
+
         [XmlElement("vrCpSeg")]
         public string VrCpSegField
         {
@@ -209,6 +247,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações gerais do contribuinte necessárias à apuração das contribuições sociais
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoContrib")]
@@ -216,13 +257,22 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoContrib
     {
+        /// <summary>
+        /// Preencher com o código correspondente à classificação tributária do contribuinte, conforme Tabela 08
+        /// </summary>
         [XmlElement("classTrib")]
         public ClassificacaoTributaria ClassTrib { get; set; }
 
+        /// <summary>
+        /// Informações complementares, exclusivas da Pessoa Jurídica
+        /// </summary>
         [XmlElement("infoPJ")]
         public InfoPJ InfoPJ { get; set; }
     }
 
+    /// <summary>
+    /// Informações complementares, exclusivas da Pessoa Jurídica
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoPJ")]
@@ -230,6 +280,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoPJ
     {
+        /// <summary>
+        /// Indicativo de cooperativa
+        /// </summary>
         [XmlElement("indCoop")]
 #if INTEROP
         public IndCoop IndCoop { get; set; } = (IndCoop)(-1);
@@ -237,9 +290,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public IndCoop? IndCoop { get; set; }
 #endif
 
+        /// <summary>
+        /// Indicativo de construtora
+        /// </summary>
         [XmlElement("indConstr")]
         public IndConstr IndConstr { get; set; }
 
+        /// <summary>
+        /// Indicativo de substituição da contribuição previdenciária patronal
+        /// </summary>
         [XmlElement("indSubstPatr")]
 #if INTEROP
         public IndSubstPatr IndSubstPatr { get; set; } = (IndSubstPatr)(-1);
@@ -253,6 +312,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double PercRedContrib { get; set; }
+
         [XmlElement("percRedContrib")]
         public string PercRedContribField
         {
@@ -260,17 +320,40 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => PercRedContrib = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Percentual de contribuição social - Lei 11.096/2005
+        /// </summary>
         [XmlElement("percTransf")]
         public string PercTransf { get; set; }
 
+        /// <summary>
+        /// Indicador de tributação sobre a folha de pagamento - PIS e 
+        /// </summary>
         [XmlElement("indTribFolhaPisCofins")]
-        public string IndTribFolhaPisCofins { get; set; }
+        [Obsolete("Propriedade obsoleta, só é aceita na versão 01.02.00 do eSocial. Nas versões superiores ela foi substituída pela propriedade IndTribFolhaPisPasep.", false)]
+#if INTEROP
+        public SimNaoLetra IndTribFolhaPisCofins { get; set; } = (SimNaoLetra)(-1);
+#else
+        public SimNaoLetra? IndTribFolhaPisCofins { get; set; }
+#endif
 
+        /// <summary>
+        /// Indicador de tributação sobre a folha de pagamento - PIS e PASEP. Preenchimento exclusivo para o empregador em situação de tributação de PIS e PASEP sobre a folha de pagamento.
+        /// </summary>
+        [XmlElement("indTribFolhaPisPasep")]
+#if INTEROP
+        public SimNaoLetra IndTribFolhaPisPasep { get; set; } = (SimNaoLetra)(-1);
+#else
+        public SimNaoLetra? IndTribFolhaPisPasep { get; set; }
+#endif
+
+        /// <summary>
+        /// Informações prestadas por empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída e não substituída
+        /// </summary>
         [XmlElement("infoAtConc")]
         public InfoAtConc InfoAtConc { get; set; }
 
         #region ShouldSerialize
-
 
 #if INTEROP
         public bool ShouldSerializeIndCoop() => IndCoop != (IndCoop)(-1);
@@ -288,11 +371,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializePercTransfField() => !string.IsNullOrEmpty(PercTransf);
 
-        public bool ShouldSerializeIndTribFolhaPisCofins() => !string.IsNullOrEmpty(IndTribFolhaPisCofins);
+#if INTEROP
+        public bool ShouldSerializeIndTribFolhaPisCofins() => IndTribFolhaPisCofins != (SimNaoLetra)(-1);
+#else
+        public bool ShouldSerializeIndTribFolhaPisCofins() => IndTribFolhaPisCofins != null;
+#endif
 
-        #endregion
+#if INTEROP
+        public bool ShouldSerializeIndTribFolhaPisPasep() => IndTribFolhaPisPasep != (SimNaoLetra)(-1);
+#else
+        public bool ShouldSerializeIndTribFolhaPisPasep() => IndTribFolhaPisPasep != null;
+#endif
+
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações prestadas por empresa enquadrada no regime de tributação Simples Nacional com tributação previdenciária substituída e não substituída
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoAtConc")]
@@ -309,6 +405,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double FatorMes { get; set; }
+
         [XmlElement("fatorMes")]
         public string FatorMesField
         {
@@ -325,6 +422,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double Fator13 { get; set; }
+
         [XmlElement("fator13")]
         public string Fator13Field
         {
@@ -333,6 +431,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações de identificação do estabelecimento ou obra de construção civil
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeEstab5011")]
@@ -340,15 +441,27 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeEstab5011
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de inscrição, conforme Tabela 05
+        /// </summary>
         [XmlElement("tpInsc")]
         public TiposInscricao TpInsc { get; set; }
 
+        /// <summary>
+        /// Informar o número de inscrição do contribuinte de acordo com o tipo de inscrição indicado no campo ideEstab/tpInsc
+        /// </summary>
         [XmlElement("nrInsc")]
         public string NrInsc { get; set; }
 
+        /// <summary>
+        /// Informações relativas a cada estabelecimento, necessárias à apuração das contribuições sociais
+        /// </summary>
         [XmlElement("infoEstab")]
         public InfoEstab5011 InfoEstab { get; set; }
 
+        /// <summary>
+        /// Identificação da lotação tributária
+        /// </summary>
         [XmlElement("ideLotacao")]
         public List<IdeLotacao5011> IdeLotacao { get; set; }
 
@@ -389,6 +502,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetIdeLotacaoCount => (IdeLotacao != null ? IdeLotacao.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações de bases de cálculo relativas à aquisição de produção rural
+        /// </summary>
         [XmlElement("basesAquis")]
         public List<BasesAquis> BasesAquis { get; set; }
 
@@ -429,6 +545,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetBasesAquisCount => (BasesAquis != null ? BasesAquis.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações de bases de cálculo relativas à comercialização da produção rural da Pessoa Física
+        /// </summary>
         [XmlElement("basesComerc")]
         public List<BasesComerc> BasesComerc { get; set; }
 
@@ -469,8 +588,17 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetBasesComercCount => (BasesComerc != null ? BasesComerc.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, consolidadas por estabelecimento e por Código de Receita - CR.
+        /// </summary>
         [XmlElement("infoCREstab")]
         public List<InfoCREstab> InfoCREstab { get; set; }
+
+        /// <summary>
+        /// Bases da contribuição do PIS/PASEP
+        /// </summary>
+        [XmlElement("basesPisPasep")]
+        public BasesPisPasep BasesPisPasep { get; set; }
 
 #if INTEROP
 
@@ -510,6 +638,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     }
 
+    /// <summary>
+    /// Informações relativas a cada estabelecimento, necessárias à apuração das contribuições sociais
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoEstab5011")]
@@ -517,9 +648,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoEstab5011
     {
+        /// <summary>
+        /// /Preencher com o código CNAE, conforme informado em S-1005
+        /// </summary>
         [XmlElement("cnaePrep")]
         public string CnaePrep { get; set; }
 
+        /// <summary>
+        /// Preencher com o CNPJ responsável pela inscrição no cadastro de obras da RFB
+        /// </summary>
         [XmlElement("cnpjResp")]
         public string CnpjResp { get; set; }
 
@@ -537,6 +674,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double Fap { get; set; }
+
         [XmlElement("fap")]
         public string FapField
         {
@@ -551,6 +689,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double AliqRatAjust { get; set; }
+
         [XmlElement("aliqRatAjust")]
         public string AliqRatAjustField
         {
@@ -558,9 +697,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => AliqRatAjust = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Informações de RAT e FAP de referência, nos casos de processo administrativo ou judicial que altere a(s) alíquota(s)
+        /// </summary>
         [XmlElement("infoEstabRef")]
         public InfoEstabRef InfoEstabRef { get; set; }
 
+        /// <summary>
+        /// Informações complementares relativas a obras de construção civil
+        /// </summary>
         [XmlElement("infoComplObra")]
         public InfoComplObra InfoComplObra { get; set; }
 
@@ -568,13 +713,16 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeCnpjResp() => !string.IsNullOrEmpty(CnpjResp);
 
-        public bool ShouldSerializeFapFIeld() => Fap > 0;
+        public bool ShouldSerializeFapField() => Fap > 0;
 
         public bool ShouldSerializeAliqRatAjustField() => AliqRatAjust > 0;
 
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações de RAT e FAP de referência, nos casos de processo administrativo ou judicial que altere a(s) alíquota(s)
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoEstabRef")]
@@ -589,8 +737,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlElement("aliqRat")]
         public int AliqRat { get; set; }
 
+        /// <summary>
+        /// Fator Acidentário de Prevenção - FAP estabelecido pelo órgão governamental competente
+        /// </summary>
         [XmlIgnore]
         public double Fap { get; set; }
+
         [XmlElement("fap")]
         public string FapField
         {
@@ -604,6 +756,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double AliqRatAjust { get; set; }
+
         [XmlElement("aliqRatAjust")]
         public string AliqRatAjustField
         {
@@ -620,6 +773,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações complementares relativas a obras de construção civil
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoComplObra")]
@@ -627,10 +783,16 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoComplObra
     {
+        /// <summary>
+        /// Indicativo de substituição da contribuição patronal de obra de construção civil
+        /// </summary>
         [XmlElement("indSubstPatrObra")]
         public IndicativoSubstituicaoPatronal IndSubstPatrObra { get; set; }
     }
 
+    /// <summary>
+    /// Identificação da lotação tributária
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.IdeLotacao5011")]
@@ -638,18 +800,33 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class IdeLotacao5011
     {
+        /// <summary>
+        /// Informar o código atribuído pelo empregador para a lotação tributária
+        /// </summary>
         [XmlElement("codLotacao")]
         public string CodLotacao { get; set; }
 
+        /// <summary>
+        /// Preencher com o código relativo ao FPAS
+        /// </summary>
         [XmlElement("fpas")]
         public string Fpas { get; set; }
 
+        /// <summary>
+        /// Preencher com o código de Terceiros, conforme Tabela 04
+        /// </summary>
         [XmlElement("codTercs")]
         public string CodTercs { get; set; }
 
+        /// <summary>
+        /// Informar o código combinado dos Terceiros para os quais o recolhimento está suspenso em virtude de processos judiciais
+        /// </summary>
         [XmlElement("codTercsSusp")]
         public string CodTercsSusp { get; set; }
 
+        /// <summary>
+        /// Informações de suspensão de contribuições destinadas a Outras Entidades e Fundos (Terceiros)
+        /// </summary>
         [XmlElement("infoTercSusp")]
         public List<InfoTercSusp> InfoTercSusp { get; set; }
 
@@ -690,12 +867,22 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetInfoTercSuspCount => (InfoTercSusp != null ? InfoTercSusp.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informação complementar que apresenta identificação do contratante e do proprietário de obra de 
+        /// construção civil contratada sob regime de empreitada parcial ou subempreitada
+        /// </summary>
         [XmlElement("infoEmprParcial")]
         public InfoEmprParcial5011 InfoEmprParcial { get; set; }
 
+        /// <summary>
+        /// Informações relativas ao operador portuário
+        /// </summary>
         [XmlElement("dadosOpPort")]
         public DadosOpPort5011 DadosOpPort { get; set; }
 
+        /// <summary>
+        /// Bases de cálculo da contribuição previdenciária incidente sobre remunerações, por categoria
+        /// </summary>
         [XmlElement("basesRemun")]
         public List<BasesRemun> BasesRemun { get; set; }
 
@@ -736,9 +923,15 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public int GetBasesRemunCount => (BasesRemun != null ? BasesRemun.Count : 0);
 #endif
 
+        /// <summary>
+        /// Informações de bases de cálculo relativas à contratação de trabalhadores avulsos não portuários
+        /// </summary>
         [XmlElement("basesAvNPort")]
         public BasesAvNPort BasesAvNPort { get; set; }
 
+        /// <summary>
+        /// Grupo preenchido exclusivamente pelo Órgão Gestor de Mão de Obra - OGMO
+        /// </summary>
         [XmlElement("infoSubstPatrOpPort")]
         public InfoSubstPatrOpPort5011 InfoSubstPatrOpPort { get; set; }
 
@@ -746,9 +939,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeCodTercsSusp() => !string.IsNullOrEmpty(CodTercsSusp);
 
-        #endregion
+        #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações de suspensão de contribuições destinadas a Outras Entidades e Fundos (Terceiros)
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoTercSusp")]
@@ -756,10 +952,17 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoTercSusp
     {
+        /// <summary>
+        /// Informar o código de Terceiro
+        /// </summary>
         [XmlElement("codTerc")]
         public string CodTerc { get; set; }
     }
 
+    /// <summary>
+    /// Informação complementar que apresenta identificação do contratante e do proprietário de obra de 
+    /// construção civil contratada sob regime de empreitada parcial ou subempreitada
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoEmprParcial5011")]
@@ -767,22 +970,40 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoEmprParcial5011
     {
+        /// <summary>
+        /// Tipo de inscrição do contratante
+        /// </summary>
         [XmlElement("tpInscContrat")]
         public TpInsc TpInscContrat { get; set; }
 
+        /// <summary>
+        /// Número de inscrição (CNPJ/CPF) do contratante
+        /// </summary>
         [XmlElement("nrInscContrat")]
         public string NrInscContrat { get; set; }
 
+        /// <summary>
+        /// Tipo de inscrição do proprietário do CNO
+        /// </summary>
         [XmlElement("tpInscProp")]
         public TpInsc TpInscProp { get; set; }
 
+        /// <summary>
+        /// Preencher com o número de inscrição (CNPJ/CPF) do proprietário do CNO
+        /// </summary>
         [XmlElement("nrInscProp")]
         public string NrInscProp { get; set; }
 
+        /// <summary>
+        /// Número do CNO da obra
+        /// </summary>
         [XmlElement("cnoObra")]
         public string CnoObra { get; set; }
     }
 
+    /// <summary>
+    /// Informações relativas ao operador portuário
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.DadosOpPort5011")]
@@ -790,6 +1011,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class DadosOpPort5011
     {
+        /// <summary>
+        /// Preencher com o CNPJ do operador portuário
+        /// </summary>
         [XmlElement("cnpjOpPortuario")]
         public string CnpjOpPortuario { get; set; }
 
@@ -806,6 +1030,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double Fap { get; set; }
+
         [XmlElement("fap")]
         public string FapField
         {
@@ -820,6 +1045,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double AliqRatAjust { get; set; }
+
         [XmlElement("aliqRatAjust")]
         public string AliqRatAjustField
         {
@@ -828,6 +1054,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Bases de cálculo da contribuição previdenciária incidente sobre remunerações, por categoria
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesRemun")]
@@ -835,16 +1064,34 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class BasesRemun
     {
+        /// <summary>
+        /// Preencher com o código correspondente ao tipo de incidência para fins de apuração da contribuição previdenciária
+        /// </summary>
         [XmlElement("indIncid")]
         public IndIncid IndIncid { get; set; }
 
+        /// <summary>
+        /// Preencher com o código da categoria do trabalhador, conforme definido em S-5001
+        /// </summary>
         [XmlElement("codCateg")]
         public CodCateg CodCateg { get; set; }
 
+        /// <summary>
+        /// Valores correspondentes às bases, contribuições do segurado e deduções da contribuição previdenciária
+        /// </summary>
         [XmlElement("basesCp")]
         public BasesCp BasesCp { get; set; }
+
+        /// <summary>
+        /// Valores correspondentes às remunerações a título de 13º salário incluídas em folha mensal - Empresas desoneradas.
+        /// </summary>
+        [XmlElement("basesCp13")]
+        public BasesCp13 BasesCp13 { get; set; }
     }
 
+    /// <summary>
+    /// Valores correspondentes às bases, contribuições do segurado e deduções da contribuição previdenciária
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesCp")]
@@ -858,6 +1105,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp00 { get; set; }
+
         [XmlElement("vrBcCp00")]
         public string VrBcCp00Field
         {
@@ -873,6 +1121,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp15 { get; set; }
+
         [XmlElement("vrBcCp15")]
         public string VrBcCp15Field
         {
@@ -887,6 +1136,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp20 { get; set; }
+
         [XmlElement("vrBcCp20")]
         public string VrBcCp20FIeld
         {
@@ -901,6 +1151,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp25 { get; set; }
+
         [XmlElement("vrBcCp25")]
         public string VrBcCp25Field
         {
@@ -914,6 +1165,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp00 { get; set; }
+
         [XmlElement("vrSuspBcCp00")]
         public string VrSuspBcCp00Field
         {
@@ -930,6 +1182,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp15 { get; set; }
+
         [XmlElement("vrSuspBcCp15")]
         public string VrSuspBcCp15Field
         {
@@ -946,6 +1199,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp20 { get; set; }
+
         [XmlElement("vrSuspBcCp20")]
         public string VrSuspBcCp20Field
         {
@@ -961,6 +1215,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp25 { get; set; }
+
         [XmlElement("vrSuspBcCp25")]
         public string VrSuspBcCp25Field
         {
@@ -975,6 +1230,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp00VA { get; set; }
+
         [XmlElement("vrBcCp00VA")]
         public string VrBcCp00VAField
         {
@@ -990,6 +1246,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp15VA { get; set; }
+
         [XmlElement("vrBcCp15VA")]
         public string VrBcCp15VAFIeld
         {
@@ -1005,6 +1262,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp20VA { get; set; }
+
         [XmlElement("vrBcCp20VA")]
         public string VrBcCp20VAField
         {
@@ -1020,6 +1278,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp25VA { get; set; }
+
         [XmlElement("vrBcCp25VA")]
         public string VrBcCp25VAField
         {
@@ -1034,6 +1293,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp00VA { get; set; }
+
         [XmlElement("vrSuspBcCp00VA")]
         public string VrSuspBcCp00VAField
         {
@@ -1050,6 +1310,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp15VA { get; set; }
+
         [XmlElement("vrSuspBcCp15VA")]
         public string VrSuspBcCp15VAField
         {
@@ -1066,6 +1327,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp20VA { get; set; }
+
         [XmlElement("vrSuspBcCp20VA")]
         public string VrSuspBcCp20VAFIeld
         {
@@ -1083,6 +1345,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspBcCp25VA { get; set; }
+
         [XmlElement("vrSuspBcCp25VA")]
         public string VrSuspBcCp25VAField
         {
@@ -1096,6 +1359,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrDescSest { get; set; }
+
         [XmlElement("vrDescSest")]
         public string VrDescSestField
         {
@@ -1109,6 +1373,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCalcSest { get; set; }
+
         [XmlElement("vrCalcSest")]
         public string VrCalcSestField
         {
@@ -1136,6 +1401,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCalcSenat { get; set; }
+
         [XmlElement("vrCalcSenat")]
         public string VrCalcSenatField
         {
@@ -1149,6 +1415,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSalFam { get; set; }
+
         [XmlElement("vrSalFam")]
         public string VrSalFamField
         {
@@ -1162,6 +1429,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSalMat { get; set; }
+
         [XmlElement("vrSalMat")]
         public string VrSalMatField
         {
@@ -1177,7 +1445,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         public bool ShouldSerializeVrBcCp20VAField() => VrBcCp20VA > 0;
 
-        public bool ShouldSerializeVrBcCp25VAFIeld() => VrBcCp25VA > 0;
+        public bool ShouldSerializeVrBcCp25VAField() => VrBcCp25VA > 0;
 
         public bool ShouldSerializeVrSuspBcCp00VAField() => VrSuspBcCp00VA > 0;
 
@@ -1190,6 +1458,124 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Valores correspondentes às remunerações a título de 13º salário incluídas em folha mensal - Empresas desoneradas.
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesCp13")]
+    [ComVisible(true)]
+#endif
+    public class BasesCp13
+    {
+        /// <summary>
+        /// Preencher com a base de cálculo da contribuição previdenciária - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcCp00 { get; set; }
+
+        [XmlElement("vrBcCp00")]
+        public string VrBcCp00Field
+        {
+            get => VrBcCp00.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcCp00 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Preencher com a base de cálculo da contribuição adicional para o financiamento dos benefícios de aposentadoria especial após 15 anos de contribuição - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcCp15 { get; set; }
+
+        [XmlElement("vrBcCp15")]
+        public string VrBcCp15Field
+        {
+            get => VrBcCp15.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcCp15 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Preencher com a base de cálculo da contribuição adicional para o financiamento dos benefícios de aposentadoria especial após 20 anos de contribuição - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcCp20 { get; set; }
+
+        [XmlElement("vrBcCp20")]
+        public string VrBcCp20FIeld
+        {
+            get => VrBcCp20.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcCp20 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Preencher com a base de cálculo da contribuição adicional para o financiamento dos benefícios de aposentadoria especial após 25 anos de contribuição - Remuneração a título de 13º salário.        
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcCp25 { get; set; }
+
+        [XmlElement("vrBcCp25")]
+        public string VrBcCp25Field
+        {
+            get => VrBcCp25.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcCp25 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da base de cálculo com incidência suspensa em decorrência de decisão judicial - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrSuspBcCp00 { get; set; }
+
+        [XmlElement("vrSuspBcCp00")]
+        public string VrSuspBcCp00Field
+        {
+            get => VrSuspBcCp00.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrSuspBcCp00 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da base de cálculo da contribuição previdenciária adicional correspondente a exposição a agente nocivo que dá ao trabalhador direito a aposentadoria especial aos 15 anos de trabalho, com incidência suspensa em decorrência de decisão judicial - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrSuspBcCp15 { get; set; }
+
+        [XmlElement("vrSuspBcCp15")]
+        public string VrSuspBcCp15Field
+        {
+            get => VrSuspBcCp15.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrSuspBcCp15 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da base de cálculo da contribuição previdenciária adicional correspondente a exposição a agente nocivo que dá ao trabalhador expectativa de aposentadoria especial aos 20 anos de trabalho, com incidência suspensa em decorrência de decisão judicial - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrSuspBcCp20 { get; set; }
+
+        [XmlElement("vrSuspBcCp20")]
+        public string VrSuspBcCp20Field
+        {
+            get => VrSuspBcCp20.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrSuspBcCp20 = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da base de cálculo da contribuição previdenciária adicional correspondente a exposição a agente nocivo que dá ao trabalhador direito a aposentadoria especial aos 25 anos de trabalho, com incidência suspensa em decorrência de decisão judicial - Remuneração a título de 13º salário.
+        /// </summary>
+        [XmlIgnore]
+        public double VrSuspBcCp25 { get; set; }
+
+        [XmlElement("vrSuspBcCp25")]
+        public string VrSuspBcCp25Field
+        {
+            get => VrSuspBcCp25.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrSuspBcCp25 = Convert.ToDouble(value);
+        }
+    }
+
+    /// <summary>
+    /// Informações de bases de cálculo relativas à contratação de trabalhadores avulsos não portuários
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesAvNPort")]
@@ -1204,6 +1590,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp00 { get; set; }
+
         [XmlElement("vrBcCp00")]
         public string VrBcCp00FIeld
         {
@@ -1219,6 +1606,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp15 { get; set; }
+
         [XmlElement("vrBcCp15")]
         public string VrBcCp15Field
         {
@@ -1233,6 +1621,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp20 { get; set; }
+
         [XmlElement("vrBcCp20")]
         public string VrBcCp20Field
         {
@@ -1247,6 +1636,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp25 { get; set; }
+
         [XmlElement("vrBcCp25")]
         public string VrBcCp25Field
         {
@@ -1261,6 +1651,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcCp13 { get; set; }
+
         [XmlElement("vrBcCp13")]
         public string VrBcCp13Field
         {
@@ -1276,6 +1667,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrDescCP { get; set; }
+
         [XmlElement("vrDescCP")]
         public string VrDescCPField
         {
@@ -1284,6 +1676,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Grupo preenchido exclusivamente pelo Órgão Gestor de Mão de Obra - OGMO
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoSubstPatrOpPort5011")]
@@ -1291,10 +1686,16 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoSubstPatrOpPort5011
     {
+        /// <summary>
+        /// Preencher com o CNPJ do operador portuário
+        /// </summary>
         [XmlElement("cnpjOpPortuario")]
         public string CnpjOpPortuario { get; set; }
     }
 
+    /// <summary>
+    /// Informações de bases de cálculo relativas à aquisição de produção rural
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesAquis")]
@@ -1302,6 +1703,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class BasesAquis
     {
+        /// <summary>
+        /// Indicativo da aquisição
+        /// </summary>
         [XmlElement("indAquis")]
         public IndAquis IndAquis { get; set; }
 
@@ -1311,6 +1715,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VlrAquis { get; set; }
+
         [XmlElement("vlrAquis")]
         public string VlrAquisField
         {
@@ -1325,6 +1730,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCPDescPR { get; set; }
+
         [XmlElement("vrCPDescPR")]
         public string VrCPDescPRField
         {
@@ -1338,6 +1744,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCPNRet { get; set; }
+
         [XmlElement("vrCPNRet")]
         public string VrCPNRetField
         {
@@ -1352,6 +1759,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrRatNRet { get; set; }
+
         [XmlElement("vrRatNRet")]
         public string VrRatNRetField
         {
@@ -1366,6 +1774,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSenarNRet { get; set; }
+
         [XmlElement("vrSenarNRet")]
         public string VrSenarNRetField
         {
@@ -1379,6 +1788,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCPCalcPR { get; set; }
+
         [XmlElement("vrCPCalcPR")]
         public string VrCPCalcPRField
         {
@@ -1394,6 +1804,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrRatDescPR { get; set; }
+
         [XmlElement("vrRatDescPR")]
         public string VrRatDescPRField
         {
@@ -1407,6 +1818,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrRatCalcPR { get; set; }
+
         [XmlElement("vrRatCalcPR")]
         public string VrRatCalcPRField
         {
@@ -1420,6 +1832,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSenarDesc { get; set; }
+
         [XmlElement("vrSenarDesc")]
         public string VrSenarDescField
         {
@@ -1427,8 +1840,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrSenarDesc = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Valor da contribuição destinada ao SENAR, incidente sobre a aquisição de produção rural de produtor rural pessoa física/segurado especial
+        /// </summary>
         [XmlIgnore]
         public double VrSenarCalc { get; set; }
+
         [XmlElement("vrSenarCalc")]
         public string VrSenarCalcField
         {
@@ -1437,6 +1854,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         }
     }
 
+    /// <summary>
+    /// Informações de bases de cálculo relativas à comercialização da produção rural da Pessoa Física
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesComerc")]
@@ -1444,6 +1864,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class BasesComerc
     {
+        /// <summary>
+        /// Indicativo de comercialização
+        /// </summary>
         [XmlElement("indComerc")]
         public IndComerc IndComerc { get; set; }
 
@@ -1456,6 +1879,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrBcComPR { get; set; }
+
         [XmlElement("vrBcComPR")]
         public string VrBcComPRField
         {
@@ -1469,6 +1893,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCPSusp { get; set; }
+
         [XmlElement("vrCPSusp")]
         public string VrCPSuspField
         {
@@ -1482,6 +1907,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrRatSusp { get; set; }
+
         [XmlElement("vrRatSusp")]
         public string VrRatSuspField
         {
@@ -1489,8 +1915,12 @@ namespace Unimake.Business.DFe.Xml.ESocial
             set => VrRatSusp = Converter.ToDouble(value);
         }
 
+        /// <summary>
+        /// Valor da contribuição para o SENAR com exigibilidade suspensa
+        /// </summary>
         [XmlIgnore]
         public double VrSenarSusp { get; set; }
+
         [XmlElement("vrSenarSusp")]
         public string VrSenarSuspField
         {
@@ -1508,6 +1938,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, consolidadas por estabelecimento e por Código de Receita - CR
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCREstab")]
@@ -1515,6 +1948,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoCREstab
     {
+        /// <summary>
+        /// Código de Receita - CR relativo a contribuições sociais devidas à Previdência Social e a Outras Entidades e Fundos (Terceiros), conforme legislação em vigor na competência.
+        /// </summary>
         [XmlElement("tpCR")]
         public TpCR TpCR { get; set; }
 
@@ -1526,6 +1962,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCR { get; set; }
+
         [XmlElement("vrCR")]
         public string VrCRField
         {
@@ -1540,6 +1977,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrSuspCR { get; set; }
+
         [XmlElement("vrSuspCR")]
         public string VrSuspCRField
         {
@@ -1554,6 +1992,9 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #endregion ShouldSerialize
     }
 
+    /// <summary>
+    /// Informações consolidadas das contribuições sociais devidas à Previdência Social e Outras Entidades e Fundos, por Código de Receita - CR
+    /// </summary>
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.ESocial.InfoCRContrib5011")]
@@ -1561,6 +2002,10 @@ namespace Unimake.Business.DFe.Xml.ESocial
 #endif
     public class InfoCRContrib5011
     {
+        /// <summary>
+        /// Código de Receita - CR relativo a contribuições sociais devidas à Previdência Social e a Outras Entidades e Fundos (Terceiros), 
+        /// conforme legislação em vigor na competência
+        /// </summary>
         [XmlElement("tpCR")]
         public TpCR TpCR { get; set; }
 
@@ -1572,6 +2017,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCR { get; set; }
+
         [XmlElement("vrCR")]
         public string VrCRField
         {
@@ -1584,6 +2030,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlIgnore]
         public double VrCRSusp { get; set; }
+
         [XmlElement("vrCRSusp")]
         public string VrSuspCRField
         {
@@ -1593,8 +2040,45 @@ namespace Unimake.Business.DFe.Xml.ESocial
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVrCRSuspFIeld() => VrCRSusp > 0;
+        public bool ShouldSerializeVrCRSuspField() => VrCRSusp > 0;
 
         #endregion ShouldSerialize
+    }
+
+    /// <summary>
+    /// Bases da contribuição do PIS/PASEP
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.ESocial.BasesPisPasep")]
+    [ComVisible(true)]
+#endif
+    public class BasesPisPasep
+    {
+        /// <summary>
+        /// Preencher com a base da contribuição do PIS/PASEP.
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcPisPasep { get; set; }
+
+        [XmlElement("vrBcPisPasep")]
+        public string VrBcPisPasepField
+        {
+            get => VrBcPisPasep.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcPisPasep = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Preencher com a base da contribuição do PIS/PASEP suspensa.
+        /// </summary>
+        [XmlIgnore]
+        public double VrBcPisPasepSusp { get; set; }
+
+        [XmlElement("vrBcPisPasepSusp")]
+        public string VrBcPisPasepSuspField
+        {
+            get => VrBcPisPasepSusp.ToString("F2", CultureInfo.InvariantCulture);
+            set => VrBcPisPasepSusp = Converter.ToDouble(value);
+        }
     }
 }

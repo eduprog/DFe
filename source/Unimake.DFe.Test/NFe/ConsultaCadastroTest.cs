@@ -11,7 +11,7 @@ namespace Unimake.DFe.Test.NFe
     public class ConsultaCadastroTest
     {
         /// <summary>
-        /// Consulta um CNPJ em cada estado somente para saber se a conexão com o webservice está ocorrendo corretamente e se quem está respondendo é o webservice correto.
+        /// Consulta um CNPJ em cada estado somente para saber se a conexão com o web-service está ocorrendo corretamente e se quem está respondendo é o web-service correto.
         /// Efetua uma consulta por estado + ambiente e um CNPJ por estado para garantir que todos estão funcionando.
         /// </summary>
         /// <param name="ufBrasil">UF para onde deve ser enviado a consulta</param>
@@ -29,7 +29,7 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(UFBrasil.ES, "00205696000354")]
         [InlineData(UFBrasil.GO, "36856904000160")]
         //        [InlineData(UFBrasil.MA)]
-        [InlineData(UFBrasil.MT, "18903380000130")]
+        [InlineData(UFBrasil.MT, "41952539000209")]
         [InlineData(UFBrasil.MS, "10656587000145")]
         [InlineData(UFBrasil.MG, "12088403000113")]
         //        [InlineData(UFBrasil.PA)]
