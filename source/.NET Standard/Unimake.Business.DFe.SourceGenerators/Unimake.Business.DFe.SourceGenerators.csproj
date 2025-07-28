@@ -4,9 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <PackageId>Unimake.Business.DFe.SourceGenerators</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
     <Authors>Unimake</Authors>
@@ -16,15 +15,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="tools\install.ps1" Pack="true" PackagePath="tools\install.ps1" />
-    <None Include="tools\uninstall.ps1" Pack="true" PackagePath="tools\uninstall.ps1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Analyzer Include="$(OutputPath)\$(AssemblyName).dll" />
   </ItemGroup>
 
 </Project>
