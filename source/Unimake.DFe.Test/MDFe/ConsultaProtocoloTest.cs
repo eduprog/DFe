@@ -1,4 +1,6 @@
-﻿using Unimake.Business.DFe.Servicos;
+﻿using System;
+using System.Xml;
+using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.MDFe;
 using Unimake.Business.DFe.Xml.MDFe;
 using Xunit;

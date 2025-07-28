@@ -1,6 +1,7 @@
 ﻿using System;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Servicos.NF3e;
+using Unimake.Business.DFe.Xml.ESocial;
 using Unimake.Business.DFe.Xml.NF3e;
 using Xunit;
 
@@ -29,6 +30,7 @@ namespace Unimake.DFe.Test.NF3e
         [InlineData(UFBrasil.ES, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.GO, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.MA, TipoAmbiente.Homologacao)]
+        [InlineData(UFBrasil.MT, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.MG, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PB, TipoAmbiente.Homologacao)]
@@ -54,6 +56,7 @@ namespace Unimake.DFe.Test.NF3e
         [InlineData(UFBrasil.GO, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MA, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MG, TipoAmbiente.Producao)]
+        [InlineData(UFBrasil.MT, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PB, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PR, TipoAmbiente.Producao)]
@@ -130,5 +133,6 @@ namespace Unimake.DFe.Test.NF3e
             }
                 
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtTSVTermino/v_S_01_02_00", IsNullable = false)]
+    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtTSVTermino/v_S_01_03_00", IsNullable = false)]
     public class ESocial2399 : XMLBaseESocial
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// <summary>
         /// ID
         /// </summary>
-        [XmlAttribute(AttributeName = "Id")]
+        [XmlAttribute(AttributeName = "Id", DataType = "token")]
         public string ID { get; set; }
 
         /// <summary>
@@ -205,12 +205,13 @@ namespace Unimake.Business.DFe.Xml.ESocial
         #region ShouldSerialize
 
 #if INTEROP
-        public bool ShouldSerializeMtvDesligTsVField() => MtvDesligTSV != (MtvDesligTSV)(-1);
+        public bool ShouldSerializeMtvDesligTSV() => MtvDesligTSV != (MtvDesligTSV)(-1);
 #else
-        public bool ShouldSerializeMtvDesligTsV() => MtvDesligTSV != null;
+        public bool ShouldSerializeMtvDesligTSV() => MtvDesligTSV != null;
 #endif
+
 #if INTEROP
-        public bool ShouldSerializePensAlimField() => PensAlim != (PensAlim)(-1);
+        public bool ShouldSerializePensAlim() => PensAlim != (PensAlim)(-1);
 #else
         public bool ShouldSerializePensAlim() => PensAlim != null;
 #endif

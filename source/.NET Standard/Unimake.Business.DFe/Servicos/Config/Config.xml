@@ -190,6 +190,12 @@
 		<ArqConfig>Equiplano.xml</ArqConfig>
 		<PadraoNFSe>EQUIPLANO</PadraoNFSe>
 	</Arquivo>
+	<Arquivo ID="9999906">
+		<Nome>FISCO</Nome>
+		<UF>BR</UF>
+		<ArqConfig>FISCO.xml</ArqConfig>
+		<PadraoNFSe>FISCO</PadraoNFSe>
+	</Arquivo>
 	<!-- **** Fim dos padrões com apenas um XML de configuração **** -->
 	<Arquivo ID="3303203">
 		<Nome>Nilópolis - RJ</Nome>
@@ -201,7 +207,7 @@
 		<Nome>Barretos - SP</Nome>
 		<UF>SP</UF>
 		<ArqConfig>BarretosSP.xml</ArqConfig>
-		<PadraoNFSe>SIGCORP</PadraoNFSe>
+		<PadraoNFSe>RLZ_INFORMATICA</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="3305109">
 		<Nome>São João de Meriti - RJ</Nome>
@@ -495,7 +501,7 @@
 		<Nome>Guarantã do Norte - MT</Nome>
 		<UF>MT</UF>
 		<ArqConfig>GuarantaDoNorteMT.xml</ArqConfig>
-		<PadraoNFSe>COPLAN</PadraoNFSe>
+		<PadraoNFSe>AGILI</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="4113700">
 		<Nome>Londrina - PR</Nome>
@@ -615,7 +621,7 @@
 		<Nome>Catanduva - SP</Nome>
 		<UF>SP</UF>
 		<ArqConfig>CatanduvaSP.xml</ArqConfig>
-		<PadraoNFSe>FIORILLI</PadraoNFSe>
+		<PadraoNFSe>RLZ_INFORMATICA</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="1502152">
 		<Nome>Canaã dos Carajás - PA</Nome>
@@ -867,7 +873,7 @@
 		<Nome>Estância Velha - RS</Nome>
 		<UF>RS</UF>
 		<ArqConfig>EstanciaVelhaRS.xml</ArqConfig>
-		<PadraoNFSe>TECNOSISTEMAS</PadraoNFSe>
+		<PadraoNFSe>IPM</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="5211909">
 		<Nome>Jataí - GO</Nome>
@@ -897,7 +903,7 @@
 		<Nome>Guariba - SP</Nome>
 		<UF>SP</UF>
 		<ArqConfig>GuaribaSP.xml</ArqConfig>
-		<PadraoNFSe>NOBESISTEMAS</PadraoNFSe>
+		<PadraoNFSe>PRIMAX</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="4203204">
 		<Nome>Camboriú - SC</Nome>
@@ -1391,12 +1397,6 @@
 		<ArqConfig>SalvadorBA.xml</ArqConfig>
 		<PadraoNFSe>SALVADOR_BA</PadraoNFSe>
 	</Arquivo>
-	<Arquivo ID="2909802">
-		<Nome>Cruz das Almas - BA</Nome>
-		<UF>BA</UF>
-		<ArqConfig>FISCO.xml</ArqConfig>
-		<PadraoNFSe>FISCO</PadraoNFSe>
-	</Arquivo>
 	<Arquivo ID="2917508">
 		<Nome>Jacobina - BA</Nome>
 		<UF>BA</UF>
@@ -1482,7 +1482,7 @@
 		<PadraoNFSe>IPM</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="3516200">
-		<Nome> Franca - SP</Nome>
+		<Nome>Franca - SP</Nome>
 		<UF>SP</UF>
 		<ArqConfig>FrancaSP.xml</ArqConfig>
 		<PadraoNFSe>SMARAPD</PadraoNFSe>
@@ -1587,7 +1587,7 @@
 		<Nome>São Cristóvão - SE</Nome>
 		<UF>SE</UF>
 		<ArqConfig>SaoCristovaoSE.xml</ArqConfig>
-		<PadraoNFSe>WEBISS</PadraoNFSe>		
+		<PadraoNFSe>WEBISS</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="1100049">
 		<Nome>Cacoal - RO</Nome>
@@ -1683,7 +1683,7 @@
 		<Nome>João Pessoa - PB</Nome>
 		<UF>PB</UF>
 		<ArqConfig>JoaoPessoaPB.xml</ArqConfig>
-		<PadraoNFSe>SISPMJP</PadraoNFSe>
+		<PadraoNFSe>DSF</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="2800308">
 		<Nome>Aracaju - SE</Nome>
@@ -1720,5 +1720,623 @@
 		<UF>PI</UF>
 		<ArqConfig>MarcolandiaPI.xml</ArqConfig>
 		<PadraoNFSe>FIORILLI</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3123601">
+		<Nome>Elói Mendes - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>EloiMendesMG.xml</ArqConfig>
+		<PadraoNFSe>BAUHAUS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4202909">
+		<Nome>Brusque - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>BrusqueSC.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3305802">
+		<Nome>Teresópolis - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>TeresopolisRJ.xml</ArqConfig>
+		<PadraoNFSe>WEBISS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4318705">
+		<Nome>São Leopoldo - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>SaoLeopoldoRS.xml</ArqConfig>
+		<PadraoNFSe>THEMA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2932903">
+		<Nome>Valença - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>ValencaBA.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3154606">
+		<Nome>Ribeirão das Neves - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>RibeiraoDasNevesMG.xml</ArqConfig>
+		<PadraoNFSe>QUASAR</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2601102">
+		<Nome>Araripina - PE</Nome>
+		<UF>PE</UF>
+		<ArqConfig>AraripinaPE.xml</ArqConfig>
+		<PadraoNFSe>HM2SOLUCOES</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4302105">
+		<Nome>Bento Gonçalves - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>BentoGoncalvesRS.xml</ArqConfig>
+		<PadraoNFSe>ELOTECH</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3539806">
+		<Nome>Poá - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>PoaSP.xml</ArqConfig>
+		<PadraoNFSe>CONAM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4106902">
+		<Nome>Curitiba - PR</Nome>
+		<UF>PR</UF>
+		<ArqConfig>CuritibaPR.xml</ArqConfig>
+		<PadraoNFSe>EGOVERNE</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3131703">
+		<Nome>Itabira - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>ItabiraMG.xml</ArqConfig>
+		<PadraoNFSe>PRONIM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2105302">
+		<Nome>Imperatriz - MA</Nome>
+		<UF>MA</UF>
+		<ArqConfig>ImperatrizMA.xml</ArqConfig>
+		<PadraoNFSe>PORTAL_FACIL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="1501402">
+		<Nome>Belém - PA</Nome>
+		<UF>PA</UF>
+		<ArqConfig>BelemPA.xml</ArqConfig>
+		<PadraoNFSe>DSF</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4124103">
+		<Nome>Santo Antônio da Platina - PR </Nome>
+		<UF>PR</UF>
+		<ArqConfig>SantoAntonioDaPlatinaPR.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3201506">
+		<Nome>Colatina - ES</Nome>
+		<UF>ES</UF>
+		<ArqConfig>ColatinaES.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3101102">
+		<Nome>Aimorés - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>AimoresMG.xml</ArqConfig>
+		<PadraoNFSe>PORTAL_FACIL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3132909">
+		<Nome>Itamogi - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>ItamogiMG.xml</ArqConfig>
+		<PadraoNFSe>E_RECEITA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3536505">
+		<Nome>Paulínia - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>PauliniaSP.xml</ArqConfig>
+		<PadraoNFSe>GISSONLINE</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4202107">
+		<Nome>Barra Velha - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>BarraVelhaSC.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4104006">
+		<Nome>Campina Grande do Sul - PR</Nome>
+		<UF>PR</UF>
+		<ArqConfig>CampinaGrandeDoSulPR.xml</ArqConfig>
+		<PadraoNFSe>ELOTECH</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5103205">
+		<Nome>Colíder - MT</Nome>
+		<UF>MT</UF>
+		<ArqConfig>ColiderMT.xml</ArqConfig>
+		<PadraoNFSe>COPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3303500">
+		<Nome>Nova Iguaçu - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>NovaIguacuRJ.xml</ArqConfig>
+		<PadraoNFSe>DSF</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2111300">
+		<Nome>São Luís - MA</Nome>
+		<UF>MA</UF>
+		<ArqConfig>SaoLuisMA.xml</ArqConfig>
+		<PadraoNFSe>DSF</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2211001">
+		<Nome>Teresina - PI</Nome>
+		<UF>PI</UF>
+		<ArqConfig>TeresinaPI.xml</ArqConfig>
+		<PadraoNFSe>DSF</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4319901">
+		<Nome>Sapiranga - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>SapirangaRS.xml</ArqConfig>
+		<PadraoNFSe>DBSELLER</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4202008">
+		<Nome>Balneário Camboriú - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>BalnearioCamboriuSC.xml</ArqConfig>
+		<PadraoNFSe>PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4203006">
+		<Nome>Caçador - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>CacadorSC.xml</ArqConfig>
+		<PadraoNFSe>PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4208203">
+		<Nome>Itajaí - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>ItajaiSC.xml</ArqConfig>
+		<PadraoNFSe>PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4210100">
+		<Nome>Mafra - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>MafraSC.xml</ArqConfig>
+		<PadraoNFSe>PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3144805">
+		<Nome>Nova Lima - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>NovaLimaMG.xml</ArqConfig>
+		<PadraoNFSe>ABACO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2901007">
+		<Nome>Amargosa - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>AmargosaBA.xml</ArqConfig>
+		<PadraoNFSe>ADM_SISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4317103">
+		<Nome>Santana do Livramento - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>SantanaDoLivramentoRS.xml</ArqConfig>
+		<PadraoNFSe>DBSELLER</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4321600">
+		<Nome>Tramandaí - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>TramandaiRS.xml</ArqConfig>
+		<PadraoNFSe>DBSELLER</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3143104">
+		<Nome>Monte Carmelo - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>MonteCarmeloMG.xml</ArqConfig>
+		<PadraoNFSe>E_RECEITA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3164704">
+		<Nome>São Sebastião do Paraíso - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>SaoSebastiaoDoParaisoMG.xml</ArqConfig>
+		<PadraoNFSe>E_RECEITA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3136702">
+		<Nome>Juiz de Fora - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>JuizDeForaMG.xml</ArqConfig>
+		<PadraoNFSe>FINTEL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3303609">
+		<Nome>Paracambi - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>ParacambiRJ.xml</ArqConfig>
+		<PadraoNFSe>FINTEL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3526100">
+		<Nome>Juquiá - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>JuquiaSP.xml</ArqConfig>
+		<PadraoNFSe>CECAM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3523503">
+		<Nome>Itatinga - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>ItatingaSP.xml</ArqConfig>
+		<PadraoNFSe>CECAM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4313375">
+		<Nome>Nova Santa Rita - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>NovaSantaRitaRS.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3522307">
+		<Nome>Itapetininga - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>ItapetiningaSP.xml</ArqConfig>
+		<PadraoNFSe>JLSOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4320206">
+		<Nome>Seberi - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>SeberiRS.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2914703">
+		<Nome>Itaberaba - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>ItaberabaBA.xml</ArqConfig>
+		<PadraoNFSe>ADM_SISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2400208">
+		<Nome>Assú - RN</Nome>
+		<UF>RN</UF>
+		<ArqConfig>AssuRN.xml</ArqConfig>
+		<PadraoNFSe>PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2612505">
+		<Nome>Santa Cruz do Capibaribe - PE</Nome>
+		<UF>PE</UF>
+		<ArqConfig>SantaCruzDoCapibaribePE.xml</ArqConfig>
+		<PadraoNFSe>TINUS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3301702">
+		<Nome>Duque de Caxias - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>DuqueDeCaxiasRJ.xml</ArqConfig>
+		<PadraoNFSe>ISSNET</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3162500">
+		<Nome>São João del Rei - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>SaoJoaoDelReiMG.xml</ArqConfig>
+		<PadraoNFSe>SH3</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3172004">
+		<Nome>Visconde do Rio Branco - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>ViscondeDoRioBrancoMG.xml</ArqConfig>
+		<PadraoNFSe>SH3</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3105905">
+		<Nome>Barroso - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>BarrosoMG.xml</ArqConfig>
+		<PadraoNFSe>SH3</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3302502">
+		<Nome>Magé - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>MageRJ.xml</ArqConfig>
+		<PadraoNFSe>MODERNIZACAO_PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3305208">
+		<Nome>São Pedro da Aldeia - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>SaoPedroDaAldeiaRJ.xml</ArqConfig>
+		<PadraoNFSe>MODERNIZACAO_PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2919207">
+		<Nome>Lauro de Freitas - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>LauroDeFreitasBA.xml</ArqConfig>
+		<PadraoNFSe>METROPOLIS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5206503">
+		<Nome>Cromínia - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>CrominiaGO.xml</ArqConfig>
+		<PadraoNFSe>MEGASOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5217708">
+		<Nome>Pontalina - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>PontalinaGO.xml</ArqConfig>
+		<PadraoNFSe>MEGASOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5212600">
+		<Nome>Mairipotaba - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>MairipotabaGO.xml</ArqConfig>
+		<PadraoNFSe>MEGASOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5218391">
+		<Nome>Professor Jamil - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>ProfessorJamilGO.xml</ArqConfig>
+		<PadraoNFSe>MEGASOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5215603">
+		<Nome>Padre Bernardo - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>PadreBernardoGO.xml</ArqConfig>
+		<PadraoNFSe>MEGASOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3537305">
+		<Nome>Penápolis - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>PenapolisSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4319703">
+		<Nome>São Valentim - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>SaoValentimRS.xml</ArqConfig>
+		<PadraoNFSe>SINSOFT</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4306403">
+		<Nome>Dois Irmãos - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>DoisIrmaosRS.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3534401">
+		<Nome>Osasco - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>OsascoSP.xml</ArqConfig>
+		<PadraoNFSe>EGOVERNEISS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4301008">
+		<Nome>Arroio do Meio - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>ArroioDoMeioRS.xml</ArqConfig>
+		<PadraoNFSe>TECNOSISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4306205">
+		<Nome>Cruzeiro do Sul - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>CruzeiroDoSulRS.xml</ArqConfig>
+		<PadraoNFSe>TECNOSISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4320909">
+		<Nome>Tapejara - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>TapejaraRS.xml</ArqConfig>
+		<PadraoNFSe>TECNOSISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="1505502">
+		<Nome>Paragominas - PA</Nome>
+		<UF>PA</UF>
+		<ArqConfig>ParagominasPA.xml</ArqConfig>
+		<PadraoNFSe>DESENVOLVECIDADE</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5201108">
+		<Nome>Anápolis - GO</Nome>
+		<UF>GO</UF>
+		<ArqConfig>AnapolisGO.xml</ArqConfig>
+		<PadraoNFSe>ISSNET</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3524402">
+		<Nome>Jacareí - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>JacareiSP.xml</ArqConfig>
+		<PadraoNFSe>EMBRAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3302403">
+		<Nome>Macaé - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>MacaeRJ.xml</ArqConfig>
+		<PadraoNFSe>TIPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3304003">
+		<Nome>Piraí - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>PiraiRJ.xml</ArqConfig>
+		<PadraoNFSe>TIPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3501608">
+		<Nome>Americana - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>AmericanaSP.xml</ArqConfig>
+		<PadraoNFSe>TIPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3300100">
+		<Nome>Angra dos Reis - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>AngraDosReisRJ.xml</ArqConfig>
+		<PadraoNFSe>TIPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3303302">
+		<Nome>Niterói - RJ</Nome>
+		<UF>RJ</UF>
+		<ArqConfig>NiteroiRJ.xml</ArqConfig>
+		<PadraoNFSe>TIPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3203205">
+		<Nome>Linhares - ES</Nome>
+		<UF>ES</UF>
+		<ArqConfig>LinharesES.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3139409">
+		<Nome>Manhuaçu - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>ManhuacuMG.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3204203">
+		<Nome>Piuma - ES</Nome>
+		<UF>ES</UF>
+		<ArqConfig>PiumaES.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3162708">
+		<Nome>São João do Paraíso - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>SaoJoaoDoParaisoMG.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3168002">
+		<Nome>Taiobeiras - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>TaiobeirasMG.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3205101">
+		<Nome>Viana - ES</Nome>
+		<UF>ES</UF>
+		<ArqConfig>VianaES.xml</ArqConfig>
+		<PadraoNFSe>EL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3557105">
+		<Nome>Votuporanga - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>VotuporangaSP.xml</ArqConfig>
+		<PadraoNFSe>RLZ_INFORMATICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5102504">
+		<Nome>Cáceres - MT</Nome>
+		<UF>MT</UF>
+		<ArqConfig>CaceresMT.xml</ArqConfig>
+		<PadraoNFSe>RLZ_INFORMATICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5107958">
+		<Nome>Tangará da Serra - MT</Nome>
+		<UF>MT</UF>
+		<ArqConfig>TangaraDaSerraMT.xml</ArqConfig>
+		<PadraoNFSe>RLZ_INFORMATICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3520509">
+		<Nome>Indaiatuba - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>IndaiatubaSP.xml</ArqConfig>
+		<PadraoNFSe>INDAIATUBA_SP</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2931350">
+		<Nome>Teixeira de Freitas - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>TeixeiraDeFreitasBA.xml</ArqConfig>
+		<PadraoNFSe>MODERNIZACAO_PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2910727">
+		<Nome>Eunápolis - BA</Nome>
+		<UF>BA</UF>
+		<ArqConfig>EunapolisBA.xml</ArqConfig>
+		<PadraoNFSe>MODERNIZACAO_PUBLICA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="5107305">
+		<Nome>São José do Rio Claro - MT</Nome>
+		<UF>MT</UF>
+		<ArqConfig>SaoJoseDoRioClaroMT.xml</ArqConfig>
+		<PadraoNFSe>COPLAN</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3514403">
+		<Nome>Dracena - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>DracenaSP.xml</ArqConfig>
+		<PadraoNFSe>ISSNET</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2307650">
+		<Nome>Maracanaú - CE</Nome>
+		<UF>CE</UF>
+		<ArqConfig>MaracanauCE.xml</ArqConfig>
+		<PadraoNFSe>INTERSOL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2304285">
+		<Nome>Eusébio - CE</Nome>
+		<UF>CE</UF>
+		<ArqConfig>EusebioCE.xml</ArqConfig>
+		<PadraoNFSe>INTERSOL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2312908">
+		<Nome>Sobral - CE</Nome>
+		<UF>CE</UF>
+		<ArqConfig>SobralCE.xml</ArqConfig>
+		<PadraoNFSe>INTERSOL</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3502804">
+		<Nome>Araçatuba - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>AracatubaSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3527108">
+		<Nome>Lins - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>LinsSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3539301">
+		<Nome>Pirassununga - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>PirassunungaSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3553708">
+		<Nome>Taquaritinga - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>TaquaritingaSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3557006">
+		<Nome>Votorantim - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>VotorantimSP.xml</ArqConfig>
+		<PadraoNFSe>ISSONLINE_ASSESSORPUBLICO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4204608">
+		<Nome>Criciúma - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>CriciumaSC.xml</ArqConfig>
+		<PadraoNFSe>BETHA</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3148004">
+		<Nome>Patos de Minas - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>PatosDeMinasMG.xml</ArqConfig>
+		<PadraoNFSe>PUBLICENTER</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4108304">
+		<Nome>Foz do Iguaçu - PR</Nome>
+		<UF>PR</UF>
+		<ArqConfig>FozDoIguacuPR.xml</ArqConfig>
+		<PadraoNFSe>LEXSOM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3528809">
+		<Nome>Maracaí - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>MaracaiSP.xml</ArqConfig>
+		<PadraoNFSe>FIORILLI</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3101508">
+		<Nome>Além Paraíba - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>AlemParaibaMG.xml</ArqConfig>
+		<PadraoNFSe>PORTAL_FACIL</PadraoNFSe>
+	</Arquivo>3
+	<Arquivo ID="3515004">
+		<Nome>Embu das Artes - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>EmbuDasArtesSP.xml</ArqConfig>
+		<PadraoNFSe>GIAP</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3549102">
+		<Nome>São João da Boa Vista - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>SaoJoaoDaBoaVistaSP.xml</ArqConfig>
+		<PadraoNFSe>GIAP</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2607208">
+		<Nome>Ipojuca - PE</Nome>
+		<UF>PE</UF>
+		<ArqConfig>IpojucaPE.xml</ArqConfig>
+		<PadraoNFSe>TINUS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3156700">
+		<Nome>Sabará - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>SabaraMG.xml</ArqConfig>
+		<PadraoNFSe>SUPERNOVA</PadraoNFSe>
 	</Arquivo>
 </Configuracoes>

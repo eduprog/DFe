@@ -23,7 +23,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtRemun/v_S_01_02_00", IsNullable = false)]
+    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtRemun/v_S_01_03_00", IsNullable = false)]
     public class ESocial1200 : XMLBaseESocial
     {
         /// <summary>
@@ -641,6 +641,24 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// </summary>
         [XmlElement("dia")]
         public string Dia { get; set; }
+
+        /// <summary>
+        /// Horas trabalhadas no dia pelo empregado com contrato de trabalho intermitente, no formato HHMM.
+        /// Validação: Preechimento obrigatório e exclusiv se classTrib em S-1000 = [22]
+        /// Se preenchida, deve estar no intervalo entre [0000] e [2359], criticando inclusive a segunda parte 
+        /// do número, que indica os minutos, que deve ser menor ou igual a 59.
+        /// </summary>
+        [XmlElement("hrsTrab")]
+        public string HrsTrab { get; set; }
+
+
+        #region ShouldSreializa
+
+        public bool ShouldSerializeHrsTrab() => !string.IsNullOrEmpty(HrsTrab);
+
+        #endregion
+
+
     }
 
     /// <summary>
@@ -748,7 +766,43 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// Identificação do estabelecimento e lotação
         /// </summary>
         [XmlElement("ideEstabLot")]
-        public IdeEstabLot IdeEstabLot { get; set; }
+        public List<IdeEstabLot> IdeEstabLot { get; set; }
+#if INTEROP
+
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddIdeEstabLot(IdeEstabLot item)
+        {
+            if (IdeEstabLot == null)
+            {
+                IdeEstabLot = new List<IdeEstabLot>();
+            }
+
+            IdeEstabLot.Add(item);
+        }
+
+        /// <summary>
+        /// Retorna o elemento da lista IdeEstabLot (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado (Começa com 0 (zero))</param>
+        /// <returns>Conteúdo do index passado por parâmetro da IdeEstabLot</returns>
+        public IdeEstabLot GetIdeEstabLot(int index)
+        {
+            if ((IdeEstabLot?.Count ?? 0) == 0)
+            {
+                return default;
+            };
+
+            return IdeEstabLot[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista IdeEstabLot
+        /// </summary>
+        public int GetIdeEstabLotCount => (IdeEstabLot != null ? IdeEstabLot.Count : 0);
+#endif
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtBasesFGTS/v_S_01_02_00", IsNullable = false)]
+    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtBasesFGTS/v_S_01_03_00", IsNullable = false)]
 
     public class ESocial5003 : XMLBaseESocial
     {
@@ -145,7 +145,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         [XmlElement("dtVenc")]
         public string DtVencField
         {
-            get => DtVenc.ToString("yyyy-MM");
+            get => DtVenc.ToString("yyyy-MM-dd");
 #if INTEROP
             set => DtVenc = DateTime.Parse(value);
 #else

@@ -1,11 +1,11 @@
 object frmPrincipal: TfrmPrincipal
-  Left = 955
+  Left = 5098
   Height = 656
-  Top = 203
-  Width = 1233
+  Top = 472
+  Width = 1234
   Caption = 'Como utilizar a DLL Unimake.DFe para envio de NFe, NFCe, CTe, etc.'
   ClientHeight = 656
-  ClientWidth = 1233
+  ClientWidth = 1234
   DesignTimePPI = 144
   OnCreate = FormCreate
   LCLVersion = '2.2.6.0'
@@ -13,10 +13,10 @@ object frmPrincipal: TfrmPrincipal
     Left = 12
     Height = 624
     Top = 12
-    Width = 357
+    Width = 358
     Caption = 'NF-e'
     ClientHeight = 594
-    ClientWidth = 353
+    ClientWidth = 354
     TabOrder = 0
     OnClick = GroupBox1Click
     object btnConsultaStatusNFe: TButton
@@ -45,6 +45,60 @@ object frmPrincipal: TfrmPrincipal
       Caption = 'Enviar NFe Síncrono c/Desserialização'
       OnClick = btnEnviarNFeSincronoDesserializacaoClick
       TabOrder = 2
+    end
+    object btnEnviarNFeSincronoDuplicidade: TButton
+      Left = 12
+      Height = 38
+      Top = 144
+      Width = 324
+      Caption = 'Enviar NFe Síncrono - Duplicidade'
+      OnClick = btnEnviarNFeSincronoDuplicidadeClick
+      TabOrder = 3
+    end
+    object btnConsultarSituacaoNFe: TButton
+      Left = 12
+      Height = 38
+      Top = 191
+      Width = 324
+      Caption = 'Consulta Situação da NFe'
+      OnClick = btnConsultarSituacaoNFeClick
+      TabOrder = 4
+    end
+    object btnEventoCancelamentoNFe: TButton
+      Left = 12
+      Height = 38
+      Top = 240
+      Width = 324
+      Caption = 'Enviar o Evento de Cancelamento'
+      OnClick = btnEventoCancelamentoNFeClick
+      TabOrder = 5
+    end
+    object btnImprimirDANFEcomUniDANFE: TButton
+      Left = 8
+      Height = 38
+      Top = 288
+      Width = 328
+      Caption = 'Imprimir DANFE com UniDANFE'
+      OnClick = btnImprimirDANFEcomUniDANFEClick
+      TabOrder = 6
+    end
+    object btnConsultarDistribuicaoDFe: TToggleBox
+      Left = 12
+      Height = 37
+      Top = 334
+      Width = 324
+      Caption = 'Consultar Distribuição DFe'
+      OnChange = btnConsultarDistribuicaoDFeChange
+      TabOrder = 7
+    end
+    object btnEnviarEventoManifestacaoNFe: TToggleBox
+      Left = 12
+      Height = 37
+      Top = 374
+      Width = 324
+      Caption = 'Enviar Evento de Manifestação da NFe'
+      OnChange = btnEnviarEventoManifestacaoNFeChange
+      TabOrder = 8
     end
   end
 end

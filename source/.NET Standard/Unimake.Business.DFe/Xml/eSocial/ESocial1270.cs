@@ -19,7 +19,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtContratAvNP/v_S_01_02_00", IsNullable = false)]
+    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtContratAvNP/v_S_01_03_00", IsNullable = false)]
     public class ESocial1270 : XMLBaseESocial
     {
         /// <summary>
@@ -64,7 +64,42 @@ namespace Unimake.Business.DFe.Xml.ESocial
         /// Remuneração dos trabalhadores avulsos não portuários
         /// </summary>
         [XmlElement("remunAvNP")]
-        public RemunAvNP RemunAvNP { get; set; }
+        public List<RemunAvNP> RemunAvNP { get; set; }
+
+#if INTEROP
+        /// <summary>
+        /// Adicionar novo elemento a lista
+        /// </summary>
+        /// <param name="item">Elemento</param>
+        public void AddRemunAvNP(RemunAvNP item)
+        {
+            if (RemunAvNP == null)
+            {
+                RemunAvNP = new List<RemunAvNP>();
+            }
+            RemunAvNP.Add(item);
+        }
+
+        ///<summary>
+        /// Retorna o elemento da lista RemunAvNP (Utilizado para linguagens diferentes do CSharp que não conseguem pegar o conteúdo da lista)
+        /// </summary>
+        /// <param name="index">Índice da lista a ser retornado</param>
+        /// <returns>Conteúdo do index passado por parâmetro da RemunAvNP</returns>
+        public RemunAvNP GetRemunAvNP(int index)
+        {
+            if ((RemunAvNP?.Count ?? 0) == 0)
+            {
+                return default;
+            }
+            ;
+            return RemunAvNP[index];
+        }
+
+        /// <summary>
+        /// Retorna a quantidade de elementos existentes na lista 
+        /// </summary>
+        public int GetRemunAvNPCount => (RemunAvNP != null ? RemunAvNP.Count : 0);
+#endif
     }
 
     /// <summary>
@@ -183,7 +218,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public double VrBcFgts { get; set; }
 
         [XmlElement("vrBcFgts")]
-        public string VrBcFgtsFIeld
+        public string VrBcFgtsField
         {
             get => VrBcFgts.ToString("F2", CultureInfo.InvariantCulture);
             set => VrBcFgts = Converter.ToDouble(value);

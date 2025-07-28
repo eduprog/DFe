@@ -19,6 +19,7 @@ namespace Unimake.DFe.Test.NFe
         [Trait("DFe", "NFe"), Trait("DFe", "NFCe")]
         [InlineData(@"..\..\..\NFe\Resources\enviNFe.xml")]
         [InlineData(@"..\..\..\NFe\Resources\enviNFe2.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envNFeReformaTributaria.xml")]
         public void SerializacaoDesserializacaoEnviNFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -35,7 +36,9 @@ namespace Unimake.DFe.Test.NFe
                 CertificadoDigital = PropConfig.CertificadoDigital
             };
 
-            Assert.True(doc.InnerText == xml.GerarXML().InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            var docGerado = xml.GerarXML();
+
+            Assert.True(doc.InnerText == docGerado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
         /// <summary>
@@ -58,10 +61,10 @@ namespace Unimake.DFe.Test.NFe
             {
                 IdLote = "000000000000001",
                 Versao = "4.00",
-                NFe = new System.Collections.Generic.List<Business.DFe.Xml.NFe.NFe>
-            {
-                XMLUtility.Deserializar<Business.DFe.Xml.NFe.NFe>(doc.OuterXml)
-            }
+                NFe =
+                [
+                    XMLUtility.Deserializar<Business.DFe.Xml.NFe.NFe>(doc.OuterXml)
+                ]
             };
 
             var configuracao = new Configuracao

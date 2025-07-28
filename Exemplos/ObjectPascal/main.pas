@@ -6,7 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComObj,
-  ConsultarStatusNFe, EnviarNFeSincrono, EnviarNFeSincronoDesserializacao;
+  ConsultarStatusNFe, EnviarNFeSincrono, EnviarNFeSincronoDuplicidade,
+  EnviarNFeSincronoDesserializacao, ConsultarSituacaoNFe, EventoCancelamentoNFe,
+  ImprimirDANFEcomUniDANFE, ConsultarDistribuicaoDFe, EnviarEventoManifestacaoNFe, EnviarNFCeSincrono;
 
 type
 
@@ -14,14 +16,30 @@ type
 
   TfrmPrincipal = class(TForm)
     btnConsultaStatusNFe: TButton;
+    btnEnviarNFCeSincrono: TButton;
     btnEnviarNFeSincrono: TButton;
     btnEnviarNFeSincronoDesserializacao: TButton;
+    btnEnviarNFeSincronoDuplicidade: TButton;
+    btnConsultarSituacaoNFe: TButton;
+    btnEventoCancelamentoNFe: TButton;
+    btnImprimirDANFEcomUniDANFE: TButton;
     GroupBox1: TGroupBox;
+    btnConsultarDistribuicaoDFe: TToggleBox;
+    btnEnviarEventoManifestacaoNFe: TToggleBox;
+    GroupBox2: TGroupBox;
+    procedure btnConsultarDistribuicaoDFeChange(Sender: TObject);
+    procedure btnConsultarSituacaoNFeClick(Sender: TObject);
     procedure btnConsultaStatusNFeClick(Sender: TObject);
+    procedure btnEnviarEventoManifestacaoNFeChange(Sender: TObject);
+    procedure btnEnviarNFCeSincronoClick(Sender: TObject);
     procedure btnEnviarNFeSincronoClick(Sender: TObject);
     procedure btnEnviarNFeSincronoDesserializacaoClick(Sender: TObject);
+    procedure btnEnviarNFeSincronoDuplicidadeClick(Sender: TObject);
+    procedure btnEventoCancelamentoNFeClick(Sender: TObject);
+    procedure btnImprimirDANFEcomUniDANFEClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure GroupBox1Click(Sender: TObject);
+
   private
 
   public
@@ -40,6 +58,47 @@ implementation
 procedure TfrmPrincipal.btnConsultaStatusNFeClick(Sender: TObject);
 var
   oServico: TConsultarStatusNFe;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnEnviarEventoManifestacaoNFeChange(Sender: TObject);
+var
+  oServico: TEnviarEventoManifestacaoNFe;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnEnviarNFCeSincronoClick(Sender: TObject);
+var
+  oServico: TEnviarNFCeSincrono;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+
+procedure TfrmPrincipal.btnConsultarSituacaoNFeClick(Sender: TObject);
+var
+  oServico: TConsultarSituacaoNFe;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnConsultarDistribuicaoDFeChange(Sender: TObject);
+var
+  oServico: TConsultarDistribuicaoDFe;
 begin
   try
     oServico.Executar();
@@ -67,6 +126,33 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.btnEnviarNFeSincronoDuplicidadeClick(Sender: TObject);
+var
+  oServico: TEnviarNFeSincronoDuplicidade;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnEventoCancelamentoNFeClick(Sender: TObject);
+var
+  oServico: TEventoCancelamentoNFe;
+begin
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnImprimirDANFEcomUniDANFEClick(Sender: TObject);
+var
+  oServico: TImprimirDANFEcomUniDANFE;
+begin
+  oServico.Executar();
+end;
+
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
 
@@ -76,5 +162,6 @@ procedure TfrmPrincipal.GroupBox1Click(Sender: TObject);
 begin
 
 end;
+
 
 end.

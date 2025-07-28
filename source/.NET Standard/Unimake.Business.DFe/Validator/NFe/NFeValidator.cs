@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
@@ -683,6 +685,140 @@ namespace Unimake.Business.DFe.Validator.NFe
                 {
                     ThrowHelper.Instance.Throw(new ValidatorDFeException("O conteúdo da tag <CNPJ> das pessoas autorizadas a acessar o XML não é válido. Conteúdo informado: " + Tag.Value + "." +
                         " [TAG: <CNPJ> do grupo de tag <NFe><infNFe><autXML>]"));
+                }
+            }).ValidateTag(element => element.NameEquals(nameof(Ide.CNF)) && element.Parent.NameEquals(nameof(Ide)), Tag =>
+            {
+                var cNF = Tag.Value;
+                var nNF = Tag.Parent.GetValue("nNF");
+
+                if (int.TryParse(cNF, out var cNFInt) && int.TryParse(nNF, out var nNFInt))
+                {
+                    if (cNFInt == nNFInt)
+                    {
+                        ThrowHelper.Instance.Throw(new ValidatorDFeException(
+                            $"O código numérico <cNF> está igual ao número da nota fiscal <nNF>. Valor informado: {cNF}. " +
+                            "Evite usar o mesmo valor em ambas as tags, pois isso facilita a dedução da chave de acesso da NFe e pode permitir fraudes. " +
+                            "[TAGs: <cNF> e <nNF> do grupo de tag <NFe><infNFe><ide>]"));
+                    }
+                }
+            }).ValidateTag(element => element.NameEquals(nameof(Ide.DhSaiEnt)) && element.Parent.NameEquals(nameof(Ide)), Tag =>
+            {
+                var mod = Tag.Parent.GetValue("mod");
+
+                if (mod == "65")
+                {
+                    ThrowHelper.Instance.Throw(new ValidatorDFeException(
+                        $"A data de entrada/saída, tag <dhSaiEnt>, não deve ser informada quando o modelo do documento fiscal, tag <mod>, for 65 (NFC-e). " +
+                        $"[TAG: <dhSaiEnt> do grupo de tag <NFe><infNFe><ide>]"));
+                }
+
+                var dhSaiEntStr = Tag.Value;
+                var dhEmiStr = Tag.Parent.GetValue("dhEmi");
+
+                if (!string.IsNullOrWhiteSpace(dhSaiEntStr) && !string.IsNullOrWhiteSpace(dhEmiStr))
+                {
+                    if (DateTime.TryParse(dhSaiEntStr, out var dhSaiEnt) && DateTime.TryParse(dhEmiStr, out var dhEmi))
+                    {
+                        var dhSaiEntTrunc = new DateTime(dhSaiEnt.Year, dhSaiEnt.Month, dhSaiEnt.Day, dhSaiEnt.Hour, 0, 0);
+                        var dhEmiTrunc = new DateTime(dhEmi.Year, dhEmi.Month, dhEmi.Day, dhEmi.Hour, 0, 0);
+
+                        if (dhSaiEntTrunc < dhEmiTrunc)
+                        {
+                            ThrowHelper.Instance.Throw(new ValidatorDFeException(
+                                $"A data/hora de saída/entrada <dhSaiEnt> não pode ser anterior à data/hora de emissão <dhEmi>. " +
+                                $"Valores informados: dhEmi = {dhEmi:O}, dhSaiEnt = {dhSaiEnt:O}. " +
+                                $"[TAGs: <dhEmi> e <dhSaiEnt> do grupo de tag <NFe><infNFe><ide>]"));
+                        }
+                    }
+                    else
+                    {
+                        ThrowHelper.Instance.Throw(new ValidatorDFeException(
+                            $"Erro ao interpretar as datas das tags <dhEmi> ou <dhSaiEnt>. Verifique se os valores estão em um formato de data/hora válido conforme o padrão ISO 8601. " +
+                            $"Valores encontrados: dhEmi = '{dhEmiStr}', dhSaiEnt = '{dhSaiEntStr}'"));
+                    }
+                }
+            }).ValidateTag(element => element.NameEquals(nameof(Prod.CFOP)) && element.Parent.NameEquals(nameof(Prod)), Tag =>
+            {
+                var finNFe = Tag.Parent.Parent.Parent.GetValue("finNFe");
+                var tpNF = Tag.Parent.Parent.Parent.GetValue("tpNF");
+
+                var emitUF = Tag.Document?.Descendants().FirstOrDefault(e => e.NameEquals(nameof(EnderEmit)))?.GetValue(nameof(EnderEmit.UF));
+                var destUF = Tag.Document?.Descendants().FirstOrDefault(e => e.NameEquals(nameof(EnderDest)))?.GetValue(nameof(EnderDest.UF));
+
+                var cfop = Tag.Value.Trim();
+                var cProd = Tag.Parent?.Parent?.GetValue("cProd");
+                var xProd = Tag.Parent?.Parent?.GetValue("xProd");
+                var nItem = Tag.Parent?.Parent?.GetAttributeValue("nItem");
+
+                if (finNFe == "4") // Devolução
+                {
+                    var tipoOperacao = "";
+                    var cfopsValidos = new HashSet<string>();
+
+                    // Devolução de venda (entrada)
+                    if (tpNF == "0")
+                    {
+                        if (string.IsNullOrWhiteSpace(destUF) || destUF.ToUpper() == "EX")
+                        {
+                            tipoOperacao = "Devolução de venda do exterior";
+                            cfopsValidos = new HashSet<string>
+                            {
+                                "3201", "3202", "3211", "3212", "3503", "3553", "3949"
+                            };
+                        }
+                        else if (!string.IsNullOrWhiteSpace(emitUF) && emitUF == destUF)
+                        {
+                            tipoOperacao = "Devolução de venda estadual";
+                            cfopsValidos = new HashSet<string>
+                            {
+                                "1201", "1202", "1203", "1204", "1208", "1209", "1212", "1213", "1214", "1215", "1216", "1410", "1411", "1503", "1504", "1505", "1506", "1553", "1660", "1661", "1662", "1918", "1919", "1949"
+                            };
+                        }
+                        else
+                        {
+                            tipoOperacao = "Devolução de venda interestadual";
+                            cfopsValidos = new HashSet<string>
+                            {
+                                "2201", "2202", "2203", "2204", "2208", "2209", "2212", "2213", "2214", "2215", "2216", "2410", "2411", "2503", "2504", "2505", "2506", "2553", "2660", "2661", "2662", "2918", "2919","2949"
+                            };
+                        }
+                    }
+                    // Devolução de compra (saída)
+                    else if (tpNF == "1")
+                    {
+                        if (!string.IsNullOrWhiteSpace(emitUF) && emitUF == destUF)
+                        {
+                            tipoOperacao = "Devolução de compra estadual";
+                            cfopsValidos = new HashSet<string> 
+                            {
+                                "5201", "5202", "5208", "5209", "5210", "5213", "5214", "5215", "5216", "5410", "5411", "5412", "5413", "5503", "5553", "5555", "5556", "5660", "5661", "5662", "5918", "5919", "5921", "5949"
+                            };
+                        }
+                        else if (!string.IsNullOrWhiteSpace(destUF) && destUF.ToUpper() == "EX")
+                        {
+                            tipoOperacao = "Devolução de compra do exterior";
+                            cfopsValidos = new HashSet<string> 
+                            {
+                                "7201", "7202", "7210", "7211", "7212", "7553", "7556", "7930", "7949"
+                            };
+                        }
+                        else
+                        {
+                            tipoOperacao = "Devolução de compra interestadual";
+                            cfopsValidos = new HashSet<string> 
+                            {
+                                "6201", "6202", "6208", "6209", "6210", "6213", "6214", "6215", "6216", "6410", "6411", "6412", "6413", "6503", "6553", "6555", "6556", "6660", "6661", "6662", "6918", "6919", "6921", "6949"
+                            };
+                        }
+                    }
+
+                    if (!cfopsValidos.Contains(cfop))
+                    {
+                        ThrowHelper.Instance.Throw(new ValidatorDFeException(
+                            $"CFOP '{cfop}' inválido para {tipoOperacao}. " +
+                            $"Para esse tipo de devolução, utilize um dos seguintes CFOPs: {string.Join(", ", cfopsValidos.OrderBy(x => x))}. " +
+                            $"[Item: {nItem}] [cProd: {cProd}] [xProd: {xProd}] [TAG: <CFOP> do grupo de tag <NFe><infNFe><det><prod>]"));
+                    }
                 }
             });
 

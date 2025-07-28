@@ -6,6 +6,7 @@ using Unimake.Business.DFe.Servicos.Interop;
 using Unimake.Business.DFe.Utility;
 using Unimake.Business.DFe.Xml.GNRE;
 using Unimake.Exceptions;
+using System.Xml;
 
 namespace Unimake.Business.DFe.Servicos.GNRE
 {
@@ -89,6 +90,60 @@ namespace Unimake.Business.DFe.Servicos.GNRE
             }
 
             Inicializar(tConsultaConfigUf?.GerarXML() ?? throw new ArgumentNullException(nameof(tConsultaConfigUf)), configuracao);
+        }
+
+        
+        ///<summary>
+        ///Construtor simplificado API
+        /// </summary>
+        /// <param name="ufBrasil">Unidade Federativa</param>
+        /// <param name="tipoAmbiente">Ambiente de Produção ou Homologação</param>
+        /// <param name="receita">Código da receita</param>
+        /// <param name="courier">Indicativo de courier</param>
+        /// <param name="configuracao">Configurações para conexão e envio do XML</param>
+        public ConsultaConfigUF(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente, int receita, SimNaoLetra courier, Configuracao configuracao) : this()
+        {
+            if (string.IsNullOrEmpty(ufBrasil.ToString()))
+            {
+                throw new ArgumentNullException(nameof(ufBrasil));
+            }
+
+            if (string.IsNullOrEmpty(tipoAmbiente.ToString()))
+            {
+                throw new ArgumentNullException(nameof(tipoAmbiente));
+            }
+
+            if (receita.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(receita));
+            }
+
+            if (string.IsNullOrEmpty(courier.ToString()))
+            {
+                throw new ArgumentNullException(nameof(courier));
+            }
+
+            if (configuracao is null)
+            {
+                throw new ArgumentNullException(nameof(configuracao));
+            }
+
+            var xml = new TConsultaConfigUf
+            {
+                Ambiente = tipoAmbiente,
+                UF = ufBrasil,
+                Receita = new Receita
+                {
+                    Courier = courier,
+                    Value = receita
+                },
+                TiposGnre = SimNaoLetra.Sim
+            };
+
+            var doc = new XmlDocument();
+            doc.LoadXml(xml?.GerarXML().OuterXml);
+
+            Inicializar(doc, configuracao);
         }
 
         #endregion Public Constructors

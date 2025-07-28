@@ -27,7 +27,9 @@ namespace Unimake.DFe.Test.NFCom
         [InlineData(UFBrasil.DF, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.ES, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.GO, TipoAmbiente.Homologacao)]
-        [InlineData(UFBrasil.MA, TipoAmbiente.Homologacao)]      
+        [InlineData(UFBrasil.MA, TipoAmbiente.Homologacao)]
+        [InlineData(UFBrasil.MG, TipoAmbiente.Homologacao)]
+        [InlineData(UFBrasil.MS, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PB, TipoAmbiente.Homologacao)]
         [InlineData(UFBrasil.PR, TipoAmbiente.Homologacao)]
@@ -52,6 +54,8 @@ namespace Unimake.DFe.Test.NFCom
         [InlineData(UFBrasil.ES, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.GO, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.MA, TipoAmbiente.Producao)]
+        [InlineData(UFBrasil.MG, TipoAmbiente.Producao)]
+        [InlineData(UFBrasil.MS, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PA, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PB, TipoAmbiente.Producao)]
         [InlineData(UFBrasil.PR, TipoAmbiente.Producao)]
@@ -82,7 +86,7 @@ namespace Unimake.DFe.Test.NFCom
                     COrgao = ufBrasil,
                     TpAmb = tipoAmbiente,
                     CNPJ = "06117473000150",
-                    ChNFCom = "12345678901234567890123456789012345678901234",
+                    ChNFCom = (int)ufBrasil + "250306117473000150620010000001231012345675",
                     DhEvento = System.DateTime.Now,
                     TpEvento = TipoEventoNFCom.Cancelamento,
                     NSeqEvento = 1

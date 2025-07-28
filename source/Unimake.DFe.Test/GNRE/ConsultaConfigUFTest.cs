@@ -135,5 +135,29 @@ namespace Unimake.DFe.Test.GNRE
 
             return dados;
         }
+
+        ///<summary>
+        ///Teste construtor API
+        ///</summary>
+        [Theory]
+        [Trait("DFe", "GNRE")]
+        [InlineData(UFBrasil.PR, TipoAmbiente.Homologacao, 100013, SimNaoLetra.Sim)]
+        [InlineData(UFBrasil.SP, TipoAmbiente.Producao, 100021, SimNaoLetra.Nao)]
+        public void ConsultaConfigUFConstrutor4Param(UFBrasil ufBrasil, TipoAmbiente tipoAmbiente, int receita, SimNaoLetra courier)
+        {
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.GNRE,
+                TipoEmissao = TipoEmissao.Normal,
+                CertificadoDigital = PropConfig.CertificadoDigital
+            };
+
+            var consultaConfigUF = new ConsultaConfigUF(ufBrasil, tipoAmbiente, receita, courier, configuracao);
+            consultaConfigUF.Executar();
+            
+            Assert.NotNull(consultaConfigUF.Result);
+            Assert.Equal(tipoAmbiente, consultaConfigUF.Result.Ambiente);
+            Assert.Equal(Servico.GNREConsultaConfigUF, configuracao.Servico);
+        }
     }
 }

@@ -91,21 +91,27 @@ namespace Unimake.Business.DFe.Servicos.MDFe
         }
 
         /// <summary>
-        /// Construtor
+        /// Construtor tanto para XML quanto para API
         /// </summary>
-        /// <param name="conteudoXML">String do XML a ser enviado</param>
+        /// <param name="conteudo">String do XML a ser enviado ou chave do MDFe</param>
         /// <param name="configuracao">Configurações para conexão e envio do XML para o web-service</param>
-        public ConsultaProtocolo(string conteudoXML, Configuracao configuracao) : this()
+        public ConsultaProtocolo(string conteudo, Configuracao configuracao) : this()
         {
+            if (string.IsNullOrWhiteSpace(conteudo))
+            {
+                throw new ArgumentNullException(nameof(conteudo));
+            }
+
             if (configuracao is null)
             {
                 throw new ArgumentNullException(nameof(configuracao));
             }
 
             var doc = new XmlDocument();
-            doc.LoadXml(conteudoXML);
+            doc.LoadXml(conteudo);
 
             Inicializar(doc, configuracao);
+
         }
 
         #endregion Public Constructors

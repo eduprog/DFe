@@ -34,7 +34,11 @@ namespace Unimake.Business.DFe.Servicos.EFDReinf
         /// <summary>
         /// Definir configurações
         /// </summary>
-        protected override void DefinirConfiguracao() { }
+        protected override void DefinirConfiguracao()
+        {
+            Configuracoes.Load(GetType().Name);
+            base.DefinirConfiguracao();
+        }
 
         /// <summary>
         /// Validar o XML

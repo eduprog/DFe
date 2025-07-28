@@ -834,7 +834,9 @@ namespace Unimake.Business.DFe.Utility
         /// </summary>
         public static TipoXML DetectXMLType(XmlDocument xmlDoc)
         {
+            var primeiraTagFilha = xmlDoc.DocumentElement.ChildNodes[0].Name;
             var tipoXML = TipoXML.NaoIdentificado;
+
             switch(xmlDoc.DocumentElement.Name)
             {
                 #region XML NFe
@@ -1008,9 +1010,94 @@ namespace Unimake.Business.DFe.Utility
 
                 #endregion XML da NFCom
 
+                case "eSocial":
+                    tipoXML = ObterTipoXmlESocial(xmlDoc, primeiraTagFilha);
+                    break;
+
+                case "Reinf":
+                    tipoXML = ObterTipoXmlEFDReinf(primeiraTagFilha);
+                    break;
 
                 default:
                     break;
+            }
+
+            return tipoXML;
+        }
+
+        /// <summary>
+        /// Obtém o tipo de XML de eSocial baseado no conteúdo do XML
+        /// </summary>
+        /// <param name="xmlDoc">XML com o conteúdo do XML a ser analisado</param>
+        /// <param name="primeiraTagFilha">Primeira tag filha do XML</param>
+        /// <returns>Tipo do XML</returns>
+        private static TipoXML ObterTipoXmlESocial(XmlDocument xmlDoc, string primeiraTagFilha)
+        {
+            switch (primeiraTagFilha)
+            {
+                case "envioLoteEventos":
+                    return TipoXML.ESocialEnvioLoteEventos;
+
+                case "consultaLoteEventos":
+                    return TipoXML.ESocialConsultaLoteAssincrono;
+
+                default:
+
+                    if (xmlDoc.GetElementsByTagName("consultaEvtsEmpregador").Count > 0)
+                    {
+                        return TipoXML.ESocialConsultaEvtsEmpregador;
+                    }
+                    else if (xmlDoc.GetElementsByTagName("consultaEvtsTrabalhador").Count > 0)
+                    {
+                        return TipoXML.ESocialConsultaEvtsTrabalhador;
+                    }
+                    else if (xmlDoc.GetElementsByTagName("consultaEvtsTabela").Count > 0)
+                    {
+                        return TipoXML.ESocialConsultaEvtsTabela;
+                    }
+                    else if (xmlDoc.GetElementsByTagName("solicDownloadEvtsPorId").Count > 0)
+                    {
+                        return TipoXML.ESocialDownloadPorID;
+                    }
+                    else if (xmlDoc.GetElementsByTagName("solicDownloadEventosPorNrRecibo").Count > 0)
+                    {
+                        return TipoXML.ESocialDownloadPorNrRec;
+                    }
+
+                    else
+                    {
+                        return TipoXML.NaoIdentificado;
+                    }
+            }
+        }
+
+        /// <summary>
+        /// Obtém o tipo de XML de EFD Reinf baseado no conteúdo do XML
+        /// </summary>
+        /// <param name="primeiraTagFilha">Primeira tag filha do XML</param>
+        /// <returns>Tipo do XML</returns>
+        private static TipoXML ObterTipoXmlEFDReinf(string primeiraTagFilha)
+        {
+            var tipoXML = TipoXML.NaoIdentificado;
+
+            switch (primeiraTagFilha)
+            {
+                case "envioLoteEventos":
+                    return TipoXML.EFDReinfEnvioLoteEventos;
+
+                case "ConsultaLoteAssincrono":
+                    return TipoXML.EFDReinfConsultaLoteAssincrono;
+
+                case "ConsultaReciboEvento":
+                    return TipoXML.EFDReinfConsultaReciboEvento;
+
+                case "ConsultaResultadoFechamento2099":
+                    return TipoXML.EFDReinfConsultaFechamento2099;
+            }
+
+            if (primeiraTagFilha.Contains("evt"))
+            {
+                return TipoXML.EFDReinfEvento;
             }
 
             return tipoXML;
@@ -1636,6 +1723,32 @@ namespace Unimake.Business.DFe.Utility
         /// <param name="chave">Chave do DFe (sem o dígito) que deve ser calculado o dígito verificador.</param>
         /// <returns>Dígito verificador</returns>
         public int CalcularDVChave(string chave) => XMLUtility.CalcularDVChave(chave);
+
+        /// <summary>
+        /// Validar o XML com o Unimake Validator
+        /// </summary>
+        /// <param name="xml">XML a ser validado</param>
+        /// <returns>true=validado com sucesso, ou uma exceção com o erro de validação.</returns>
+        /// <exception cref="ArgumentNullException">Quando o XML está nulo</exception>
+        /// <exception cref="Exception">Quando o validador encontra algum erro no XML</exception>
+        public bool Validate(string xml) => ValidatorFactory.BuidValidator(xml)?.Validate() ?? true;
+
+        /// <summary>
+        /// Executa uma verificação simples para garantir que a chave do DFe (NFe, CTe, MDfe, NFCe, CTeOS) é valida, se tiver erros retorna exceção.
+        /// </summary>
+        /// <param name="chave">Chave do DFe a ser verificada</param>
+        /// <example>
+        /// try
+        /// {
+        ///     XMLUtility.ChecarChaveDFe("41201280568835000181570010000004841004185096");
+        /// }
+        /// catch(Exception ex)
+        /// {
+        ///     //Se chave tiver algum erro, vai retornar uma exceção.
+        ///     MessageBox.Show(ex.Message);
+        /// }
+        /// </example>
+        public void ChecarChaveDFe(string chave) => XMLUtility.ChecarChaveDFe(chave);
     }
 
 #endif

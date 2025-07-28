@@ -19,7 +19,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtIrrf/v_S_01_02_00", IsNullable = false)]
+    [XmlRoot("eSocial", Namespace = "http://www.esocial.gov.br/schema/evt/evtIrrf/v_S_01_03_00", IsNullable = false)]
     public class ESocial5012 : XMLBaseESocial
     {
         /// <summary>
@@ -286,7 +286,7 @@ namespace Unimake.Business.DFe.Xml.ESocial
         public double VrCRDia { get; set; }
 
         [XmlElement("vrCRDia")]
-        public string CRDiaField
+        public string VrCRDiaField
         {
             get => VrCRDia.ToString("F2", CultureInfo.InvariantCulture);
             set => VrCRDia = Converter.ToDouble(value);

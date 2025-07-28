@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace Unimake.Business.DFe.Servicos
@@ -413,6 +414,12 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [Description("Recepcionar Lote Assincrono EFDReinf")]
         EFDReinfRecepcionarLoteAssincrono = 67,
+
+        /// <summary>
+        /// 84 - Consulta do fechamento do R-2099 EFD Reinf
+        /// </summary>
+        [Description("Consulta do fechamento do R-2099 EFD Reinf")]
+        EFDReinfConsultaFechamento2099 = 84,
 
         /// <summary>
         /// 68 - ESocial Informacoes Do Empregador S-1000
@@ -1592,7 +1599,7 @@ namespace Unimake.Business.DFe.Servicos
         /// 2 - Contingência off-line da NF3e e da NFCom
         /// </summary>
         [XmlEnum("2")]
-        ContingenciaOfflineNF3e = 10
+        ContingenciaOfflineNF3eNFCom = 10
     }
 
     #endregion
@@ -1626,7 +1633,189 @@ namespace Unimake.Business.DFe.Servicos
         /// 4 - Devolução de mercadoria
         /// </summary>
         [XmlEnum("4")]
-        Devolucao = 4
+        Devolucao = 4,
+
+        /// <summary>
+        /// 5 - Nota de crédito
+        /// </summary>
+        [XmlEnum("5")]
+        NotaCredito = 5,
+
+        /// <summary>
+        /// 6 - Nota de débito
+        /// </summary>
+        [XmlEnum("6")]
+        NotaDebito = 6
+    }
+
+    #endregion
+
+    #region TipoNFDebito
+
+    /// <summary>
+    /// Tipo de nota de débito
+    /// </summary>
+    public enum TipoNFDebito
+    {
+        /// <summary>
+        /// 01 - Transferência de créditos para Cooperativas
+        /// </summary>
+        [XmlEnum("01")]
+        TransferenciaCreditosCooperativas = 1,
+
+        /// <summary>
+        /// 02 - Anulação de Crédito por Saídas Imunes/Isentas
+        /// </summary>
+        [XmlEnum("02")]
+        AnulacaoCreditoSaidasImunesIsentas = 2,
+
+        /// <summary>
+        /// 03 - Débitos de notas fiscais não processadas na apuração
+        /// </summary>
+        [XmlEnum("03")]
+        DebitosNotasFiscaisNaoProcessadas = 3,
+
+        /// <summary>
+        /// 04 - Multa e juros
+        /// </summary>
+        [XmlEnum("04")]
+        MultaJuros = 4,
+
+        /// <summary>
+        /// 05 - Transferência de crédito de sucessão
+        /// </summary>
+        [XmlEnum("05")]
+        TransferenciaCreditoSucessao = 5,
+
+        /// <summary>
+        /// 06 - Pagamento antecipado
+        /// </summary>
+        [XmlEnum("06")]
+        PagamentoAntecipado = 6,
+
+        /// <summary>
+        /// 07 - Perda em estoque
+        /// </summary>
+        [XmlEnum("07")]
+        PerdaEmEstoque = 7
+    }
+
+    #endregion
+
+    #region TipoNFCredito
+
+    /// <summary>
+    /// Tipo de nota de crédito
+    /// </summary>
+    public enum TipoNFCredito
+    {
+        /// <summary>
+        /// 01 - A Definir (SEFAZ ainda não definiu esta tabela)
+        /// </summary>
+        [XmlEnum("01")]
+        MultaJuros = 1,
+
+        /// <summary>
+        /// 02 - Apropriação de crédito presumido de IBS sobre o saldo devedor na ZFM (art. 450, § 1º, LC 214/25)
+        /// </summary>
+        [XmlEnum("02")]
+        ApropriacaoCreditoPresumidoIBSZFM = 2
+    }
+
+    #endregion
+
+    #region TipoEnteGovernamental
+
+    /// <summary>
+    /// Tipo de Ente Governamental
+    /// </summary>
+    public enum TipoEnteGovernamental
+    {
+        /// <summary>
+        /// 1 - União
+        /// </summary>
+        [XmlEnum("1")]
+        Uniao = 1,
+
+        /// <summary>
+        /// 2 - Estado
+        /// </summary>
+        [XmlEnum("2")]
+        Estado = 2,
+
+        /// <summary>
+        /// 3 - Distrito Federal
+        /// </summary>
+        [XmlEnum("3")]
+        DistritoFederal = 3,
+
+        /// <summary>
+        /// 4 - Município
+        /// </summary>
+        [XmlEnum("4")]
+        Municipio = 4
+    }
+
+    #endregion
+
+    #region TipoCreditoPresumidoIBSZFM
+
+    /// <summary>
+    /// Tipo de classificação de acordo para o cálculo do crédito presumido na ZFM
+    /// </summary>
+    public enum TipoCreditoPresumidoIBSZFM
+    {
+        /// <summary>
+        /// 0 - Sem Crédito Presumido
+        /// </summary>
+        [XmlEnum("0")]
+        SemCreditoPresumido = 0,
+
+        /// <summary>
+        /// 1 - Bens de consumo final (55%)
+        /// </summary>
+        [XmlEnum("1")]
+        BensConsumoFinal = 1,
+
+        /// <summary>
+        /// 2 - Bens de capital (75%)
+        /// </summary>
+        [XmlEnum("2")]
+        BensCapital = 2,
+
+        /// <summary>
+        /// 3 - Bens intermediários (90,25%)
+        /// </summary>
+        [XmlEnum("3")]
+        BensIntermediarios = 3,
+
+        /// <summary>
+        /// 4 - Bens de informática e outros definidos em legislação (100%)
+        /// </summary>
+        [XmlEnum("4")]
+        BensInformaticaEOutros = 4
+    }
+
+    #endregion
+
+    #region TipoOperacaoEnteGovernamental
+
+    /// <summary>
+    /// Tipo de operação com o ente governamental
+    /// </summary>
+    public enum TipoOperacaoEnteGovernamental
+    {
+        /// <summary>
+        /// 1 - Fornecimento
+        /// </summary>
+        [XmlEnum("1")]
+        Fornecimento = 1,
+
+        /// <summary>
+        /// 2 - Recebimento do pagamento, conforme fato gerador do IBS/CBS definido no Art. 10 § 2º
+        /// </summary>
+        [XmlEnum("2")]
+        RecebimentoPagamento = 2,
     }
 
     #endregion
@@ -4447,6 +4636,8 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion
 
+    #region TipoPrestacaoCTe
+
     /// <summary>
     /// Indica se a prestação é total ou parcial em relação as notas o documento anterior
     /// </summary>
@@ -4464,6 +4655,64 @@ namespace Unimake.Business.DFe.Servicos
         [XmlEnum("2")]
         Parcial = 2
     }
+
+    #endregion
+
+    #region ClassificacaoDutoviarioCTe
+
+    /// <summary>
+    /// Classiciação Dutoviário do CTe
+    /// </summary>
+    public enum ClassificacaoDutoviarioCTe
+    {
+        /// <summary>
+        /// 1 - Gasoduto
+        /// </summary>
+        [XmlEnum("1")]
+        Gasoduto = 1,
+
+        /// <summary>
+        /// 2 - Mineroduto
+        /// </summary>
+        [XmlEnum("2")]
+        Mineroduto = 2,
+
+        /// <summary>
+        /// 3 - Mineroduto
+        /// </summary>
+        [XmlEnum("3")]
+        Oleoduto = 3
+    }
+
+    #endregion
+
+    #region TipoContratacaoTransporteCTe
+
+    /// <summary>
+    /// Tipo de Contratação do Serviço de Transporte (CTe)
+    /// </summary>
+    public enum TipoContratacaoTransporteCTe
+    {
+        /// <summary>
+        /// 0 - Ponto a Ponto
+        /// </summary>
+        [XmlEnum("0")]
+        PontoAPonto = 0,
+
+        /// <summary>
+        /// 1 - Capacidade de Entrada
+        /// </summary>
+        [XmlEnum("1")]
+        CapacidadeEntrada = 1,
+
+        /// <summary>
+        /// 2 - Capacidade de Saída
+        /// </summary>
+        [XmlEnum("2")]
+        CapacidadeSaida = 2
+    }
+
+    #endregion
 
     #region ModeloNF
 
@@ -4985,7 +5234,13 @@ namespace Unimake.Business.DFe.Servicos
         /// 11 - Perigosa (carga geral)
         /// </summary>
         [XmlEnum("11")]
-        PerigosaCargaGeral = 11
+        PerigosaCargaGeral = 11,
+
+        /// <summary>
+        /// 12 - Granel pressurizada
+        /// </summary>
+        [XmlEnum("12")]
+        GranelPressurizada = 12
     }
 
     #endregion
@@ -5020,22 +5275,28 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoComponenteMDFe
     {
         /// <summary>
-        /// 01 = Vale Pedágio
+        /// 01 - Vale Pedágio
         /// </summary>
         [XmlEnum("01")]
         ValePedagio = 1,
 
         /// <summary>
-        /// 02 = Impostos, Taxas e Contribuições
+        /// 02 - Impostos, Taxas e Contribuições
         /// </summary>
         [XmlEnum("02")]
         ImpostosTaxasContribuicoes = 2,
 
         /// <summary>
-        /// 03 = Despesas (Bancárias, Meios de pagamento, Outras)
+        /// 03 - Despesas (Bancárias, Meios de pagamento, Outras)
         /// </summary>
         [XmlEnum("03")]
         Despesas = 3,
+
+        /// <summary>
+        /// 4 - Frete
+        /// </summary>
+        [XmlEnum("04")]
+        Frete = 4,
 
         /// <summary>
         /// 99 = Outras
@@ -6338,22 +6599,30 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoValePedagio
     {
         /// <summary>
-        /// TAG = 01
+        /// 01 - TAG
         /// </summary>
         [XmlEnum("01")]
         TAG = 1,
 
         /// <summary>
-        /// Cupom = 01
+        /// 02 - Cupom
         /// </summary>
+        [Obsolete("O tipo de Vale Pedágio 02 será eliminado em futuras atualizações da SEFAZ.", false)]
         [XmlEnum("02")]
         Cupom = 2,
 
         /// <summary>
-        /// Cartão = 01
+        /// 03 - Cartão
         /// </summary>
+        [Obsolete("O tipo de Vale Pedágio 03 será eliminado em futuras atualizações da SEFAZ.", false)]
         [XmlEnum("03")]
-        Cartao = 3
+        Cartao = 3,
+
+        /// <summary>
+        /// 04 - Leitura de placa (pela placa de identificação veicular)
+        /// </summary>
+        [XmlEnum("04")]
+        LeituraPlaca = 4
     }
 
     #endregion
@@ -6781,7 +7050,7 @@ namespace Unimake.Business.DFe.Servicos
         /// LIBRE
         /// </summary>
         [Description("LIBRE")]
-        LIBRE =  57,
+        LIBRE = 57,
 
         /// <summary>
         /// MANAUS_AM
@@ -6812,6 +7081,146 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         [Description("SISPMJP")]
         SISPMJP = 62,
+
+        /// <summary>
+        /// HM2SOLUCOES
+        /// </summary>
+        [Description("HM2SOLUCOES")]
+        HM2SOLUCOES = 63,
+
+        /// <summary>
+        /// ELOTECH
+        /// </summary>
+        [Description("ELOTECH")]
+        ELOTECH = 64,
+
+        /// <summary>
+        /// CONAM
+        /// </summary>
+        [Description("CONAM")]
+        CONAM = 65,
+
+        /// <summary>
+        /// EGOVERNE
+        /// </summary>
+        [Description("EGOVERNE")]
+        EGOVERNE = 66,
+
+        /// <summary>
+        /// PORTAL_FACIL
+        /// </summary>
+        [Description("PORTAL_FACIL")]
+        PORTAL_FACIL = 67,
+
+        /// <summary>
+        /// E_RECEITA
+        /// </summary>
+        [Description("E_RECEITA")]
+        E_RECEITA = 68,
+
+        ///<summary>
+        ///DBSELLER
+        /// </summary>
+        [Description("DBSELLER")]
+        DBSELLER = 69,
+
+        ///<summary>
+        ///CECAM
+        /// </summary>
+        [Description("CECAM")]
+        CECAM = 70,
+
+        ///<summary>
+        ///JLSOFT
+        /// </summary>
+        [Description("JLSOFT")]
+        JLSOFT = 71,
+
+        ///<summary>
+        ///SH3
+        /// </summary>
+        [Description("SH3")]
+        SH3 = 72,
+
+        ///<summary>
+        ///MODERNIZACAO_PUBLICA
+        /// </summary>
+        [Description("MODERNIZACAO_PUBLICA")]
+        MODERNIZACAO_PUBLICA = 73,
+
+        ///<summary>
+        ///METROPOLIS
+        /// </summary>
+        [Description("METROPOLIS")]
+        METROPOLIS = 74,
+
+        ///<summary>
+        ///MEGASOFT
+        /// </summary>
+        [Description("MEGASOFT")]
+        MEGASOFT = 75,
+
+        ///<summary>
+        ///ISSONLINE_ASSESSORPUBLICO
+        /// </summary>
+        [Description("ISSONLINE_ASSESSORPUBLICO")]
+        ISSONLINE_ASSESSORPUBLICO = 76,
+
+
+        ///<summary>
+        ///SINSOFT
+        /// </summary>
+        [Description("SINSOFT")]
+        SINSOFT = 77,
+
+        /// <summary>
+        /// PRIMAX
+        /// </summary>
+        [Description("PRIMAX")]
+        PRIMAX = 78,
+
+        ///<summary>
+        ///EGOVERNEISS
+        /// </summary>
+        [Description("EGOVERNEISS")]
+        EGOVERNEISS = 79,
+
+        ///<summary>
+        ///DESENVOLVECIDADE
+        /// </summary>
+        [Description("DESENVOLVECIDADE")]
+        DESENVOLVECIDADE = 80,
+
+
+        ///<summary>
+        ///INDAIATUBA_SP
+        /// </summary>
+        [Description("INDAIATUBA_SP")]
+        INDAIATUBA_SP = 81,
+
+        ///<summary>
+        ///INTERSOL
+        /// </summary>
+        [Description("INTERSOL")]
+        INTERSOL = 82,
+
+        ///<summary>
+        ///PUBLICENTER
+        /// </summary>
+        [Description("PUBLICENTER")]
+        PUBLICENTER = 83,
+
+        /// <summary>
+        /// LEXSOM
+        /// </summary>
+        [Description("LEXSOM")]
+        LEXSOM = 84,
+
+        ///<summary>
+        ///SUPERNOVA
+        /// </summary>
+        [Description("SUPERNOVA")]
+        SUPERNOVA = 85,
     }
 
     #endregion
@@ -7157,6 +7566,86 @@ namespace Unimake.Business.DFe.Servicos
         NFCom = 36,
 
         #endregion NFCom
+
+        #region eSocial
+
+        /// <summary>
+        /// XML de envio de lote de eSocial
+        /// </summary>
+        [Description("XML de envio de lote de eSocial")]
+        ESocialEnvioLoteEventos = 37,
+
+        /// <summary>
+        /// XML de consulta lote assincrono de eSocial
+        /// </summary>
+        [Description("XML de consulta lote assincrono de eSocial")]
+        ESocialConsultaLoteAssincrono = 38,
+
+        /// <summary>
+        /// XML de consulta eventos do empregador
+        /// </summary>
+        [Description("XML de consulta eventos do empregador")]
+        ESocialConsultaEvtsEmpregador = 39,
+
+        /// <summary>
+        /// XML de consulta eventos de tabela
+        /// </summary>
+        [Description("XML de consulta eventos de tabela")]
+        ESocialConsultaEvtsTabela = 40,
+
+        /// <summary>
+        /// XML de consulta eventos do trabalhador
+        /// </summary>
+        [Description("XML de consulta eventos do trabalhador")]
+        ESocialConsultaEvtsTrabalhador = 41,
+
+        /// <summary>
+        /// XML de download de evento por ID
+        /// </summary>
+        [Description("XML de download de evento por ID")]
+        ESocialDownloadPorID = 42,
+
+        /// <summary>
+        /// XML de download de evento por número do recibo
+        /// </summary>
+        [Description("XML de download de evento por número do recibo")]
+        ESocialDownloadPorNrRec = 43,
+
+        #endregion eSocial
+
+        #region EFD Reinf
+
+        /// <summary>
+        /// XML de envio de lote de EFD Reinf
+        /// </summary>
+        [Description("XML de envio de lote de EFD Reinf")]
+        EFDReinfEnvioLoteEventos = 44,
+
+        /// <summary>
+        /// XML de consulta lote assincrono de EFD Reinf
+        /// </summary>
+        [Description("XML de consulta lote assincrono de EFD Reinf")]
+        EFDReinfConsultaLoteAssincrono = 45,
+
+        /// <summary>
+        /// XML de consulta recibo do evento de EFD Reinf
+        /// </summary>
+        [Description("XML de consulta recibo do evento de EFD Reinf")]
+        EFDReinfConsultaReciboEvento = 46,
+
+        /// <summary>
+        /// XML específico de evento de EFD Reinf
+        /// </summary>
+        [Description("XML específico de evento de EFD Reinf")]
+        EFDReinfEvento = 47,
+
+        /// <summary>
+        /// XML de consulta do fechamento R-2099 do EFD Reinf
+        /// </summary>
+        [Description("XML de consulta do fechamento R-2099 do EFD Reinf")]
+        EFDReinfConsultaFechamento2099 = 48,
+
+        #endregion EFD Reinf
 
         /// <summary>
         /// Não foi possível identificar o tipo do XML
@@ -7532,7 +8021,13 @@ namespace Unimake.Business.DFe.Servicos
         /// 6 - CEI
         /// </summary>
         [XmlEnum("6")]
-        CEI = 6
+        CEI = 6,
+
+        /// <summary>
+        /// 0 - Não definido
+        /// </summary>
+        [XmlEnum("0")]
+        NaoDefinido = 0
     }
 
     #endregion
@@ -7839,16 +8334,22 @@ namespace Unimake.Business.DFe.Servicos
     public enum TipoProcesso
     {
         /// <summary>
-        /// 01 - Administrativo.
+        /// 1 - Administrativo.
         /// </summary>
         [XmlEnum("1")]
         Administrativo = 1,
 
         /// <summary>
-        /// 02 - Judicial.
+        /// 2 - Judicial.
         /// </summary>
         [XmlEnum("2")]
         Judicial = 2,
+
+        /// <summary>
+        /// 3 - Sem Processo
+        /// </summary>
+        [XmlEnum("3")]
+        SemProcesso = 3
     }
     #endregion
 
@@ -9960,7 +10461,7 @@ namespace Unimake.Business.DFe.Servicos
     /// Código de incidência da rubrica para o Fundo de Garantia do Tempo de Serviço - FGTS.
     /// Validação: Para utilização de código [91, 92, 93], é necessária a existência de grupo com informações relativas ao processo.
     /// </summary>
-    public enum CodIncFGTS
+    public enum CodigoIncidenciaRubricaFGTS
     {
         /// <summary>
         /// 00 - Não é base de cálculo do FGTS
@@ -9989,7 +10490,7 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// 31 - Desconto eConsignado
         /// </summary>
-        [XmlEnum("31 ")]
+        [XmlEnum("31")]
         DescontoeConsignado = 31,
 
         /// <summary>
@@ -10995,7 +11496,7 @@ namespace Unimake.Business.DFe.Servicos
     }
     #endregion IndGuia
 
-    #region PercTranf
+    #region PercentualTransformacao
 
     /// <summary>
     /// Informe o percentual de contribuição social devida em
@@ -11007,30 +11508,39 @@ namespace Unimake.Business.DFe.Servicos
     /// [4] - 0,8000
     /// [5] - 1,0000
     /// </summary>
-    public enum PercTranf
+    public enum PercentualTransformacao
     {
         /// <summary>
         /// [1] - 0,2000
         /// </summary>
+        [XmlEnum("1")]
         UM = 1,
+
         /// <summary>
         /// [2] - 0,4000
         /// </summary>
+        [XmlEnum("2")]
         DOIS = 2,
+
         /// <summary>
         /// [3] - 0,6000
         /// </summary>
+        [XmlEnum("3")]
         TRES = 3,
+
         /// <summary>
         /// [4] - 0,8000
         /// </summary>
+        [XmlEnum("4")]
         QUATRO = 4,
+
         /// <summary>
         /// [5] - 1,0000
         /// </summary>
+        [XmlEnum("5")]
         CINCO = 5,
     }
-    #endregion PercTranf
+    #endregion PercentualTransformacao
 
     #region undSalFixo - Unidade de pagamento da parte fixa da remuneração. - eSocial.
 
@@ -13506,6 +14016,12 @@ namespace Unimake.Business.DFe.Servicos
         FgtsPeriodoAnteriorDecimoTerceiroSalarioAprendizContratoVerdeAmarelo = 18,
 
         /// <summary>
+        /// 19 - FGTS - Avulsos não portuários
+        /// </summary>
+        [XmlEnum("19")]
+        FgtsAvulsosNaoPortuarios = 19,
+
+        /// <summary>
         /// 21 - FGTS mês da rescisão
         /// </summary>
         [XmlEnum("21")]
@@ -14696,12 +15212,12 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion TipoFonteEnergia
 
-    #region TipoAjuste
+    #region TipoAjusteNF3e
 
     /// <summary>
     /// Tipo de ajuste a ser aplicado ao item
     /// </summary>
-    public enum TipoAjuste
+    public enum TipoAjusteNF3e
     {
         /// <summary>
         /// 1 - Item a ser substituído (deve informar detItemAnt)
@@ -14728,7 +15244,7 @@ namespace Unimake.Business.DFe.Servicos
         ItemASerIncluidoReferenteANF3eAnterior = 4,
     }
 
-    #endregion TipoAjuste
+    #endregion TipoAjusteNF3e
 
     #region MotivoAjuste
 
@@ -15237,22 +15753,22 @@ namespace Unimake.Business.DFe.Servicos
 
     #endregion IndicativoPrePago
 
-    #region IndicadorSessaoMeiosDeRede 
+    #region IndicadorCessaoMeiosDeRede 
 
     /// <summary>
-    /// Indicador de sessão de meios de rede
+    /// Indicador de cessão de meios de rede
     /// </summary>
-    public enum IndicadorSessaoMeiosDeRede
+    public enum IndicadorCessaoMeiosDeRede
     {
         /// <summary>
         /// Uma vez informado (valor = 1), essa tag dispensa geração do grupo Fatura.
         /// Apenas para notas dos tipos Normal e Substituição com tipo de faturamento normal
         /// </summary>
         [XmlEnum("1")]
-        IndicadorSessaoMeioDeRede = 1
+        IndicadorCessaoMeioDeRede = 1
     }
 
-    #endregion IndicadorSessaoMeiosDeRede 
+    #endregion IndicadorCessaoMeiosDeRede 
 
     #region IndicadorNotaEntrada
 

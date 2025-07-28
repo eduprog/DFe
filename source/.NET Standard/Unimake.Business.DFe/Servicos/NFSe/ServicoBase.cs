@@ -7,7 +7,11 @@ using System.Text;
 using System.Xml;
 using Unimake.Business.DFe.Security;
 using Unimake.Exceptions;
-using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Unimake.Business.DFe.Servicos.NFSe
 {
@@ -28,55 +32,392 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
 
         /// <summary>
-        /// Definir configurações
+        /// Definir configurações específicas da NFSe
         /// </summary>
         protected override void DefinirConfiguracao()
-        { 
-            if (Configuracoes.PadraoNFSe == PadraoNFSe.MEMORY)
+        {
+            //Esta linha irá carregar as informações referêntes ao município.
+            Configuracoes.Load(GetType().Name);
+
+
+            switch (Configuracoes.PadraoNFSe)
             {
-                var numeroRPS = GetXMLElementInnertext("numeroRPS");
-                var numeroNFSE = GetXMLElementInnertext("numeroNFSE");
-                var protocolo = GetXMLElementInnertext("protocolo");
-                var codMunicipio = GetXMLElementInnertext("codMunicipio");
+                case PadraoNFSe.MEMORY:
+                    MEMORY();
+                    break;
 
-                if (codMunicipio == null && Configuracoes.Servico == Servico.NFSeRecepcionarLoteRps)
-                {
-                    var nodeloteRps = ConteudoXML.GetElementsByTagName("LoteRps")?[0];
-                    codMunicipio = nodeloteRps.Attributes.GetNamedItem("codMunicipio").Value;
-                }
+                case PadraoNFSe.BAUHAUS:
+                    BAUHAUS();
+                    break;
 
-                // Replaces necessários para a comunicação com o webservice, deve estar antes da linha que altera o Codigo do Municipio
-                Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{numeroRPS}", numeroRPS)
-                                                                         .Replace("{numeroNFSE}", numeroNFSE)
-                                                                         .Replace("{protocolo}", protocolo)
-                                                                         .Replace("{codMunicipio}", codMunicipio)
-                                                                         .Replace("{cnpjPrestador}", Configuracoes.MunicipioUsuario)
-                                                                         .Replace("{hashValidador}", Configuracoes.MunicipioSenha);
+                case PadraoNFSe.ABASE:
+                case PadraoNFSe.BETHA:
+                case PadraoNFSe.GINFES:
+                case PadraoNFSe.EQUIPLANO:
+                case PadraoNFSe.WEBFISCO:
+                    PadroesConfigUnica();
+                    break;
 
-                
-                Configuracoes.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), Configuracoes.PadraoNFSe.ToString());
+                case PadraoNFSe.IPM:
+                    IPM();
+                    break;
 
+                case PadraoNFSe.NACIONAL:
+                    NACIONAL();
+                    break;
+
+                case PadraoNFSe.HM2SOLUCOES:
+                    HM2SOLUCOES();
+                    AuthorizationBasic();
+                    break;
+
+                case PadraoNFSe.GIAP:
+                    GIAP();
+                    break;
+
+                case PadraoNFSe.EL:
+
+                    if (Configuracoes.SchemaVersao == "1.00")
+                    {
+                        EL();
+                    }
+
+                    break;
+
+                case PadraoNFSe.EGOVERNEISS:
+                    EGOVERNEISS();
+                    break;
             }
+            Configuracoes.Definida = true;
+            base.DefinirConfiguracao();
+        }
 
-            //Padrões com link unico, alteração para a dll buscar o arquivo de configuração em comum
-            if (Configuracoes.PadraoNFSe == PadraoNFSe.ABASE || 
-                Configuracoes.PadraoNFSe == PadraoNFSe.BETHA || 
-                Configuracoes.PadraoNFSe == PadraoNFSe.GINFES ||
-                Configuracoes.PadraoNFSe == PadraoNFSe.EQUIPLANO || 
-                Configuracoes.PadraoNFSe == PadraoNFSe.WEBFISCO)
+        private void HM2SOLUCOES()
+        {
+            if (!ConteudoXML.GetElementsByTagName("EnviarLoteRpsEnvio").IsNullOrEmpty())
             {
-                //Municípios pontuais com configuração diferente:
-                //São José dos Pinhais - PR     |GINFES
-                //Varginha - MG                 |BETHA
-                //Fortaleza - CE                |GINFES
-                if (Configuracoes.CodigoMunicipio != 4125506 || Configuracoes.CodigoMunicipio != 3170701 || Configuracoes.CodigoMunicipio != 2304400)
+                _ = ConteudoXMLAssinado;
+
+                var parameters = new Dictionary<string, string>
                 {
-                    Configuracoes.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), Configuracoes.PadraoNFSe.ToString());
+                    { "xml", ConteudoXMLAssinado.OuterXml }
+                };
+
+                Configuracoes.HttpContent = new FormUrlEncodedContent(parameters);
+            }
+            else
+            {
+                XDocument document = XDocument.Parse(ConteudoXML.OuterXml);
+                var dictionary = new Dictionary<string, string>();
+
+                foreach (var parameters in document.Descendants())
+                {
+                    dictionary.Add(parameters.Name.ToString(), parameters.Value);
                 }
+
+                Configuracoes.HttpContent = new FormUrlEncodedContent(dictionary);
             }
         }
 
+        #region Configurações separadas por PadrãoNFSe
+
+        #region MEMORY
+
+        private void MEMORY()
+        {
+            var numeroRPS = GetXMLElementInnertext("numeroRPS");
+            var numeroNFSE = GetXMLElementInnertext("numeroNFSE");
+            var protocolo = GetXMLElementInnertext("protocolo");
+            var codMunicipio = GetXMLElementInnertext("codMunicipio");
+
+            if (codMunicipio == null && Configuracoes.Servico == Servico.NFSeRecepcionarLoteRps)
+            {
+                var nodeloteRps = ConteudoXML.GetElementsByTagName("LoteRps")?[0];
+                codMunicipio = nodeloteRps.Attributes.GetNamedItem("codMunicipio").Value;
+            }
+
+            // Replaces necessários para a comunicação com o webservice, deve estar antes da linha que altera o Codigo do Municipio
+            Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{numeroRPS}", numeroRPS)
+                                                                     .Replace("{numeroNFSE}", numeroNFSE)
+                                                                     .Replace("{protocolo}", protocolo)
+                                                                     .Replace("{codMunicipio}", codMunicipio)
+                                                                     .Replace("{cnpjPrestador}", Configuracoes.MunicipioUsuario)
+                                                                     .Replace("{hashValidador}", Configuracoes.MunicipioSenha);
+            PadroesConfigUnica();
+        }
+
+        #endregion MEMORY
+
+        #region IPM
+
+        private void IPM()
+        {
+            AuthorizationBasic();
+
+            if (Configuracoes.SchemaVersao == "2.80")
+            {
+                CriarHttpContentIPM();
+            }
+
+        }
+
+        private void CriarHttpContentIPM()
+        {
+            var path = string.Empty;
+
+            var xml = ConteudoXML.OuterXml.Replace("<", "&lt;")
+                                          .Replace(">", "&gt;")
+                                          .Replace("/", "")
+                                          .Replace("&", "&amp;")
+                                          .Replace("'", "&apos;")
+                                          .Replace("\"", "&quot;");
+
+            if (string.IsNullOrWhiteSpace(ConteudoXML.BaseURI))
+            {
+                path = "arquivo.xml";
+            }
+            else
+            {
+                path = ConteudoXML.BaseURI.Substring(8, ConteudoXML.BaseURI.Length - 8);
+            }
+
+            var boundary = "----------------------------" + DateTime.Now.Ticks.ToString("x");
+
+            #region ENVIO EM BYTES
+            var xmlBytes = Encoding.UTF8.GetBytes(xml);
+            var xmlContent = new ByteArrayContent(xmlBytes);
+            xmlContent.Headers.ContentType = MediaTypeHeaderValue.Parse("text/xml");
+            xmlContent.Headers.ContentEncoding.Add("ISO-8859-1");
+            xmlContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "f1",
+                FileName = path,
+
+            };
+            #endregion ENVIO EM BYTES
+
+            HttpContent MultiPartContent = new MultipartContent("form-data", boundary)
+                {
+                    xmlContent,
+
+                };
+
+            if (!string.IsNullOrWhiteSpace(Configuracoes.CodigoTom))               //SERÁ USADO PARA IPM 1.00 / Campo Mourão - PR 
+            {
+                var usuario = new StringContent(Configuracoes.MunicipioUsuario);
+                usuario.Headers.ContentType = MediaTypeHeaderValue.Parse("text/xml");
+                usuario.Headers.ContentEncoding.Add("UTF-8");
+                usuario.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "login",
+                };
+                var senha = new StringContent(Configuracoes.MunicipioSenha);
+                senha.Headers.ContentType = MediaTypeHeaderValue.Parse("text/xml");
+                senha.Headers.ContentEncoding.Add("UTF-8");
+                senha.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "senha",
+                };
+                var codigoTom = new StringContent(Configuracoes.CodigoTom);
+                codigoTom.Headers.ContentType = MediaTypeHeaderValue.Parse("text/xml");
+                codigoTom.Headers.ContentEncoding.Add("UTF-8");
+                codigoTom.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "cidade",
+                };
+                var f1 = new StringContent(path);
+                f1.Headers.ContentType = MediaTypeHeaderValue.Parse("text/xml");
+                f1.Headers.ContentEncoding.Add("ISO-8859-1");
+                f1.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "f1",
+                };
+                HttpContent content = new MultipartContent("form-data", boundary)
+                    {
+                        usuario,
+                        senha,
+                        codigoTom,
+                        f1,
+                        xmlContent
+                    };
+
+                Configuracoes.HttpContent = content;
+            }
+        }
+
+        #endregion IPM
+
+        #region Bauhaus
+
+        private void BAUHAUS()  //Authorization Homologação: apiConfig.Token = "9f16d93554dc1d93656e23bd4fc9d4566a4d76848517634d7bcabd5dasdasde4948f";
+        {
+            GerarContentBauhaus();
+            AjusteLinkBauhaus();
+        }
+
+        private void GerarContentBauhaus()
+        {
+            var json = JsonConvert.SerializeObject(ConteudoXML);
+            Configuracoes.HttpContent = new StringContent(json, Encoding.UTF8, Configuracoes.WebContentType);
+        }
+
+        private void AjusteLinkBauhaus()
+        {
+            Configuracoes.RequestURI = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.RequestURIProducao : Configuracoes.RequestURIHomologacao);
+
+            var chave = default(string);
+            if (Configuracoes.RequestURI.IndexOf("NumeroRps") > 0)
+            {
+                chave = ConteudoXML.GetElementsByTagName("NumeroRps")[0].InnerText;
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            }
+            else if (Configuracoes.RequestURI.IndexOf("NumeroNfse") > 0)
+            {
+                chave = ConteudoXML.GetElementsByTagName("NumeroNfse")[0].InnerText;
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            }
+        }
+
+        #endregion Bauhaus
+
+        #region NACIONAL
+
+        private void NACIONAL()
+        {
+            var URI = Configuracoes.RequestURI;// = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.RequestURIProducao : Configuracoes.RequestURIHomologacao);
+
+            var startIndex = ConteudoXML.OuterXml.IndexOf("Id=\"") + 7;
+            var endIndex = ConteudoXML.OuterXml.IndexOf("\"", startIndex);
+            var chave = ConteudoXML.OuterXml.Substring(startIndex, (endIndex - startIndex));
+            Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+        }
+
+        #endregion NACIONAL
+
+        #region EL
+
+        private void EL()
+        {
+            var protocolo = GetXMLElementInnertext("Protocolo");
+            var numeroNFSeRps = GetXMLElementInnertext("Numero");
+            var cnpjCpfTomador = string.Empty;
+            var cnpjCpfIntermediario = string.Empty;
+            var dataInicial = string.Empty;
+            var dataFinal = string.Empty;
+
+            if (Configuracoes.Servico == Servico.NFSeConsultarNfse)
+            {
+                dataInicial = GetXMLElementInnertext("DataInicial");
+                dataFinal = GetXMLElementInnertext("DataFinal");
+
+                var tomador = ConteudoXML.GetElementsByTagName("Tomador");
+                var intermediario = ConteudoXML.GetElementsByTagName("IntermediarioServico");
+
+                if (tomador.Count > 0)
+                {
+                    foreach (XmlNode nodeTomador in tomador)
+                    {
+                        cnpjCpfTomador = nodeTomador.FirstChild.InnerText;
+                    }
+                }
+
+                if (intermediario.Count > 0)
+                {
+                    foreach (XmlNode nodeIntermediario in intermediario)
+                    {
+                        cnpjCpfIntermediario = nodeIntermediario.FirstChild.InnerText;
+                    }
+                }
+            }
+
+
+            Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{MunicipioUsuario}", Configuracoes.MunicipioUsuario)
+                                                                     .Replace("{MunicipioSenha}", Configuracoes.MunicipioSenha)
+                                                                     .Replace("{numeroProtocolo}", protocolo)
+                                                                     .Replace("{numeroNFSeRps}", numeroNFSeRps)
+                                                                     .Replace("{dataInicial}", dataInicial)
+                                                                     .Replace("{dataFinal}", dataFinal)
+                                                                     .Replace("{cnpjCpfTomador}", cnpjCpfTomador)
+                                                                     .Replace("{cnpjCpfIntermediario}", cnpjCpfIntermediario);
+
+        }
+
+        #endregion EL
+
+        #region EGOVERNEISS
+        private void EGOVERNEISS()
+        {
+            //Para o EGOVERNEISS, temos que alterar a tag "Homologação" para true ou false dependendo do que for o ambiente.
+            switch (Configuracoes.Servico)
+            {
+                case Servico.NFSeEnvioRps:
+                    var xmlBodyNotaFiscal = GetXmlElementOuterXml("NotaFiscal");
+
+                    Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{xmlBodyNotaFiscal}", xmlBodyNotaFiscal);
+
+                    break;
+
+                case Servico.NFSeEnvioLoteRps:
+                    var xmlBodyNotas = GetXmlElementOuterXml("Notas");
+
+                    Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{xmlBodyNotas}", xmlBodyNotas);
+
+                    break;
+
+
+                case Servico.NFSeCancelarNfse:                  
+                    var chaveAutenticacao = GetXMLElementInnertext("ChaveAutenticacao");
+                    var homologacao = GetXMLElementInnertext("Homologacao");
+                    var motivo = string.Empty;
+                    var numeroNota = GetXMLElementInnertext("NumeroNota");
+
+                    Configuracoes.WebSoapString = Configuracoes.WebSoapString.Replace("{chaveAutenticacao}", chaveAutenticacao)
+                                                                     .Replace("{homologacao}", homologacao)
+                                                                     .Replace("{motivo}", motivo)
+                                                                     .Replace("{numeroNota}", numeroNota);
+
+                    break;
+
+            }
+        }
+
+
+        #endregion EGOVERNEISS
+
+        #region GIAP
+
+        private void GIAP()
+        {
+            Configuracoes.MunicipioToken = Configuracoes.MunicipioUsuario + "-" + Configuracoes.MunicipioSenha;
+
+        }
+
+        #endregion GIAP
+
+        #endregion Configurações separadas por PadrãoNFSe
+
+        private void PadroesConfigUnica()
+        {
+            //Municípios pontuais com configuração diferente:
+            //São José dos Pinhais - PR     |GINFES
+            //Varginha - MG                 |BETHA
+            //Fortaleza - CE                |GINFES
+            //Criciúma - SC                 |BETHA
+            if (Configuracoes.CodigoMunicipio != 4125506 || Configuracoes.CodigoMunicipio != 3170701 || Configuracoes.CodigoMunicipio != 2304400 || Configuracoes.CodigoMunicipio != 4204608)
+            {
+                Configuracoes.CodigoMunicipio = (int)(CodigoPadraoNFSe)Enum.Parse(typeof(CodigoPadraoNFSe), Configuracoes.PadraoNFSe.ToString());
+            }
+        }
+
+        private void AuthorizationBasic()
+        {
+            // HM2SOLUCOES homologação:  11222333000181:S3nh@
+            Configuracoes.MunicipioToken = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Configuracoes.MunicipioUsuario}:{Configuracoes.MunicipioSenha}"));
+        }
+
         private string GetXMLElementInnertext(string tag) => ConteudoXML.GetElementsByTagName(tag)[0]?.InnerText;
+
+        private string GetXmlElementOuterXml(string tag) => ConteudoXML.GetElementsByTagName(tag)[0]?.OuterXml;
 
         /// <summary>
         /// Ajustes no XMLs, depois de assinado.
@@ -212,7 +553,7 @@ namespace Unimake.Business.DFe.Servicos.NFSe
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
 
                 VerificarAssinarXML(Configuracoes.TagAssinatura, Configuracoes.TagAtributoID);
@@ -254,7 +595,22 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 #endif
         protected override void Inicializar(XmlDocument conteudoXML, Configuracao configuracao)
         {
-            base.Inicializar(conteudoXML, configuracao);
+            Configuracoes = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
+            ConteudoXML = conteudoXML ?? throw new ArgumentNullException(nameof(conteudoXML));
+
+            if (!Configuracoes.Definida)
+            {
+                DefinirConfiguracao();
+            }
+
+            System.Diagnostics.Trace.WriteLine(ConteudoXML?.InnerXml, "Unimake.DFe");
+
+            //Forçar criar a tag QrCode bem como assinatura para que o usuário possa acessar o conteúdo no objeto do XML antes de enviar
+            _ = ConteudoXMLAssinado;
+
+            XmlValidar();
+
+            //base.Inicializar(conteudoXML, configuracao);
         }
 
         /// <summary>
