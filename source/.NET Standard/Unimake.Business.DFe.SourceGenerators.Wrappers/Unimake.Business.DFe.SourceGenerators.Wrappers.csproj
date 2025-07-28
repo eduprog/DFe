@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <PackageId>Unimake.Business.DFe.SourceGenerators.Wrappers</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Unimake</Authors>
+    <Description>Classes wrapper para geração automática de DTOs sem modificar o projeto base</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Unimake.Business.DFe\Unimake.Business.DFe.csproj" />
+    <ProjectReference Include="..\Unimake.Business.DFe.SourceGenerators\Unimake.Business.DFe.SourceGenerators.csproj" 
+                      OutputItemType="Analyzer" 
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>
