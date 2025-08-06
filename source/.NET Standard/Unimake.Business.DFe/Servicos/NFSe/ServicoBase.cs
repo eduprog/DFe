@@ -12,6 +12,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Net;
+using Unimake.Business.DFe.Utility;
 
 namespace Unimake.Business.DFe.Servicos.NFSe
 {
@@ -87,10 +89,19 @@ namespace Unimake.Business.DFe.Servicos.NFSe
                 case PadraoNFSe.EGOVERNEISS:
                     EGOVERNEISS();
                     break;
+
+                case PadraoNFSe.SIGISSWEB:
+                    SIGISSWEB();
+                    break;
+
+                case PadraoNFSe.SOFTPLAN:
+                    SOFTPLAN();
+                    break;
             }
             Configuracoes.Definida = true;
             base.DefinirConfiguracao();
         }
+
 
         private void HM2SOLUCOES()
         {
@@ -365,7 +376,7 @@ namespace Unimake.Business.DFe.Servicos.NFSe
                     break;
 
 
-                case Servico.NFSeCancelarNfse:                  
+                case Servico.NFSeCancelarNfse:
                     var chaveAutenticacao = GetXMLElementInnertext("ChaveAutenticacao");
                     var homologacao = GetXMLElementInnertext("Homologacao");
                     var motivo = string.Empty;
@@ -393,6 +404,86 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         }
 
         #endregion GIAP
+
+        #region SIGISSWEB
+        private void SIGISSWEB()
+        {
+            // Substituições de placeholders na URL
+            if (Configuracoes.RequestURI.Contains("{numeronf}"))
+            {
+                var numeroNf = GetXMLElementInnertext("numeronf");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{numeronf}", numeroNf);
+            }
+            if (Configuracoes.RequestURI.Contains("{serie}"))
+            {
+                var serie = GetXMLElementInnertext("serie");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{serie}", serie);
+            }
+            if (Configuracoes.RequestURI.Contains("{motivo}"))
+            {
+                var motivo = GetXMLElementInnertext("motivo");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{motivo}", motivo);
+            }
+            if (Configuracoes.RequestURI.Contains("{numerorps}"))
+            {
+                var numeroRps = GetXMLElementInnertext("NumeroRPS");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{numerorps}", numeroRps);
+            }
+            if (Configuracoes.RequestURI.Contains("{serierps}"))
+            {
+                var serieRps = GetXMLElementInnertext("Serie");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{serierps}", serieRps);
+            }
+
+            // ─────────── Monta o corpo do POST só para emissão de NFSe ───────────
+            if (Configuracoes.Servico == Servico.NFSeGerarNfse)
+            {
+                Configuracoes.HttpContent = new StringContent(
+                    ConteudoXMLAssinado.OuterXml,
+                    Encoding.UTF8,
+                    Configuracoes.WebContentType
+                );
+            }
+            else
+            {
+                Configuracoes.HttpContent = null;
+            }
+
+            var token = Token.GerarTokenSIGISSWEB(Configuracoes);
+
+            Configuracoes.MunicipioToken = token;
+        }
+
+        #endregion SIGISSWEB
+
+        #region SOFTPLAN
+
+        private void SOFTPLAN()
+        {
+            if (Configuracoes.RequestURI.Contains("{CodigoVerificacao}"))
+            {
+                var cv = GetXMLElementInnertext("CodigoVerificacao");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{CodigoVerificacao}", cv);
+            }
+            if (Configuracoes.RequestURI.Contains("{CMC}"))
+            {
+                var cmc = GetXMLElementInnertext("CMC");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{CMC}", cmc);
+            }
+            if (Configuracoes.RequestURI.Contains("numero"))
+            {
+                var numero = GetXMLElementInnertext("numero");
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{numero}", numero);
+            }
+
+            
+            var token = Token.GerarTokenSOFTPLAN(Configuracoes);
+
+            Configuracoes.MunicipioToken = token;
+        }
+
+        #endregion SOFTPLAN
+
 
         #endregion Configurações separadas por PadrãoNFSe
 

@@ -4,8 +4,8 @@
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<LangVersion>7.3</LangVersion>
-		<AssemblyVersion>2025.07.22.1412</AssemblyVersion>
-		<FileVersion>2025.07.22.1412</FileVersion>
+		<AssemblyVersion>2025.08.04.1740</AssemblyVersion>
+		<FileVersion>2025.08.04.1740</FileVersion>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
 		<Configurations>Debug;Release;INTEROP_Release</Configurations>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -306,12 +306,14 @@
 		<None Remove="Servicos\Config\NFSe\AguasDeLindoiaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\AgudoRS.xml" />
 		<None Remove="Servicos\Config\NFSe\AimoresMG.xml" />
+		<None Remove="Servicos\Config\NFSe\AlagoinhasBA.xml" />
 		<None Remove="Servicos\Config\NFSe\AlegreteRS.xml" />
 		<None Remove="Servicos\Config\NFSe\AlemParaibaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\AmambaiMS.xml" />
 		<None Remove="Servicos\Config\NFSe\AmargosaBA.xml" />
 		<None Remove="Servicos\Config\NFSe\AmericanaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\AnapolisGO.xml" />
+		<None Remove="Servicos\Config\NFSe\AndradasMG.xml" />
 		<None Remove="Servicos\Config\NFSe\AngraDosReisRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\AparecidaDeGoianiaGO.xml" />
 		<None Remove="Servicos\Config\NFSe\AracajuSE.xml" />
@@ -319,16 +321,22 @@
 		<None Remove="Servicos\Config\NFSe\AraguainaTO.xml" />
 		<None Remove="Servicos\Config\NFSe\AraguariMG.xml" />
 		<None Remove="Servicos\Config\NFSe\AraquariSC.xml" />
+		<None Remove="Servicos\Config\NFSe\ArarasSP.xml" />
+		<None Remove="Servicos\Config\NFSe\ArcosMG.xml" />
 		<None Remove="Servicos\Config\NFSe\AriquemesRO.xml" />
 		<None Remove="Servicos\Config\NFSe\ArroioDoMeioRS.xml" />
 		<None Remove="Servicos\Config\NFSe\ArujaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\AssisSP.xml" />
 		<None Remove="Servicos\Config\NFSe\AssuRN.xml" />
+		<None Remove="Servicos\Config\NFSe\AstorgaPR.xml" />
+		<None Remove="Servicos\Config\NFSe\BageRS.xml" />
 		<None Remove="Servicos\Config\NFSe\BalnearioCamboriuSC.xml" />
 		<None Remove="Servicos\Config\NFSe\BalnearioPicarrasSC.xml" />
+		<None Remove="Servicos\Config\NFSe\BarbacenaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\BaririSP.xml" />
 		<None Remove="Servicos\Config\NFSe\BarraDeSaoFranciscoES.xml" />
 		<None Remove="Servicos\Config\NFSe\BarraDoGarcasMT.xml" />
+		<None Remove="Servicos\Config\NFSe\BarraDoPiraiRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\BarraMansaRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\BarraVelhaSC.xml" />
 		<None Remove="Servicos\Config\NFSe\BarreirasBA.xml" />
@@ -361,6 +369,7 @@
 		<None Remove="Servicos\Config\NFSe\CamacariBA.xml" />
 		<None Remove="Servicos\Config\NFSe\CamboriuSC.xml" />
 		<None Remove="Servicos\Config\NFSe\CampinaGrandeDoSulPR.xml" />
+		<None Remove="Servicos\Config\NFSe\CampinaGrandePB.xml" />
 		<None Remove="Servicos\Config\NFSe\CampinasSP.xml" />
 		<None Remove="Servicos\Config\NFSe\CampoBomRS.xml" />
 		<None Remove="Servicos\Config\NFSe\CampoGrandeMS.xml" />
@@ -368,6 +377,7 @@
 		<None Remove="Servicos\Config\NFSe\CampoMouraoPR.xml" />
 		<None Remove="Servicos\Config\NFSe\CampoNovoParecisMT.xml" />
 		<None Remove="Servicos\Config\NFSe\CanaaDosCarajasPA.xml" />
+		<None Remove="Servicos\Config\NFSe\CandeiasBA.xml" />
 		<None Remove="Servicos\Config\NFSe\CanoasRS.xml" />
 		<None Remove="Servicos\Config\NFSe\CanoinhasSC.xml" />
 		<None Remove="Servicos\Config\NFSe\CarapicuibaSP.xml" />
@@ -381,6 +391,7 @@
 		<None Remove="Servicos\Config\NFSe\CaxiasDoSulRS.xml" />
 		<None Remove="Servicos\Config\NFSe\CedralSP.xml" />
 		<None Remove="Servicos\Config\NFSe\ChapecoSC.xml" />
+		<None Remove="Servicos\Config\NFSe\CianortePR.xml" />
 		<None Remove="Servicos\Config\NFSe\CodoMA.xml" />
 		<None Remove="Servicos\Config\NFSe\ColatinaES.xml" />
 		<None Remove="Servicos\Config\NFSe\ColiderMT.xml" />
@@ -409,6 +420,7 @@
 		<None Remove="Servicos\Config\NFSe\Equiplano.xml" />
 		<None Remove="Servicos\Config\NFSe\ErnestinaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\EstanciaVelhaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\EsteioRS.xml" />
 		<None Remove="Servicos\Config\NFSe\EstrelaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\EunapolisBA.xml" />
 		<None Remove="Servicos\Config\NFSe\EusebioCE.xml" />
@@ -417,6 +429,8 @@
 		<None Remove="Servicos\Config\NFSe\FernandopolisSP.xml" />
 		<None Remove="Servicos\Config\NFSe\FISCO.xml" />
 		<None Remove="Servicos\Config\NFSe\FloresDaCunhaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\FlorianopolisSC.xml" />
+		<None Remove="Servicos\Config\NFSe\FormigaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\FormosaGO.xml" />
 		<None Remove="Servicos\Config\NFSe\FortalezaCE.xml" />
 		<None Remove="Servicos\Config\NFSe\FozDoIguacuPR.xml" />
@@ -424,6 +438,7 @@
 		<None Remove="Servicos\Config\NFSe\GaranhunsPE.xml" />
 		<None Remove="Servicos\Config\NFSe\GarcaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\GaribaldiRS.xml" />
+		<None Remove="Servicos\Config\NFSe\GasparSC.xml" />
 		<None Remove="Servicos\Config\NFSe\GetulioVargasRS.xml" />
 		<None Remove="Servicos\Config\NFSe\Ginfes.xml" />
 		<None Remove="Servicos\Config\NFSe\GoianaPE.xml" />
@@ -438,16 +453,20 @@
 		<None Remove="Servicos\Config\NFSe\GuarapariES.xml" />
 		<None Remove="Servicos\Config\NFSe\GuaratinguetaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\GuaribaSP.xml" />
+		<None Remove="Servicos\Config\NFSe\GuaxupeMG.xml" />
 		<None Remove="Servicos\Config\NFSe\GurupiTO.xml" />
 		<None Remove="Servicos\Config\NFSe\HarmoniaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\IbicoaraBA.xml" />
 		<None Remove="Servicos\Config\NFSe\IbirubaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\IcaraSC.xml" />
 		<None Remove="Servicos\Config\NFSe\IgarapeMG.xml" />
 		<None Remove="Servicos\Config\NFSe\IjuiRS.xml" />
+		<None Remove="Servicos\Config\NFSe\ImbeRS.xml" />
 		<None Remove="Servicos\Config\NFSe\ImperatrizMA.xml" />
 		<None Remove="Servicos\Config\NFSe\IndaiatubaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\IpatingaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\IpojucaPE.xml" />
+		<None Remove="Servicos\Config\NFSe\IratiPR.xml" />
 		<None Remove="Servicos\Config\NFSe\ItabaianaSE.xml" />
 		<None Remove="Servicos\Config\NFSe\ItaberabaBA.xml" />
 		<None Remove="Servicos\Config\NFSe\ItabiraMG.xml" />
@@ -457,6 +476,7 @@
 		<None Remove="Servicos\Config\NFSe\ItajubaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\ItambacuriMG.xml" />
 		<None Remove="Servicos\Config\NFSe\ItamogiMG.xml" />
+		<None Remove="Servicos\Config\NFSe\ItanhangaMT.xml" />
 		<None Remove="Servicos\Config\NFSe\ItapemaSC.xml" />
 		<None Remove="Servicos\Config\NFSe\ItaporangaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\ItaquaquecetubaSP.xml" />
@@ -479,10 +499,14 @@
 		<None Remove="Servicos\Config\NFSe\JundiaiSP.xml" />
 		<None Remove="Servicos\Config\NFSe\JuquiaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\JuscimeiraMT.xml" />
+		<None Remove="Servicos\Config\NFSe\LajeadoRS.xml" />
 		<None Remove="Servicos\Config\NFSe\LauroDeFreitasBA.xml" />
+		<None Remove="Servicos\Config\NFSe\LavrasMG.xml" />
+		<None Remove="Servicos\Config\NFSe\LemeSP.xml" />
 		<None Remove="Servicos\Config\NFSe\LimeiraSP.xml" />
 		<None Remove="Servicos\Config\NFSe\LinharesES.xml" />
 		<None Remove="Servicos\Config\NFSe\LinsSP.xml" />
+		<None Remove="Servicos\Config\NFSe\LoandaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\LondrinaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\LontrasSC.xml" />
 		<None Remove="Servicos\Config\NFSe\LorenaSP.xml" />
@@ -497,6 +521,8 @@
 		<None Remove="Servicos\Config\NFSe\MaracanauCE.xml" />
 		<None Remove="Servicos\Config\NFSe\MarataRS.xml" />
 		<None Remove="Servicos\Config\NFSe\MarcolandiaPI.xml" />
+		<None Remove="Servicos\Config\NFSe\MarialvaPR.xml" />
+		<None Remove="Servicos\Config\NFSe\MarilenaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\MariliaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\MaringaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\MassarandubaSC.xml" />
@@ -533,13 +559,17 @@
 		<None Remove="Servicos\Config\NFSe\OuroFinoMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PadreBernardoGO.xml" />
 		<None Remove="Servicos\Config\NFSe\PalmaresPE.xml" />
+		<None Remove="Servicos\Config\NFSe\PalmasTO.xml" />
+		<None Remove="Servicos\Config\NFSe\PalmeiraPR.xml" />
 		<None Remove="Servicos\Config\NFSe\PantanoGrandeRS.xml" />
 		<None Remove="Servicos\Config\NFSe\ParacambiRJ.xml" />
+		<None Remove="Servicos\Config\NFSe\ParacatuMG.xml" />
 		<None Remove="Servicos\Config\NFSe\ParaDeMinasMG.xml" />
 		<None Remove="Servicos\Config\NFSe\ParagominasPA.xml" />
 		<None Remove="Servicos\Config\NFSe\ParanavaiPR.xml" />
 		<None Remove="Servicos\Config\NFSe\PareciNovoRS.xml" />
 		<None Remove="Servicos\Config\NFSe\ParobeRS.xml" />
+		<None Remove="Servicos\Config\NFSe\PassoFundoRS.xml" />
 		<None Remove="Servicos\Config\NFSe\PassosMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PatosDeMinasMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PauliniaSP.xml" />
@@ -547,16 +577,20 @@
 		<None Remove="Servicos\Config\NFSe\PauloBentoRS.xml" />
 		<None Remove="Servicos\Config\NFSe\PaveramaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\PederneirasSP.xml" />
+		<None Remove="Servicos\Config\NFSe\PedroLeopoldoMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PeixotodeAzevedoMT.xml" />
 		<None Remove="Servicos\Config\NFSe\PelotasRS.xml" />
 		<None Remove="Servicos\Config\NFSe\PenapolisSP.xml" />
 		<None Remove="Servicos\Config\NFSe\PetropolisRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\PiracicabaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\PiraiRJ.xml" />
+		<None Remove="Servicos\Config\NFSe\PiraquaraPR.xml" />
 		<None Remove="Servicos\Config\NFSe\PirassunungaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\PiratiningaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\PiumaES.xml" />
+		<None Remove="Servicos\Config\NFSe\PocosDeCaldasMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PomerodeSC.xml" />
+		<None Remove="Servicos\Config\NFSe\PontaGrossaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\PontalinaGO.xml" />
 		<None Remove="Servicos\Config\NFSe\PorangatuGO.xml" />
 		<None Remove="Servicos\Config\NFSe\PortaoRS.xml" />
@@ -565,6 +599,7 @@
 		<None Remove="Servicos\Config\NFSe\PortoVelhoRO.xml" />
 		<None Remove="Servicos\Config\NFSe\PotirendabaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\PousoAltoMG.xml" />
+		<None Remove="Servicos\Config\NFSe\PrataMG.xml" />
 		<None Remove="Servicos\Config\NFSe\PresidenteLucenaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\PrimaveraDoLesteMT.xml" />
 		<None Remove="Servicos\Config\NFSe\ProfessorJamilGO.xml" />
@@ -581,7 +616,9 @@
 		<None Remove="Servicos\Config\NFSe\SabaraMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SalvadorBA.xml" />
 		<None Remove="Servicos\Config\NFSe\SalvadorDoSulRS.xml" />
+		<None Remove="Servicos\Config\NFSe\SantaCruzDoSulRS.xml" />
 		<None Remove="Servicos\Config\NFSe\SantaMariaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\SantoAntonioDaPatrulhaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\SantoAntonioDaPlatinaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\SantoAntonioDeJesusBA.xml" />
 		<None Remove="Servicos\Config\NFSe\SantosSP.xml" />
@@ -589,11 +626,14 @@
 		<None Remove="Servicos\Config\NFSe\SaoCarlosSP.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoCristovaoSE.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoGoncaloDoAmaranteRN.xml" />
+		<None Remove="Servicos\Config\NFSe\SaoGoncaloDoParaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDaBoaVistaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDelReiMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDeMeritiRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDoParaisoMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaquimDaBarraSP.xml" />
+		<None Remove="Servicos\Config\NFSe\SaoJoaquimDeBicasMG.xml" />
+		<None Remove="Servicos\Config\NFSe\SaoJoseDaLapaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoseDeRibamarMA.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoseDoRioClaroMT.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoseDoRioPretoSP.xml" />
@@ -623,6 +663,7 @@
 		<None Remove="Servicos\Config\NFSe\TaioSC.xml" />
 		<None Remove="Servicos\Config\NFSe\TangaraDaSerraMT.xml" />
 		<None Remove="Servicos\Config\NFSe\TaperaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\TaquaraRS.xml" />
 		<None Remove="Servicos\Config\NFSe\TaquaritingaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\TaquaritubaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\TaubateSP.xml" />
@@ -645,12 +686,15 @@
 		<None Remove="Servicos\Config\NFSe\UmuaramaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\UruguaianaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\ValencaBA.xml" />
+		<None Remove="Servicos\Config\NFSe\VargemGrandePaulistaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\VarginhaMG.xml" />
 		<None Remove="Servicos\Config\NFSe\VarzeaGrandeMT.xml" />
+		<None Remove="Servicos\Config\NFSe\VenancioAiresRS.xml" />
 		<None Remove="Servicos\Config\NFSe\VeraCruzRS.xml" />
 		<None Remove="Servicos\Config\NFSe\VeranopolisRS.xml" />
 		<None Remove="Servicos\Config\NFSe\VianaES.xml" />
 		<None Remove="Servicos\Config\NFSe\VilaVelhaES.xml" />
+		<None Remove="Servicos\Config\NFSe\VilhenaRO.xml" />
 		<None Remove="Servicos\Config\NFSe\ViscondeDoRioBrancoMG.xml" />
 		<None Remove="Servicos\Config\NFSe\VitoriaDaConquistaBA.xml" />
 		<None Remove="Servicos\Config\NFSe\VitoriaES.xml" />
@@ -1055,6 +1099,7 @@
 		<None Remove="Xml\Schemas\NFCom\tiposGeralNFCom_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFCom\xmldsig-core-schema_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFe\110150_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\Averb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\DFeTiposBasicos_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\distDFeInt_v1.35.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110130_v1.00.xsd" />
@@ -1064,6 +1109,8 @@
 		<None Remove="Xml\Schemas\NFe\e110193_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110750_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110751_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e790700_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\envAverb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\envEPEC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\envEventoAtorInteressado_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\envEventoCancEConf_v1.00.xsd" />
@@ -1081,6 +1128,7 @@
 		<None Remove="Xml\Schemas\NFe\EventoEntregaNFe_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\eventoEPEC_v0.01.xsd" />
 		<None Remove="Xml\Schemas\NFe\EventoInsucessoNFe_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\leiauteAverb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\leiauteEPEC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\leiauteEventoAtorInteressado_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\leiauteEventoCancEConf_v1.00.xsd" />
@@ -1089,6 +1137,7 @@
 		<None Remove="Xml\Schemas\NFe\leiauteEventoEConf_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\leiauteEventoEntregaNFe_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\leiauteEventoInsucessoNFe_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\procAverbNFe_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\procEPEC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\procEventoAtorInteressado_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\procEventoCancEConf_v1.00.xsd" />
@@ -1100,6 +1149,7 @@
 		<None Remove="Xml\Schemas\NFe\resEvento_v1.35.xsd" />
 		<None Remove="Xml\Schemas\NFe\resNFe_v1.35.xsd" />
 		<None Remove="Xml\Schemas\NFe\retDistDFeInt_v1.35.xsd" />
+		<None Remove="Xml\Schemas\NFe\retEnvAverb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\retEnvEPEC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\retEnvEventoAtorInteressado_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\retEventoCancEConf_v1.00.xsd" />
@@ -1422,40 +1472,80 @@
 	  <EmbeddedResource Include="Servicos\Config\NFCom\SP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\SVRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\TO.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\AlagoinhasBA.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AlemParaibaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AmericanaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AnapolisGO.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\AndradasMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AngraDosReisRJ.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AracatubaSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\ArarasSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\ArcosMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ArroioDoMeioRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\AstorgaPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\BageRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\BarbacenaMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\BarraDoPiraiRJ.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\CaceresMT.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\CampinaGrandePB.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\CandeiasBA.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\CianortePR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\CriciumaSC.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\CruzeiroDoSulRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\DoisIrmaosRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\DracenaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\EmbuDasArtesSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\EsteioRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\EunapolisBA.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\EusebioCE.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\FlorianopolisSC.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\FormigaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\FozDoIguacuPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\GasparSC.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\GuaxupeMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\IcaraSC.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\ImbeRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\IndaiatubaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\IpojucaPE.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\IratiPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\ItanhangaMT.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\JacareiSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\LajeadoRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\LavrasMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\LemeSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\LinharesES.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\LinsSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\LoandaPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\MacaeRJ.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ManhuacuMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\MaracaiSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\MaracanauCE.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\MarialvaPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\MarilenaPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\NiteroiRJ.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\OsascoSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PalmasTO.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PalmeiraPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\ParacatuMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ParagominasPA.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PassoFundoRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\PatosDeMinasMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PedroLeopoldoMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\PiraiRJ.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PiraquaraPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\PirassunungaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\PiumaES.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PocosDeCaldasMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PontaGrossaPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\PrataMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SabaraMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SantaCruzDoSulRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SantoAntonioDaPatrulhaRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoGoncaloDoParaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaoDaBoaVistaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaoDoParaisoMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaquimDeBicasMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoseDaLapaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoseDoRioClaroMT.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoValentimRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AimoresMG.xml" />
@@ -1626,6 +1716,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TaiobeirasMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TangaraDaSerraMT.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TapejaraRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\TaquaraRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TaquaritingaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TeixeiraDeFreitasBA.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TeresinaPI.xml" />
@@ -1665,6 +1756,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\TimboSC.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\UmuaramaPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ValencaBA.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\VargemGrandePaulistaSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\VarzeaGrandeMT.xml">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
@@ -1830,6 +1922,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\AmambaiMS.xml">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	  <EmbeddedResource Include="Servicos\Config\NFSe\VenancioAiresRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\VeranopolisRS.xml">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
@@ -1837,6 +1930,7 @@
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>
 	  <EmbeddedResource Include="Servicos\Config\NFSe\VianaES.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\VilhenaRO.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ViscondeDoRioBrancoMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\VitoriaES.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\VotorantimSP.xml" />
@@ -2298,11 +2392,14 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFCom\tiposGeralNFCom_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFCom\xmldsig-core-schema_v1.01.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\110150_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\Averb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\DFeTiposBasicos_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110192_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110193_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110750_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110751_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e790700_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\envAverb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\envEventoAtorInteressado_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\envEventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\envEventoCancInsucessoNFe_v1.00.xsd" />
@@ -2313,16 +2410,19 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoCancInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoInsucessoNFe_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteAverb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoAtorInteressado_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoCancInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoInsucessoNFe_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\procAverbNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoAtorInteressado_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoCancInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoInsucessoNFe_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\retEnvAverb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\retEnvEventoAtorInteressado_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\retEventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\retEventoCancInsucessoNFe_v1.00.xsd" />
@@ -3411,9 +3511,9 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.7" />
-		<PackageReference Include="Unimake.Cryptography" Version="20250711.1902.25" />
-		<PackageReference Include="Unimake.Extensions" Version="20250711.1902.25" />
-		<PackageReference Include="Unimake.Utils" Version="20250711.1902.25" />
+		<PackageReference Include="Unimake.Cryptography" Version="20250728.1652.21" />
+		<PackageReference Include="Unimake.Extensions" Version="20250728.1652.21" />
+		<PackageReference Include="Unimake.Utils" Version="20250728.1652.21" />
 	</ItemGroup>
 
 	<ItemGroup>
