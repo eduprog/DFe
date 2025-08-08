@@ -2603,4 +2603,28 @@
 		<ArqConfig>IcaraSC.xml</ArqConfig>
 		<PadraoNFSe>BAUHAUS</PadraoNFSe>
 	</Arquivo>
+	<Arquivo ID="3535507">
+		<Nome>Paraguaçu Paulista - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>ParaguacuPaulistaSP.xml</ArqConfig>
+		<PadraoNFSe>SIMPLISS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3148103">
+		<Nome>Patrocínio - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>PatrocinioMG.xml</ArqConfig>
+		<PadraoNFSe>SIMPLISS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3541406">
+		<Nome>Presidente Prudente - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>PresidentePrudenteSP.xml</ArqConfig>
+		<PadraoNFSe>SIMPLISS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3556404">
+		<Nome>Vargem Grande do Sul - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>VargemGrandeDoSulSP.xml</ArqConfig>
+		<PadraoNFSe>SIMPLISS</PadraoNFSe>
+	</Arquivo>
 </Configuracoes>
