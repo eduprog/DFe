@@ -2561,7 +2561,8 @@ namespace TreinamentoDLL
             {
                 if (CertificadoSelecionadoField == null)
                 {
-                    CertificadoSelecionadoField = new CertificadoDigital().CarregarCertificadoDigitalA1(PathCertificadoDigital, SenhaCertificadoDigital);
+                    CertificadoSelecionadoField = new CertificadoDigital().AbrirTelaSelecao();
+                    //new CertificadoDigital().CarregarCertificadoDigitalA1(PathCertificadoDigital, SenhaCertificadoDigital);
                 }
 
                 return CertificadoSelecionadoField;
