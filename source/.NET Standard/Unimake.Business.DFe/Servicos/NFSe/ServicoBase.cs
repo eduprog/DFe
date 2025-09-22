@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Net;
 using Unimake.Business.DFe.Utility;
+using System.Text.RegularExpressions;
 
 namespace Unimake.Business.DFe.Servicos.NFSe
 {
@@ -96,6 +97,10 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
                 case PadraoNFSe.SOFTPLAN:
                     SOFTPLAN();
+                    break;
+
+                case PadraoNFSe.ISSONLINE_ASSESSORPUBLICO:
+                    ISSONLINE_ASSESSORPUBLICO();
                     break;
             }
             Configuracoes.Definida = true;
@@ -460,15 +465,15 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
         private void SOFTPLAN()
         {
-            if (Configuracoes.RequestURI.Contains("{CodigoVerificacao}"))
+            if (Configuracoes.RequestURI.Contains("{codigoVerificacao}"))
             {
                 var cv = GetXMLElementInnertext("CodigoVerificacao");
-                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{CodigoVerificacao}", cv);
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{codigoVerificacao}", cv);
             }
-            if (Configuracoes.RequestURI.Contains("{CMC}"))
+            if (Configuracoes.RequestURI.Contains("{cmc}"))
             {
                 var cmc = GetXMLElementInnertext("CMC");
-                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{CMC}", cmc);
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{cmc}", cmc);
             }
             if (Configuracoes.RequestURI.Contains("numero"))
             {
@@ -476,13 +481,37 @@ namespace Unimake.Business.DFe.Servicos.NFSe
                 Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{numero}", numero);
             }
 
-            
-            var token = Token.GerarTokenSOFTPLAN(Configuracoes);
+            var tokenTemp = Configuracoes.MunicipioToken;
 
-            Configuracoes.MunicipioToken = token;
+            if (!Token.TokenEhValido(Configuracoes.MunicipioTokenValidade, tokenTemp))
+            {
+                var token = Token.GerarTokenSOFTPLAN(Configuracoes);
+
+                Configuracoes.MunicipioTokenValidade = DateTime.Now.AddSeconds(token.ExpiresIn);
+                tokenTemp = token.AccessToken;
+            }
+
+            Configuracoes.MunicipioToken = $"Bearer {tokenTemp}";
         }
 
         #endregion SOFTPLAN
+
+        #region ISSONLINE_ASSESSORPUBLICO
+
+        private void ISSONLINE_ASSESSORPUBLICO()
+        {
+            var senhaCriptografada = Criptografia.GetMD5Hash(Configuracoes.MunicipioSenha);
+
+            Configuracoes.MunicipioSenha = senhaCriptografada;
+
+            var soap = Configuracoes.WebSoapString;
+
+            var substuicao = Regex.Replace(soap, @"<nfse:Senha>.*?</nfse:Senha>", $"<nfse:Senha>{Configuracoes.MunicipioSenha}</nfse:Senha>");
+
+            Configuracoes.WebSoapString = substuicao;
+        }
+
+        #endregion ISSONLINE_ASSESSORPUBLICO
 
 
         #endregion Configurações separadas por PadrãoNFSe
@@ -616,32 +645,53 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         {
             get
             {
-                if (Configuracoes.PadraoNFSe == PadraoNFSe.DSF && Configuracoes.EncriptaTagAssinatura)
+                if (Configuracoes.EncriptaTagAssinatura)
                 {
-                    var listLote = ConteudoXML.GetElementsByTagName("Lote");
-
-                    foreach (XmlNode nodeLote in listLote)
+                    if (Configuracoes.PadraoNFSe == PadraoNFSe.DSF)
                     {
-                        var elementListLote = (XmlElement)nodeLote;
-
-                        foreach (XmlNode nodeRps in elementListLote.GetElementsByTagName("RPS"))
+                        // DSF: RPS dentro de cada Lote; normaliza quando vier com mais de 40 chars
+                        foreach (XmlElement lote in ConteudoXML.GetElementsByTagName("Lote"))
                         {
-                            var elementRps = (XmlElement)nodeRps;
-
-                            var tagAssinatura = elementRps.GetElementsByTagName("Assinatura");
-
-                            if (tagAssinatura.Count > 0)
+                            foreach (XmlElement rps in lote.GetElementsByTagName("RPS"))
                             {
-                                var conteudoTagAssinatura = tagAssinatura[0].InnerText;
+                                var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
+                                if (assinaturaNodes.Count == 0) continue;
 
-                                // O formato esperado do hash SHA-1 é 40 caracteres
-                                // Se vier encriptado, vamos fazer nada
-                                if (conteudoTagAssinatura.Length > 40)
+                                var el = (XmlElement)assinaturaNodes[0];
+                                var valor = el.InnerText?.Trim();
+
+                                if (!IsSha1Hex(valor) && (valor?.Length > 40))
                                 {
-                                    var sh1 = Criptografia.GetSHA1HashData(conteudoTagAssinatura);
-
-                                    elementRps.GetElementsByTagName("Assinatura")[0].InnerText = sh1;
+                                    el.InnerText = Criptografia.GetSHA1HashData(valor);
                                 }
+                            }
+                        }
+                    }
+                    else if (Configuracoes.PadraoNFSe == PadraoNFSe.PAULISTANA)
+                    {
+                        // PAULISTANA: normalização nos RPS
+                        foreach (XmlElement rps in ConteudoXML.GetElementsByTagName("RPS"))
+                        {
+                            var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
+                            if (assinaturaNodes.Count == 0) continue;
+
+                            var el = (XmlElement)assinaturaNodes[0];
+                            var valor = el.InnerText?.Trim();
+
+                            if (!IsSha1Hex(valor) && (valor?.Length == 86 || valor?.Length == 101))
+                            {
+                                el.InnerText = Criptografia.GetSHA1HashData(valor);
+                            }
+                        }
+
+                        //CANCELAMENTO: <AssinaturaCancelamento>
+                        foreach (XmlElement el in ConteudoXML.GetElementsByTagName("AssinaturaCancelamento"))
+                        {
+                            var valor = el.InnerText?.Trim();
+
+                            if (!IsSha1Hex(valor) && (valor?.Length == 20))
+                            {
+                                el.InnerText = Criptografia.GetSHA1HashData(valor);
                             }
                         }
                     }
@@ -840,5 +890,20 @@ namespace Unimake.Business.DFe.Servicos.NFSe
             stream.Write(byteData, 0, byteData.Length);
             stream.Close();
         }
+
+        #region Private Methods
+        private static bool IsSha1Hex(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s) || s.Length != 40) return false;
+            foreach (var c in s)
+            {
+                bool isHex = (c >= '0' && c <= '9') ||
+                             (c >= 'a' && c <= 'f') ||
+                             (c >= 'A' && c <= 'F');
+                if (!isHex) return false;
+            }
+            return true;
+        }
+        #endregion Private Methods
     }
 }

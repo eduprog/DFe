@@ -27,11 +27,16 @@
 				<indIntermed>0</indIntermed>
 				<procEmi>3</procEmi>
 				<verProc>4.00_HOMO</verProc>
+				<gCompraGov>
+					<tpEnteGov>1</tpEnteGov>
+					<pRedutor>1.0000</pRedutor>
+					<tpOperGov>1</tpOperGov>
+				</gCompraGov>
 			</ide>
 			<emit>
 				<CNPJ>12345678901234</CNPJ>
-				<xNome>TESTE DE RTC - CST 000 E CST 550</xNome>
-				<xFant>TESTE DE RTC - CST 000 E CST 550</xFant>
+				<xNome>TESTE DE RTC - CST 510 E CST 620</xNome>
+				<xFant>TESTE DE RTC - CST 510 E CST 620</xFant>
 				<enderEmit>
 					<xLgr>RUA XXXXXXXXXX</xLgr>
 					<nro>2</nro>
@@ -124,7 +129,7 @@
 					</COFINS>
 					<IBSCBS>
 						<CST>510</CST>
-						<cClassTrib>200032</cClassTrib>
+						<cClassTrib>510001</cClassTrib>
 						<gIBSCBS>
 							<vBC>1840.61</vBC>
 							<gIBSUF>
@@ -136,6 +141,10 @@
 								<gDevTrib>
 									<vDevTrib>0.00</vDevTrib>
 								</gDevTrib>
+								<gRed>
+									<pRedAliq>60.0000</pRedAliq>
+									<pAliqEfet>0.0040</pAliqEfet>
+								</gRed>
 								<vIBSUF>0.07</vIBSUF>
 							</gIBSUF>
 							<gIBSMun>
@@ -147,6 +156,10 @@
 								<gDevTrib>
 									<vDevTrib>0.00</vDevTrib>
 								</gDevTrib>
+								<gRed>
+									<pRedAliq>60.0000</pRedAliq>
+									<pAliqEfet>0.0040</pAliqEfet>
+								</gRed>
 								<vIBSMun>0.01</vIBSMun>
 							</gIBSMun>
 							<gCBS>
@@ -158,6 +171,10 @@
 								<gDevTrib>
 									<vDevTrib>0.00</vDevTrib>
 								</gDevTrib>
+								<gRed>
+									<pRedAliq>60.0000</pRedAliq>
+									<pAliqEfet>0.0040</pAliqEfet>
+								</gRed>
 								<vCBS>6.63</vCBS>
 							</gCBS>
 							<gIBSCredPres>

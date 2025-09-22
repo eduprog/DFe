@@ -38,11 +38,6 @@ namespace Unimake.DFe.Test.NFe
 
             var docGerado = xml.GerarXML();
 
-            if (File.Exists(@"C:\Users\Wandrey\Downloads\XmlGerado.xml"))
-            {
-                File.Delete(@"C:\Users\Wandrey\Downloads\XmlGerado.xml");
-            }
-            File.WriteAllText(@"C:\Users\Wandrey\Downloads\XmlGerado.xml", docGerado.OuterXml);
 
             Assert.True(doc.InnerText == docGerado.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
@@ -56,6 +51,7 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(@"..\..\..\NFe\Resources\NFe2.xml")]
         [InlineData(@"..\..\..\NFe\Resources\NFe3.xml")]
         [InlineData(@"..\..\..\NFe\Resources\NFe4.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\NFeRTC1.xml")]
         public void SerializacaoDesserializacaoNFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -73,15 +69,9 @@ namespace Unimake.DFe.Test.NFe
                 ]
             };
 
-            var configuracao = new Configuracao
-            {
-                TipoDFe = TipoDFe.NFe,
-                CertificadoDigital = PropConfig.CertificadoDigital
-            };
+            var doc2 = enviNFe.GerarXML();
 
-            var autorizacao = new Business.DFe.Servicos.NFe.Autorizacao(enviNFe, configuracao);
-
-            Assert.True(doc.InnerText == autorizacao.ConteudoXMLOriginal.GetElementsByTagName("NFe")[0].InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+            Assert.True(doc.InnerText == doc2.GetElementsByTagName("NFe")[0].InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
         }
 
         /// <summary>

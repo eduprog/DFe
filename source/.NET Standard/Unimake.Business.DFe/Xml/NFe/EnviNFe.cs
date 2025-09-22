@@ -13051,7 +13051,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Valor do IBS (soma de vIBSUF e vIBSMun). Quando houver crédito presumido com indicador “IndDeduzCredPres=1”, o vCredPres deve ser abatido desse valor.
         /// </summary>
         [XmlIgnore]
-        public double VIBS { get; set; }
+        public double? VIBS { get; set; }
 
         /// <summary>
         /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade vIBS para atribuir ou resgatar o valor)
@@ -13059,7 +13059,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("vIBS")]
         public string VIBSField
         {
-            get => VIBS.ToString("F2", CultureInfo.InvariantCulture);
+            get => VIBS?.ToString("F2", CultureInfo.InvariantCulture);
             set => VIBS = Converter.ToDouble(value);
         }
 
@@ -13068,7 +13068,6 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// </summary>
         [XmlElement("gCBS")]
         public GCBS GCBS { get; set; }
-
 
         /// <summary>
         /// Grupo de informações da Tributação Regular
@@ -13093,6 +13092,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// </summary>
         [XmlElement("gTribCompraGov")]
         public GTribCompraGov GTribCompraGov { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeVIBSField() => VIBS != null;
+
+        #endregion
     }
 
     /// <summary>
@@ -14016,7 +14021,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("pDifIBS")]
         public string PDifIBSField
         {
-            get => PDifIBS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PDifIBS.ToString("F2", CultureInfo.InvariantCulture);
             set => PDifIBS = Converter.ToDouble(value);
         }
 
@@ -14048,7 +14053,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("pDifCBS")]
         public string PDifCBSField
         {
-            get => PDifCBS.ToString("F4", CultureInfo.InvariantCulture);
+            get => PDifCBS.ToString("F2", CultureInfo.InvariantCulture);
             set => PDifCBS = Converter.ToDouble(value);
         }
 
