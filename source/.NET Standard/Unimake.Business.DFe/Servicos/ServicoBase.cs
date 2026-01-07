@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text;
+using Unimake.Exceptions;
+using Unimake.Business.DFe.Validator.Abstractions;
 
 namespace Unimake.Business.DFe.Servicos
 {
@@ -25,8 +27,9 @@ namespace Unimake.Business.DFe.Servicos
     [ProgId("Unimake.Business.DFe.Servicos.ServicoBase")]
     [ComVisible(true)]
 #endif
-    public abstract class ServicoBase
+    public abstract class ServicoBase : IDisposable
     {
+        private bool _disposed = false;
         private XmlDocument _ConteudoXML;
 
         /// <summary>
@@ -74,9 +77,16 @@ namespace Unimake.Business.DFe.Servicos
         }
 
         /// <summary>
+        /// Exceções que não interrompem o fluxo do sistema, sendo registradas apenas como avisos ou alertas.
+        /// </summary>
+        public List<ValidatorDFeException> Warnings { get; protected set; } = new List<ValidatorDFeException>();
+
+        /// <summary>
         /// Construtor
         /// </summary>
-        protected ServicoBase() { }
+        protected ServicoBase()
+        {
+        }
 
         /// <summary>
         /// Este método é uma possibilidade de fazer ajustes no XML depois de assinado, pois ele é executado assim que a assinatura é feita. Basta implementar ele nas heranças.
@@ -102,8 +112,8 @@ namespace Unimake.Business.DFe.Servicos
                 ....                            oque é específico entre um tipo de DFe, dentro da classe ServicoBaseDFe..
 
              */
-            if (!Configuracoes.Definida)                                    
-            {                                                               
+            if (!Configuracoes.Definida)
+            {
                 Configuracoes.Load(GetType().Name);
             }
 
@@ -256,6 +266,16 @@ namespace Unimake.Business.DFe.Servicos
             Configuracoes = configuracao ?? throw new ArgumentNullException(nameof(configuracao));
             ConteudoXML = conteudoXML ?? throw new ArgumentNullException(nameof(conteudoXML));
 
+            var validator = (XmlValidatorBase)(ValidatorFactory.BuidValidator(ConteudoXML.InnerXml));
+            var validou = (validator?.Validate() ?? true);
+
+            Warnings = validator?.Warnings;
+
+            if (!validou)
+            {
+                return;
+            }
+
             if (!Configuracoes.Definida)
             {
                 DefinirConfiguracao();
@@ -329,7 +349,7 @@ namespace Unimake.Business.DFe.Servicos
         /// <summary>
         /// Stream retornada pelo Webservice. Para consumo de serviços que retornam .pdf
         /// </summary>
-        public Stream RetornoStream { get; set; }
+        public Stream RetornoWSStream { get; set; }
 
         static ServicoBase() => AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolver.AssemblyResolve;
 
@@ -341,11 +361,6 @@ namespace Unimake.Business.DFe.Servicos
 #endif
         public virtual void Executar()
         {
-            if (!(ValidatorFactory.BuidValidator(ConteudoXML.InnerXml)?.Validate() ?? true))
-            {
-                return;
-            }
-
             if (!string.IsNullOrWhiteSpace(Configuracoes.TagAssinatura) && Configuracoes.NaoAssina != null && Configuracoes.NaoAssina != Configuracoes.TipoAmbiente)
             {
                 if (!AssinaturaDigital.EstaAssinado(ConteudoXML, Configuracoes.TagAssinatura))
@@ -370,8 +385,8 @@ namespace Unimake.Business.DFe.Servicos
                     WebAction = Configuracoes.WebActionProducao,
                     MunicipioSenha = Configuracoes.MunicipioSenha,
                     MunicipioUsuario = Configuracoes.MunicipioUsuario,
-                    PadraoNFSe = Configuracoes.PadraoNFSe,              
-                    LoginConexao = Configuracoes.LoginConexao,          
+                    PadraoNFSe = Configuracoes.PadraoNFSe,
+                    LoginConexao = Configuracoes.LoginConexao,
                     ResponseMediaType = Configuracoes.ResponseMediaType,
                     CodigoTom = Configuracoes.CodigoTom,
                     Servico = Configuracoes.Servico,
@@ -386,8 +401,23 @@ namespace Unimake.Business.DFe.Servicos
 
                 RetornoWSString = consumirAPI.RetornoServicoString;
                 RetornoWSXML = consumirAPI.RetornoServicoXML;
-                RetornoStream = consumirAPI.RetornoStream;  //Retorno específico para criação de .pdf para os casos em que a String corrompe o conteúdo. Mauricio 27/09/2023 #157859
                 HttpStatusCode = consumirAPI.HttpStatusCode;
+
+                // Copiar o stream para um MemoryStream antes do Dispose
+                if (consumirAPI.RetornoServicoStream != null)
+                {
+                    var memoryStream = new MemoryStream();
+                    consumirAPI.RetornoServicoStream.CopyTo(memoryStream);
+                    memoryStream.Position = 0;
+                    RetornoWSStream = memoryStream;
+                }
+                else
+                {
+                    RetornoWSStream = null;
+                }
+
+                apiConfig.Dispose();
+                consumirAPI.Dispose();
             }
             else
             {
@@ -423,6 +453,8 @@ namespace Unimake.Business.DFe.Servicos
                 RetornoWSString = consumirWS.RetornoServicoString;
                 RetornoWSXML = consumirWS.RetornoServicoXML;
                 HttpStatusCode = consumirWS.HttpStatusCode;
+
+                consumirWS.Dispose();
             }
         }
 
@@ -436,5 +468,46 @@ namespace Unimake.Business.DFe.Servicos
         [ComVisible(false)]
 #endif
         public abstract void GravarXmlDistribuicao(string pasta, string nomeArquivo, string conteudoXML);
+
+        /// <summary>
+        /// Implementação do padrão Dispose para liberar recursos.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose protegido para sobrescrita em classes derivadas.
+        /// </summary>
+        /// <param name="disposing">Indica se está liberando recursos gerenciados.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                // Liberar recursos gerenciados
+                if (RetornoWSStream != null)
+                {
+                    RetornoWSStream.Dispose();
+                    RetornoWSStream = null;
+                }
+            }
+
+            // Liberar recursos não gerenciados (se houver)
+
+            _disposed = true;
+        }
+
+        /// <summary>
+        /// Finalizador
+        /// </summary>
+        ~ServicoBase()
+        {
+            Dispose(false);
+        }
     }
 }

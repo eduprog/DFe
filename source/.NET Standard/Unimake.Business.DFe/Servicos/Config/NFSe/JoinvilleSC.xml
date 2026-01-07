@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuracoes>
-    <Servicos ID="NFSe">
-        <RecepcionarLoteRps versao="3.00">
+	<Servicos ID="NFSe">
+		<RecepcionarLoteRps versao="3.00">
 			<Descricao>Recepcionar Lote RPS</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
 			<WebEnderecoProducao>https://nfem.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoProducao>
 			<WebActionHomologacao>http://service.nfse.integracao.ws.publica/Services/RecepcionarLoteRpsRequest</WebActionHomologacao>
 			<WebActionProducao>http://service.nfse.integracao.ws.publica/Services/GerarNfseRequest</WebActionProducao>
-			<SchemaArquivo></SchemaArquivo>
+			<SchemaArquivo>schema_nfse_v03-rtc.xsd</SchemaArquivo>
 			<TagAssinatura>Rps</TagAssinatura>
 			<TagAtributoID>InfRps</TagAtributoID>
 			<TagLoteAssinatura>EnviarLoteRpsEnvio</TagLoteAssinatura>
@@ -16,17 +16,17 @@
 			<WebSoapString><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.nfse.integracao.ws.publica/"><soapenv:Header/><soapenv:Body><ser:RecepcionarLoteRps><XML>{xmlBodyScape}</XML></ser:RecepcionarLoteRps></soapenv:Body></soapenv:Envelope>]]></WebSoapString>
 			<WebTagRetorno>ns2:RecepcionarLoteRpsResponse</WebTagRetorno>
 			<WebEncodingRetorno>UTF-8</WebEncodingRetorno>
-            <WebSoapVersion>soap11</WebSoapVersion>
+			<WebSoapVersion>soap11</WebSoapVersion>
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
-        </RecepcionarLoteRps>
+		</RecepcionarLoteRps>
 		<GerarNfse versao="3.00">
 			<Descricao>Gerar uma única NFSe</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
 			<WebEnderecoProducao>https://nfem.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoProducao>
 			<WebActionHomologacao>http://service.nfse.integracao.ws.publica/Services/GerarNfseRequest</WebActionHomologacao>
 			<WebActionProducao>http://service.nfse.integracao.ws.publica/Services/GerarNfseRequest</WebActionProducao>
-			<SchemaArquivo></SchemaArquivo>
+			<SchemaArquivo>schema_nfse_v03-rtc.xsd</SchemaArquivo>
 			<TagAssinatura>Rps</TagAssinatura>
 			<TagAtributoID>InfRps</TagAtributoID>
 			<TagLoteAssinatura></TagLoteAssinatura>
@@ -39,13 +39,13 @@
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
 		</GerarNfse>
-        <CancelarNfse versao="3.00">
+		<CancelarNfse versao="3.00">
 			<Descricao>Cancelar NFSe</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
 			<WebEnderecoProducao>https://nfem.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoProducao>
 			<WebActionHomologacao>http://service.nfse.integracao.ws.publica/Services/CancelarNfseRequest</WebActionHomologacao>
 			<WebActionProducao>http://service.nfse.integracao.ws.publica/Services/GerarNfseRequest</WebActionProducao>
-			<SchemaArquivo></SchemaArquivo>
+			<SchemaArquivo>schema_nfse_v03-rtc.xsd</SchemaArquivo>
 			<TagAssinatura>Pedido</TagAssinatura>
 			<TagAtributoID>InfPedidoCancelamento</TagAtributoID>
 			<TagLoteAssinatura></TagLoteAssinatura>
@@ -57,8 +57,8 @@
 			<WebSoapVersion>soap11</WebSoapVersion>
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
-        </CancelarNfse>
-        <ConsultarLoteRps versao="3.00">
+		</CancelarNfse>
+		<ConsultarLoteRps versao="3.00">
 			<Descricao>Consultar Lote RPS</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
 			<WebEnderecoProducao>https://nfem.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoProducao>
@@ -76,14 +76,14 @@
 			<WebSoapVersion>soap11</WebSoapVersion>
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
-        </ConsultarLoteRps>
-        <ConsultarNfsePorRps versao="3.00">
+		</ConsultarLoteRps>
+		<ConsultarNfsePorRps versao="3.00">
 			<Descricao>Consultar NFSe por RPS</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
 			<WebEnderecoProducao>https://nfem.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoProducao>
 			<WebActionHomologacao>http://service.nfse.integracao.ws.publica/Services/ConsultarNfsePorRpsRequest</WebActionHomologacao>
 			<WebActionProducao>http://service.nfse.integracao.ws.publica/Services/GerarNfseRequest</WebActionProducao>
-			<SchemaArquivo></SchemaArquivo>
+			<SchemaArquivo>schema_nfse_v03-rtc.xsd</SchemaArquivo>
 			<TagAssinatura>ConsultarNfseRpsEnvio</TagAssinatura>
 			<TagAtributoID>Prestador</TagAtributoID>
 			<TagLoteAssinatura></TagLoteAssinatura>
@@ -95,7 +95,7 @@
 			<WebSoapVersion>soap11</WebSoapVersion>
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
-        </ConsultarNfsePorRps>
+		</ConsultarNfsePorRps>
 		<ConsultarNfseFaixa versao="3.00">
 			<Descricao>Consultar NFSe por faixa de numeração</Descricao>
 			<WebEnderecoHomologacao>https://nfsehomologacao.joinville.sc.gov.br/nfse_integracao/Services?wsdl</WebEnderecoHomologacao>
@@ -134,5 +134,5 @@
 			<SchemaVersao>3.00</SchemaVersao>
 			<TargetNS>http://www.publica.inf.br</TargetNS>
 		</ConsultarSituacaoLoteRps>
-    </Servicos>
+	</Servicos>
 </Configuracoes>

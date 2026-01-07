@@ -130,7 +130,7 @@ namespace Unimake.Business.DFe.Servicos
         /// </summary>
         /// <param name="arquivo">Nome do arquivo que é para ler o conteúdo</param>
         /// <returns>Stream do arquivo de configuração contido nos recursos da DLL</returns>
-        private Stream LoadXmlConfig(string arquivo) => _assembly.GetManifestResourceStream(arquivo);
+        public Stream LoadXmlConfig(string arquivo) => _assembly.GetManifestResourceStream(arquivo);
 
         /// <summary>
         /// Ler as configurações do XML
@@ -362,9 +362,18 @@ namespace Unimake.Business.DFe.Servicos
                                 EncriptaTagAssinatura = XMLUtility.TagRead(elementPropriedades, "EncriptaTagAssinatura").ToLower() == "true" ? true : false;
                             }
 
-                            if (XMLUtility.TagExist(elementPropriedades, "TemCDATA"))
+                            if (XMLUtility.TagExist(elementPropriedades, "EncriptaTagAssinatura"))
                             {
-                                TemCDATA = XMLUtility.TagRead(elementPropriedades, "TemCDATA").ToLower() == "true" ? true : false;
+                                EncriptaTagAssinatura = XMLUtility.TagRead(elementPropriedades, "EncriptaTagAssinatura").ToLower() == "true" ? true : false;
+                            }
+
+                            if (XMLUtility.TagExist(elementPropriedades, "TimeOutWebServiceConnect"))
+                            {
+                                var timeOut = Convert.ToInt32(XMLUtility.TagRead(elementPropriedades, "TimeOutWebServiceConnect"));
+                                if (timeOut > 0)
+                                {
+                                    TimeOutWebServiceConnect = timeOut;
+                                }
                             }
 
                             //Verificar se existem schemas específicos de validação

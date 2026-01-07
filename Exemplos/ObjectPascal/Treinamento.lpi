@@ -149,6 +149,150 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="InutilizacaoNumeroNFe"/>
       </Unit>
+      <Unit>
+        <Filename Value="consultarstatusnfcom.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarStatusNFCom"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarnfcomsincrono.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarNFComSincrono"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarmdfesincrono.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarMDFeSincrono"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviareventocancelamentomdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarEventoCancelamentoMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviareventoencerramentomdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarEventoEncerramentoMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarstatusmdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarStatusMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarsituacaomdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarSituacaoMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="eventopagamentomdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EventoPagamentoMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviareventoalteracaopagamentomdfe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarEventoAlteracaoPagamentoMDFe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarsituacaonfcom.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarSituacaoNFCom"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviareventocancelamentonfcom.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarEventoCancelamentoNFCom"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarstatuscte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarStatusCte"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarmdfenaoencerrado.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarMDFeNaoEncerrado"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultarsituacaocte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultarSituacaoCTe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarctesincrono.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarCteSincrono"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarcteossincrono.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarCteOsSincrono"/>
+      </Unit>
+      <Unit>
+        <Filename Value="eventocancelamentocte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EventoCancelamentoCTe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviareventocancelamentocteos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarEventoCancelamentoCTeOS"/>
+      </Unit>
+      <Unit>
+        <Filename Value="eventoccecte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EventoCCeCTe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="insucessoentregacte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="InsucessoEntregaCTe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="cancelamentoinsucessoentregacte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CancelamentoInsucessoEntregaCTe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="desserializandoxmlcteos.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="DesserializandoXmlCTeOS"/>
+      </Unit>
+      <Unit>
+        <Filename Value="eventoctedesacordo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EventoCTeDesacordo"/>
+      </Unit>
+      <Unit>
+        <Filename Value="eventoepeccte.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EventoEpecCte"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultaconfiggnre.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultaConfigGNRE"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarxmlgnre.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarXmlGNRe"/>
+      </Unit>
+      <Unit>
+        <Filename Value="consultaresultadolotegnre.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ConsultaResultadoLoteGNRE"/>
+      </Unit>
+      <Unit>
+        <Filename Value="enviarnfceoffline.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="EnviarNFCeOffline"/>
+      </Unit>
+      <Unit>
+        <Filename Value="EnviarNFeSincronoContingenciaSVC.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

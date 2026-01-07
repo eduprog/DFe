@@ -102,6 +102,27 @@ namespace Unimake.Business.DFe.Servicos.NFSe
                 case PadraoNFSe.ISSONLINE_ASSESSORPUBLICO:
                     ISSONLINE_ASSESSORPUBLICO();
                     break;
+
+                case PadraoNFSe.PRONIM:
+                    PRONIM();
+                    break;
+
+                case PadraoNFSe.GIF:
+                    GIF();
+                    break;
+
+                case PadraoNFSe.SIMPLISS:
+                    if (Configuracoes.SchemaVersao == "1.01")
+                    {
+                        SIMPLISS();
+                        break;
+                    }
+                    break;
+
+                case PadraoNFSe.SMARAPD:
+                    SMARAPD();
+                    break;
+
             }
             Configuracoes.Definida = true;
             base.DefinirConfiguracao();
@@ -170,11 +191,22 @@ namespace Unimake.Business.DFe.Servicos.NFSe
         {
             AuthorizationBasic();
 
-            if (Configuracoes.SchemaVersao == "2.80")
+            switch (Configuracoes.SchemaVersao)
             {
-                CriarHttpContentIPM();
-            }
+                case "2.80":
+                    CriarHttpContentIPM();
+                    break;
 
+                case "2.04":
+                    //Remover a linha <?xml version="1.0" encoding="utf-8"?> do XML, pois o webservice do IPM 2.04 não aceita esta linha no corpo do XML.
+                    var xmlBody = ConteudoXML.OuterXml;
+                    if (xmlBody.IndexOf("?>") >= 0)
+                    {
+                        xmlBody = xmlBody.Substring(xmlBody.IndexOf("?>") + 2);
+                        ConteudoXML.LoadXml(xmlBody);
+                    }
+                    break;
+            }
         }
 
         private void CriarHttpContentIPM()
@@ -296,16 +328,71 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
         #endregion Bauhaus
 
+        #region SMARAPD
+
+        private void SMARAPD()
+        {
+            // Verificar se é um evento de consulta
+            bool isConsulta = Configuracoes.Servico == Servico.NFSeConsultarNfsePorRps ||
+                              Configuracoes.Servico == Servico.NFSeConsultarNfse ||
+                              Configuracoes.Servico == Servico.NFSeConsultarNfsePDF;
+            if (isConsulta) {
+                var URI = Configuracoes.RequestURI;
+
+                var startIndex = ConteudoXML.OuterXml.IndexOf("Id=\"") + 7;
+                var endIndex = ConteudoXML.OuterXml.IndexOf("\"", startIndex);
+                var chave = ConteudoXML.OuterXml.Substring(startIndex, (endIndex - startIndex));
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            }
+        }
+
+        #endregion SMARAPD
+
         #region NACIONAL
 
         private void NACIONAL()
         {
-            var URI = Configuracoes.RequestURI;// = (Configuracoes.TipoAmbiente == TipoAmbiente.Producao ? Configuracoes.RequestURIProducao : Configuracoes.RequestURIHomologacao);
+            // Verificar se é um dos novos serviços de parâmetros municipais
+            bool isParametrosMunicipais = Configuracoes.Servico == Servico.NFSeConsultarConvenioMunicipal ||
+                                          Configuracoes.Servico == Servico.NFSeConsultarAliquotasMunicipais ||
+                                          Configuracoes.Servico == Servico.NFSeConsultarHistoricoAliquotasMunicipais ||
+                                          Configuracoes.Servico == Servico.NFSeConsultarRegimesEspeciaisMunicipais ||
+                                          Configuracoes.Servico == Servico.NFSeConsultarRetencoesMunicipais ||
+                                          Configuracoes.Servico == Servico.NFSeConsultarBeneficioMunicipal;
 
-            var startIndex = ConteudoXML.OuterXml.IndexOf("Id=\"") + 7;
-            var endIndex = ConteudoXML.OuterXml.IndexOf("\"", startIndex);
-            var chave = ConteudoXML.OuterXml.Substring(startIndex, (endIndex - startIndex));
-            Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            if (isParametrosMunicipais)
+            {
+                // Para serviços de parâmetros municipais, fazer substituições na URL conforme o XML
+                if (Configuracoes.RequestURI.Contains("{codigoMunicipio}"))
+                {
+                    var codigoMunicipio = GetXMLElementInnertext("codigoMunicipio");
+                    Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{codigoMunicipio}", codigoMunicipio);
+                }
+                if (Configuracoes.RequestURI.Contains("{codigoServico}"))
+                {
+                    var codigoServico = GetXMLElementInnertext("codigoServico");
+                    Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{codigoServico}", codigoServico);
+                }
+                if (Configuracoes.RequestURI.Contains("{competencia}"))
+                {
+                    var competencia = GetXMLElementInnertext("competencia");
+                    Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{competencia}", competencia);
+                }
+                if (Configuracoes.RequestURI.Contains("{numeroBeneficio}"))
+                {
+                    var numeroBeneficio = GetXMLElementInnertext("numeroBeneficio");
+                    Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{numeroBeneficio}", numeroBeneficio);
+                }
+            }
+            else
+            {
+                var URI = Configuracoes.RequestURI;
+
+                var startIndex = ConteudoXML.OuterXml.IndexOf("Id=\"") + 7;
+                var endIndex = ConteudoXML.OuterXml.IndexOf("\"", startIndex);
+                var chave = ConteudoXML.OuterXml.Substring(startIndex, (endIndex - startIndex));
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            }
         }
 
         #endregion NACIONAL
@@ -513,6 +600,87 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
         #endregion ISSONLINE_ASSESSORPUBLICO
 
+        #region PRONIM
+
+        /// <summary>
+        /// Processa os parâmetros e ajusta a URL para o padrão PRONIM.
+        /// </summary>
+        public void PRONIM()
+        {
+            if (Configuracoes.Servico == Servico.NFSeConsultarNfsePorRps)
+            {
+                Console.WriteLine(ConteudoXMLAssinado.OuterXml);
+
+                var idNodeList =
+                 ConteudoXMLAssinado.GetElementsByTagName(
+                     "infDPS",
+                     "http://www.sped.fazenda.gov.br/nfse"
+                 );
+
+                if (idNodeList == null || idNodeList.Count == 0)
+                    throw new Exception("Elemento infDPS não encontrado no XML da DPS.");
+
+                var infDps = (XmlElement)idNodeList[0];
+
+                string id = infDps.GetAttribute("Id");
+
+                if (string.IsNullOrWhiteSpace(id))
+                    throw new Exception("Atributo Id da DPS não encontrado.");
+
+                if (!id.StartsWith("DPS"))
+                    throw new Exception("Atributo Id não inicia com 'DPS'.");
+
+                string chave = id.Substring(3);
+
+
+                string documentoDps = chave.Substring(0, 14);
+                string municipioDps = chave.Substring(14, 7);
+                string serieDps = chave.Substring(21, 3);
+                string numeroDps = chave.Substring(24, 9);
+
+                // 4 — Substituir placeholders
+                Configuracoes.RequestURI = Configuracoes.RequestURI
+                    .Replace("{documento}", documentoDps)
+                    .Replace("{serie}", serieDps)
+                    .Replace("{numero}", numeroDps);
+            }
+        }
+        #endregion PRONIM
+
+        #region GIF
+        /// <summary>
+        /// Definindo configurações padrão GIF
+        /// </summary>
+        public void GIF()
+        {
+            var URI = Configuracoes.RequestURI;
+
+            if (URI != null)
+            {
+                if (Configuracoes.Servico == Servico.NFSeCancelarNfse)
+                {
+                    Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", GetXMLElementInnertext("chNFSe"));
+                    return;
+                };
+                var startIndex = ConteudoXML.OuterXml.IndexOf("Id=\"") + 7;
+                var endIndex = ConteudoXML.OuterXml.IndexOf("\"", startIndex);
+                var chave = ConteudoXML.OuterXml.Substring(startIndex, (endIndex - startIndex));
+                Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", chave);
+            }
+        }
+        #endregion
+
+        #region SIMPLISS
+
+        private void SIMPLISS()
+        {
+            var Chave = GetXMLElementInnertext("chNFSe");
+            Configuracoes.RequestURI = Configuracoes.RequestURI.Replace("{Chave}", Chave);
+
+        }
+
+        #endregion SIMPLISS
+
 
         #endregion Configurações separadas por PadrãoNFSe
 
@@ -531,7 +699,6 @@ namespace Unimake.Business.DFe.Servicos.NFSe
 
         private void AuthorizationBasic()
         {
-            // HM2SOLUCOES homologação:  11222333000181:S3nh@
             Configuracoes.MunicipioToken = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Configuracoes.MunicipioUsuario}:{Configuracoes.MunicipioSenha}"));
         }
 
@@ -647,54 +814,7 @@ namespace Unimake.Business.DFe.Servicos.NFSe
             {
                 if (Configuracoes.EncriptaTagAssinatura)
                 {
-                    if (Configuracoes.PadraoNFSe == PadraoNFSe.DSF)
-                    {
-                        // DSF: RPS dentro de cada Lote; normaliza quando vier com mais de 40 chars
-                        foreach (XmlElement lote in ConteudoXML.GetElementsByTagName("Lote"))
-                        {
-                            foreach (XmlElement rps in lote.GetElementsByTagName("RPS"))
-                            {
-                                var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
-                                if (assinaturaNodes.Count == 0) continue;
-
-                                var el = (XmlElement)assinaturaNodes[0];
-                                var valor = el.InnerText?.Trim();
-
-                                if (!IsSha1Hex(valor) && (valor?.Length > 40))
-                                {
-                                    el.InnerText = Criptografia.GetSHA1HashData(valor);
-                                }
-                            }
-                        }
-                    }
-                    else if (Configuracoes.PadraoNFSe == PadraoNFSe.PAULISTANA)
-                    {
-                        // PAULISTANA: normalização nos RPS
-                        foreach (XmlElement rps in ConteudoXML.GetElementsByTagName("RPS"))
-                        {
-                            var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
-                            if (assinaturaNodes.Count == 0) continue;
-
-                            var el = (XmlElement)assinaturaNodes[0];
-                            var valor = el.InnerText?.Trim();
-
-                            if (!IsSha1Hex(valor) && (valor?.Length == 86 || valor?.Length == 101))
-                            {
-                                el.InnerText = Criptografia.GetSHA1HashData(valor);
-                            }
-                        }
-
-                        //CANCELAMENTO: <AssinaturaCancelamento>
-                        foreach (XmlElement el in ConteudoXML.GetElementsByTagName("AssinaturaCancelamento"))
-                        {
-                            var valor = el.InnerText?.Trim();
-
-                            if (!IsSha1Hex(valor) && (valor?.Length == 20))
-                            {
-                                el.InnerText = Criptografia.GetSHA1HashData(valor);
-                            }
-                        }
-                    }
+                    XMLUtility.EncryptTagAssinaturaNFSe(Configuracoes.PadraoNFSe, ConteudoXML, Configuracoes.CertificadoDigital);
                 }
 
                 VerificarAssinarXML(Configuracoes.TagAssinatura, Configuracoes.TagAtributoID);
@@ -891,19 +1011,6 @@ namespace Unimake.Business.DFe.Servicos.NFSe
             stream.Close();
         }
 
-        #region Private Methods
-        private static bool IsSha1Hex(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s) || s.Length != 40) return false;
-            foreach (var c in s)
-            {
-                bool isHex = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-                if (!isHex) return false;
-            }
-            return true;
-        }
-        #endregion Private Methods
+
     }
 }

@@ -14,7 +14,15 @@ uses
   BETHAGerarNFSe, BETHACancelarNFSe, BETHAEnviarLoteRPSSincrono,
   BETHAConsultarNFSeRPS, BETHAConsultarLoteRPS, NACIONALGerarNFSe,
   NACIONALCancelarNFSe, NACIONALConsultarNFSe, NACIONALConsultarNFSeRPS,
-  NACIONALConsultarNFSePDF, EventoCCENFe, InutilizacaoNumeroNFe;
+  NACIONALConsultarNFSePDF, EventoCCENFe, InutilizacaoNumeroNFe,
+  ConsultarStatusNFCom, EnviarNFComSincrono, EnviarMDFeSincrono,
+  EnviarEventoCancelamentoMDFe, EnviarEventoEncerramentoMDFe,
+  ConsultarStatusMDFe, ConsultarSituacaoMDFe,ConsultarMDFeNaoEncerrado,EventoPagamentoMDFe,
+  EnviarEventoAlteracaoPagamentoMDFe,ConsultarSituacaoNFCom,EnviarEventoCancelamentoNFCom,
+  ConsultarStatusCte, ConsultarSituacaoCTe, EnviarCteSincrono, EnviarCteOsSincrono,EventoCancelamentoCTe,
+  EnviarEventoCancelamentoCTeOS, EventoCCeCTe,InsucessoEntregaCTe,CancelamentoInsucessoEntregaCTe, DesserializandoXmlCTeOS,
+  EventoCTeDesacordo, EventoEpecCte, ConsultaConfigGNRE, EnviarXmlGNRe, ConsultaResultadoLoteGNRE,
+  EnviarNFCeOffline, EnviarNFeSincronoContingenciaSVC;
 
 type
 
@@ -43,6 +51,32 @@ type
     BtnNACIONALConsultarPDFNFSe: TButton;
     btnEventoCCENFe: TButton;
     btnInutilizacaoNumeroNFe: TButton;
+    BtnEnviarNFComSincrono: TButton;
+    BtnEnviarEventoEncerramentoMDFe: TButton;
+    Btn_CancelamentoInsucessoEntregaCTe: TButton;
+    Btn_ConsultarStatusMDFe: TButton;
+    Btn_ConsultarSituacaoMDFe: TButton;
+    Btn_ConsultaMdfeNaoEncerrado: TButton;
+    Btn_EventoPagamentoMDFe: TButton;
+    Btn_EnviarEventoAlteracaoPagamentoMDFe: TButton;
+    Btn_ConsultaSituacaoNFCom: TButton;
+    Btn_EnviarEventoCancelamentoNFCom: TButton;
+    Btn_ConsultaStatusCte: TButton;
+    Btn_ConsultaSituacaoCTe: TButton;
+    Btn_EnviarCteSincrono: TButton;
+    Btn_EnviarCteOsSincrono: TButton;
+    Btn_EventoCancelamentoCTe: TButton;
+    Btn_EnviarEventoCancelamentoCTeOS: TButton;
+    Btn_EventoCCeCTe: TButton;
+    Btn_InsucessoEntregaCTe: TButton;
+    Btn_DesserializandoXmlCTeOS: TButton;
+    Btn_EventoCteDesacordo: TButton;
+    Btn_EventoEpecCte: TButton;
+    Btn_ConsultaResultadoLoteGNRE: TButton;
+    btnEnviarNFCeOffline: TButton;
+    btnEnviarNFeSincronoContingenciaSVC: TButton;
+    EnviarXmlGNRe: TButton;
+    ConsultaConfigGNRE: TButton;
     GroupBox1: TGroupBox;
     btnConsultarDistribuicaoDFe: TToggleBox;
     btnEnviarEventoManifestacaoNFe: TToggleBox;
@@ -52,6 +86,13 @@ type
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
     BtnBETHAConsultarNfseRps: TButton;
+    GroupBox5: TGroupBox;
+    BtnConsultarStatusNFCom: TToggleBox;
+    GroupBox6: TGroupBox;
+    BtnEnviarMDFeSincrono: TToggleBox;
+    BtnEnviarEventoCancelamentoMDFe: TToggleBox;
+    GroupBox7: TGroupBox;
+    GroupBox8: TGroupBox;
     procedure BtnBETHACancelarNFSeClick(Sender: TObject);
     procedure BtnBETHAConsultarLoteRPSClick(Sender: TObject);
     procedure BtnBETHAConsultarNFSeRPSClick(Sender: TObject);
@@ -60,12 +101,19 @@ type
     procedure BtnCertificadoDigitalClick(Sender: TObject);
     procedure btnConsultarDistribuicaoDFeOnClick(Sender: TObject);
     procedure btnConsultarSituacaoNFeClick(Sender: TObject);
+    procedure BtnConsultarStatusNFComClick(Sender: TObject);
     procedure btnConsultaStatusNFeClick(Sender: TObject);
     procedure btnDesserializarRetornoConsultaDFeClick(Sender: TObject);
+    procedure BtnEnviarEventoCancelamentoMDFeClick(Sender: TObject);
+    procedure BtnEnviarEventoEncerramentoMDFeClick(Sender: TObject);
     procedure btnEnviarEventoManifestacaoNFeClick(Sender: TObject);
+    procedure BtnEnviarMDFeSincronoClick(Sender: TObject);
+    procedure btnEnviarNFCeOfflineClick(Sender: TObject);
     procedure btnEnviarNFCeSincronoClick(Sender: TObject);
     procedure btnEnviarNFCeSincronoDesserializacaoClick(Sender: TObject);
+    procedure BtnEnviarNFComSincronoClick(Sender: TObject);
     procedure btnEnviarNFeSincronoClick(Sender: TObject);
+    procedure btnEnviarNFeSincronoContingenciaSVCClick(Sender: TObject);
     procedure btnEnviarNFeSincronoDesserializacaoClick(Sender: TObject);
     procedure btnEnviarNFeSincronoDuplicidadeClick(Sender: TObject);
     procedure btnEnviarNFeSincronoRTCClick(Sender: TObject);
@@ -79,7 +127,33 @@ type
     procedure BtnNACIONALConsultarNFSePorRPSClick(Sender: TObject);
     procedure BtnNACIONALConsultarPDFNFSeClick(Sender: TObject);
     procedure BtnNACIONALGerarNFSeClick(Sender: TObject);
+    procedure Btn_CancelamentoInsucessoEntregaCTeClick(Sender: TObject);
+    procedure Btn_ConsultaResultadoLoteGNREClick(Sender: TObject);
+    procedure Btn_ConsultaSituacaoCTeClick(Sender: TObject);
+    procedure Btn_ConsultaStatusCteClick(Sender: TObject);
+    procedure Btn_EnviarEventoCancelamentoCTeOSClick(Sender: TObject);
+    procedure Btn_EnviarCteOsSincronoClick(Sender: TObject);
+    procedure Btn_EnviarEventoAlteracaoPagamentoMDFeClick(Sender: TObject);
+    procedure Btn_ConsultaMdfeNaoEncerradoClick(Sender: TObject);
+    procedure Btn_ConsultarStatusMDFeClick(Sender: TObject);
+    procedure Btn_ConsultarSituacaoMDFeClick(Sender: TObject);
+    procedure Btn_EventoCancelamentoCTeClick(Sender: TObject);
+    procedure Btn_EventoCCeCTeClick(Sender: TObject);
+    procedure Btn_EventoEpecCteClick(Sender: TObject);
+    procedure Btn_EventoPagamentoMDFeClick(Sender: TObject);
+    procedure Btn_ConsultaSituacaoNFComClick(Sender: TObject);
+    procedure Btn_EnviarEventoCancelamentoNFComClick(Sender: TObject);
+    procedure Btn_EnviarCteSincronoClick(Sender: TObject);
+    procedure Btn_InsucessoEntregaCTeClick(Sender: TObject);
+    procedure Btn_DesserializandoXmlCTeOSClick(Sender: TObject);
+    procedure Btn_EventoCteDesacordoClick(Sender: TObject);
+    procedure ConsultaConfigGNREClick(Sender: TObject);
+    procedure EnviarXmlGNReClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure GroupBox1Click(Sender: TObject);
+    procedure GroupBox2Click(Sender: TObject);
+    procedure GroupBox3Click(Sender: TObject);
+    procedure GroupBox8Click(Sender: TObject);
 
   private
 
@@ -119,6 +193,28 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.BtnEnviarEventoCancelamentoMDFeClick(Sender: TObject);
+var
+  oServico: TEnviarEventoCancelamentoMDFe;
+begin
+  oServico := TEnviarEventoCancelamentoMDFe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.BtnEnviarEventoEncerramentoMDFeClick(Sender: TObject);
+var
+  oServico: TEnviarEventoEncerramentoMDFe;
+begin
+  oServico := TEnviarEventoEncerramentoMDFe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
 
 procedure TfrmPrincipal.btnEnviarEventoManifestacaoNFeClick(Sender: TObject);
 var
@@ -130,6 +226,29 @@ begin
   finally
   end;
 end;
+
+procedure TfrmPrincipal.BtnEnviarMDFeSincronoClick(Sender: TObject);
+var
+  oServico: TEnviarMDFeSincrono;
+begin
+  oServico := TEnviarMDFeSincrono.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnEnviarNFCeOfflineClick(Sender: TObject);
+var
+  oServico: TEnviarNFCeOffline;
+begin
+  oServico := TEnviarNFCeOffline.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
 
 procedure TfrmPrincipal.btnEnviarNFCeSincronoClick(Sender: TObject);
 var
@@ -153,12 +272,34 @@ begin
   end;
 end;
 
+procedure TfrmPrincipal.BtnEnviarNFComSincronoClick(Sender: TObject);
+var
+  oServico: TEnviarNFComSincrono;
+begin
+  oServico := TEnviarNFComSincrono.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
 
 procedure TfrmPrincipal.btnConsultarSituacaoNFeClick(Sender: TObject);
 var
   oServico: TConsultarSituacaoNFe;
 begin
   oServico := TConsultarSituacaoNFe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.BtnConsultarStatusNFComClick(Sender: TObject);
+var
+  oServico: TConsultarStatusNFCom;
+begin
+  oServico := TConsultarStatusNFCom.Create;
   try
     oServico.Executar();
   finally
@@ -247,6 +388,17 @@ var
   oServico: TEnviarNFeSincrono;
 begin
   oServico := TEnviarNFeSincrono.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.btnEnviarNFeSincronoContingenciaSVCClick(Sender: TObject);
+var
+  oServico: TEnviarNFeSincronoContingenciaSVC;
+begin
+  oServico := TEnviarNFeSincronoContingenciaSVC.Create;
   try
     oServico.Executar();
   finally
@@ -396,7 +548,269 @@ begin
     end;
 end;
 
+procedure TfrmPrincipal.Btn_CancelamentoInsucessoEntregaCTeClick(Sender: TObject);
+var
+  oServico: TCancelamentoInsucessoEntregaCTe;
+begin
+  oServico := TCancelamentoInsucessoEntregaCTe.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultaResultadoLoteGNREClick(Sender: TObject);
+var
+  oServico: TConsultaResultadoLoteGNRE;
+begin
+  oServico := TConsultaResultadoLoteGNRE.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultaSituacaoCTeClick(Sender: TObject);
+var
+  oServico: TConsultarSituacaoCTe;
+begin
+  oServico := TConsultarSituacaoCTe.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultaStatusCteClick(Sender: TObject);
+var
+  oServico: TConsultaStatusCte;
+begin
+  oServico := TConsultaStatusCte.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_EnviarEventoCancelamentoCTeOSClick(Sender: TObject);
+var
+  oServico: TEnviarEventoCancelamentoCTeOS;
+begin
+  oServico := TEnviarEventoCancelamentoCTeOS.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_EnviarCteOsSincronoClick(Sender: TObject);
+var
+  oServico: TEnviarCteOsSincrono;
+begin
+  oServico := TEnviarCteOsSincrono.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_EnviarEventoAlteracaoPagamentoMDFeClick(Sender: TObject);
+var
+  oServico: TEnviarEventoAlteracaoPagamentoMDFe;
+begin
+  oServico := TEnviarEventoAlteracaoPagamentoMDFe.create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultaMdfeNaoEncerradoClick(Sender: TObject);
+  var
+    oServico: TConsultarMDFeNaoEncerrado;
+  begin
+    oServico := TConsultarMDFeNaoEncerrado.create;
+    try
+        oServico.Executar();
+      finally
+      end;
+  end;
+
+procedure TfrmPrincipal.Btn_ConsultarStatusMDFeClick(Sender: TObject);
+var
+  oServico: TConsultarStatusMDFe;
+begin
+  oServico := TConsultarStatusMDFe.Create;
+  try
+      oServico.Executar();
+    finally
+    end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultarSituacaoMDFeClick(Sender: TObject);
+var
+  oServico: TConsultarSituacaoMDFe;
+begin
+  oServico := TConsultarSituacaoMDFe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EventoCancelamentoCTeClick(Sender: TObject);
+var
+  oServico: TEventoCancelamentoCTe;
+begin
+  oServico := TEventoCancelamentoCTe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EventoCCeCTeClick(Sender: TObject);
+var
+  oServico: TEventoCCeCTe;
+begin
+  oServico := TEventoCCeCTe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EventoEpecCteClick(Sender: TObject);
+var
+  oServico: TEventoEpecCte;
+begin
+  oServico := TEventoEpecCte.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EventoPagamentoMDFeClick(Sender: TObject);
+var
+  oServico: TEventoPagamentoMDFe;
+begin
+  oServico := TEventoPagamentoMDFe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_ConsultaSituacaoNFComClick(Sender: TObject);
+var
+  oServico: TConsultaSituacaoNFCom;
+begin
+  oServico := TConsultaSituacaoNFCom.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EnviarEventoCancelamentoNFComClick(Sender: TObject);
+var
+  oServico: TEnviarEventoCancelamentoNFCom;
+begin
+  oServico := TEnviarEventoCancelamentoNFCom.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EnviarCteSincronoClick(Sender: TObject);
+var
+  oServico: TEnviarCteSincrono;
+begin
+  oServico := TEnviarCteSincrono.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_InsucessoEntregaCTeClick(Sender: TObject);
+var
+  oServico: TInsucessoEntregaCTe;
+begin
+  oServico := TInsucessoEntregaCTe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_DesserializandoXmlCTeOSClick(Sender: TObject);
+var
+  oServico: TDesserializandoXmlCTeOS;
+begin
+  oServico := TDesserializandoXmlCTeOS.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.Btn_EventoCteDesacordoClick(Sender: TObject);
+var
+  oServico: TEventoCteDesacordo;
+begin
+  oServico := TEventoCteDesacordo.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.ConsultaConfigGNREClick(Sender: TObject);
+var
+  oServico: TConsultaConfigGNRE;
+begin
+  oServico := TConsultaConfigGNRE.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
+procedure TfrmPrincipal.EnviarXmlGNReClick(Sender: TObject);
+var
+  oServico: TEnviarXmlGNRe;
+begin
+  oServico := TEnviarXmlGNRe.Create;
+  try
+    oServico.Executar();
+  finally
+  end;
+end;
+
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmPrincipal.GroupBox1Click(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmPrincipal.GroupBox2Click(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmPrincipal.GroupBox3Click(Sender: TObject);
+begin
+
+end;
+
+procedure TfrmPrincipal.GroupBox8Click(Sender: TObject);
 begin
 
 end;

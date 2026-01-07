@@ -56,6 +56,16 @@ Function EnviarNfeSincrono()
    oIde.ProcEmi  = 0 && ProcessoEmissao.AplicativoContribuinte
    oIde.VerProc  = "TESTE 1.00"
    
+ * Referenciar chave 1
+   oNFref = CREATEOBJECT("Unimake.Business.DFe.Xml.NFe.NFref")
+   oNFRef.RefNFe = "chave referenciada"
+   oIde.AddNFRef(oNFref)   
+
+ * Referenciar chave 2   
+   oNFref = CREATEOBJECT("Unimake.Business.DFe.Xml.NFe.NFref")
+   oNFRef.RefNFe = "chave referenciada"
+   oIde.AddNFRef(oNFref)      
+
  * adicionar a tag Ide dentro da tag InfDfe
    oInfNFe.Ide = oIde
 
@@ -272,6 +282,23 @@ Function EnviarNfeSincrono()
 *
 *    * adicionar a tag ICMS51 dentro da tag ICMS
 * 	   oICMS.ICMS51 = oICMS51
+	   
+	 * criar tag Icms
+       oICMS             = CreateObject("Unimake.Business.DFe.Xml.NFe.ICMS")
+	   
+     * criar tag ICMSSN
+       oICMSSN900            = CreateObject("Unimake.Business.DFe.Xml.NFe.ICMSSN900")
+       oICMSSN900.Orig       = 0 && OrigemMercadoria.Nacional
+       oICMSSN900.ModBC      = 3 && ModalidadeBaseCalculoIcms.ValorOperacao
+       oICMSSN900.vBC        = 100.00
+       oICMSSN900.pICMS      = 18.00
+       oICMSSN900.vICMS      = 18.00
+       oICMSSN900.PFCPST     = 2.00
+       oICMSSN900.VFCPST     = 0.36
+       oICMSSN900.VBCFCPST   = 18.00
+	   
+     * adicionar a tag ICMSSN101 dentro da tag ICMS
+       oICMS.ICMSSN900 = oICMSSN900
 	   
      * adicionar a tag ICMS dentro da tag Imposto
        oImposto.Icms = oICMS

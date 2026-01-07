@@ -159,14 +159,12 @@ namespace Unimake.Business.DFe.Servicos.NFCom
 
                 var elementEmit = (XmlElement)elementInfNFCom.GetElementsByTagName("emit")[0];
 
-                var cnpjEmit = string.Empty;
-
                 if (elementEmit.GetElementsByTagName("CNPJ").Count <= 0)
                 {
                     throw new Exception("A tag obrigatória <CNPJ>, do grupo de tag <NFCom><infNFCom><emit>, não foi localizada no XML.");
                 }
 
-                cnpjEmit = elementEmit.GetElementsByTagName("CNPJ")[0].InnerText;
+                var cnpjEmit = elementEmit.GetElementsByTagName("CNPJ")[0].InnerText;
 
                 var conteudoChaveDFe = new XMLUtility.ConteudoChaveDFe
                 {
@@ -187,7 +185,7 @@ namespace Unimake.Business.DFe.Servicos.NFCom
                 var urlQrCode = Configuracoes.TipoAmbiente == TipoAmbiente.Homologacao ? Configuracoes.UrlQrCodeHomologacao : Configuracoes.UrlQrCodeProducao;
                 var paramLinkQRCode = urlQrCode + "?chNFCom=" + chave + "&tpAmb=" + ((int)tpAmb).ToString();
 
-                if (tpEmis == TipoEmissao.ContingenciaOffLine)
+                if ((int)tpEmis == 2)
                 {
                     paramLinkQRCode += "&sign=" + Converter.ToRSASHA1(Configuracoes.CertificadoDigital, chave);
                 }

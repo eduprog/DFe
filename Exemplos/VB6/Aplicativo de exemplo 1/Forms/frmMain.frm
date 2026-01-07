@@ -1,5 +1,4 @@
 VERSION 5.00
-Object = "{F9043C88-F6F2-101A-A3C9-08002B2F49FB}#1.2#0"; "comdlg32.ocx"
 Begin VB.Form frmMain 
    Caption         =   "Unimake.DFe Interop Tests"
    ClientHeight    =   11850
@@ -10,12 +9,14 @@ Begin VB.Form frmMain
    ScaleHeight     =   11850
    ScaleWidth      =   11580
    StartUpPosition =   2  'CenterScreen
-   Begin MSComDlg.CommonDialog OpenFileDialog 
+   Begin VB.PictureBox OpenFileDialog 
+      Height          =   480
       Left            =   840
+      ScaleHeight     =   420
+      ScaleWidth      =   1140
+      TabIndex        =   2
       Top             =   10215
-      _ExtentX        =   847
-      _ExtentY        =   847
-      _Version        =   393216
+      Width           =   1200
    End
    Begin VB.TextBox txtLog 
       BorderStyle     =   0  'None
@@ -79,6 +80,9 @@ Begin VB.Form frmMain
          End
          Begin VB.Menu mnuNFe_Distribuicao 
             Caption         =   "Consultar Distribuição"
+         End
+         Begin VB.Menu mnuNFe_ConsultarGTIN 
+            Caption         =   "Consultar GTIN"
          End
       End
       Begin VB.Menu mnuNFe_Eventos 
@@ -190,6 +194,12 @@ Begin VB.Form frmMain
          Caption         =   "Emitir um MDF-e"
       End
    End
+   Begin VB.Menu mnuNFCom 
+      Caption         =   "NFCom"
+      Begin VB.Menu mnuNFCom_EmitirUma 
+         Caption         =   "Emitir uma NFCom"
+      End
+   End
    Begin VB.Menu mnuCertificado 
       Caption         =   "Certificado"
       Begin VB.Menu mnuCertificadoSelecionar 
@@ -200,6 +210,9 @@ Begin VB.Form frmMain
       End
       Begin VB.Menu mnuCertificadoSelecionarBase64 
          Caption         =   "Selecionar de Base64"
+      End
+      Begin VB.Menu mnuCertificadoTestesDiversos 
+         Caption         =   "Testes Diversos"
       End
    End
 End
@@ -248,6 +261,10 @@ End Sub
 
 Private Sub mnuCertificadoSelecionarBase64_Click()
 SelecionarCertificado.SelecionarDeBase64
+End Sub
+
+Private Sub mnuCertificadoTestesDiversos_Click()
+TestesDiversosCertificado
 End Sub
 
 Private Sub mnuCTe_ConsultaCadastroContribuinte_Click()
@@ -326,6 +343,10 @@ Private Sub mnuNFCe_Inutilizar_Click()
 InutilizarNumeroNFCe
 End Sub
 
+Private Sub mnuNFCom_EmitirUma_Click()
+EnviarNFComSincrono
+End Sub
+
 Private Sub mnuNFe_Autorizar_Click()
 AutorizarNFe
 End Sub
@@ -340,6 +361,10 @@ End Sub
 
 Private Sub mnuNFe_ConsultarCadastro_Click()
 ConsultarContribuinteNFe
+End Sub
+
+Private Sub mnuNFe_ConsultarGTIN_Click()
+ConsultarGTIN
 End Sub
 
 Private Sub mnuNFe_ConsultarRecibo_Click()

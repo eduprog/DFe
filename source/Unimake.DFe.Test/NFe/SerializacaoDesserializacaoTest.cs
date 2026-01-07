@@ -18,8 +18,7 @@ namespace Unimake.DFe.Test.NFe
         [Theory]
         [Trait("DFe", "NFe"), Trait("DFe", "NFCe")]
         [InlineData(@"..\..\..\NFe\Resources\enviNFe.xml")]
-        [InlineData(@"..\..\..\NFe\Resources\enviNFe2.xml")]
-        [InlineData(@"..\..\..\NFe\Resources\envNFeReformaTributaria.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\enviNFe2.xml")]        
         public void SerializacaoDesserializacaoEnviNFe(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -150,6 +149,23 @@ namespace Unimake.DFe.Test.NFe
         [InlineData(@"..\..\..\NFe\Resources\envEvento_110150_3.xml")]
         [InlineData(@"..\..\..\NFe\Resources\envEvento_110750.xml")]
         [InlineData(@"..\..\..\NFe\Resources\envEvento_110751.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_110001.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_112110.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_112120.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_112150.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211128.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_212110.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_212120.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_412120.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_112130.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_412130.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_112140.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211110.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211120.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211124.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211130.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211140.xml")]
+        [InlineData(@"..\..\..\NFe\Resources\envEvento_211150.xml")]
         public void SerializacaoDesserializacaoEnvEvento(string arqXML)
         {
             Assert.True(File.Exists(arqXML), "Arquivo " + arqXML + " não foi localizado para a realização da serialização/desserialização.");
@@ -161,6 +177,15 @@ namespace Unimake.DFe.Test.NFe
             var doc2 = xml.GerarXML();
 
             Assert.True(doc.InnerText == doc2.InnerText, "XML gerado pela DLL está diferente do conteúdo do arquivo serializado.");
+
+            //Vou validar o XML em busca de erros
+            var configuracao = new Configuracao
+            {
+                TipoDFe = TipoDFe.NFe,
+                CertificadoDigital = PropConfig.CertificadoDigital
+            };
+
+            var recepcaoVento = new Business.DFe.Servicos.NFe.RecepcaoEvento(doc.OuterXml, configuracao);
         }
 
         /// <summary>

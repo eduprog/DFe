@@ -16,6 +16,14 @@
 		<SchemaVersao>1.00</SchemaVersao>
 		<TargetNS></TargetNS>
 	</Versao>
+	<Versao ID="1.01">
+		<WebContentType></WebContentType>
+		<WebSoapString></WebSoapString>
+		<WebTagRetorno></WebTagRetorno>
+		<WebSoapVersion></WebSoapVersion>
+		<SchemaVersao>1.01</SchemaVersao>
+		<TargetNS></TargetNS>
+	</Versao>
 	<Versao ID="1.03">
 		<WebContentType></WebContentType>
 		<WebSoapString></WebSoapString>
@@ -72,6 +80,14 @@
 		<SchemaVersao>2.04</SchemaVersao>
 		<TargetNS></TargetNS>
 	</Versao>
+	<Versao ID="2.05">
+		<WebContentType></WebContentType>
+		<WebSoapString></WebSoapString>
+		<WebTagRetorno></WebTagRetorno>
+		<WebSoapVersion></WebSoapVersion>
+		<SchemaVersao>2.05</SchemaVersao>
+		<TargetNS></TargetNS>
+	</Versao>
 	<Versao ID="2.80">
 		<WebContentType></WebContentType>
 		<WebSoapString></WebSoapString>
@@ -86,6 +102,22 @@
 		<WebTagRetorno></WebTagRetorno>
 		<WebSoapVersion></WebSoapVersion>
 		<SchemaVersao>3.00</SchemaVersao>
+		<TargetNS></TargetNS>
+	</Versao>
+	<Versao ID="3.01">
+		<WebContentType></WebContentType>
+		<WebSoapString></WebSoapString>
+		<WebTagRetorno></WebTagRetorno>
+		<WebSoapVersion></WebSoapVersion>
+		<SchemaVersao>3.01</SchemaVersao>
+		<TargetNS></TargetNS>
+	</Versao>
+	<Versao ID="4.00">
+		<WebContentType></WebContentType>
+		<WebSoapString></WebSoapString>
+		<WebTagRetorno></WebTagRetorno>
+		<WebSoapVersion></WebSoapVersion>
+		<SchemaVersao>4.00</SchemaVersao>
 		<TargetNS></TargetNS>
 	</Versao>
 </ConfigPadrao>

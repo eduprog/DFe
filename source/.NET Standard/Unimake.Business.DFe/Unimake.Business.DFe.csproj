@@ -4,8 +4,8 @@
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<LangVersion>7.3</LangVersion>
-		<AssemblyVersion>2025.09.17.1627</AssemblyVersion>
-		<FileVersion>2025.09.17.1627</FileVersion>
+		<AssemblyVersion>2026.01.06.1602</AssemblyVersion>
+		<FileVersion>2026.01.06.1602</FileVersion>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
 		<Configurations>Debug;Release;INTEROP_Release</Configurations>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -252,6 +252,7 @@
 		<None Remove="Servicos\Config\NFCom\MA.xml" />
 		<None Remove="Servicos\Config\NFCom\MG.xml" />
 		<None Remove="Servicos\Config\NFCom\MS.xml" />
+		<None Remove="Servicos\Config\NFCom\MT.xml" />
 		<None Remove="Servicos\Config\NFCom\PA.xml" />
 		<None Remove="Servicos\Config\NFCom\PB.xml" />
 		<None Remove="Servicos\Config\NFCom\PE.xml" />
@@ -355,6 +356,7 @@
 		<None Remove="Servicos\Config\NFSe\BeloHorizonteMG.xml" />
 		<None Remove="Servicos\Config\NFSe\BentoGoncalvesRS.xml" />
 		<None Remove="Servicos\Config\NFSe\Betha.xml" />
+		<None Remove="Servicos\Config\NFSe\BETHA_CLOUD.xml" />
 		<None Remove="Servicos\Config\NFSe\BiguacuSC.xml" />
 		<None Remove="Servicos\Config\NFSe\BiriguiSP.xml" />
 		<None Remove="Servicos\Config\NFSe\BlumenauSC.xml" />
@@ -379,6 +381,7 @@
 		<None Remove="Servicos\Config\NFSe\CaieirasSP.xml" />
 		<None Remove="Servicos\Config\NFSe\CajuruSP.xml" />
 		<None Remove="Servicos\Config\NFSe\CamacariBA.xml" />
+		<None Remove="Servicos\Config\NFSe\CambaraPR.xml" />
 		<None Remove="Servicos\Config\NFSe\CamboriuSC.xml" />
 		<None Remove="Servicos\Config\NFSe\CampinaGrandeDoSulPR.xml" />
 		<None Remove="Servicos\Config\NFSe\CampinaGrandePB.xml" />
@@ -517,6 +520,7 @@
 		<None Remove="Servicos\Config\NFSe\JaciSP.xml" />
 		<None Remove="Servicos\Config\NFSe\JacobinaBA.xml" />
 		<None Remove="Servicos\Config\NFSe\JaguapitaPR.xml" />
+		<None Remove="Servicos\Config\NFSe\JardinopolisSP.xml" />
 		<None Remove="Servicos\Config\NFSe\JataiGO.xml" />
 		<None Remove="Servicos\Config\NFSe\JauSP.xml" />
 		<None Remove="Servicos\Config\NFSe\JiParanaRO.xml" />
@@ -672,6 +676,7 @@
 		<None Remove="Servicos\Config\NFSe\SalvadorBA.xml" />
 		<None Remove="Servicos\Config\NFSe\SalvadorDoSulRS.xml" />
 		<None Remove="Servicos\Config\NFSe\SantaCruzDoSulRS.xml" />
+		<None Remove="Servicos\Config\NFSe\SantaGertrudesSP.xml" />
 		<None Remove="Servicos\Config\NFSe\SantaMariaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\SantaRosaRS.xml" />
 		<None Remove="Servicos\Config\NFSe\SantaTerezinhaDeItaipuPR.xml" />
@@ -689,6 +694,7 @@
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDaBoaVistaSP.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDelReiMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDeMeritiRJ.xml" />
+		<None Remove="Servicos\Config\NFSe\SaoJoaoDoItaperiuSC.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaoDoParaisoMG.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaquimDaBarraSP.xml" />
 		<None Remove="Servicos\Config\NFSe\SaoJoaquimDeBicasMG.xml" />
@@ -740,6 +746,7 @@
 		<None Remove="Servicos\Config\NFSe\TeresopolisRJ.xml" />
 		<None Remove="Servicos\Config\NFSe\TerraBoaPR.xml" />
 		<None Remove="Servicos\Config\NFSe\TerraDeAreiaRS.xml" />
+		<None Remove="Servicos\Config\NFSe\TibauRN.XML" />
 		<None Remove="Servicos\Config\NFSe\TimboSC.xml" />
 		<None Remove="Servicos\Config\NFSe\TramandaiRS.xml" />
 		<None Remove="Servicos\Config\NFSe\TremembeSP.xml" />
@@ -1174,6 +1181,7 @@
 		<None Remove="Xml\Schemas\NFe\Averb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\DFeTiposBasicos_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\distDFeInt_v1.35.xsd" />
+		<None Remove="Xml\Schemas\NFe\e110001_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110130_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110131_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110140_v1.00.xsd" />
@@ -1181,6 +1189,21 @@
 		<None Remove="Xml\Schemas\NFe\e110193_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110750_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e110751_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e112110_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e112130_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e112140_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e112150_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211110_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211120_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211124_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211128_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211130_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211140_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e211150_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e212110_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e212120_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e412120_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFe\e412130_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\e790700_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\envAverb_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFe\envEPEC_v1.00.xsd" />
@@ -1258,8 +1281,27 @@
 		<None Remove="Xml\Schemas\NFSe\BETHA\xmldsig-core-schema.xsd" />
 		<None Remove="Xml\Schemas\NFSe\BETHA\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\BETHA\xmldsig-core-schema_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\consulta_status.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\dps_completo_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\evento_cancelamento_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\nfse_betha_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_cancelar_nfse_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_cancelar_nfse_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_lote_rps_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_lote_rps_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_rps_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_rps_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_situacao_lote_rps_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_situacao_lote_rps_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_enviar_lote_rps_envio_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\servico_enviar_lote_rps_resposta_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\TiposNFe_v01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\BETHA_CLOUD\xmldsig-core-schema_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\BHISS\nfse.xsd" />
 		<None Remove="Xml\Schemas\NFSe\BHISS\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\CONAM\XML_RPS_V4.xsd" />
 		<None Remove="Xml\Schemas\NFSe\COPLAN\nfse_v2-03.xsd" />
 		<None Remove="Xml\Schemas\NFSe\COPLAN\nfse_v2_02.xsd" />
 		<None Remove="Xml\Schemas\NFSe\COPLAN\xmldsig-core-schema20020212.xsd" />
@@ -1272,7 +1314,10 @@
 		<None Remove="Xml\Schemas\NFSe\DSF\nfse.xsd" />
 		<None Remove="Xml\Schemas\NFSe\DSF\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\ELOTECH\nfse_v2_03.xsd" />
+		<None Remove="Xml\Schemas\NFSe\EL\CNC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\EL\nfse_v2-04.xsd" />
+		<None Remove="Xml\Schemas\NFSe\EL\tiposCnc_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\EL\xmldsig-core-schema.xsd" />
 		<None Remove="Xml\Schemas\NFSe\EL\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\EQUIPLANO\esCancelarNfseEnvio_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\EQUIPLANO\esCancelarNfseResposta_v01.xsd" />
@@ -1292,7 +1337,12 @@
 		<None Remove="Xml\Schemas\NFSe\E_RECEITA\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\FIORILLI\nfse_v201.xsd" />
 		<None Remove="Xml\Schemas\NFSe\FIORILLI\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\FUTURIZE\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\GIF\DPS_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\GIF\NFSe-Infisc-v1.xsd" />
+		<None Remove="Xml\Schemas\NFSe\GIF\tiposComplexos_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\GIF\tiposEventos_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\GIF\tiposSimples_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\GIF\xmldsig-core-schema_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\GINFES\cabecalho_v03.xsd" />
 		<None Remove="Xml\Schemas\NFSe\GINFES\servico_cancelar_nfse_envio_v02.xsd" />
@@ -1364,13 +1414,23 @@
 		<None Remove="Xml\Schemas\NFSe\METROPOLIS\nfse.xsd" />
 		<None Remove="Xml\Schemas\NFSe\METROPOLIS\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\MODERNIZACAO_PUBLICA\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\CNC_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\DPS_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\DPS_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\evento_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\evento_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\NFSe_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\NFSe_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\pedRegEvento_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\pedRegEvento_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposCnc_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposComplexos_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposComplexos_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposEventos_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposEventos_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposSimples_v1.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\tiposSimples_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\NACIONAL\xmldsig-core-schema.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NACIONAL\xmldsig-core-schema_v1.00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NATALENSE\nfse.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NATALENSE\xmldsig-core-schema20020212.xsd" />
@@ -1378,22 +1438,46 @@
 		<None Remove="Xml\Schemas\NFSe\NOBESISTEMAS\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NOTAINTELIGENTE\nfse v2 02.xsd" />
 		<None Remove="Xml\Schemas\NFSe\NOTAINTELIGENTE\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\ConsultaGuia_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\ConsultaSituacaoGuiaAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\ConsultaSituacaoLoteAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\EmissaoGuiaAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoLote_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoLote_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoNFe_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoNFe_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaCNPJ_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaCNPJ_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaLote_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaLote_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFePeriodo_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFePeriodo_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFe_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFe_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPSAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPS_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPS_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioRPS_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioRPS_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoInformacoesLote_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\PedidoInformacoesLote_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoCancelamentoNFe_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoCancelamentoNFe_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoConsultaCNPJ_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoConsultaCNPJ_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoConsulta_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoConsulta_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPSAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPS_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPS_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioRPS_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioRPS_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoInformacoesLote_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\RetornoInformacoesLote_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\TiposNFeAsync_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\TiposNFe_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\TiposNFe_v02.xsd" />
+		<None Remove="Xml\Schemas\NFSe\PAULISTANA\xmldsig-core-schema_v01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PAULISTANA\xmldsig-core-schema_v02.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PORTAL_FACIL\nfse_v204.xsd" />
 		<None Remove="Xml\Schemas\NFSe\PORTAL_FACIL\schema nfse v2-04.xsd" />
@@ -1416,12 +1500,31 @@
 		<None Remove="Xml\Schemas\NFSe\SIGCORP\nfse.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SIGCORP\nfse_v3-00.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SIGCORP\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\DPS_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\evento_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\nfse_3.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\NFSe_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SIMPLISS\nfse_v2-03.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\pedRegEvento_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_cancelar_nfse_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_cancelar_nfse_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_lote_rps_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_lote_rps_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_rps_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_rps_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_situacao_lote_rps_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_situacao_lote_rps_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_enviar_lote_rps_envio.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\servico_enviar_lote_rps_resposta.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\tiposComplexos_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\tiposEventos_v1.01.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SIMPLISS\tiposSimples_v1.01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SIMPLISS\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SISPMJP\nfse v2 02.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SISPMJP\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SMARAPD\nfse_v2-03.xsd" />
-		<None Remove="Xml\Schemas\NFSe\SMARAPD\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SONNER\nfse-v2-01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SONNER\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\SUPERNOVA\nfse.xsd" />
@@ -1468,6 +1571,7 @@
 		<None Remove="Xml\Schemas\NFSe\VERSATEC\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\NFSe\VITORIA_ES\nfse v2 01.xsd" />
 		<None Remove="Xml\Schemas\NFSe\VITORIA_ES\xmldsig-core-schema20020212.xsd" />
+		<None Remove="Xml\Schemas\NFSe\WEBISS\nfse_v2_02-IBSCBS.xsd" />
 		<None Remove="Xml\Schemas\NFSe\WEBISS\nfse_v2_02.xsd" />
 		<None Remove="Xml\Schemas\NFSe\WEBISS\xmldsig-core-schema20020212.xsd" />
 		<None Remove="Xml\Schemas\procCCeNFe_v1.00.xsd" />
@@ -1493,6 +1597,7 @@
 		<None Remove="Xml\Schemas\retEnviNFe_v4.00.xsd" />
 		<None Remove="Xml\Schemas\retEnvRemIndus_v1.00.xsd" />
 		<None Remove="Xml\Schemas\retInutNFe_v4.00.xsd" />
+		<None Remove="Xml\Schemas\NFSe\SALVADOR_BA\nfse_salvador.xsd" />
 		<None Remove="Xml\Schemas\SNCM\msgevtin_ver_0-01.xsd" />
 		<None Remove="Xml\Schemas\SNCM\msgmbragtmgmt_ver_0-01-r1.xsd" />
 		<None Remove="Xml\Schemas\SNCM\msgmdatamah_ver_0-01-r1.xsd" />
@@ -1506,6 +1611,16 @@
 		<None Remove="Xml\Schemas\tiposBasico_v4.00.xsd" />
 		<None Remove="Xml\Schemas\tiposDistDFe_v1.01.xsd" />
 		<None Remove="Xml\Schemas\xmldsig-core-schema_v1.01.xsd" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Servicos\Config\NFSe\TibauRN.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Servicos\Config\NFSe\BETHA_CLOUD.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\CambaraPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\CapitaoRS.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -1529,6 +1644,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFCom\MA.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\MG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\MS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFCom\MT.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\PA.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\PB.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFCom\PE.xml" />
@@ -1598,6 +1714,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\GravataiRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\GuarapuavaPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\GuaxupeMG.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\GuararaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\HorizontinaRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\IcaraSC.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ImbeRS.xml" />
@@ -1610,6 +1727,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\ItaperunaRJ.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\JacareiSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\JaguapitaPR.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\JardinopolisSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\JauSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\LajeadoRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\LavrasMG.xml" />
@@ -1667,6 +1785,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\RolandiaPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SabaraMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SantaCruzDoSulRS.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SantaGertrudesSP.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SantaRosaRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SantaTerezinhaDeItaipuPR.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SantoAntonioDaPatrulhaRS.xml" />
@@ -1674,6 +1793,7 @@
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoGabrielRS.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoGoncaloDoParaMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaoDaBoaVistaSP.xml" />
+	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaoDoItaperiuSC.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaoDoParaisoMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoaquimDeBicasMG.xml" />
 	  <EmbeddedResource Include="Servicos\Config\NFSe\SaoJoseDaLapaMG.xml" />
@@ -2538,10 +2658,27 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFe\110150_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\Averb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\DFeTiposBasicos_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e110001_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110192_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110193_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110750_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e110751_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e112110_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e112120_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e112130_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e112140_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e112150_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211110_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211120_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211124_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211128_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211130_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211140_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e211150_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e212110_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e212120_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e412120_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\e412130_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\e790700_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\envAverb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\envEventoAtorInteressado_v1.00.xsd" />
@@ -2553,12 +2690,14 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoCancInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoEConf_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\Evento_DVS_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\EventoInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteAverb_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoAtorInteressado_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoCancEConf_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoCancInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoEConf_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEvento_DVS_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\leiauteEventoInsucessoNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procAverbNFe_v1.00.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFe\procEventoAtorInteressado_v1.00.xsd" />
@@ -2578,6 +2717,25 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\ABASE\xmldsig-core-schema20020212.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\ADM_SISTEMAS\2.03\nfse v2 03.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\ADM_SISTEMAS\2.03\xmldsig-core-schema20020212.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\consulta_status.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\dps_completo_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\evento_cancelamento_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\nfse_v202.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_cancelar_nfse_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_cancelar_nfse_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_lote_rps_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_lote_rps_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_rps_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_nfse_rps_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_situacao_lote_rps_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_consultar_situacao_lote_rps_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_enviar_lote_rps_envio_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\servico_enviar_lote_rps_resposta_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\TiposNFe_v01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\xmldsig-core-schema20020212.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\BETHA_CLOUD\xmldsig-core-schema_v01.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDCadastroContasContabeis.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDCadastroContasContabeisRetorno.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDConsultaContasPendentes.xsd" />
@@ -2597,6 +2755,7 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDNFEletronicaArquivo.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDNotaTomador.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\CECAM\XSDRetorno.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\CONAM\XML_RPS_V4.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\DBSELLER\cabecalho-v2_04.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\DBSELLER\cancelar-nfse-envio-v2_04.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\DBSELLER\consultar-lote-rps-envio-v2_04.xsd" />
@@ -2616,6 +2775,26 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\DSF\2.03\nfse_v2-03_ima.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\DSF\2.03\xmldsig-core-schema20020212.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\ELOTECH\nfse_v2_03.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\CNC_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\DPS_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\NFSe_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\pedRegEvento_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\tiposCnc_v1.00.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\tiposComplexos_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\tiposEventos_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\tiposSimples_v1.01.xsd">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\EQUIPLANO\esCancelarNfseEnvio_v01.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\EQUIPLANO\esCancelarNfseResposta_v01.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\EQUIPLANO\esConsultarLoteRpsEnvio_v01.xsd" />
@@ -2634,7 +2813,17 @@
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\E_RECEITA\xmldsig-core-schema20020212.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\FIORILLI\nfse_v201.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\FIORILLI\xmldsig-core-schema20020212.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\FUTURIZE\nfse_v2_02.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\FUTURIZE\xmldsig-core-schema20020212.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\DPS_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\evento_v1.01.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\NFSe-Infisc-v1.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\NFSe_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\pedRegEvento_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\tiposComplexos_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\tiposEventos_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\tiposSimples_v1.01.xsd" />
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\xmldsig-core-schema.xsd" />
 	  <EmbeddedResource Include="Xml\Schemas\NFSe\GIF\xmldsig-core-schema_v1.01.xsd" />
 	</ItemGroup>
 
@@ -3478,28 +3667,51 @@
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GINFES\tipos_v03.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GINFES\xmldsig-core-schema20020212_v03.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GINFES\xmldsig-core-schema_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cabecalho-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cabecalho-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cancelar-nfse-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cancelar-nfse-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cancelar-nfse-reposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\cancelar-nfse-reposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-lote-rps-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-lote-rps-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-lote-rps-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-lote-rps-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-faixa-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-faixa-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-faixa-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-faixa-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-rps-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-rps-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-rps-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-rps-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-prestado-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-prestado-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-prestado-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-prestado-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-tomado-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-tomado-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-tomado-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\consultar-nfse-servico-tomado-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-sincrono-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-sincrono-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-sincrono-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\enviar-lote-rps-sincrono-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\gerar-nfse-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\gerar-nfse-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\gerar-nfse-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\gerar-nfse-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\nfse_v2-04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\nfse_v2-04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\substituir-nfse-envio-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\substituir-nfse-envio-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\substituir-nfse-resposta-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\substituir-nfse-resposta-v2_04.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\tipos-v2_04-RTC.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\tipos-v2_04.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\GISSONLINE\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\INDAIATUBA_SP\nfse_v2-03 2016.xsd" />
@@ -3519,6 +3731,7 @@
 		<EmbeddedResource Include="Xml\Schemas\NFSe\INTERSOL\enviar_lote_rps_resposta_v1.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\INTERSOL\tipos_v1.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\INTERSOL\xmldsig-core-schema20020212_v1.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\ISSNET\schema_v101.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\ISSNET\nfse_v2-04.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\ISSNET\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\LEXSOM\NFSE.xsd" />
@@ -3531,36 +3744,69 @@
 		<EmbeddedResource Include="Xml\Schemas\NFSe\METROPOLIS\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\MODERNIZACAO_PUBLICA\nfse v2 02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\MODERNIZACAO_PUBLICA\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\CNC_v1.00.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\DPS_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\DPS_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\evento_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\evento_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\NFSe_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\NFSe_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\pedRegEvento_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\pedRegEvento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposCnc_v1.00.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposComplexos_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposComplexos_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposEventos_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposEventos_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposSimples_v1.00.xsd" />
-		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\xmldsig-core-schema_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\tiposSimples_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\NACIONAL\xmldsig-core-schema.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NATALENSE\nfse.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NATALENSE\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NOBESISTEMAS\nfse.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NOBESISTEMAS\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NOTAINTELIGENTE\nfse v2 02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\NOTAINTELIGENTE\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\ConsultaGuia_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\ConsultaSituacaoGuiaAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\ConsultaSituacaoLoteAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\EmissaoGuiaAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoLote_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoLote_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoNFe_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoCancelamentoNFe_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaCNPJ_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaCNPJ_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaLote_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaLote_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFePeriodo_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFePeriodo_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFe_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoConsultaNFe_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPSAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPS_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioLoteRPS_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioRPS_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoEnvioRPS_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoInformacoesLote_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\PedidoInformacoesLote_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoCancelamentoNFe_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoCancelamentoNFe_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoConsultaCNPJ_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoConsultaCNPJ_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoConsulta_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoConsulta_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPSAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPS_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioLoteRPS_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioRPS_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoEnvioRPS_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoInformacoesLote_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\RetornoInformacoesLote_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\TiposNFeAsync_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\TiposNFe_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\TiposNFe_v02.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\xmldsig-core-schema_v01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PAULISTANA\xmldsig-core-schema_v02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PORTAL_FACIL\nfse_v202.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PORTAL_FACIL\schema nfse v2-04.xsd" />
@@ -3569,16 +3815,33 @@
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRODATA\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRODEB\nfse_v2_01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRODEB\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\DPS_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\evento_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\nfse.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\NFSe_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\nfse_v2-03.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\pedRegEvento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\tiposComplexos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\tiposEventos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\tiposSimples_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\xmldsig-core-schema.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PRONIM\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PROPRIOGOIANIA\nfse_v02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PROPRIOGOIANIA\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PROPRIOJOINVILLESC\nfse_v2_04.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PROPRIOJOINVILLESC\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PUBLICA\schema_nfse_v03.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\PUBLICA\schema_nfse_v03-rtc.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\PUBLICA\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\DPS_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\evento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\NFSe_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\nfse_v2_01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\pedRegEvento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\tiposComplexos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\tiposEventos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\tiposSimples_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\xmldsig-core-schema.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\QUASAR\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\RLZ_INFORMATICA\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\RLZ_INFORMATICA\XSDRLZ_Informatica_02.xsd" />
@@ -3587,12 +3850,45 @@
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SIGCORP\nfse.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SIGCORP\nfse_v3-00.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SIGCORP\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\DPS_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\DPS_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\evento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\nfse_3.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\NFSe_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\NFSe_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\nfse_v2-03.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\pedRegEvento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_cancelar_nfse_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_cancelar_nfse_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_lote_rps_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_lote_rps_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_rps_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_nfse_rps_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_situacao_lote_rps_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_consultar_situacao_lote_rps_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_enviar_lote_rps_envio.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\servico_enviar_lote_rps_resposta.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\tiposComplexos_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\tiposComplexos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\tiposEventos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\tiposSimples_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\tiposSimples_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\xmldsig-core-schema.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SIMPLISS\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SISPMJP\nfse v2 02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SISPMJP\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\DPS_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\evento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\NFSe_v1.01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\nfse_v2-03.xsd" />
-		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\pedRegEvento_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\tiposComplexos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\tiposEventos_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\tiposSimples_v1.00.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\tiposSimples_v1.01.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SMARAPD\xmldsig-core-schema.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SONNER\nfse-v2-01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SONNER\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\SUPERNOVA\nfse.xsd" />
@@ -3641,8 +3937,11 @@
 		</EmbeddedResource>
 		<EmbeddedResource Include="Xml\Schemas\NFSe\VITORIA_ES\nfse v2 01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\VITORIA_ES\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\WEBISS\nfse_v2_02-IBSCBS.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\WEBISS\nfse_v2_02.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\NFSe\WEBISS\xmldsig-core-schema20020212.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SALVADOR_BA\nfse_salvador.xsd" />
+		<EmbeddedResource Include="Xml\Schemas\NFSe\SALVADOR_BA\xmldsig-core-schema20020212.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\SNCM\msgevtin_ver_0-01.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\SNCM\msgmbragtmgmt_ver_0-01-r1.xsd" />
 		<EmbeddedResource Include="Xml\Schemas\SNCM\msgmdatamah_ver_0-01-r1.xsd" />
@@ -3657,10 +3956,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.9" />
-		<PackageReference Include="Unimake.Cryptography" Version="20250912.1810.37" />
-		<PackageReference Include="Unimake.Extensions" Version="20250912.1810.37" />
-		<PackageReference Include="Unimake.Utils" Version="20250912.1810.37" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.1" />
+		<PackageReference Include="Unimake.Cryptography" Version="20251119.239.8" />
+		<PackageReference Include="Unimake.Extensions" Version="20251119.239.8" />
+		<PackageReference Include="Unimake.Utils" Version="20251119.239.8" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -3681,6 +3980,10 @@
 	<ItemGroup>
 	  <Folder Include="Servicos\MFE\" />
 	  <Folder Include="Xml\Schemas\NFSe\FINTEL\2.02\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Xml\Schemas\NFSe\EL\xmldsig-core-schema.xsd" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -5,12 +5,13 @@ using System.Runtime.InteropServices;
 #endif
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
 using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Utility;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Xml;
 
 namespace Unimake.Business.DFe.Xml.NFCom
 {
@@ -23,7 +24,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
     [ComVisible(true)]
 #endif
     [Serializable()]
-    [XmlType(Namespace = "http://www.portalfiscal.inf.br/nfcom")]
     [XmlRoot("NFCom", Namespace = "http://www.portalfiscal.inf.br/nfcom", IsNullable = false)]
     public class NFCom : XMLBase
     {
@@ -67,6 +67,10 @@ namespace Unimake.Business.DFe.Xml.NFCom
         {
             get
             {
+                if (Ide == null) throw new NullReferenceException("A propriedade 'Ide' está nula.");
+                if (Emit == null) throw new NullReferenceException("A propriedade 'Emit' está nula.");
+                if (string.IsNullOrWhiteSpace(Emit.CNPJ)) throw new NullReferenceException("Emit.CNPJ não foi informado.");
+
                 var conteudoChaveDFe = new XMLUtility.ConteudoChaveDFe
                 {
                     UFEmissor = (UFBrasil)(int)Ide.CUF,
@@ -76,12 +80,12 @@ namespace Unimake.Business.DFe.Xml.NFCom
                     Modelo = (ModeloDFe)(int)Ide.Mod,
                     Serie = Ide.Serie,
                     NumeroDoctoFiscal = Ide.NNF,
-                    TipoEmissao = (TipoEmissao)(int)Ide.TpEmis,
+                    TipoEmissao = Ide.TpEmis,
                     NSiteAutoriz = Ide.NSiteAutoriz,
                     CodigoNumerico = Ide.CNF
                 };
 
-                ChaveField = XMLUtility.MontarChaveNF3e(ref conteudoChaveDFe);
+                ChaveField = XMLUtility.MontarChaveNFCom(ref conteudoChaveDFe);
                 Ide.CDV = conteudoChaveDFe.DigitoVerificador;
 
                 return ChaveField;
@@ -214,6 +218,9 @@ namespace Unimake.Business.DFe.Xml.NFCom
 #endif
     public class Ide
     {
+        private string CNFField;
+        private string NSiteAutorizField;
+
         [XmlIgnore]
         public UFBrasil CUF { get; set; }
 
@@ -236,8 +243,33 @@ namespace Unimake.Business.DFe.Xml.NFCom
         [XmlElement("nNF")]
         public int NNF { get; set; }
 
+        /// <summary>
+        /// Código numérico que compõe a Chave de Acesso. Número aleatório gerado pelo emitente para cada NFe/NFCe
+        /// </summary>
         [XmlElement("cNF")]
-        public string CNF { get; set; }
+        public string CNF
+        {
+            get
+            {
+                string retorno;
+                if (string.IsNullOrWhiteSpace(CNFField))
+                {
+                    if (NNF < 0)
+                    {
+                        throw new Exception("Defina o conteúdo da TAG <nNF>, pois a mesma é utilizada como base para calcular o código numérico.");
+                    }
+
+                    retorno = XMLUtility.GerarCodigoNumerico(NNF, 7).ToString("0000000");
+                }
+                else
+                {
+                    retorno = CNFField;
+                }
+
+                return retorno;
+            }
+            set => CNFField = value;
+        }
 
         [XmlElement("cDV")]
         public int CDV { get; set; }
@@ -264,7 +296,22 @@ namespace Unimake.Business.DFe.Xml.NFCom
         public TipoEmissao TpEmis { get; set; }
 
         [XmlElement("nSiteAutoriz")]
-        public string NSiteAutoriz { get; set; }
+        public string NSiteAutoriz
+
+        {
+            get => NSiteAutorizField;
+            set
+            {
+                var valoresPermitidos = new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+                if (!valoresPermitidos.Contains(value))
+                {
+                    throw new Exception("A tag <nSiteAutoriz> só aceita os valores 0, 1, 2, 3, 4, 5, 6, 7, 8 e 9.");
+                }
+
+                NSiteAutorizField = value;
+            }
+        }
 
         [XmlElement("cMunFG")]
         public string CMunFG { get; set; }
@@ -681,6 +728,9 @@ namespace Unimake.Business.DFe.Xml.NFCom
         public void AddCUFAdic(UFBrasil item) => TerminaisAdicionais.Add(new TerminalAdicional { CUFAdic = item });
         public int GetCUFAdic(int index) => (index >= 0 && index < TerminaisAdicionais.Count) ? (int)TerminaisAdicionais[index].CUFAdic : default;
         public int GetCUFAdicCount => TerminaisAdicionais.Count;
+        public bool ShouldSerializeCUFPrincField() => CUFPrinc != (UFBrasil)(-1);
+#else
+        public bool ShouldSerializeCUFPrincField() => CUFPrinc != null;
 #endif
 
         #region ShouldSerialize
@@ -688,7 +738,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
         public bool ShouldSerializeDContratoIniField() => DContratoIni != default;
         public bool ShouldSerializeDContratoFimField() => DContratoFim != default;
         public bool ShouldSerializeNroTermPrinc() => !string.IsNullOrEmpty(NroTermPrinc);
-        public bool ShouldSerializeCUFPrincField() => CUFPrinc != null && CUFPrinc != (UFBrasil)(-1);
         public bool ShouldSerializeTerminaisAdicionaisRaw() => TerminaisAdicionais?.Count > 0;
         #endregion
     }
@@ -859,8 +908,16 @@ namespace Unimake.Business.DFe.Xml.NFCom
             set => QFaturada = Converter.ToDouble(value);
         }
 
-        [XmlElement("vItem")]
+        [XmlIgnore]
         public decimal VItem { get; set; }
+
+        [XmlElement("vItem")]
+        public string VItemField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VItem.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VItem = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         [XmlIgnore]
         public double VDesc { get; set; }
@@ -882,8 +939,16 @@ namespace Unimake.Business.DFe.Xml.NFCom
             set => VOutro = Converter.ToDouble(value);
         }
 
-        [XmlElement("vProd")]
+        [XmlIgnore]
         public decimal VProd { get; set; }
+
+        [XmlElement("vProd")]
+        public string VProdField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VProd.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VProd = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         [XmlIgnore]
 #if INTEROP
@@ -1222,7 +1287,7 @@ namespace Unimake.Business.DFe.Xml.NFCom
 
         #region ShouldSerialize
 
-        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0;
+        public bool ShouldSerializeVICMSDesonField() => VICMSDeson > 0 || !string.IsNullOrEmpty(CBenef);
 
         public bool ShouldSerializeCBenef() => !string.IsNullOrEmpty(CBenef);
 
@@ -1594,20 +1659,60 @@ namespace Unimake.Business.DFe.Xml.NFCom
 #endif
     public class RetTrib
     {
-        [XmlElement("vRetPIS")]
+        [XmlIgnore]
         public decimal VRetPIS { get; set; }
 
-        [XmlElement("vRetCofins")]
+        [XmlElement("vRetPIS")]
+        public string VRetPISField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VRetPIS.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VRetPIS = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        [XmlIgnore]
         public decimal VRetCofins { get; set; }
 
-        [XmlElement("vRetCSLL")]
+        [XmlElement("vRetCofins")]
+        public string VRetCofinsField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VRetCofins.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VRetCofins = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        [XmlIgnore]
         public decimal VRetCSLL { get; set; }
 
-        [XmlElement("vBCIRRF")]
+        [XmlElement("vRetCSLL")]
+        public string VRetCSLLField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VRetCSLL.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VRetCSLL = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        [XmlIgnore]
         public decimal VBCIRRF { get; set; }
 
-        [XmlElement("vIRRF")]
+        [XmlElement("vBCIRRF")]
+        public string VBCIRRFField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VBCIRRF.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VBCIRRF = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        [XmlIgnore]
         public decimal VIRRF { get; set; }
+
+        [XmlElement("vIRRF")]
+        public string VIRRFField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VIRRF.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VIRRF = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
     }
 
 #if INTEROP
@@ -1623,8 +1728,71 @@ namespace Unimake.Business.DFe.Xml.NFCom
         [XmlElement("cClassTrib")]
         public string CClassTrib { get; set; }
 
+        /// <summary>
+        /// Indica a natureza da operação de doação, orientando a apuração e a geração de débitos ou estornos conforme o cenário
+        /// </summary>
+        [XmlElement("indDoacao")]
+        public int IndDoacao { get; set; }
+
         [XmlElement("gIBSCBS")]
         public GIBSCBS GIBSCBS { get; set; }
+
+        /// <summary>
+        /// Estorno de Crédito
+        /// </summary>
+        [XmlElement("gEstornoCred")]
+        public GEstornoCred GEstornoCred { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeIndDoacao() => IndDoacao == 1;
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Estorno de Crédito
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFCom.GEstornoCred")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfcom")]
+    public class GEstornoCred 
+    {
+        /// <summary>
+        /// Valor do IBS a ser estornado
+        /// </summary>
+        [XmlIgnore]
+        public double VIBSEstCred { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade VIBSEstCred para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vIBSEstCred")]
+        public string VIBSEstCredField
+        {
+            get => VIBSEstCred.ToString("F2", CultureInfo.InvariantCulture);
+            set => VIBSEstCred = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da CBS a ser estornada
+        /// </summary>
+        [XmlIgnore]
+        public double VCBSEstCred { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade VCBSEstCred para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vCBSEstCred")]
+        public string VCBSEstCredField
+        {
+            get => VCBSEstCred.ToString("F2", CultureInfo.InvariantCulture);
+            set => VCBSEstCred = Converter.ToDouble(value);
+        }
     }
 
 #if INTEROP
@@ -1671,12 +1839,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
 
         [XmlElement("gTribRegular")]
         public GTribRegular GTribRegular { get; set; }
-
-        [XmlElement("gIBSCredPres")]
-        public GIBSCredPres GIBSCredPres { get; set; }
-
-        [XmlElement("gCBSCredPres")]
-        public GCBSCredPres GCBSCredPres { get; set; }
 
         [XmlElement("gTribCompraGov")]
         public GTribCompraGov GTribCompraGov { get; set; }
@@ -1949,98 +2111,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
 
 #if INTEROP
     [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.NFCom.GIBSCredPres")]
-    [ComVisible(true)]
-#endif
-    public class GIBSCredPres
-    {
-        [XmlElement("cCredPres")]
-        public string CCredPres { get; set; }
-
-        [XmlIgnore]
-        public double PCredPres { get; set; }
-
-        [XmlElement("pCredPres")]
-        public string PCredPresField
-        {
-            get => PCredPres.ToString("F4", CultureInfo.InvariantCulture);
-            set => PCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPres { get; set; }
-
-        [XmlElement("vCredPres")]
-        public string VCredPresField
-        {
-            get => VCredPres.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPresCondSus { get; set; }
-
-        [XmlElement("vCredPresCondSus")]
-        public string VCredPresCondSusField
-        {
-            get => VCredPresCondSus.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPresCondSus = Converter.ToDouble(value);
-        }
-
-        #region Should Serialize
-        public bool ShouldSerializeVCredPresField() => VCredPresCondSus <= 0;
-        public bool ShouldSerializeVCredPresCondSusField() => VCredPres <= 0;
-        #endregion
-    }
-
-#if INTEROP
-    [ClassInterface(ClassInterfaceType.AutoDual)]
-    [ProgId("Unimake.Business.DFe.Xml.NFCom.GCBSCredPres")]
-    [ComVisible(true)]
-#endif
-    public class GCBSCredPres
-    {
-        [XmlElement("cCredPres")]
-        public string CCredPres { get; set; }
-
-        [XmlIgnore]
-        public double PCredPres { get; set; }
-
-        [XmlElement("pCredPres")]
-        public string PCredPresField
-        {
-            get => PCredPres.ToString("F4", CultureInfo.InvariantCulture);
-            set => PCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPres { get; set; }
-
-        [XmlElement("vCredPres")]
-        public string VCredPresField
-        {
-            get => VCredPres.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPresCondSus { get; set; }
-
-        [XmlElement("vCredPresCondSus")]
-        public string VCredPresCondSusField
-        {
-            get => VCredPresCondSus.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPresCondSus = Converter.ToDouble(value);
-        }
-
-        #region Should Serialize
-        public bool ShouldSerializeVCredPresField() => VCredPresCondSus <= 0;
-        public bool ShouldSerializeVCredPresCondSusField() => VCredPres <= 0;
-        #endregion
-    }
-
-#if INTEROP
-    [ClassInterface(ClassInterfaceType.AutoDual)]
     [ProgId("Unimake.Business.DFe.Xml.NFCom.GTribCompraGov")]
     [ComVisible(true)]
 #endif
@@ -2115,8 +2185,16 @@ namespace Unimake.Business.DFe.Xml.NFCom
 #endif
     public class GProcRef
     {
-        [XmlElement("vItem")]
+        [XmlIgnore]
         public decimal VItem { get; set; }
+
+        [XmlElement("vItem")]
+        public string VItemField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VItem.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VItem = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         [XmlIgnore]
         public double QFaturada { get; set; }
@@ -2128,8 +2206,16 @@ namespace Unimake.Business.DFe.Xml.NFCom
             set => QFaturada = Converter.ToDouble(value);
         }
 
-        [XmlElement("vProd")]
+        [XmlIgnore]
         public decimal VProd { get; set; }
+
+        [XmlElement("vProd")]
+        public string VProdField
+        {
+            // mínimo 2 casas, máximo 8 -> "0.00######" (2 zeros + 8 #)
+            get => VProd.ToString("0.00######", CultureInfo.InvariantCulture);
+            set => VProd = decimal.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         [XmlIgnore]
         public double VDesc { get; set; }
@@ -2564,7 +2650,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
     [ProgId("Unimake.Business.DFe.Xml.NFCom.IBSCBSTot")]
     [ComVisible(true)]
 #endif
-
     public class IBSCBSTot
     {
         [XmlIgnore]
@@ -2582,6 +2667,12 @@ namespace Unimake.Business.DFe.Xml.NFCom
 
         [XmlElement("gCBS")]
         public GCBSTot GCBSTot { get; set; }
+
+        /// <summary>
+        /// Total do Estorno de crédito
+        /// </summary>
+        [XmlElement("gEstornoCred")]
+        public GEstornoCred GEstornoCred { get; set; }
     }
 
 #if INTEROP
@@ -2605,26 +2696,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
         {
             get => VIBS.ToString("F2", CultureInfo.InvariantCulture);
             set => VIBS = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPres { get; set; }
-
-        [XmlElement("vCredPres")]
-        public string VCredPresField
-        {
-            get => VCredPres.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPresCondSus { get; set; }
-
-        [XmlElement("vCredPresCondSus")]
-        public string VCredPresCondSusField
-        {
-            get => VCredPresCondSus.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPresCondSus = Converter.ToDouble(value);
         }
     }
 
@@ -2739,26 +2810,6 @@ namespace Unimake.Business.DFe.Xml.NFCom
         {
             get => VCBS.ToString("F2", CultureInfo.InvariantCulture);
             set => VCBS = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPres { get; set; }
-
-        [XmlElement("vCredPres")]
-        public string VCredPresField
-        {
-            get => VCredPres.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPres = Converter.ToDouble(value);
-        }
-
-        [XmlIgnore]
-        public double VCredPresCondSus { get; set; }
-
-        [XmlElement("vCredPresCondSus")]
-        public string VCredPresCondSusField
-        {
-            get => VCredPresCondSus.ToString("F2", CultureInfo.InvariantCulture);
-            set => VCredPresCondSus = Converter.ToDouble(value);
         }
     }
 

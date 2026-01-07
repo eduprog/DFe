@@ -47,7 +47,7 @@ namespace Unimake.Business.DFe.Validator.Abstractions
         /// <summary>
         /// Exceções que não interrompem o fluxo do sistema, sendo registradas apenas como avisos ou alertas.
         /// </summary>
-        public List<ValidatorDFeException> Warnings { protected get; set; } = new List<ValidatorDFeException>();
+        public List<ValidatorDFeException> Warnings { get; protected set; } = new List<ValidatorDFeException>();
 
         #endregion Public Properties
 
@@ -57,7 +57,9 @@ namespace Unimake.Business.DFe.Validator.Abstractions
         /// Inicia o objeto de validação
         /// </summary>
         public XmlValidatorBase()
-        { }
+        { 
+            Warnings.Clear();
+        }
 
         #endregion Public Constructors
 

@@ -57,7 +57,7 @@
 	</Arquivo>
 	<Arquivo ID="26">
 		<Nome>Pernambuco</Nome>
-		<UF>PR</UF>
+		<UF>PE</UF>
 		<ArqConfig>PE.xml</ArqConfig>
 	</Arquivo>
 	<Arquivo ID="15">
@@ -195,6 +195,12 @@
 		<UF>BR</UF>
 		<ArqConfig>FISCO.xml</ArqConfig>
 		<PadraoNFSe>FISCO</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="9999907">
+		<Nome>BETHA_CLOUD</Nome>
+		<UF>BR</UF>
+		<ArqConfig>BETHA_CLOUD.xml</ArqConfig>
+		<PadraoNFSe>BETHA_CLOUD</PadraoNFSe>
 	</Arquivo>
 	<!-- **** Fim dos padrões com apenas um XML de configuração **** -->
 	<Arquivo ID="3303203">
@@ -411,7 +417,7 @@
 		<Nome>Goiânia - GO</Nome>
 		<UF>GO</UF>
 		<ArqConfig>GoianiaGO.xml</ArqConfig>
-		<PadraoNFSe>PROPRIOGOIANIA</PadraoNFSe>
+		<PadraoNFSe>ISSNET</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="5105200">
 		<Nome>Juscimeira - MT</Nome>
@@ -1119,7 +1125,7 @@
 		<Nome>Paulista - PE</Nome>
 		<UF>PE</UF>
 		<ArqConfig>PaulistaPE.xml</ArqConfig>
-		<PadraoNFSe>TINUS</PadraoNFSe>
+		<PadraoNFSe>GISSONLINE</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="4322806">
 		<Nome>Veranópolis - RS</Nome>
@@ -2301,7 +2307,7 @@
 		<Nome>Foz do Iguaçu - PR</Nome>
 		<UF>PR</UF>
 		<ArqConfig>FozDoIguacuPR.xml</ArqConfig>
-		<PadraoNFSe>LEXSOM</PadraoNFSe>
+		<PadraoNFSe>WEBISS</PadraoNFSe>
 	</Arquivo>
 	<Arquivo ID="3528809">
 		<Nome>Maracaí - SP</Nome>
@@ -3034,5 +3040,47 @@
 		<UF>PR</UF>
 		<ArqConfig>JaguapitaPR.xml</ArqConfig>
 		<PadraoNFSe>ELOTECH</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4304697">
+		<Nome>Capitão - RS</Nome>
+		<UF>RS</UF>
+		<ArqConfig>CapitaoRS.xml</ArqConfig>
+		<PadraoNFSe>TECNOSISTEMAS</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4216354">
+		<Nome>São João do Itaperiú - SC</Nome>
+		<UF>SC</UF>
+		<ArqConfig>SaoJoaoDoItaperiuSC.xml</ArqConfig>
+		<PadraoNFSe>IPM</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="4103602">
+		<Nome>Cambará - PR</Nome>
+		<UF>PR</UF>
+		<ArqConfig>CambaraPR.xml</ArqConfig>
+		<PadraoNFSe>ELOTECH</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3525102">
+		<Nome>Jardinópolis - SP</Nome>
+		<UF>SC</UF>
+		<ArqConfig>JardinopolisSP.xml</ArqConfig>
+		<PadraoNFSe>GISSONLINE</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3546702">
+		<Nome>Santa Gertrudes - SP</Nome>
+		<UF>SP</UF>
+		<ArqConfig>SantaGertrudesSP.xml</ArqConfig>
+		<PadraoNFSe>SIGISSWEB</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="3128501">
+		<Nome>Guarará - MG</Nome>
+		<UF>MG</UF>
+		<ArqConfig>GuararaMG.xml</ArqConfig>
+		<PadraoNFSe>FUTURIZE</PadraoNFSe>
+	</Arquivo>
+	<Arquivo ID="2411056">
+		<Nome>Tibau - RN</Nome>
+		<UF>RN</UF>
+		<ArqConfig>TibauRN.xml</ArqConfig>
+		<PadraoNFSe>AGILI</PadraoNFSe>
 	</Arquivo>
 </Configuracoes>

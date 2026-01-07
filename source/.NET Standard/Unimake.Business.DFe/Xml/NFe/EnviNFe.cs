@@ -474,10 +474,7 @@ namespace Unimake.Business.DFe.Xml.NFe
                 ChaveField = XMLUtility.MontarChaveNFe(ref conteudoChaveDFe);
                 Ide.CDV = conteudoChaveDFe.DigitoVerificador;
 
-                if (InfRespTec != null)
-                {
-                    InfRespTec.GerarHashCSRT(ChaveField);
-                }
+                InfRespTec?.GerarHashCSRT(ChaveField);
 
                 return ChaveField;
             }
@@ -696,6 +693,31 @@ namespace Unimake.Business.DFe.Xml.NFe
 #endif
         }
 
+
+        /// <summary>
+        /// Data da previsão de entrega ou disponibilização do bem.
+        /// </summary>
+        [XmlIgnore]
+#if INTEROP
+        public DateTime DPrevEntrega { get; set; }
+#else
+        public DateTimeOffset DPrevEntrega { get; set; }
+#endif
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade DPrevEntrega para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("dPrevEntrega")]
+        public string DPrevEntregaField
+        {
+            get => DPrevEntrega.ToString("yyyy-MM-dd");
+#if INTEROP
+            set => DPrevEntrega = DateTime.Parse(value);
+#else
+            set => DPrevEntrega = DateTimeOffset.Parse(value);
+#endif
+        }
+
         /// <summary>
         /// Tipo do Documento Fiscal
         /// </summary>
@@ -901,8 +923,6 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         public bool ShouldSerializeDhSaiEntField()
         {
-            // ~\uninfe\doc\NFCe e NFe 3.10\NT2012.004_v1.2_NFCe.pdf
-            // Página 06 item #14
             // Nota: Para a NFC-e este campo não deve existir
             if (Mod == ModeloDFe.NFCe)
             {
@@ -910,6 +930,17 @@ namespace Unimake.Business.DFe.Xml.NFe
             }
 
             return DhSaiEnt > DateTime.MinValue;
+        }
+
+        public bool ShouldSerializeDPrevEntregaField()
+        {
+            // Nota: Para a NFC-e este campo não deve existir
+            if (Mod == ModeloDFe.NFCe)
+            {
+                return false;
+            }
+
+            return DPrevEntrega > DateTime.MinValue;
         }
 
         #endregion
@@ -2267,6 +2298,16 @@ namespace Unimake.Business.DFe.Xml.NFe
         public List<GCred> GCred { get; set; }
 
         /// <summary>
+        /// Tipo de classificação de acordo para calculo do crédito presumido do ZFM
+        /// </summary>
+        [XmlElement("tpCredPresIBSZFM")]
+#if INTEROP
+        public TipoCreditoPresumidoIBSZFM TpCredPresIBSZFM { get; set; } = (TipoCreditoPresumidoIBSZFM)(-1);
+#else
+        public TipoCreditoPresumidoIBSZFM? TpCredPresIBSZFM { get; set; }
+#endif
+
+        /// <summary>
         /// Código EX TIPI (3 posições)
         /// </summary>
         [XmlElement("EXTIPI")]
@@ -2539,6 +2580,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeCBarraTrib() => !string.IsNullOrWhiteSpace(CBarraTrib);
 
         public bool ShouldSerializeIndBemMovelUsado() => IndBemMovelUsado == 1;
+
+#if INTEROP
+        public bool ShouldSerializeTpCredPresIBSZFM() => TpCredPresIBSZFM != (TipoCreditoPresumidoIBSZFM)(-1);
+#else
+        public bool ShouldSerializeTpCredPresIBSZFM() => TpCredPresIBSZFM != null;
+#endif
 
         #endregion
 
@@ -5549,7 +5596,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         public bool ShouldSerializeVFCPField() => (VBCFCP + VFCP + PFCP) > 0;
 
         public bool ShouldSerializePFCPDifField() => PFCPDif > 0;
-        public bool ShouldSerializeVFCPDifField() => VFCPDif > 0;
+        public bool ShouldSerializeVFCPDifField() => VFCPDif > 0 || PFCPDif > 0;
         public bool ShouldSerializeVFCPEfetField() => VFCPEfet > 0;
 
         #endregion
@@ -12983,6 +13030,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         public string CClassTrib { get; set; }
 
         /// <summary>
+        /// Indica a natureza da operação de doação, orientando a apuração e a geração de débitos ou estornos conforme o cenário
+        /// </summary>
+        [XmlElement("indDoacao")]
+        public int IndDoacao { get; set; }
+
+        /// <summary>
         /// Grupo de Informações do IBS e da CBS
         /// </summary>
         [XmlElement("gIBSCBS")]
@@ -13001,10 +13054,79 @@ namespace Unimake.Business.DFe.Xml.NFe
         public GTransfCred GTransfCred { get; set; }
 
         /// <summary>
-        /// Informações do crédito presumido de IBS para fornecimentos a partir da ZFM
+        /// Ajuste de Competência
         /// </summary>
+        [XmlElement("gAjusteCompet")]
+        public GAjusteCompet GAjusteCompet { get; set; }
+
+        /// <summary>
+        /// Estorno de Crédito
+        /// </summary>
+        [XmlElement("gEstornoCred")]
+        public GEstornoCred GEstornoCred { get; set; }
+
+        /// <summary>
+        /// Crédito Presumido da Operação
+        /// </summary>
+        [XmlElement("gCredPresOper")]
+        public GCredPresOper GCredPresOper { get; set; }
+
         [XmlElement("gCredPresIBSZFM")]
         public GCredPresIBSZFM GCredPresIBSZFM { get; set; }
+
+        #region ShouldSerialize
+
+        public bool ShouldSerializeIndDoacao() => IndDoacao == 1;
+
+        #endregion
+
+    }
+
+    /// <summary>
+    /// Crédito Presumido da Operação
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.GCredPresOper")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class GCredPresOper
+    {
+        /// <summary>
+        /// Valor da Base de Cálculo do Crédito Presumido da Operação
+        /// </summary>
+        [XmlIgnore]
+        public double VBCCredPres { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade VBCCredPres para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vBCCredPres")]
+        public string VBCCredPresField
+        {
+            get => VBCCredPres.ToString("F2", CultureInfo.InvariantCulture);
+            set => VBCCredPres = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Código de Classificação do Crédito Presumido 
+        /// </summary>
+        [XmlElement("cCredPres")]
+        public string CCredPres { get; set; }
+
+        /// <summary>
+        /// Grupo de Informações do Crédito Presumido referente ao IBS
+        /// </summary>
+        [XmlElement("gIBSCredPres")]
+        public GIBSCredPres GIBSCredPres { get; set; }
+
+        /// <summary>
+        /// Grupo de Informações do Crédito Presumido referente a CBS
+        /// </summary>
+        [XmlElement("gCBSCredPres")]
+        public GCBSCredPres GCBSCredPres { get; set; }
     }
 
     /// <summary>
@@ -13051,7 +13173,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// Valor do IBS (soma de vIBSUF e vIBSMun). Quando houver crédito presumido com indicador “IndDeduzCredPres=1”, o vCredPres deve ser abatido desse valor.
         /// </summary>
         [XmlIgnore]
-        public double? VIBS { get; set; }
+        public double VIBS { get; set; }
 
         /// <summary>
         /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade vIBS para atribuir ou resgatar o valor)
@@ -13059,7 +13181,7 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("vIBS")]
         public string VIBSField
         {
-            get => VIBS?.ToString("F2", CultureInfo.InvariantCulture);
+            get => VIBS.ToString("F2", CultureInfo.InvariantCulture);
             set => VIBS = Converter.ToDouble(value);
         }
 
@@ -13076,28 +13198,10 @@ namespace Unimake.Business.DFe.Xml.NFe
         public GTribRegular GTribRegular { get; set; }
 
         /// <summary>
-        /// Grupo de Informações do Crédito Presumido referente ao IBS
-        /// </summary>
-        [XmlElement("gIBSCredPres")]
-        public GIBSCredPres GIBSCredPres { get; set; }
-
-        /// <summary>
-        /// Grupo de Informações do Crédito Presumido referente ao CBS
-        /// </summary>
-        [XmlElement("gCBSCredPres")]
-        public GCBSCredPres GCBSCredPres { get; set; }
-
-        /// <summary>
         /// Grupo de informações da composição do valor do IBS e da CBS em compras governamental
         /// </summary>
         [XmlElement("gTribCompraGov")]
         public GTribCompraGov GTribCompraGov { get; set; }
-
-        #region ShouldSerialize
-
-        public bool ShouldSerializeVIBSField() => VIBS != null;
-
-        #endregion
     }
 
     /// <summary>
@@ -13542,12 +13646,6 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class GIBSCredPres
     {
         /// <summary>
-        /// Código de Classificação do Crédito Presumido
-        /// </summary>
-        [XmlElement("cCredPres")]
-        public string CCredPres { get; set; }
-
-        /// <summary>
         /// Percentual do Crédito Presumido
         /// </summary>
         [XmlIgnore]
@@ -13559,8 +13657,8 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("pCredPres")]
         public string PCredPresField
         {
-            get => PCredPres.ToString("F4", CultureInfo.InvariantCulture);
-            set => PCredPres = Converter.ToDouble(value);
+            get => PCredPres.ToString("0.00##", CultureInfo.InvariantCulture);
+            set => PCredPres = double.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -13597,11 +13695,11 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
+        public bool ShouldSerializePCredPresField() => VCredPresCondSus <= 0;
         public bool ShouldSerializeVCredPresField() => VCredPresCondSus <= 0;
+        public bool ShouldSerializeVCredPresCondSusField() => VCredPresCondSus > 0;
 
-        public bool ShouldSerializeVCredPresCondSusField() => VCredPres <= 0;
-
-        #endregion ShouldSerialize
+        #endregion
     }
 
     /// <summary>
@@ -13617,12 +13715,6 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class GCBSCredPres
     {
         /// <summary>
-        /// Código de Classificação do Crédito Presumido
-        /// </summary>
-        [XmlElement("cCredPres")]
-        public string CCredPres { get; set; }
-
-        /// <summary>
         /// Percentual do Crédito Presumido
         /// </summary>
         [XmlIgnore]
@@ -13634,8 +13726,8 @@ namespace Unimake.Business.DFe.Xml.NFe
         [XmlElement("pCredPres")]
         public string PCredPresField
         {
-            get => PCredPres.ToString("F4", CultureInfo.InvariantCulture);
-            set => PCredPres = Converter.ToDouble(value);
+            get => PCredPres.ToString("0.00##", CultureInfo.InvariantCulture);
+            set => PCredPres = double.Parse(value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -13672,11 +13764,11 @@ namespace Unimake.Business.DFe.Xml.NFe
 
         #region ShouldSerialize
 
+        public bool ShouldSerializePCredPresField() => VCredPresCondSus <= 0;
         public bool ShouldSerializeVCredPresField() => VCredPresCondSus <= 0;
+        public bool ShouldSerializeVCredPresCondSusField() => VCredPresCondSus > 0;
 
-        public bool ShouldSerializeVCredPresCondSusField() => VCredPres <= 0;
-
-        #endregion ShouldSerialize
+        #endregion
     }
 
     /// <summary>
@@ -13763,8 +13855,18 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// <summary>
         /// Quantidade tributada na monofasia
         /// </summary>
+        [XmlIgnore]
+        public double QBCMono { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade QBCMono para atribuir ou resgatar o valor)
+        /// </summary>
         [XmlElement("qBCMono")]
-        public decimal QBCMono { get; set; }
+        public string QBCMonoField
+        {
+            get => QBCMono.ToString("F4", CultureInfo.InvariantCulture);
+            set => QBCMono = Converter.ToDouble(value);
+        }
 
         /// <summary>
         /// Alíquota ad rem do IBS
@@ -13844,10 +13946,20 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class GMonoReten
     {
         /// <summary>
-        /// Quantidade tributada sujeita à retenção na monofasia
+        /// Quantidade tributada sujeita à retenção na monofasia 
+        /// </summary>
+        [XmlIgnore]
+        public double QBCMonoReten { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade QBCMonoReten para atribuir ou resgatar o valor)
         /// </summary>
         [XmlElement("qBCMonoReten")]
-        public double QBCMonoReten { get; set; }
+        public string QBCMonoRetenField
+        {
+            get => QBCMonoReten.ToString("F4", CultureInfo.InvariantCulture);
+            set => QBCMonoReten = Converter.ToDouble(value);
+        }
 
         /// <summary>
         /// Alíquota ad rem do IBS sujeito a retenção 
@@ -13929,8 +14041,18 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// <summary>
         /// Quantidade tributada retida anteriormente 
         /// </summary>
-        [XmlElement("qBCMonoRet")]
+        [XmlIgnore]
         public double QBCMonoRet { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade QBCMonoRet para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("qBCMonoRet")]
+        public string QBCMonoRetField
+        {
+            get => QBCMonoRet.ToString("F4", CultureInfo.InvariantCulture);
+            set => QBCMonoRet = Converter.ToDouble(value);
+        }
 
         /// <summary>
         /// Alíquota ad rem do IBS retido anteriormente
@@ -14180,6 +14302,12 @@ namespace Unimake.Business.DFe.Xml.NFe
         /// </summary>
         [XmlElement("gMono")]
         public GMono GMono { get; set; }
+
+        /// <summary>
+        /// Grupo total do Estorno de Crédito
+        /// </summary>
+        [XmlElement("gEstornoCred")]
+        public GEstornoCred GEstornoCred { get; set; }
     }
 
     /// <summary>
@@ -14682,6 +14810,112 @@ namespace Unimake.Business.DFe.Xml.NFe
     }
 
     /// <summary>
+    /// Ajuste de Competência
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.GAjusteCompet")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class GAjusteCompet
+    {
+        /// <summary>
+        /// Ano e mês referência do período de apuração (AAAA-MM); Informar período atual ou retroativo.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime CompetApur { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade CompetApur para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("competApur")]
+        public string CompetApurField
+        {
+            get => CompetApur.ToString("yyyy-MM");
+            set => CompetApur = DateTime.Parse(value);
+        }
+
+        /// <summary>
+        /// Valor do IBS 
+        /// </summary>
+        [XmlIgnore]
+        public double VIBS { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade vIBS para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vIBS")]
+        public string VIBSField
+        {
+            get => VIBS.ToString("F2", CultureInfo.InvariantCulture);
+            set => VIBS = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor do CBS 
+        /// </summary>
+        [XmlIgnore]
+        public double VCBS { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade vCBS para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vCBS")]
+        public string VCBSField
+        {
+            get => VCBS.ToString("F2", CultureInfo.InvariantCulture);
+            set => VCBS = Converter.ToDouble(value);
+        }
+    }
+
+    /// <summary>
+    /// Estorno de Crédito
+    /// </summary>
+#if INTEROP
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ProgId("Unimake.Business.DFe.Xml.NFe.GEstornoCred")]
+    [ComVisible(true)]
+#endif
+    [Serializable()]
+    [XmlType(AnonymousType = true, Namespace = "http://www.portalfiscal.inf.br/nfe")]
+    public class GEstornoCred
+    {
+        /// <summary>
+        /// Valor do IBS a ser estornado
+        /// </summary>
+        [XmlIgnore]
+        public double VIBSEstCred { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade VIBSEstCred para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vIBSEstCred")]
+        public string VIBSEstCredField
+        {
+            get => VIBSEstCred.ToString("F2", CultureInfo.InvariantCulture);
+            set => VIBSEstCred = Converter.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Valor da CBS a ser estornada
+        /// </summary>
+        [XmlIgnore]
+        public double VCBSEstCred { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade VCBSEstCred para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("vCBSEstCred")]
+        public string VCBSEstCredField
+        {
+            get => VCBSEstCred.ToString("F2", CultureInfo.InvariantCulture);
+            set => VCBSEstCred = Converter.ToDouble(value);
+        }
+    }
+
+    /// <summary>
     /// Informações do crédito presumido de IBS para fornecimentos a partir da ZFM
     /// </summary>
 #if INTEROP
@@ -14694,7 +14928,23 @@ namespace Unimake.Business.DFe.Xml.NFe
     public class GCredPresIBSZFM
     {
         /// <summary>
-        /// Tipo de classificação de acordo para calculo do crédito presumido do ZFM
+        /// Ano e mês referência do período de apuração (AAAA-MM); Informar período atual ou retroativo.
+        /// </summary>
+        [XmlIgnore]
+        public DateTime CompetApur { get; set; }
+
+        /// <summary>
+        /// Propriedade auxiliar para serialização/desserialização do XML (Utilize sempre a propriedade CompetApur para atribuir ou resgatar o valor)
+        /// </summary>
+        [XmlElement("competApur")]
+        public string CompetApurField
+        {
+            get => CompetApur.ToString("yyyy-MM");
+            set => CompetApur = DateTime.Parse(value);
+        }
+
+        /// <summary>
+        /// Tipo de classificação de acordo com o art. 450, § 1º, da LC 214/25 para o cálculo do crédito presumido na ZFM
         /// </summary>
         [XmlElement("tpCredPresIBSZFM")]
         public TipoCreditoPresumidoIBSZFM TpCredPresIBSZFM { get; set; }
@@ -14714,12 +14964,6 @@ namespace Unimake.Business.DFe.Xml.NFe
             get => VCredPresIBSZFM.ToString("F2", CultureInfo.InvariantCulture);
             set => VCredPresIBSZFM = Converter.ToDouble(value);
         }
-
-        #region ShouldSerialize
-
-        public bool ShouldSerializeVCredPresIBSZFMField() => VCredPresIBSZFM > 0;
-
-        #endregion
     }
 
     /// <summary>

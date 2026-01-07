@@ -13,6 +13,8 @@ using System.Xml.Serialization;
 using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Validator;
 using Unimake.Exceptions;
+using Unimake.Business.DFe.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Unimake.Business.DFe.Utility
 {
@@ -436,11 +438,6 @@ namespace Unimake.Business.DFe.Utility
         public static T Deserializar<T>(string xml)
             where T : new()
         {
-            if (!Validate(xml))
-            {
-                return default;
-            }
-
             try
             {
                 xml = TratarFalhaXML(xml);
@@ -581,7 +578,7 @@ namespace Unimake.Business.DFe.Utility
 
                     var positionFinal = xml.IndexOf(">", linePosition) - positionStart + 1;
 
-                    message = "TAG com caracteres inválidos: " + xml.Substring(positionStart, positionFinal) + ".";
+                    message = "TAG com caracteres inválidos: " + xml.Substring(positionStart, positionFinal);
                 }
             }
 
@@ -1294,22 +1291,28 @@ namespace Unimake.Business.DFe.Utility
             chave += conteudoChaveDFe.DigitoVerificador.ToString();
 
             return chave;
-        }
+        }        
 
         /// <summary>
         /// Gera um número randômico para ser utilizado no Código Numérico da NFe, NFCe, CTe, MDFe, etc...
         /// </summary>
         /// <param name="numeroNF">Número da NF, CT ou MDF</param>
+        /// <param name="tamanho">Quantidade de dígitos do código numérico</param>
         /// <returns>Código numérico</returns>
-        public static int GerarCodigoNumerico(int numeroNF)
+        public static int GerarCodigoNumerico(int numeroNF, int tamanho = 8)
         {
-            var retorno = 0;
+            if (tamanho < 1 || tamanho > 9)
+                throw new ArgumentOutOfRangeException(nameof(tamanho), "O tamanho deve estar entre 1 e 9 para evitar overflow de int.");
+
+            int retorno = 0;
+            int limiteSuperior = (int)Math.Pow(10, tamanho); // Ex: 10^8 = 100000000
+            int limiteInferior = (int)Math.Pow(10, tamanho - 1); // Ex: 10^7 = 10000000
+
+            var rnd = new Random(numeroNF); // Seed fixa para gerar mesmo número a partir do mesmo NF
 
             while (retorno == 0)
             {
-                var rnd = new Random(numeroNF);
-
-                retorno = Convert.ToInt32(rnd.Next(1, 99999999).ToString("00000000"));
+                retorno = rnd.Next(limiteInferior, limiteSuperior);
             }
 
             return retorno;
@@ -1759,6 +1762,85 @@ namespace Unimake.Business.DFe.Utility
 
             return chaveDFe;
         }
+
+        /// <summary>
+        /// Encripta tag "Assinatura" dos padrões DSF e PAULISTANA de NFSe
+        /// </summary>
+        /// <param name="padraoNFSe">Padrão de NFSe</param>
+        /// <param name="conteudoXML">Conteúdo XML a ser encriptado</param>
+        /// <param name="certificado">Certificado Digital</param>
+        /// <returns>XML com tag encriptada</returns>
+        public static XmlDocument EncryptTagAssinaturaNFSe(PadraoNFSe padraoNFSe, XmlDocument conteudoXML, X509Certificate2 certificado)
+        {
+            if (padraoNFSe == PadraoNFSe.DSF)
+            {
+                // DSF: RPS dentro de cada Lote; normaliza quando vier com mais de 40 chars
+                foreach (XmlElement lote in conteudoXML.GetElementsByTagName("Lote"))
+                {
+                    foreach (XmlElement rps in lote.GetElementsByTagName("RPS"))
+                    {
+                        var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
+                        if (assinaturaNodes.Count == 0) continue;
+
+                        var el = (XmlElement)assinaturaNodes[0];
+                        var valor = el.InnerText?.Trim();
+
+                        if (!IsSha1Hex(valor) && (valor?.Length > 40))
+                        {
+                            el.InnerText = Criptografia.SignWithRSASHA1(certificado, valor);
+
+                        }
+                    }
+                }
+            }
+            else if (padraoNFSe == PadraoNFSe.PAULISTANA)
+            {
+                // PAULISTANA: normalização nos RPS
+                foreach (XmlElement rps in conteudoXML.GetElementsByTagName("RPS"))
+                {
+                    var assinaturaNodes = rps.GetElementsByTagName("Assinatura");
+                    if (assinaturaNodes.Count == 0) continue;
+
+                    var el = (XmlElement)assinaturaNodes[0];
+                    var valor = el.InnerText?.Trim();
+
+                    if (!IsSha1Hex(valor) && valor?.Length <= 120)
+                    {
+                        var sh1 = Criptografia.SignWithRSASHA1(certificado, valor);
+                        el.InnerText = sh1;
+                    }
+                }
+
+                //CANCELAMENTO: <AssinaturaCancelamento>
+                foreach (XmlElement el in conteudoXML.GetElementsByTagName("AssinaturaCancelamento"))
+                {
+                    var valor = el.InnerText?.Trim();
+
+                    if (!IsSha1Hex(valor) && (valor?.Length == 20))
+                    {
+                        var sh1 = Criptografia.SignWithRSASHA1(certificado, valor);
+                        el.InnerText = sh1;
+                    }
+                }
+            }
+
+            return conteudoXML;
+        }
+
+        #region Private Methods
+        private static bool IsSha1Hex(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s) || s.Length != 40) return false;
+            foreach (var c in s)
+            {
+                bool isHex = (c >= '0' && c <= '9') ||
+                             (c >= 'a' && c <= 'f') ||
+                             (c >= 'A' && c <= 'F');
+                if (!isHex) return false;
+            }
+            return true;
+        }
+        #endregion Private Methods
     }
 
 #if INTEROP
